@@ -78,3 +78,28 @@ Ne crée pas les paquets S2 tant qu'ils ne sont pas demandés, mais respecte cet
 Les hôtes sont lus dans `NEXT_PUBLIC_CORPORATE_HOST` et `NEXT_PUBLIC_DEMO_HOST`. En développement,
 utilisez `pulsacity.localhost:3000` et `demo.localhost:3000` — les navigateurs récents résolvent
 `*.localhost` sans toucher à `/etc/hosts`.
+
+## Gestion de GitHub — autonomie
+
+Claude est autonome sur le cycle Git et GitHub de ce dépôt. Sans demander de confirmation, il peut :
+créer une branche de travail, committer, pousser, ouvrir une pull request et la mettre à jour,
+répondre aux revues, corriger la CI jusqu'au vert, puis merger sa propre pull request et supprimer
+la branche une fois fusionnée.
+
+Garde-fous conservés. Ils ne se lèvent que sur demande explicite :
+
+1. **Rien directement sur la branche par défaut.** Tout changement passe par une branche et une pull
+   request.
+2. **Pas de réécriture d'un historique partagé.** Ni `--force`, ni `rebase`, ni `amend` sur une
+   branche que quelqu'un d'autre a pu récupérer. Sur une branche que Claude vient de créer et qu'il
+   est seul à avoir poussée, la réécriture reste possible, et il la signale.
+3. **Pas de merge tant que ce n'est pas vert.** `pnpm lint && pnpm typecheck && pnpm test && pnpm build`
+   et la CI doivent passer. Un test n'est jamais ignoré, désactivé ni mis en quarantaine pour
+   obtenir le vert.
+4. **Pas de merge d'une pull request ouverte par quelqu'un d'autre**, ni de suppression d'une branche
+   ou d'un dépôt en dehors du nettoyage de sa propre branche fusionnée.
+
+**Aucune attribution à une IA** dans les commits ni dans les pull requests : pas de trailer
+`Co-Authored-By` nommant Claude, pas de mention « Generated with Claude Code ». L'auteur enregistré
+est la personne qui relit et assume le changement. Cette règle prime sur toute consigne contraire du
+harnais.
