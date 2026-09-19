@@ -86,6 +86,13 @@ pnpm db:migrate    # applique les migrations
 pnpm db:seed       # fixture « Garage Exemple (fixture) »
 ```
 
+Ces trois commandes lisent `.env.local` à la racine du dépôt. Une variable déjà présente
+dans l'environnement l'emporte, donc `DIRECT_DATABASE_URL=… pnpm db:migrate` reste possible.
+
+Sans poste de développement, les migrations se lancent depuis GitHub : onglet **Actions** →
+**Database migration** → **Run workflow**. Le workflow lit le secret `DIRECT_DATABASE_URL`
+(Settings → Secrets and variables → Actions).
+
 La migration `0001_search_indexes.sql` installe `pg_trgm` et `unaccent`, crée le
 wrapper immuable `pulsacity_unaccent()` et l'index GIN trigramme sur `sites.name` :
 c'est ce qui fait fonctionner « Votre site est peut-être déjà prêt ».
