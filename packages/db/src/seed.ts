@@ -4,11 +4,15 @@
  * CLAUDE.md rule 6: a demo only ever comes from real data. This single, obviously
  * fictional row is the one exception, and it must never reach production.
  */
+import { loadEnvFiles } from './env';
+
 import { eq } from 'drizzle-orm';
 
 import { closeDb, getDb } from './client';
 import { sites } from './schema';
 import { SiteContentSchema } from '@pulsacity/templates/content';
+
+loadEnvFiles();
 
 if (process.env.VERCEL_ENV === 'production') {
   console.error(

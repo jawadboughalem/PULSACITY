@@ -4,11 +4,15 @@
  * Uses the direct connection (port 5432) when one is configured: the transaction
  * pooler refuses the session-level statements migrations need.
  */
+import { loadEnvFiles } from './env';
+
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import postgres from 'postgres';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+loadEnvFiles();
 
 const url = process.env.DIRECT_DATABASE_URL || process.env.DATABASE_URL;
 
