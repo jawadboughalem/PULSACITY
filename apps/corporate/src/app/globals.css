@@ -1,0 +1,66 @@
+@import 'tailwindcss';
+
+/* The generic site template lives in a workspace package; Tailwind must scan it too. */
+@source '../../../../packages/templates/src';
+
+@theme {
+  /* One accent colour, and nothing else: the page stays sober. */
+  --color-accent: oklch(0.45 0.15 255);
+  --color-accent-hover: oklch(0.39 0.15 255);
+  --color-accent-soft: oklch(0.96 0.02 255);
+  --color-accent-foreground: oklch(0.99 0 0);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* The sticky header must not hide an anchored section. */
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-white text-neutral-900 antialiased;
+    font-family: var(--font-sans);
+  }
+
+  :focus-visible {
+    @apply outline-accent outline-2 outline-offset-2;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* Legal pages: Markdown converted to HTML, styled once here. */
+.legal-prose {
+  @apply text-[0.975rem] leading-relaxed text-neutral-700;
+}
+.legal-prose h1 {
+  @apply mb-6 text-3xl font-semibold tracking-tight text-neutral-900;
+}
+.legal-prose h2 {
+  @apply mb-3 mt-10 text-xl font-semibold text-neutral-900;
+}
+.legal-prose h3 {
+  @apply mb-2 mt-6 text-base font-semibold text-neutral-900;
+}
+.legal-prose p {
+  @apply my-3;
+}
+.legal-prose ul {
+  @apply my-3 list-disc space-y-1 pl-5;
+}
+.legal-prose ol {
+  @apply my-3 list-decimal space-y-1 pl-5;
+}
+.legal-prose a {
+  @apply text-accent underline underline-offset-2;
+}
+.legal-prose strong {
+  @apply font-semibold text-neutral-900;
+}
