@@ -1,0 +1,8 @@
+pnpm-lock.yaml
+.next/
+dist/
+coverage/
+packages/db/drizzle/
+apps/corporate/public/
+playwright-report/
+test-results/
