@@ -8,6 +8,7 @@
 import { drizzle, type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
+import { connectionOptions } from './connection';
 import * as schema from './schema';
 
 export type Database = PostgresJsDatabase<typeof schema>;
@@ -29,12 +30,7 @@ export function getDb(): Database {
     throw new Error('DATABASE_URL est absente. Renseignez-la dans .env.local (voir .env.example).');
   }
 
-  client = postgres(url, {
-    prepare: false, // required by the Supabase transaction pooler
-    max: 5,
-    idle_timeout: 20,
-    connect_timeout: 10,
-  });
+  client = postgres(url, connectionOptions(url, { max: 5, idle_timeout: 20, connect_timeout: 10 }));
   database = drizzle(client, { schema });
   return database;
 }

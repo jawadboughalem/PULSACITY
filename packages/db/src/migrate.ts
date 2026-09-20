@@ -4,6 +4,7 @@
  * Uses the direct connection (port 5432) when one is configured: the transaction
  * pooler refuses the session-level statements migrations need.
  */
+import { connectionOptions } from './connection';
 import { loadEnvFiles } from './env';
 
 import { drizzle } from 'drizzle-orm/postgres-js';
@@ -22,7 +23,7 @@ if (!url) {
 }
 
 const migrationsFolder = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'drizzle');
-const client = postgres(url, { max: 1, prepare: false, onnotice: () => {} });
+const client = postgres(url, connectionOptions(url, { max: 1, onnotice: () => {} }));
 
 try {
   await migrate(drizzle(client), { migrationsFolder });
