@@ -10,9 +10,10 @@ import { join } from 'node:path';
 
 import { marked } from 'marked';
 
-import { EXTRA_CHANGE_HT_CENTS, PRICE_HT_CENTS, RENEWAL_HT_CENTS, formatEurHt } from './pricing';
-import { contactDetails, legalIdentity, vatMode } from './server-env';
-import { VAT_FRANCHISE_NOTICE } from './pricing';
+import { liveLines } from './lines';
+import { VAT_FRANCHISE_NOTICE, formatEurHt } from './pricing';
+import { legalIdentity, vatMode } from './server-env';
+import { loadSite } from './site-content';
 
 export const LEGAL_SLUGS = ['mentions-legales', 'confidentialite', 'cgv'] as const;
 export type LegalSlug = (typeof LEGAL_SLUGS)[number];
@@ -56,10 +57,16 @@ export function substituteLegalVariables(source: string, variables: LegalVariabl
   return rendered;
 }
 
-/** Every variable the legal Markdown may reference. */
+/**
+ * Every variable the legal Markdown may reference.
+ *
+ * The amounts come from the offer line, not from a constant: the terms and the page
+ * quote the same figures because they read the same file.
+ */
 export function legalVariables(): LegalVariables {
   const identity = legalIdentity();
-  const contact = contactDetails();
+  const site = loadSite();
+  const offer = liveLines().find((line) => line.offer)?.offer;
 
   return {
     LEGAL_NAME: identity.name,
@@ -69,11 +76,11 @@ export function legalVariables(): LegalVariables {
     LEGAL_EMAIL: identity.email,
     LEGAL_PUBLISHER: identity.publisher ?? identity.name,
     LEGAL_HOST_ADDRESS: identity.hostAddress,
-    CONTACT_EMAIL: contact.email,
-    CONTACT_PHONE: contact.phone,
-    PRICE_HT: formatEurHt(PRICE_HT_CENTS),
-    RENEWAL_HT: formatEurHt(RENEWAL_HT_CENTS),
-    EXTRA_CHANGE_HT: formatEurHt(EXTRA_CHANGE_HT_CENTS),
+    CONTACT_EMAIL: site.contact.email,
+    CONTACT_PHONE: site.contact.phone,
+    PRICE_HT: offer ? formatEurHt(offer.priceHtCents) : undefined,
+    RENEWAL_HT: offer?.renewalHtCents ? formatEurHt(offer.renewalHtCents) : undefined,
+    EXTRA_CHANGE_HT: offer?.extraChangeHtCents ? formatEurHt(offer.extraChangeHtCents) : undefined,
     // Only meaningful under the VAT franchise; the line disappears otherwise.
     VAT_NOTICE: vatMode() === 'franchise' ? VAT_FRANCHISE_NOTICE : undefined,
   };

@@ -9,9 +9,9 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-accent text-accent-foreground hover:bg-accent-hover',
-        secondary: 'border border-neutral-300 bg-white text-neutral-900 hover:bg-neutral-50',
-        ghost: 'text-neutral-700 hover:bg-neutral-100',
-        link: 'text-accent underline-offset-4 hover:underline',
+        secondary: 'border border-line-strong bg-surface text-ink hover:bg-ground',
+        ghost: 'text-ink-muted hover:bg-ground',
+        link: 'text-accent-ink underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-11 px-5',

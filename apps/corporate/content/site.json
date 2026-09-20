@@ -1,0 +1,14 @@
+{
+  "brand": "PULSACITY",
+  "founderFirstName": "",
+  "callbackDelay": "sous 24 h",
+  "contact": {
+    "email": "",
+    "phone": ""
+  },
+  "legalLinks": [
+    { "href": "/mentions-legales", "label": "Mentions légales" },
+    { "href": "/confidentialite", "label": "Confidentialité" },
+    { "href": "/cgv", "label": "CGV" }
+  ]
+}

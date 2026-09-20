@@ -1,40 +1,47 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 
 import { corporateOrigin } from '@/lib/env';
+import { liveLines } from '@/lib/lines';
+import { loadSite } from '@/lib/site-content';
 
 import './globals.css';
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-manrope',
 });
 
-const TITLE = 'PULSACITY — Le site de votre entreprise, déjà prêt.';
-const DESCRIPTION =
-  'Site vitrine complet, nom de domaine et hébergement inclus la première année. 500 € HT tout compris, en ligne sous 72 h.';
+/** Title and description come from the content, like everything else on the page. */
+export function generateMetadata(): Metadata {
+  const site = loadSite();
+  const line = liveLines()[0];
+  const hero = line?.sections.find((section) => section.type === 'hero');
+  const title = hero ? `${site.brand} — ${hero.title}` : site.brand;
+  const description = hero?.text ?? line?.tagline ?? '';
 
-export const metadata: Metadata = {
-  metadataBase: new URL(corporateOrigin()),
-  title: { default: TITLE, template: '%s — PULSACITY' },
-  description: DESCRIPTION,
-  openGraph: {
-    type: 'website',
-    locale: 'fr_FR',
-    siteName: 'PULSACITY',
-    title: TITLE,
-    description: DESCRIPTION,
-    url: '/',
-  },
-  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
-  alternates: { canonical: '/' },
-};
+  return {
+    metadataBase: new URL(corporateOrigin()),
+    title: { default: title, template: `%s — ${site.brand}` },
+    description,
+    openGraph: {
+      type: 'website',
+      locale: 'fr_FR',
+      siteName: site.brand,
+      title,
+      description,
+      url: '/',
+    },
+    twitter: { card: 'summary_large_image', title, description },
+    alternates: { canonical: '/' },
+  };
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={inter.variable}>
+    <html lang="fr" className={manrope.variable}>
       <body>
         {children}
         {/* Audience measurement without cookies — hence no consent banner. */}

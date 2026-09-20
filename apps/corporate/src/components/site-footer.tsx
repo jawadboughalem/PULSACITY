@@ -1,69 +1,73 @@
 import Link from 'next/link';
 
+import { Wordmark } from '@/components/wordmark';
 import { VAT_FRANCHISE_NOTICE } from '@/lib/pricing';
-import { contactDetails, legalIdentity, vatMode } from '@/lib/server-env';
+import { legalIdentity, vatMode } from '@/lib/server-env';
+import { loadSite } from '@/lib/site-content';
 
-const LEGAL_LINKS = [
-  { href: '/mentions-legales', label: 'Mentions légales' },
-  { href: '/confidentialite', label: 'Confidentialité' },
-  { href: '/cgv', label: 'CGV' },
-];
-
-/** Contact block and footer. Anything not configured is simply absent. */
+/** Contact and footer. Anything the content file leaves empty is simply absent. */
 export function SiteFooter() {
-  const contact = contactDetails();
+  const site = loadSite();
   const identity = legalIdentity();
   const showVatNotice = vatMode() === 'franchise';
 
   return (
-    <footer id="contact" className="border-t border-neutral-200 bg-neutral-50">
-      <div className="mx-auto w-full max-w-5xl px-4 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight text-neutral-900">Contact</h2>
+    <footer id="contact" className="border-line bg-surface border-t">
+      <div className="mx-auto w-full max-w-5xl px-4 py-16">
+        <h2 className="text-title text-ink font-semibold">Contact</h2>
 
-        {contact.email || contact.phone ? (
-          <ul className="mt-4 space-y-1.5 text-neutral-700">
-            {contact.email ? (
+        {site.founderFirstName ? (
+          <p className="text-ink-muted mt-3">
+            {site.founderFirstName}, derrière {site.brand}.
+          </p>
+        ) : null}
+
+        {site.contact.email || site.contact.phone ? (
+          <ul className="mt-4 space-y-1.5">
+            {site.contact.email ? (
               <li>
                 <a
-                  href={`mailto:${contact.email}`}
-                  className="text-accent underline underline-offset-2"
+                  href={`mailto:${site.contact.email}`}
+                  className="text-accent-ink underline underline-offset-4"
                 >
-                  {contact.email}
+                  {site.contact.email}
                 </a>
               </li>
             ) : null}
-            {contact.phone ? (
+            {site.contact.phone ? (
               <li>
                 <a
-                  href={`tel:${contact.phone.replace(/[^\d+]/g, '')}`}
-                  className="text-accent underline underline-offset-2"
+                  href={`tel:${site.contact.phone.replace(/[^\d+]/g, '')}`}
+                  className="text-accent-ink underline underline-offset-4"
                 >
-                  {contact.phone}
+                  {site.contact.phone}
                 </a>
               </li>
             ) : null}
           </ul>
         ) : null}
 
-        <div className="mt-10 flex flex-col gap-4 border-t border-neutral-200 pt-6 text-sm text-neutral-600 sm:flex-row sm:items-center sm:justify-between">
+        <div className="border-line text-ink-muted mt-12 flex flex-col gap-4 border-t pt-6 text-sm sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
-            <p className="font-semibold tracking-[0.18em] text-neutral-900">PULSACITY</p>
+            <Wordmark className="text-sm" />
             {identity.name ? <p>{identity.name}</p> : null}
             {showVatNotice ? <p>{VAT_FRANCHISE_NOTICE}</p> : null}
           </div>
 
-          <nav aria-label="Informations légales">
-            <ul className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              {LEGAL_LINKS.map((link, index) => (
-                <li key={link.href} className="flex items-center gap-3">
-                  {index > 0 ? <span aria-hidden="true">·</span> : null}
-                  <Link href={link.href} className="hover:text-neutral-900 hover:underline">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          {site.legalLinks.length > 0 ? (
+            <nav aria-label="Informations légales">
+              <ul className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                {site.legalLinks.map((link, index) => (
+                  <li key={link.href} className="flex items-center gap-3">
+                    {index > 0 ? <span aria-hidden="true">·</span> : null}
+                    <Link href={link.href} className="hover:text-ink hover:underline">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : null}
         </div>
       </div>
     </footer>

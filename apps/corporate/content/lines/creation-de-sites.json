@@ -1,0 +1,117 @@
+{
+  "slug": "creation-de-sites",
+  "order": 1,
+  "status": "live",
+  "title": "Création de sites",
+  "tagline": "Votre site, fait pour vous.",
+  "offer": {
+    "priceHtCents": 50000,
+    "renewalHtCents": 9900,
+    "extraChangeHtCents": 4900,
+    "productLabel": "Site vitrine PULSACITY — 500 € HT tout compris"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "title": "Votre site, fait pour vous.",
+      "text": "Un site construit avec vous : vos textes, vos photos, vos couleurs, les pages qui comptent pour votre activité. 500 € HT tout compris, nom de domaine et hébergement inclus la première année.",
+      "primary": { "label": "Demander mon site", "href": "/commander" },
+      "secondary": { "label": "Voir un site livré", "href": "#realisations" }
+    },
+    {
+      "type": "features",
+      "items": [
+        {
+          "title": "Vos mots",
+          "text": "Je rédige vos textes à partir de votre activité et de vos avis clients ; vous les validez."
+        },
+        {
+          "title": "Votre image",
+          "text": "Vos couleurs, votre logo si vous en avez un, vos photos ou celles de votre fiche Google."
+        },
+        {
+          "title": "Les pages qui comptent",
+          "text": "Accueil, prestations, tarifs ou devis, avis, contact : on choisit ensemble les cinq pages utiles à votre métier. Demande de devis et prise de rendez-vous en ligne incluses."
+        },
+        {
+          "title": "Un interlocuteur, pas un ticket",
+          "text": "Vous m'appelez, je réponds. Des ajustements jusqu'à ce que le site vous ressemble, avant la mise en ligne."
+        }
+      ]
+    },
+    { "type": "showcase", "title": "Un site livré" },
+    {
+      "type": "steps",
+      "title": "Comment ça se passe",
+      "items": [
+        {
+          "title": "Vous me décrivez votre activité et le site que vous voulez",
+          "text": "Trois minutes, dans le formulaire."
+        },
+        {
+          "title": "Je vous appelle sous 24 h",
+          "text": "On cale les pages, le ton, les photos."
+        },
+        {
+          "title": "Je construis votre site et vous l'envoie par SMS",
+          "text": "Vous le regardez sur votre téléphone et me dites ce qui change."
+        },
+        {
+          "title": "Vous validez, vous réglez 500 € HT, mise en ligne sous 72 h",
+          "text": "Nom de domaine à votre nom, hébergement inclus la première année."
+        }
+      ]
+    },
+    {
+      "type": "pricing",
+      "title": "Le prix",
+      "headline": "500 € HT tout compris.",
+      "text": "Site cinq pages, textes, photos, devis et rendez-vous en ligne, nom de domaine .fr à votre nom, hébergement et certificat SSL la première année, mise en ligne sous 72 h. Ensuite 99 € HT par an pour garder tout cela en ligne. Une modification après la mise en ligne : 49 € HT. Un seul prix, pas de surprise.",
+      "action": { "label": "Demander mon site", "href": "/commander" }
+    },
+    {
+      "type": "faq",
+      "title": "Questions fréquentes",
+      "items": [
+        {
+          "question": "Mes clients me trouvent déjà sur Google, à quoi sert un site ?",
+          "answer": "Votre fiche Google affiche vos horaires, votre adresse et vos avis. Un site montre le détail de vos prestations et de vos tarifs, et permet de vous envoyer une demande de devis ou de prendre rendez-vous sans vous appeler. Les deux se complètent."
+        },
+        {
+          "question": "Que se passe-t-il après ma demande ?",
+          "answer": "Je vous appelle sous 24 h pour caler les pages, le ton et les photos. Je construis ensuite votre site et vous l'envoie par SMS : vous le regardez sur votre téléphone et me dites ce qui change."
+        },
+        {
+          "question": "Dois-je payer avant de voir mon site ?",
+          "answer": "Non : vous le voyez sur votre téléphone avant de régler. Vous ne payez qu'une fois le site validé."
+        },
+        {
+          "question": "À qui appartiennent le site et le nom de domaine ?",
+          "answer": "À vous. Le nom de domaine est déposé à votre nom, et le site vous appartient dès le paiement. Vous pouvez le récupérer et l'héberger ailleurs quand vous le souhaitez."
+        },
+        {
+          "question": "Et après la première année ?",
+          "answer": "La première année, le nom de domaine, l'hébergement et le certificat SSL sont compris dans les 500 € HT. Ensuite, 99 € HT par an pour garder tout cela en ligne. Si vous ne renouvelez pas, vous conservez votre nom de domaine et je vous remets les fichiers de votre site."
+        },
+        {
+          "question": "Je veux une boutique en ligne ou une fonction particulière.",
+          "answer": "Pas dans cette offre, qui couvre les pages essentielles d'une vitrine. Dites-le dans le formulaire, je vous répondrai franchement."
+        },
+        {
+          "question": "Je n'ai ni logo ni photos.",
+          "answer": "Ce n'est pas bloquant. J'utilise les photos de votre fiche Google, et le site fonctionne sans logo. Les photographies professionnelles ne sont pas comprises."
+        },
+        {
+          "question": "Faites-vous des remises ?",
+          "answer": "Non : un seul prix pour tout le monde, c'est ce qui me permet de le tenir."
+        }
+      ]
+    },
+    {
+      "type": "cta",
+      "title": "Décrivez-moi votre activité",
+      "text": "Trois minutes dans le formulaire, et je vous appelle sous 24 h.",
+      "action": { "label": "Demander mon site", "href": "/commander" }
+    }
+  ]
+}

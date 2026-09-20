@@ -69,3 +69,8 @@ export function toCards(entries: ShowcaseEntry[], publicDir: string): ShowcaseCa
     };
   });
 }
+
+/** The first real mobile capture available, used to illustrate the method. */
+export function firstMobileShot(cards: ShowcaseCard[]): string | undefined {
+  return cards.find((card) => card.mobileShot)?.mobileShot;
+}

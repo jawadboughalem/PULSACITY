@@ -1,21 +1,27 @@
-import { OrderForm } from '@/components/order-form';
-import { buttonVariants } from '@/components/ui/button';
+import Link from 'next/link';
 
-export function Hero() {
+import { buttonVariants } from '@/components/ui/button';
+import type { Section } from '@/lib/lines';
+
+type Hero = Extract<Section, { type: 'hero' }>;
+
+export function HeroSection({ section }: { section: Hero }) {
   return (
-    <section className="mx-auto w-full max-w-5xl px-4 pb-14 pt-16 sm:pb-20 sm:pt-24">
-      <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-neutral-900 sm:text-5xl">
-        Le site de votre entreprise, déjà prêt.
-      </h1>
-      <p className="mt-5 max-w-2xl text-lg text-neutral-600">
-        Site vitrine complet, nom de domaine et hébergement inclus la première année. 500&nbsp;€ HT
-        tout compris, en ligne sous 72&nbsp;h. Sans engagement : le site et le domaine sont à vous.
-      </p>
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <a href="#mon-site" className={buttonVariants({ size: 'lg' })}>
-          Voir si mon site est déjà prêt
-        </a>
-        <OrderForm source="page" label="Commander — 500 € HT" variant="secondary" size="lg" />
+    <section className="mx-auto w-full max-w-5xl px-4 pb-20 pt-20 sm:pb-28 sm:pt-32">
+      <h1 className="text-display text-ink max-w-4xl font-semibold">{section.title}</h1>
+      <p className="text-lead text-ink-muted mt-8 max-w-2xl">{section.text}</p>
+      <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+        <Link href={section.primary.href} className={buttonVariants({ size: 'lg' })}>
+          {section.primary.label}
+        </Link>
+        {section.secondary ? (
+          <Link
+            href={section.secondary.href}
+            className={buttonVariants({ variant: 'secondary', size: 'lg' })}
+          >
+            {section.secondary.label}
+          </Link>
+        ) : null}
       </div>
     </section>
   );

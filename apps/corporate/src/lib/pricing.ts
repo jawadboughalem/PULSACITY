@@ -1,19 +1,11 @@
 /**
- * The price. One product, one price, no option, no discount (CLAUDE.md rule 7).
+ * Money rules that do not belong to any one offer.
  *
- * These are constants, never environment variables: an operator must not be able to
- * change what PULSACITY sells by editing a dashboard.
+ * What a line costs lives in `content/lines/<slug>.json`, read server-side at
+ * checkout — never sent by the browser, never an environment variable. This file
+ * holds only the currency, the VAT wording and the French formatting.
  */
 export const CURRENCY = 'eur' as const;
-
-/** 500 € HT, in cents. */
-export const PRICE_HT_CENTS = 50_000;
-/** Renewal from year 2, in cents. */
-export const RENEWAL_HT_CENTS = 9_900;
-/** One change outside the package, in cents. */
-export const EXTRA_CHANGE_HT_CENTS = 4_900;
-
-export const PRODUCT_NAME = 'Site vitrine PULSACITY — 500 € HT tout compris';
 
 /** VAT rate applied in `standard` mode, as a percentage. */
 export const STANDARD_VAT_PERCENT = 20;

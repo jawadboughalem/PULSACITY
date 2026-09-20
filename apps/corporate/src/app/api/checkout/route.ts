@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 
 import { buildCheckoutSessionParams } from '@/lib/checkout';
+import { findOffer } from '@/lib/lines';
 import { corporateOrigin, demoUrl } from '@/lib/env';
 import { SLUG_PATTERN } from '@/lib/host-routing';
 import { rateLimit } from '@/lib/rate-limit';
@@ -20,6 +21,11 @@ const optionalText = (max: number) =>
     .transform((value) => (value ? value : undefined));
 
 const bodySchema = z.object({
+  /** Which offer line is being bought. Its price is read from that line's file. */
+  offer: z
+    .string()
+    .trim()
+    .regex(/^[a-z0-9][a-z0-9-]{0,60}$/),
   source: z.enum(['page', 'demo']).default('page'),
   demo_slug: z
     .string()
@@ -28,6 +34,12 @@ const bodySchema = z.object({
     .optional()
     .or(z.literal('').transform(() => undefined)),
   site_id: z
+    .string()
+    .trim()
+    .uuid()
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  lead_id: z
     .string()
     .trim()
     .uuid()
@@ -82,6 +94,15 @@ export async function POST(request: NextRequest) {
   }
   const body = parsed.data;
 
+  // The price never comes from the browser: it is read from the line's content file.
+  const offer = findOffer(body.offer);
+  if (!offer) {
+    console.error(`Commande refusée : offre inconnue « ${body.offer} ».`);
+    return json
+      ? NextResponse.json({ error: 'unknown_offer' }, { status: 400 })
+      : NextResponse.redirect(`${corporateOrigin()}/commande-indisponible`, 303);
+  }
+
   if (!isStripeConfigured()) {
     console.error('Commande impossible : STRIPE_SECRET_KEY absente ou incomplète.');
     return json
@@ -97,13 +118,16 @@ export async function POST(request: NextRequest) {
   try {
     const params = buildCheckoutSessionParams(
       {
+        offerSlug: body.offer,
         source: body.source,
         demoSlug: body.demo_slug,
         siteId: body.site_id,
+        leadId: body.lead_id,
         businessName: body.business_name,
         city: body.city,
       },
       {
+        offer,
         vatMode: vatMode(),
         taxRateId: stripeTaxRateId(),
         // Left unencoded on purpose: Stripe substitutes the session id itself.

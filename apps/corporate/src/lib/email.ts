@@ -64,6 +64,7 @@ export async function notifyOwnerOfSale(sale: {
   email?: string | null;
   amountCents: number;
   vatMode: string;
+  offerSlug: string;
   demoSlug?: string | null;
 }): Promise<boolean> {
   const owner = ownerEmail();
@@ -81,6 +82,7 @@ export async function notifyOwnerOfSale(sale: {
     `Téléphone : ${phone}`,
     sale.email?.trim() ? `E-mail : ${sale.email.trim()}` : null,
     `Montant encaissé : ${(sale.amountCents / 100).toFixed(2)} €`,
+    `Ligne : ${sale.offerSlug}`,
     `Régime de TVA : ${sale.vatMode}`,
     sale.demoSlug ? `Démo : ${sale.demoSlug}` : null,
     '',
@@ -122,12 +124,16 @@ export async function sendBuyerConfirmation(buyer: {
   });
 }
 
-/** A visitor asked for a site through the « déjà prêt ? » form. */
+/** Any inbound request, whatever the line and whatever the form. */
 export async function notifyOwnerOfLead(lead: {
-  businessName: string;
+  kind: 'order_brief' | 'notify' | 'contact';
+  lineSlug?: string | null;
+  businessName?: string | null;
   city?: string | null;
-  phoneE164: string;
+  phoneE164?: string | null;
   email?: string | null;
+  /** The form's own answers, rendered one per line. */
+  details?: Record<string, string | undefined>;
 }): Promise<boolean> {
   const owner = ownerEmail();
   if (!owner) {
@@ -135,18 +141,25 @@ export async function notifyOwnerOfLead(lead: {
     return false;
   }
 
+  const subject =
+    lead.kind === 'order_brief'
+      ? `Demande de site : ${lead.businessName?.trim() || 'entreprise non renseignée'} — ${lead.phoneE164 ?? ''}`
+      : `Inscription « prévenez-moi » : ${lead.lineSlug ?? ''}`;
+
   const lines = [
-    `Entreprise : ${lead.businessName}`,
+    lead.lineSlug ? `Ligne : ${lead.lineSlug}` : null,
+    lead.businessName?.trim() ? `Entreprise : ${lead.businessName.trim()}` : null,
     lead.city?.trim() ? `Ville : ${lead.city.trim()}` : null,
-    `Téléphone : ${lead.phoneE164}`,
+    lead.phoneE164 ? `Téléphone : ${lead.phoneE164}` : null,
     lead.email?.trim() ? `E-mail : ${lead.email.trim()}` : null,
-    '',
-    'Origine : formulaire « Votre site est peut-être déjà prêt » (site_check).',
+    ...Object.entries(lead.details ?? {})
+      .filter(([, value]) => value?.trim())
+      .map(([label, value]) => `${label} : ${value}`),
   ].filter((line): line is string => line !== null);
 
   return sendEmail({
     to: owner,
-    subject: `Demande de site : ${lead.businessName} — ${lead.phoneE164}`,
+    subject,
     text: lines.join('\n'),
     ...(lead.email?.trim() ? { replyTo: lead.email.trim() } : {}),
   });

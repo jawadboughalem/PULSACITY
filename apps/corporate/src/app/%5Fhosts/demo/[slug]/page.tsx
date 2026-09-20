@@ -6,6 +6,8 @@ import { renderSite, safeParseSiteContent } from '@pulsacity/templates';
 import { DemoBanner } from '@/components/demo-banner';
 import { DemoUnavailable } from '@/components/demo-unavailable';
 import { demoTtlDays } from '@/lib/server-env';
+import { liveLines } from '@/lib/lines';
+import { formatEurHt } from '@/lib/pricing';
 
 // A demo reflects the database at request time, and expires on its own.
 export const dynamic = 'force-dynamic';
@@ -35,13 +37,24 @@ export default async function DemoPage({ params }: { params: Promise<{ slug: str
     return <DemoUnavailable />;
   }
 
+  // A demo sells the first live line; its price comes from that line's content file.
+  const line = liveLines()[0];
+  if (!line?.offer) return <DemoUnavailable />;
+
   return (
     <>
       {/* Room for the fixed banner. */}
       <div className="pb-28">
         {renderSite({ name: site.name, city: site.city, content: content.data })}
       </div>
-      <DemoBanner name={site.name} slug={site.slug} city={site.city} siteId={site.id} />
+      <DemoBanner
+        name={site.name}
+        slug={site.slug}
+        city={site.city}
+        siteId={site.id}
+        offerSlug={line.slug}
+        priceLabel={formatEurHt(line.offer.priceHtCents)}
+      />
     </>
   );
 }

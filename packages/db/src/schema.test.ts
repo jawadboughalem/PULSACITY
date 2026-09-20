@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import {
   domainTypeEnum,
   domains,
+  leadKindEnum,
   leadStatusEnum,
   leads,
   orderStatusEnum,
@@ -18,6 +19,7 @@ describe('enums', () => {
   it('keeps the documented status values', () => {
     expect(siteStatusEnum.enumValues).toEqual(['demo', 'sold', 'live', 'archived']);
     expect(leadStatusEnum.enumValues).toEqual(['new', 'contacted', 'converted', 'rejected']);
+    expect(leadKindEnum.enumValues).toEqual(['order_brief', 'notify', 'contact']);
     expect(orderStatusEnum.enumValues).toEqual(['paid']);
     expect(vatModeEnum.enumValues).toEqual(['franchise', 'standard']);
     expect(domainTypeEnum.enumValues).toEqual(['corporate', 'demo', 'client']);
@@ -57,11 +59,25 @@ describe('tables', () => {
     expect(config.columns.find((column) => column.name === 'id')?.primary).toBe(true);
   });
 
-  it('normalises lead phone numbers into a dedicated column', () => {
-    const column = getTableConfig(leads).columns.find(
-      (candidate) => candidate.name === 'phone_e164',
-    );
-    expect(column?.notNull).toBe(true);
+  // A « prévenez-moi » carries an e-mail and nothing else, so the brief-only fields
+  // must be optional; what each form asks lives in `payload` instead.
+  it('lets every request kind share one table', () => {
+    const columns = getTableConfig(leads).columns;
+    const by = (name: string) => columns.find((column) => column.name === name);
+
+    expect(by('kind')?.notNull).toBe(true);
+    expect(by('phone_e164')?.notNull).toBe(false);
+    expect(by('business_name')?.notNull).toBe(false);
+    expect(by('payload')?.getSQLType()).toBe('jsonb');
+    expect(by('payload')?.notNull).toBe(true);
+    expect(by('line_slug')).toBeDefined();
+    expect(by('converted_order_id')).toBeDefined();
+  });
+
+  it('records which line each order bought', () => {
+    const columns = getTableConfig(orders).columns;
+    expect(columns.find((column) => column.name === 'offer_slug')?.notNull).toBe(true);
+    expect(columns.find((column) => column.name === 'lead_id')).toBeDefined();
   });
 
   it('stores every timestamp with its time zone', () => {
