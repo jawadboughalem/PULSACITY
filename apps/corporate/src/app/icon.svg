@@ -1,7 +1,16 @@
+<!--
+  The wordmark reduced to its first letter and its point.
+
+  A favicon renders with no stylesheet and no webfont, so the P is drawn as a
+  path rather than set in Fraunces; its proportions follow the logotype. Both
+  colours mirror packages/design/src/tokens.css and are held by its tokens.test.ts.
+-->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PULSACITY">
-  <rect width="64" height="64" rx="12" fill="#2a4a9c" />
+  <rect width="64" height="64" rx="12" fill="#1f1915" />
   <path
-    d="M22 46V18h12.2c6.2 0 10.3 3.7 10.3 9.4 0 5.8-4.1 9.5-10.3 9.5h-5.6V46H22Zm6.6-14.6h4.8c2.8 0 4.6-1.6 4.6-4s-1.8-4-4.6-4h-4.8v8Z"
-    fill="#ffffff"
+    fill-rule="evenodd"
+    d="M18 14h15c6.5 0 11 4 11 10s-4.5 10-11 10h-7v11h6v3H13v-3h5Zm8 6h6.5c3 0 4.5 1.6 4.5 4s-1.5 4-4.5 4H26Z"
+    fill="#f6f5f2"
   />
+  <circle cx="47" cy="44" r="4" fill="#d33e25" />
 </svg>

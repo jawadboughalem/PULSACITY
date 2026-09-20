@@ -7,14 +7,22 @@ export const alt = 'PULSACITY';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-const INK = '#2a2522';
-const ACCENT = '#e2603c';
-const GROUND = '#fbfaf8';
+/*
+ * This image is rendered by a runtime with no stylesheet, so it cannot read
+ * packages/design/src/tokens.css. The three constants below mirror it instead,
+ * and packages/design/src/tokens.test.ts fails if one of them stops matching the
+ * token named beside it.
+ */
+const GROUND = '#fbfaf7'; // --color-ground
+const INK = '#171310'; // --color-ink
+const ACCENT = '#d33e25'; // --color-accent
 
 /** Generated at build time from the content, so it cannot drift from the page. */
 export default function OpengraphImage() {
   const site = loadSite();
-  const hero = liveLines()[0]?.sections.find((section) => section.type === 'hero');
+  const sections = liveLines()[0]?.sections;
+  const hero = sections?.find((section) => section.type === 'hero');
+  const pricing = sections?.find((section) => section.type === 'pricing');
 
   return new ImageResponse(
     <div
@@ -38,9 +46,12 @@ export default function OpengraphImage() {
         >
           {hero?.title ?? site.brand}
         </div>
-        <div style={{ display: 'flex', marginTop: 28, fontSize: 34, color: ACCENT }}>
-          500 € HT tout compris.
-        </div>
+        {/* The price belongs to the line's content; with no pricing section, the line is simply absent. */}
+        {pricing ? (
+          <div style={{ display: 'flex', marginTop: 28, fontSize: 34, color: ACCENT }}>
+            {pricing.headline}
+          </div>
+        ) : null}
       </div>
       <div style={{ display: 'flex', height: 12, width: 200, background: ACCENT }} />
     </div>,

@@ -80,7 +80,7 @@ réglerait rien que le contraste des deux premières ne règle.
 
 `content/showcase.json` est vide, et la règle 6 interdit toute capture fabriquée. Le produit est
 donc invisible alors que c'est l'argument principal. Les deux états sont dessinés, tous deux sur
-l'encre, et **la zone garde la même hauteur dans les deux cas** (`--size-showcase-min-h`) : le jour
+l'encre, et **la zone garde la même hauteur dans les deux cas** (`--spacing-showcase-min`) : le jour
 où la première capture arrive, rien ne bouge autour.
 
 - **État plein** — une capture réelle dans un cadre de téléphone. Art direction en §9.
@@ -149,7 +149,7 @@ rôle **et un interdit** — un jeton sans interdit finit par tout faire.
 | `--color-ink-faint`         | `oklch(0.55 0.008 60)`  | `#75716d` | Métadonnées, aide de saisie, texte de substitution.                          | plus clair : c'est le plancher du texte.                          | **relevé**  |
 | `--color-line`              | `oklch(0.91 0.005 70)`  | `#e3e1de` | Le filet qui sépare, et rien d'autre.                                        | en bordure de contrôle : 1,25:1, il n'informe pas.                | conservé    |
 | `--color-line-strong`       | `oklch(0.635 0.008 70)` | `#8e8a85` | La bordure d'un contrôle : champ, case, bouton secondaire, cadre de capture. | en séparateur de section.                                         | **relevé**  |
-| `--color-accent`            | `oklch(0.58 0.19 32)`   | `#d33e25` | L'aplat corail : bouton principal, et le point.                              | en couleur de texte sur le papier (4,49:1).                       | conservé    |
+| `--color-accent`            | `oklch(0.58 0.19 32)`   | `#d33e25` | L'aplat corail : bouton principal, et le point.                              | en couleur de texte sur le papier (4,48:1).                       | conservé    |
 | `--color-accent-hover`      | `oklch(0.52 0.19 32)`   | `#be260b` | Le même aplat au survol et à l'appui.                                        | au repos.                                                         | conservé    |
 | `--color-accent-ink`        | `oklch(0.42 0.14 32)`   | `#892312` | Le corail lisible : lien, badge, chiffre mis en avant.                       | en aplat de fond.                                                 | conservé    |
 | `--color-accent-soft`       | `oklch(0.96 0.02 40)`   | `#ffeee8` | Le fond d'un badge, l'anneau de focus.                                       | en fond de section.                                               | **corrigé** |
@@ -164,10 +164,10 @@ rôle **et un interdit** — un jeton sans interdit finit par tout faire.
   valeur garde la chroma du papier, une lueur plus haut.
 - **`ink-faint` était `0.63`**, soit **3,36:1** sur le papier — sous le plancher de 4,5:1 alors que
   le jeton porte déjà du texte : la ville dans `templates/src/render.tsx`, l'aide de
-  `brief-form.tsx`, le texte de substitution de `ui/input.tsx`. Relevé à `0.55` → **4,64:1**.
+  `brief-form.tsx`, le texte de substitution de `ui/input.tsx`. Relevé à `0.55` → **4,63:1**.
 - **`line-strong` était `0.84`**, soit **1,56:1** — or c'est la bordure du champ de saisie, de la
   case à cocher, du bouton secondaire et du cadre de capture. Une bordure qui délimite un contrôle
-  demande 3:1 (WCAG 1.4.11). Relevé à `0.635` → **3,29:1 sur le papier, 3,38:1 sur `surface`,
+  demande 3:1 (WCAG 1.4.11). Relevé à `0.635` → **3,28:1 sur le papier, 3,37:1 sur `surface`,
   3,09:1 sur `surface-sunken`** : la valeur est choisie pour passer sur les trois surfaces claires,
   pas seulement sur le papier.
 - **`accent-soft` était `oklch(0.96 0.03 40)`**, **hors du gamut sRGB** : le navigateur l'écrêtait à
@@ -207,23 +207,23 @@ porteur de sens.
 | -------------------------------------- | ------- | --- | ----------------------------------------------- |
 | `ink` sur `ground`                     | 17,69:1 | 4,5 | Titres et texte courant                         |
 | `ink-muted` sur `ground`               | 6,25:1  | 4,5 | Texte secondaire                                |
-| `ink-faint` sur `ground`               | 4,64:1  | 4,5 | Métadonnées, aide de saisie                     |
-| `ink` sur `surface`                    | 18,18:1 | 4,5 | Texte sur une carte                             |
+| `ink-faint` sur `ground`               | 4,63:1  | 4,5 | Métadonnées, aide de saisie                     |
+| `ink` sur `surface`                    | 18,17:1 | 4,5 | Texte sur une carte                             |
 | `ink-muted` sur `surface`              | 6,42:1  | 4,5 | Secondaire sur une carte                        |
 | `ink-faint` sur `surface`              | 4,76:1  | 4,5 | Texte de substitution d'un champ                |
 | `ink` sur `surface-sunken`             | 16,66:1 | 4,5 | Le bloc prix                                    |
-| `ink-muted` sur `surface-sunken`       | 5,89:1  | 4,5 | Le bloc prix, secondaire                        |
+| `ink-muted` sur `surface-sunken`       | 5,88:1  | 4,5 | Le bloc prix, secondaire                        |
 | `accent-foreground` sur `accent`       | 4,56:1  | 4,5 | Libellé du bouton plein                         |
-| `accent-foreground` sur `accent-hover` | 5,90:1  | 4,5 | Bouton plein, au survol                         |
-| `accent-ink` sur `ground`              | 8,70:1  | 4,5 | Lien corail                                     |
-| `accent-ink` sur `surface`             | 8,94:1  | 4,5 | Lien sur une carte                              |
+| `accent-foreground` sur `accent-hover` | 5,89:1  | 4,5 | Bouton plein, au survol                         |
+| `accent-ink` sur `ground`              | 8,69:1  | 4,5 | Lien corail                                     |
+| `accent-ink` sur `surface`             | 8,93:1  | 4,5 | Lien sur une carte                              |
 | `accent-ink` sur `accent-soft`         | 8,06:1  | 4,5 | Badge « En préparation »                        |
 | `danger` sur `ground`                  | 6,04:1  | 4,5 | Message d'erreur                                |
 | `success` sur `ground`                 | 5,00:1  | 4,5 | Message d'envoi                                 |
-| `line-strong` sur `ground`             | 3,29:1  | 3   | Bordure de champ, de case, de bouton secondaire |
-| `line-strong` sur `surface`            | 3,38:1  | 3   | Bordure de champ sur une carte                  |
+| `line-strong` sur `ground`             | 3,28:1  | 3   | Bordure de champ, de case, de bouton secondaire |
+| `line-strong` sur `surface`            | 3,37:1  | 3   | Bordure de champ sur une carte                  |
 | `line-strong` sur `surface-sunken`     | 3,09:1  | 3   | Bordure dans l'encart prix                      |
-| `accent` sur `ground`                  | 4,49:1  | 3   | Surface du bouton plein                         |
+| `accent` sur `ground`                  | 4,48:1  | 3   | Surface du bouton plein                         |
 | `surface-inverted` sur `ground`        | 16,65:1 | 3   | Le bloc encré posé sur le papier                |
 
 **Sur encre**
@@ -231,8 +231,8 @@ porteur de sens.
 | Paire                            | Mesuré  | Min | Usage                   |
 | -------------------------------- | ------- | --- | ----------------------- |
 | `ink` sur `ground`               | 15,94:1 | 4,5 | Titre sur l'encre       |
-| `ink-muted` sur `ground`         | 7,53:1  | 4,5 | Texte secondaire        |
-| `ink-faint` sur `ground`         | 4,75:1  | 4,5 | Métadonnées             |
+| `ink-muted` sur `ground`         | 7,52:1  | 4,5 | Texte secondaire        |
+| `ink-faint` sur `ground`         | 4,74:1  | 4,5 | Métadonnées             |
 | `accent-ink` sur `ground`        | 6,59:1  | 4,5 | Lien corail sur l'encre |
 | `accent-foreground` sur `accent` | 4,56:1  | 4,5 | Libellé du bouton plein |
 | `ink` sur `surface`              | 13,83:1 | 4,5 | Texte sur une carte     |
@@ -240,7 +240,7 @@ porteur de sens.
 | `danger` sur `ground`            | 6,10:1  | 4,5 | Erreur                  |
 | `success` sur `ground`           | 8,24:1  | 4,5 | Envoi confirmé          |
 | `accent` sur `ground`            | 3,71:1  | 3   | Surface du bouton plein |
-| `line-strong` sur `ground`       | 3,14:1  | 3   | Bordure de contrôle     |
+| `line-strong` sur `ground`       | 3,13:1  | 3   | Bordure de contrôle     |
 
 **Le plancher, en une phrase :** 4,5:1 pour tout texte, 3:1 pour une bordure qui délimite un
 contrôle et pour un aplat porteur de sens. Une paire absente de ces deux tableaux n'a pas le droit
@@ -309,6 +309,11 @@ Aucune coupe statique n'est chargée en plus.
 Les valeurs bureau (`4.5rem`, `2.5rem`) et `--text-lead` sont **conservées telles quelles** : elles
 sont justes.
 
+Une précision qui change le sens de ce tableau : **jusqu'ici, aucune taille mobile ne s'appliquait**.
+Le point de rupture était écrit `@media { @theme { … } }`, or Tailwind aplatit un `@theme` imbriqué —
+il garde la dernière déclaration et l'émet sans condition. Le `3.25rem` mobile de V0 était donc
+écrasé par le `4.5rem` bureau, à toutes les largeurs. Voir §12.
+
 **Fraunces ne descend jamais sous 20 px.** `--text-subtitle` et tout ce qui est plus petit est en
 Manrope. C'est ce qui garantit la netteté sur un écran d'entrée de gamme, en plus de l'axe optique.
 
@@ -318,16 +323,20 @@ Manrope. C'est ce qui garantit la netteté sur un écran d'entrée de gamme, en 
 
 ### 5.1 Les mesures
 
-| Jeton                   | Valeur              | Note                                                                                                  |
-| ----------------------- | ------------------- | ----------------------------------------------------------------------------------------------------- |
-| `--spacing`             | `0.5rem`            | La grille : 8 px. Toute dimension en est un multiple, sauf les filets (1 px) et les tailles de texte. |
-| `--width-prose`         | `34rem`             | Mentions légales, réponse de FAQ. Environ 68 signes à 17 px.                                          |
-| `--width-narrow`        | `48rem`             | Formulaires, encart prix, sections de texte seul. Conservé (`max-w-3xl`).                             |
-| `--width-wide`          | `64rem`             | La page. Conservé (`max-w-5xl`).                                                                      |
-| `--space-gutter`        | `1.5rem` / `2rem`   | Marge latérale, mobile puis bureau. `1rem` était trop court sous un titre de 44 px.                   |
-| `--space-section`       | `5rem` / `7.5rem`   | Respiration verticale d'une section.                                                                  |
-| `--space-section-tight` | `3rem` / `4rem`     | Les sections brèves : « À venir », le pied de page.                                                   |
-| `--space-title`         | `2.5rem` / `3.5rem` | Du titre de section à son contenu.                                                                    |
+Les préfixes ne sont pas décoratifs : ce sont les espaces de noms que Tailwind lit. `--container-*`
+est ce qui produit `max-w-narrow`, `--spacing-*` ce qui produit `py-section` et `px-gutter`. Un
+jeton nommé `--width-*` existerait comme variable mais n'engendrerait aucune classe.
+
+| Jeton                     | Valeur              | Note                                                                                                  |
+| ------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------- |
+| `--spacing`               | `0.5rem`            | La grille : 8 px. Toute dimension en est un multiple, sauf les filets (1 px) et les tailles de texte. |
+| `--container-measure`     | `34rem`             | Mentions légales, réponse de FAQ. Environ 68 signes à 17 px.                                          |
+| `--container-narrow`      | `48rem`             | Formulaires, encart prix, sections de texte seul. Conservé (`max-w-3xl`).                             |
+| `--container-wide`        | `64rem`             | La page. Conservé (`max-w-5xl`).                                                                      |
+| `--spacing-gutter`        | `1.5rem` / `2rem`   | Marge latérale, mobile puis bureau. `1rem` était trop court sous un titre de 44 px.                   |
+| `--spacing-section`       | `5rem` / `7.5rem`   | Respiration verticale d'une section.                                                                  |
+| `--spacing-section-tight` | `3rem` / `4rem`     | Les sections brèves : « À venir », le pied de page.                                                   |
+| `--spacing-title`         | `2.5rem` / `3.5rem` | Du titre de section à son contenu.                                                                    |
 
 ### 5.2 La règle d'alternance
 
@@ -341,23 +350,23 @@ suffisent à donner un relief à la page, sans une image de plus.
    _est_ la séparation ; y ajouter un filet, c'est faire deux fois le même travail.
 3. **`surface` ne prend jamais la pleine largeur.** C'est ce qui pose une carte sur le papier,
    jamais ce qui fait une section.
-4. **`surface-sunken` : un seul encart par page**, le prix, sur `--width-narrow`.
+4. **`surface-sunken` : un seul encart par page**, le prix, sur `--container-narrow`.
 5. **Le document commence et finit sur le papier.** Un bloc encré ne touche jamais le bord haut ni
    le bord bas.
 
 ### 5.3 La partition de `creation-de-sites.json`
 
-| Section      | Surface            | Filet au-dessus | Pourquoi                                                           |
-| ------------ | ------------------ | --------------- | ------------------------------------------------------------------ |
-| `hero`       | `ground`           | non             | C'est le haut du document.                                         |
-| `features`   | `ground`           | **oui**         | Même surface que la section précédente.                            |
-| `showcase`   | `surface-inverted` | non             | Bloc encré n° 1. Le changement de surface sépare.                  |
-| `steps`      | `ground`           | non             | On sort d'une autre surface.                                       |
-| `pricing`    | `surface-sunken`   | non             | L'encart creusé, sur `--width-narrow`. Il ne touche pas les bords. |
-| `faq`        | `ground`           | **oui**         | L'encart est posé sur le papier : on n'a pas changé de sol.        |
-| `cta`        | `surface-inverted` | non             | Bloc encré n° 2 : la sortie.                                       |
-| `à venir`    | `ground`           | **oui**         | —                                                                  |
-| pied de page | `ground`           | **oui**         | Le document finit sur le papier, comme il a commencé.              |
+| Section      | Surface            | Filet au-dessus | Pourquoi                                                               |
+| ------------ | ------------------ | --------------- | ---------------------------------------------------------------------- |
+| `hero`       | `ground`           | non             | C'est le haut du document.                                             |
+| `features`   | `ground`           | **oui**         | Même surface que la section précédente.                                |
+| `showcase`   | `surface-inverted` | non             | Bloc encré n° 1. Le changement de surface sépare.                      |
+| `steps`      | `ground`           | non             | On sort d'une autre surface.                                           |
+| `pricing`    | `surface-sunken`   | non             | L'encart creusé, sur `--container-narrow`. Il ne touche pas les bords. |
+| `faq`        | `ground`           | **oui**         | L'encart est posé sur le papier : on n'a pas changé de sol.            |
+| `cta`        | `surface-inverted` | non             | Bloc encré n° 2 : la sortie.                                           |
+| `à venir`    | `ground`           | **oui**         | —                                                                      |
+| pied de page | `ground`           | **oui**         | Le document finit sur le papier, comme il a commencé.                  |
 
 Le pied de page passe de `bg-surface` à `ground` : l'appel final en encre doit rester la dernière
 note forte, et le pied doit s'effacer derrière lui.
@@ -392,14 +401,20 @@ suit la graisse et dont l'alignement suit la fonte : il ne se règle pas. Il est
 
 - Carré `--color-surface-inverted`, rayon `12/64` de la largeur.
 - La lettre **P** en Fraunces 500 (`SOFT 30`, `opsz 144`), en `ink` inversé (`#f6f5f2`), 15,94:1.
+  **Dans `icon.svg`, elle est tracée en courbes**, pas composée : un favicon est rendu sans feuille
+  de style et sans fonte chargée. Le tracé suit les proportions du logotype ; la consigne Fraunces
+  vaut partout où une fonte est disponible.
 - Le point corail (`accent`), diamètre `8/64`, posé sur la ligne de base à droite du P. 3,71:1
   contre le carré.
 - **Sous 32 px, le point disparaît et le P passe en corail** : à cette échelle un disque de 2 px se
   lit comme une poussière.
 
-L'icône actuelle (`apps/corporate/src/app/icon.svg`) est un carré **bleu `#2a4a9c`** : une couleur
-qui n'existe dans aucun jeton, écrite à la main dans un fichier. Elle ne vient de rien et n'annonce
-rien. Elle est remplacée.
+L'icône précédente était un carré **bleu `#2a4a9c`** : une couleur qui n'existait dans aucun jeton,
+écrite à la main dans un fichier. Elle ne venait de rien et n'annonçait rien. Elle est remplacée.
+
+La variante sous 32 px n'est **pas encore livrée** : `icon.svg` est un fichier unique, et servir un
+dessin différent aux petites tailles demande une seconde ressource déclarée dans les métadonnées.
+À 16 px, le point est donc rendu à environ 2 px — c'est la limite connue de l'icône actuelle.
 
 ---
 
@@ -518,17 +533,68 @@ qu'elle prétend reprendre.**
 
 ---
 
-## 12. Ce que la suite doit tenir
+## 12. Le garde-fou, et ce qui reste
 
-Ce document fige les décisions ; `02-design-tokens` écrit `packages/design/src/tokens.css` et le
-test qui tient la règle 10. Ce test doit, au minimum :
+La charte n'est pas un document à relire : c'est un test qui échoue.
 
-1. **Interdire toute couleur littérale** (`#…`, `rgb(`, `hsl(`) dans `apps/corporate/src/**` et
-   `packages/templates/src/**`, à la seule exception de `opengraph-image.tsx` et `icon.svg`, dont
-   les constantes sont comparées aux jetons.
-2. **Vérifier que chaque `--color-*` employé par un composant existe** dans `tokens.css`.
-3. **Recalculer les contrastes** depuis `tokens.css` et échouer si une paire des tableaux du §3.3
-   passe sous son plancher.
+`packages/design/src/tokens.test.ts` tient quatre règles, et
+`packages/design/src/contrast.test.ts` tient l'arithmétique qui les rend crédibles — un garde-fou
+dont le calcul est faux vaut moins que pas de garde-fou, puisqu'il validerait n'importe quelle
+palette.
 
-C'est le troisième point qui compte : il transforme la charte en test. Une valeur de jeton modifiée
-sans mesure fait échouer `pnpm test`, et la règle cesse de dépendre de la vigilance de qui relit.
+1. **Aucun littéral de couleur dans un composant.** `#…`, `rgb(`, `hsl(`, `oklch(` sont interdits
+   dans `apps/corporate/src/**` et `packages/templates/src/**`.
+2. **Les deux fichiers miroirs restent dans la palette.** `opengraph-image.tsx` est rendu par un
+   runtime sans feuille de style et `icon.svg` est un fichier autonome : ce sont les seuls endroits
+   où un littéral est admis. Chacun doit être la valeur sRGB d'un jeton, et là où le fichier nomme
+   le jeton qu'il recopie (`const INK = '#171310'; // --color-ink`), c'est ce jeton-là qui est
+   vérifié.
+3. **Chaque `var(--…)` et chaque classe de palette résolvent.** Un `text-ink-subtle` qui n'existe
+   pas ne produit rien en Tailwind : la faute est silencieuse en production, elle ne l'est plus ici.
+   Seules les classes bâties sur une famille de la palette sont inspectées, donc `text-sm`,
+   `border-t` et `shadow-subtle` ne sont jamais pris pour des couleurs.
+4. **Chaque paire de contraste est recalculée depuis `tokens.css`** — conversion `oklch()` → sRGB,
+   luminance WCAG, rapport — et comparée à deux choses : son plancher, et **le chiffre imprimé dans
+   ce document**. Une couleur modifiée sans mesure fait échouer `pnpm test` ; un chiffre corrigé ici
+   sans être reporté dans la charte aussi.
+
+S'y ajoutent trois vérifications de cohérence : toute couleur est dans le gamut sRGB (c'est ce qui
+aurait attrapé l'ancien `accent-soft`), aucune couleur ne change au point de rupture bureau, et
+`accent`, `accent-hover` et `accent-foreground` ne sont jamais redéclarés sur l'encre — le bouton
+plein est un seul objet.
+
+> La quatrième règle a servi dès sa première exécution : douze rapports publiés ici étaient arrondis
+> au centième **supérieur** alors que la méthode annoncée arrondit vers le bas. Ils ont été corrigés
+> dans le sens le moins flatteur, comme la règle l'exige.
+
+### Deux pièges trouvés en implémentant
+
+Ils ne se voient pas dans une relecture : il faut compiler et lire le CSS produit.
+
+1. **`@theme` imbriqué est aplati.** `@media (width >= 40rem) { @theme { --text-display: 4.5rem } }`
+   n'engendre aucune règle conditionnelle : Tailwind retient la dernière valeur et l'émet dans
+   `:root`. V0 écrivait son point de rupture ainsi, donc **chaque titre mobile était rendu à sa
+   taille bureau** — un `h1` à 72 px sur un écran de 375 px, exactement le contraire de ce que le
+   fichier semblait dire. La surcharge est maintenant un `:root` ordinaire dans le `@media`, ce qui
+   fonctionne parce que les utilitaires compilent en `var(--text-display)`. Un test refuse
+   désormais tout `@theme` imbriqué.
+2. **`prose` était déjà pris.** Tailwind livre un `max-w-prose` intégré, à `65ch` : un jeton
+   `--container-prose` existait comme variable mais l'utilitaire continuait de valoir `65ch`. Le
+   jeton s'appelle `--container-measure` — _measure_ étant le terme typographique pour la longueur
+   de ligne.
+
+### Ce que 02 ne fait pas
+
+Les jetons existent, ils sont mesurés et tenus ; **aucun composant ne les emploie encore**. La page
+rendue est donc presque inchangée : les couleurs corrigées s'appliquent partout où leur nom était
+déjà employé, mais la seconde famille typographique, la règle d'alternance des surfaces, le point
+décliné et l'état vide de la vitrine sont du travail de composant — ce sont les prompts 03 à 05.
+
+Deux dettes connues, à traiter là :
+
+- `demo-banner.tsx` compose une surface encrée à la main (`bg-ink text-ground`) au lieu d'employer
+  `.surface-inverted`. Les deux jetons existent, donc le garde-fou passe ; la charte, elle, veut le
+  mécanisme.
+- Fraunces est chargée et `--font-display` la désigne, mais rien ne l'applique encore. C'est
+  volontaire : la fonte est prête pour 03, et un jeton qui pointe vers une variable inexistante
+  aurait été un jeton cassé.
