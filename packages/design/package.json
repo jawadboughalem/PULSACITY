@@ -6,6 +6,9 @@
   "exports": {
     "./tokens.css": "./src/tokens.css",
     "./tokens": "./src/tokens.ts",
+    "./logo": "./src/logo.ts",
+    "./logo/*": "./src/logo/*",
+    "./stylesheet": "./src/stylesheet.ts",
     "./contrast": "./src/contrast.ts"
   },
   "files": [
@@ -13,9 +16,13 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "brand:assets": "tsx scripts/build-brand-assets.ts"
   },
   "devDependencies": {
+    "@types/node": "^22.10.2",
+    "sharp": "^0.33.5",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }

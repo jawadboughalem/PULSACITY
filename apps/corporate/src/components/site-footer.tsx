@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Mail, Phone } from 'lucide-react';
 
-import { Wordmark } from '@/components/wordmark';
+import { Logo } from '@/components/wordmark';
 import { Container } from '@/components/ui/container';
 import { Divider } from '@/components/ui/divider';
 import { SectionTitle } from '@/components/ui/section-title';
@@ -61,7 +61,11 @@ export function SiteFooter() {
             <Divider />
             <div className="text-ink-faint text-caption flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-col gap-1">
-                <Wordmark className="text-caption text-ink-muted" />
+                <Logo
+                  className="text-ink-muted"
+                  markClassName="size-5"
+                  wordmarkClassName="text-caption"
+                />
                 {identity.name ? <p>{identity.name}</p> : null}
                 {showVatNotice ? <p>{VAT_FRANCHISE_NOTICE}</p> : null}
               </div>

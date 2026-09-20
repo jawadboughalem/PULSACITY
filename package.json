@@ -15,9 +15,11 @@
     "test": "pnpm -r --if-present test",
     "test:e2e": "pnpm --filter @pulsacity/corporate test:e2e",
     "db:generate": "pnpm --filter @pulsacity/db generate",
+    "db:check-url": "pnpm --filter @pulsacity/db check-url",
     "db:migrate": "pnpm --filter @pulsacity/db migrate",
     "db:seed": "pnpm --filter @pulsacity/db seed",
-    "showcase:shots": "pnpm --filter @pulsacity/corporate showcase:shots"
+    "showcase:shots": "pnpm --filter @pulsacity/corporate showcase:shots",
+    "brand:assets": "pnpm --filter @pulsacity/design brand:assets"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

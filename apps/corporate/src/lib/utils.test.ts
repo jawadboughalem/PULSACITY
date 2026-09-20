@@ -3,7 +3,7 @@
  * about is a whole family of invisible bugs: the class is dropped, nothing warns,
  * and the component renders at the wrong size.
  */
-import { readTokens } from '@pulsacity/design/tokens';
+import { readTokens } from '@pulsacity/design/stylesheet';
 import { describe, expect, it } from 'vitest';
 
 import { cn, CONTAINER_SCALE, slugify, SPACING_SCALE, TEXT_SCALE } from './utils';

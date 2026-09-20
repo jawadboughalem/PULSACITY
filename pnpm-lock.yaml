@@ -145,6 +145,15 @@ importers:
 
   packages/design:
     devDependencies:
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.4
+      sharp:
+        specifier: ^0.33.5
+        version: 0.33.5
+      tsx:
+        specifier: ^4.19.2
+        version: 4.23.13
       typescript:
         specifier: ^5.7.2
         version: 5.9.3

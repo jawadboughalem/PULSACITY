@@ -1,125 +1,75 @@
 /**
- * Reads `tokens.css` as data.
+ * The brand colours, in code.
  *
- * The stylesheet is the source of the look; this turns it into something a test
- * can measure. Deliberately a small brace matcher rather than a CSS parser
- * dependency: the file it reads is one we write.
+ * `tokens.css` is the source for anything rendered by a browser. This module exists for
+ * everything that cannot read a CSS variable — `next/og` images, generated SVG files,
+ * rasterised app icons — and it declares the *same* OKLCH values, converted on demand.
+ *
+ * One source, two consumers. A colour written by hand anywhere else is a bug.
+ *
+ * Only the base palette lives here. The values `.surface-inverted` redeclares are a
+ * rendering context, not a second palette: nothing outside a browser draws on ink.
  */
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 
-export type Declarations = Readonly<Record<string, string>>;
+/** An OKLCH colour: lightness 0–1, chroma, hue in degrees. */
+export type Oklch = readonly [lightness: number, chroma: number, hue: number];
 
-export interface TokenBlock {
-  /** Nesting, outermost first: `['@media (width >= 40rem)', '@theme']`. */
-  readonly path: readonly string[];
-  readonly declarations: Declarations;
+export const OKLCH = {
+  ground: [0.985, 0.004, 85],
+  surface: [0.995, 0.002, 85],
+  surfaceSunken: [0.965, 0.006, 85],
+  surfaceInverted: [0.22, 0.012, 55],
+  ink: [0.19, 0.008, 60],
+  inkMuted: [0.48, 0.008, 60],
+  inkFaint: [0.55, 0.008, 60],
+  line: [0.91, 0.005, 70],
+  lineStrong: [0.635, 0.008, 70],
+  accent: [0.58, 0.19, 32],
+  accentHover: [0.52, 0.19, 32],
+  accentInk: [0.42, 0.14, 32],
+  accentSoft: [0.96, 0.02, 40],
+  accentForeground: [0.99, 0, 0],
+  danger: [0.51, 0.18, 27],
+  success: [0.52, 0.11, 155],
+} as const satisfies Record<string, Oklch>;
+
+export type TokenName = keyof typeof OKLCH;
+
+/** sRGB gamma encoding, then a byte. Out-of-gamut channels are clipped, not scaled. */
+function encodeChannel(linear: number): number {
+  const gamma =
+    linear <= 0.0031308 ? 12.92 * linear : 1.055 * Math.abs(linear) ** (1 / 2.4) - 0.055;
+  return Math.round(Math.min(1, Math.max(0, gamma)) * 255);
 }
 
-export const tokensPath = fileURLToPath(new URL('./tokens.css', import.meta.url));
+/** OKLCH to a `#rrggbb` string, through OKLab and linear sRGB. */
+export function oklchToHex([lightness, chroma, hue]: Oklch): string {
+  const radians = (hue * Math.PI) / 180;
+  const a = chroma * Math.cos(radians);
+  const b = chroma * Math.sin(radians);
 
-/** Everything outside a block — comments and stray text — is ignored. */
-export function parseBlocks(css: string): TokenBlock[] {
-  const source = css.replace(/\/\*[\s\S]*?\*\//g, '');
-  const blocks: TokenBlock[] = [];
-  const open: { selector: string; declarations: Record<string, string> }[] = [];
-  let buffer = '';
+  const long = (lightness + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+  const medium = (lightness - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+  const short = (lightness - 0.0894841775 * a - 1.291485548 * b) ** 3;
 
-  const flushDeclarations = () => {
-    const current = open.at(-1);
-    if (!current) {
-      buffer = '';
-      return;
-    }
-    for (const statement of buffer.split(';')) {
-      const separator = statement.indexOf(':');
-      if (separator === -1) continue;
-      const name = statement.slice(0, separator).trim();
-      if (!name.startsWith('--')) continue;
-      current.declarations[name] = statement.slice(separator + 1).trim();
-    }
-    buffer = '';
-  };
+  const channels = [
+    4.0767416621 * long - 3.3077115913 * medium + 0.2309699292 * short,
+    -1.2684380046 * long + 2.6097574011 * medium - 0.3413193965 * short,
+    -0.0041960863 * long - 0.7034186147 * medium + 1.707614701 * short,
+  ];
 
-  for (const character of source) {
-    if (character === '{') {
-      const selector = buffer.trim();
-      flushDeclarations();
-      open.push({ selector, declarations: {} });
-      continue;
-    }
-    if (character === '}') {
-      flushDeclarations();
-      const closed = open.pop();
-      if (closed) {
-        blocks.push({
-          path: [...open.map((block) => block.selector), closed.selector],
-          declarations: closed.declarations,
-        });
-      }
-      continue;
-    }
-    buffer += character;
-  }
-
-  return blocks;
+  return `#${channels
+    .map(encodeChannel)
+    .map((value) => value.toString(16).padStart(2, '0'))
+    .join('')}`;
 }
 
-const merge = (blocks: TokenBlock[]): Declarations =>
-  Object.assign({}, ...blocks.map((block) => block.declarations)) as Declarations;
+/** Every token as `#rrggbb`. Derived, never typed by hand. */
+export const HEX = Object.fromEntries(
+  Object.entries(OKLCH).map(([name, value]) => [name, oklchToHex(value)]),
+) as Record<TokenName, string>;
 
-export interface Tokens {
-  /** `@theme` and `:root` at the top level: the values that apply everywhere. */
-  readonly base: Declarations;
-  /** The `@media (width >= 40rem)` overrides — sizes only, never colours. */
-  readonly desktop: Declarations;
-  /** `.surface-inverted`: the same names, other values. */
-  readonly inverted: Declarations;
-  readonly blocks: readonly TokenBlock[];
-}
-
-export function parseTokens(css: string): Tokens {
-  const blocks = parseBlocks(css);
-  const atTopLevel = (block: TokenBlock, selector: string) =>
-    block.path.length === 1 && block.path[0] === selector;
-
-  return {
-    base: merge(
-      blocks.filter((block) => atTopLevel(block, '@theme') || atTopLevel(block, ':root')),
-    ),
-    desktop: merge(
-      blocks.filter(
-        (block) =>
-          block.path.length > 1 &&
-          (block.path.at(-1) === ':root' || block.path.at(-1) === '@theme'),
-      ),
-    ),
-    inverted: merge(blocks.filter((block) => atTopLevel(block, '.surface-inverted'))),
-    blocks,
-  };
-}
-
-export function readTokens(): Tokens {
-  return parseTokens(readFileSync(tokensPath, 'utf8'));
-}
-
-/** What a token resolves to inside an inked block: its override, else its base. */
-export function resolve(tokens: Tokens, name: string, onInk: boolean): string | undefined {
-  return onInk ? (tokens.inverted[name] ?? tokens.base[name]) : tokens.base[name];
-}
-
-export const colourNames = (declarations: Declarations): string[] =>
-  Object.keys(declarations).filter((name) => name.startsWith('--color-'));
-
-/**
- * The first segment of every colour token: `ground`, `ink`, `accent`, …
- * A utility class built on one of these names must resolve to a real token.
- */
-export function colourFamilies(declarations: Declarations): Set<string> {
-  const families = new Set<string>();
-  for (const name of colourNames(declarations)) {
-    const family = name.slice('--color-'.length).split('-')[0];
-    if (family) families.add(family);
-  }
-  return families;
+/** The CSS form, for a place that wants the exact declaration. */
+export function oklchToCss([lightness, chroma, hue]: Oklch): string {
+  return `oklch(${lightness} ${chroma} ${hue})`;
 }

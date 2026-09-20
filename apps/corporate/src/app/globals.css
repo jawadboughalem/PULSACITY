@@ -38,7 +38,17 @@
 }
 
 .wordmark-dot {
-  animation: pulsacity-pulse 2.4s ease-in-out infinite;
+  animation: pulsacity-pulse var(--duration-pulse) ease-in-out infinite;
+}
+
+/*
+ * The same pulse, on the block of the mark that beats. `transform-box` is what makes
+ * `scale` turn about the rect's own centre instead of the SVG origin.
+ */
+.mark-pulse {
+  animation: pulsacity-pulse var(--duration-pulse) ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 /*
@@ -70,7 +80,8 @@
   html {
     scroll-behavior: auto;
   }
-  .wordmark-dot {
+  .wordmark-dot,
+  .mark-pulse {
     animation: none;
   }
 }

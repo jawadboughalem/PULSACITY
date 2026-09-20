@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { Wordmark } from '@/components/wordmark';
+import { Logo, Wordmark } from '@/components/wordmark';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -120,9 +120,13 @@ function Gallery() {
         <Row label="Badge">
           <Badge>En préparation</Badge>
         </Row>
-        <Row label="Wordmark" note="fixe · animé (en-tête seul)">
+        <Row label="Wordmark" note="seul, avec son point · sans point">
           <Wordmark className="text-body" />
-          <Wordmark className="text-body" animated />
+          <Wordmark className="text-body" withDot={false} />
+        </Row>
+        <Row label="Logo" note="le verrou : fixe · animé (en-tête seul)">
+          <Logo />
+          <Logo animated />
         </Row>
       </Group>
 
