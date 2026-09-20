@@ -1,15 +1,7 @@
-import { readFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { describe, expect, it } from 'vitest';
 
+import { readTokens } from './stylesheet';
 import { HEX, OKLCH, oklchToCss, oklchToHex } from './tokens';
-
-const tokensCss = readFileSync(
-  join(resolve(dirname(fileURLToPath(import.meta.url))), 'tokens.css'),
-  'utf8',
-);
 
 describe('oklchToHex', () => {
   // The three sRGB primaries and a mid grey, in OKLCH. If the matrices are wrong, these
@@ -33,11 +25,13 @@ describe('oklchToHex', () => {
 describe('the two token files agree', () => {
   // tokens.css is what a browser reads; tokens.ts is what an image generator reads. A
   // value present in one and different in the other is the drift this test exists for.
+  // The BASE block only. `.surface-inverted` redeclares these same names with other
+  // values, so a flat scan of the file would compare the palette against the ink
+  // context and fail on almost every colour.
   const cssColors = new Map(
-    [...tokensCss.matchAll(/--color-([a-z-]+):\s*(oklch\([^)]+\));/g)].map((match) => [
-      match[1]!,
-      match[2]!,
-    ]),
+    Object.entries(readTokens().base)
+      .filter(([name]) => name.startsWith('--color-'))
+      .map(([name, value]) => [name.slice('--color-'.length), value]),
   );
 
   const camelCase = (name: string) =>

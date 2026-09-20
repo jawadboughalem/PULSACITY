@@ -42,10 +42,25 @@ const FeaturesSectionSchema = z.object({
   items: z.array(z.object({ title: text(80), text: text(600) })).min(1),
 });
 
-/** Renders `content/showcase.json`; disappears when that file is empty. */
+/**
+ * Renders `content/showcase.json`.
+ *
+ * `empty` is what the section says before a single site has been delivered — the
+ * page's main argument must not become a hole. It lives here rather than in a
+ * component because the page knows nothing about what is being sold. A line that
+ * omits it keeps the old behaviour: the section is left out rather than filled
+ * with something invented (rule 9).
+ */
 const ShowcaseSectionSchema = z.object({
   type: z.literal('showcase'),
   title: text(120),
+  empty: z
+    .object({
+      text: text(300),
+      /** What the delivered site will contain — named, not promised. */
+      items: z.array(text(60)).min(1).max(8),
+    })
+    .optional(),
 });
 
 const StepsSectionSchema = z.object({
@@ -87,6 +102,35 @@ export const SectionSchema = z.discriminatedUnion('type', [
 
 export type Section = z.infer<typeof SectionSchema>;
 
+/**
+ * The order journey, in the line's own words.
+ *
+ * `/commander`, `/commander/merci` and `/merci` describe what is being sold —
+ * what you get, when it goes live, what the invoice looks like. That is offer
+ * copy, so it lives here rather than in the pages (rule 1). The pages add one
+ * sentence of their own, built from `site.callbackDelay`, which is brand-level
+ * and stays the single source of that value.
+ */
+const JourneySchema = z.object({
+  /** `/commander` — the brief form. */
+  brief: z.object({ title: text(120), text: text(400) }),
+  /** `/commander/merci` — the brief is in, payment is still optional. */
+  sent: z.object({
+    title: text(120),
+    text: text(600),
+    payNowTitle: text(120),
+    payNowText: text(300),
+  }),
+  /** `/merci` — Stripe came back happy. */
+  paid: z.object({
+    title: text(120),
+    text: text(300),
+    steps: z.array(text(200)).min(1).max(6),
+  }),
+});
+
+export type Journey = z.infer<typeof JourneySchema>;
+
 /** What a line costs. Read server-side at checkout; never sent by the browser. */
 export const OfferSchema = z.object({
   priceHtCents: z.number().int().positive(),
@@ -105,6 +149,7 @@ export const LineSchema = z
     title: text(80),
     tagline: text(300),
     offer: OfferSchema.optional(),
+    journey: JourneySchema.optional(),
     sections: z.array(SectionSchema).default([]),
   })
   .superRefine((line, ctx) => {
@@ -113,6 +158,12 @@ export const LineSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Une ligne live doit avoir des sections.',
+        });
+      }
+      if (!line.journey) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Une ligne live doit décrire son parcours de commande (journey).',
         });
       }
       if (!line.offer) {

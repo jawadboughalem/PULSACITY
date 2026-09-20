@@ -7,7 +7,9 @@
     "./tokens.css": "./src/tokens.css",
     "./tokens": "./src/tokens.ts",
     "./logo": "./src/logo.ts",
-    "./logo/*": "./src/logo/*"
+    "./logo/*": "./src/logo/*",
+    "./stylesheet": "./src/stylesheet.ts",
+    "./contrast": "./src/contrast.ts"
   },
   "files": [
     "src"

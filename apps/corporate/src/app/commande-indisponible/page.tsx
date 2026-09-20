@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
+import { SectionBand } from '@/components/sections/section-band';
+import { SiteFooter } from '@/components/site-footer';
+import { SiteHeader } from '@/components/site-header';
+import { SectionTitle } from '@/components/ui/section-title';
+import { TextLink } from '@/components/ui/text-link';
 import { loadSite } from '@/lib/site-content';
 
 export const metadata: Metadata = {
@@ -8,33 +12,40 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/** Shown when the payment link cannot be created. */
+/**
+ * Shown when the payment link cannot be created.
+ *
+ * System copy, not offer copy: it says what happened and what to do, and holds
+ * true whatever is being sold. It stays in the page rather than in `content/`.
+ */
 export default function CommandeIndisponiblePage() {
   const site = loadSite();
 
   return (
-    <main className="mx-auto flex min-h-[60vh] w-full max-w-lg flex-col justify-center px-4 py-20">
-      <h1 className="text-ink text-2xl font-semibold tracking-tight">
-        La commande est momentanément indisponible.
-      </h1>
-      <p className="text-ink-muted mt-3">
-        Rien n&apos;a été débité. Réessayez dans quelques instants.
-      </p>
-      {site.contact.email ? (
-        <p className="text-ink-muted mt-3">
-          Vous pouvez aussi nous écrire à{' '}
-          <a
-            href={`mailto:${site.contact.email}`}
-            className="text-accent-ink underline underline-offset-4"
-          >
-            {site.contact.email}
-          </a>
-          .
-        </p>
-      ) : null}
-      <Link href="/" className="text-accent mt-6 underline underline-offset-2">
-        ← Retour à l&apos;accueil
-      </Link>
-    </main>
+    <>
+      <SiteHeader />
+      <main>
+        <SectionBand tone="ground" divided={false} width="narrow">
+          <div className="flex flex-col gap-6">
+            <SectionTitle as="h1" className="text-display max-w-[18ch]">
+              La commande est momentanément indisponible
+            </SectionTitle>
+            <p className="text-lead text-ink-muted">
+              Rien n’a été débité. Réessayez dans quelques instants.
+            </p>
+            {site.contact.email ? (
+              <p className="text-ink-muted text-body">
+                Vous pouvez aussi m’écrire à{' '}
+                <TextLink href={`mailto:${site.contact.email}`}>{site.contact.email}</TextLink>.
+              </p>
+            ) : null}
+            <TextLink href="/" className="text-body-sm mt-2">
+              ← Retour à l’accueil
+            </TextLink>
+          </div>
+        </SectionBand>
+      </main>
+      <SiteFooter />
+    </>
   );
 }

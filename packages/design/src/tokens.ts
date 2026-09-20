@@ -6,6 +6,9 @@
  * rasterised app icons — and it declares the *same* OKLCH values, converted on demand.
  *
  * One source, two consumers. A colour written by hand anywhere else is a bug.
+ *
+ * Only the base palette lives here. The values `.surface-inverted` redeclares are a
+ * rendering context, not a second palette: nothing outside a browser draws on ink.
  */
 
 /** An OKLCH colour: lightness 0–1, chroma, hue in degrees. */
@@ -13,18 +16,21 @@ export type Oklch = readonly [lightness: number, chroma: number, hue: number];
 
 export const OKLCH = {
   ground: [0.985, 0.004, 85],
-  surface: [1, 0, 0],
+  surface: [0.995, 0.002, 85],
+  surfaceSunken: [0.965, 0.006, 85],
+  surfaceInverted: [0.22, 0.012, 55],
   ink: [0.19, 0.008, 60],
   inkMuted: [0.48, 0.008, 60],
-  inkFaint: [0.63, 0.008, 60],
+  inkFaint: [0.55, 0.008, 60],
   line: [0.91, 0.005, 70],
-  lineStrong: [0.84, 0.006, 70],
+  lineStrong: [0.635, 0.008, 70],
   accent: [0.58, 0.19, 32],
   accentHover: [0.52, 0.19, 32],
-  accentSoft: [0.96, 0.03, 40],
   accentInk: [0.42, 0.14, 32],
+  accentSoft: [0.96, 0.02, 40],
   accentForeground: [0.99, 0, 0],
   danger: [0.51, 0.18, 27],
+  success: [0.52, 0.11, 155],
 } as const satisfies Record<string, Oklch>;
 
 export type TokenName = keyof typeof OKLCH;

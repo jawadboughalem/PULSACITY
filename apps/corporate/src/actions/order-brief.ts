@@ -11,8 +11,36 @@ import { notifyOwnerOfLead } from '@/lib/email';
 import { parseFrenchPhone } from '@/lib/phone';
 import { rateLimit } from '@/lib/rate-limit';
 
+/** Exactly what the visitor typed, so a rejected submit does not throw it away. */
+export interface BriefValues {
+  businessName: string;
+  activity: string;
+  city: string;
+  phone: string;
+  email: string;
+  googleUrl: string;
+  description: string;
+  pages: string[];
+  pagesOther: string;
+  likedSites: string;
+  hasAssets: string;
+}
+
 export type BriefState =
-  { status: 'idle' } | { status: 'error'; message: string; fieldErrors?: Record<string, string> };
+  | { status: 'idle' }
+  | {
+      status: 'error';
+      message: string;
+      /**
+       * Bumped on every rejected attempt. React clears an uncontrolled form once
+       * its action resolves, and a changed `defaultValue` does not reach a
+       * mounted input — so the form remounts on this number to take the values
+       * below. Without it, one bad phone number wipes the other ten fields.
+       */
+      attempt: number;
+      fieldErrors?: Record<string, string>;
+      values: BriefValues;
+    };
 
 const UNAVAILABLE = "L'envoi est momentanément indisponible. Réessayez dans quelques instants.";
 
@@ -52,10 +80,34 @@ function fieldErrorsOf(error: z.ZodError): Record<string, string> {
  * confirmation page. The line is a parameter: the same form serves any future line.
  */
 export async function submitBriefAction(
-  _previous: BriefState,
+  previous: BriefState,
   formData: FormData,
 ): Promise<BriefState> {
   const lineSlug = String(formData.get('lineSlug') ?? '');
+  const text = (name: string) => String(formData.get(name) ?? '');
+
+  const values: BriefValues = {
+    businessName: text('businessName'),
+    activity: text('activity'),
+    city: text('city'),
+    phone: text('phone'),
+    email: text('email'),
+    googleUrl: text('googleUrl'),
+    description: text('description'),
+    pages: formData.getAll('pages').map(String),
+    pagesOther: text('pagesOther'),
+    likedSites: text('likedSites'),
+    hasAssets: text('hasAssets'),
+  };
+
+  const attempt = (previous.status === 'error' ? previous.attempt : 0) + 1;
+  const fail = (message: string, fieldErrors?: Record<string, string>): BriefState => ({
+    status: 'error',
+    message,
+    attempt,
+    values,
+    ...(fieldErrors ? { fieldErrors } : {}),
+  });
 
   // A filled honeypot is a bot: accept silently, store nothing.
   if (String(formData.get('website') ?? '').trim() !== '') {
@@ -76,29 +128,23 @@ export async function submitBriefAction(
     hasAssets: formData.get('hasAssets') ?? undefined,
   });
   if (!parsed.success) {
-    return {
-      status: 'error',
-      message: 'Vérifiez les informations saisies.',
-      fieldErrors: fieldErrorsOf(parsed.error),
-    };
+    return fail('Vérifiez les informations saisies.', fieldErrorsOf(parsed.error));
   }
 
   const phone = parseFrenchPhone(parsed.data.phone);
   if (!phone.ok || !phone.e164) {
-    return {
-      status: 'error',
-      message: 'Vérifiez les informations saisies.',
-      fieldErrors: { phone: 'Numéro de téléphone français invalide.' },
-    };
+    return fail('Vérifiez les informations saisies.', {
+      phone: 'Numéro de téléphone français invalide.',
+    });
   }
 
   const store = await headers();
   const ip = store.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
   if (!rateLimit(`brief:${ip}`, { limit: 5, windowMs: 3_600_000 }).ok) {
-    return { status: 'error', message: 'Trop de tentatives. Patientez avant de réessayer.' };
+    return fail('Trop de tentatives. Patientez avant de réessayer.');
   }
 
-  if (!isDatabaseConfigured()) return { status: 'error', message: UNAVAILABLE };
+  if (!isDatabaseConfigured()) return fail(UNAVAILABLE);
 
   const pages = parsed.data.pages.map(briefPageLabel);
   const payload = {
@@ -125,7 +171,7 @@ export async function submitBriefAction(
     leadId = inserted?.id;
   } catch (error) {
     console.error('Enregistrement du brief impossible.', error);
-    return { status: 'error', message: UNAVAILABLE };
+    return fail(UNAVAILABLE);
   }
 
   // The brief is saved; a failed notification must not tell the visitor otherwise.

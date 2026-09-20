@@ -1,47 +1,54 @@
-import { join } from 'node:path';
-
-import showcaseJson from '../../../content/showcase.json';
 import type { Section } from '@/lib/lines';
-import { firstMobileShot, parseShowcase, toCards } from '@/lib/showcase';
+import { firstMobileShot } from '@/lib/showcase';
+import { loadCards } from '@/lib/showcase-content';
+import { planSections } from '@/lib/surface-score';
 
 import { CtaSection } from './cta';
 import { FaqSection } from './faq';
 import { FeaturesSection } from './features';
 import { HeroSection } from './hero';
 import { PricingSection } from './pricing';
+import { SectionBand } from './section-band';
 import { ShowcaseSection } from './showcase';
 import { StepsSection } from './steps';
 
 /**
  * Renders a line's sections. The page knows section *types*, never offers:
  * what is being sold lives entirely in `content/lines/`.
+ *
+ * Which surface each band sits on, where a hairline falls, how wide its column
+ * is and which anchor it answers to are all derived by `planSections` from the
+ * charter's rule — never listed here.
  */
 export function RenderSections({ sections }: { sections: Section[] }) {
-  const phoneShot = firstMobileShot(
-    toCards(parseShowcase(showcaseJson), join(process.cwd(), 'public')),
-  );
+  const cards = loadCards();
+  const phoneShot = firstMobileShot(cards);
 
   return (
     <>
-      {sections.map((section, index) => {
-        const key = `${section.type}-${index}`;
-        switch (section.type) {
-          case 'hero':
-            return <HeroSection key={key} section={section} />;
-          case 'features':
-            return <FeaturesSection key={key} section={section} />;
-          case 'showcase':
-            return <ShowcaseSection key={key} section={section} />;
-          case 'steps':
-            return <StepsSection key={key} section={section} phoneShot={phoneShot} />;
-          case 'pricing':
-            return <PricingSection key={key} section={section} />;
-          case 'faq':
-            return <FaqSection key={key} section={section} />;
-          case 'cta':
-            return <CtaSection key={key} section={section} />;
-        }
-      })}
+      {planSections(sections, { hasCards: cards.length > 0 }).map(
+        ({ section, tone, divided, anchor, width }, index) => (
+          <SectionBand
+            key={`${section.type}-${index}`}
+            tone={tone}
+            divided={divided}
+            id={anchor}
+            width={width}
+          >
+            {section.type === 'hero' ? <HeroSection section={section} /> : null}
+            {section.type === 'features' ? <FeaturesSection section={section} /> : null}
+            {section.type === 'showcase' ? (
+              <ShowcaseSection section={section} cards={cards} />
+            ) : null}
+            {section.type === 'steps' ? (
+              <StepsSection section={section} phoneShot={phoneShot} />
+            ) : null}
+            {section.type === 'pricing' ? <PricingSection section={section} /> : null}
+            {section.type === 'faq' ? <FaqSection section={section} /> : null}
+            {section.type === 'cta' ? <CtaSection section={section} /> : null}
+          </SectionBand>
+        ),
+      )}
     </>
   );
 }

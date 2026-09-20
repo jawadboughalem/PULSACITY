@@ -12,12 +12,15 @@ import { cn } from '@/lib/utils';
 export function LogoMark({
   compact = false,
   reversed = false,
+  animated = false,
   className,
 }: {
   /** The three-block drawing, for anything rendered below 24 px. */
   compact?: boolean;
   /** On an inked surface, the plain blocks are cut out of the ground instead. */
   reversed?: boolean;
+  /** The block that beats actually beats. One per screen, in the header. */
+  animated?: boolean;
   className?: string;
 }) {
   const blocks = compact ? MARK_COMPACT : MARK;
@@ -37,9 +40,10 @@ export function LogoMark({
           width={block.width}
           height={block.height}
           rx={block.radius}
-          className={
-            block.role === 'accent' ? 'fill-accent' : reversed ? 'fill-ground' : 'fill-ink'
-          }
+          className={cn(
+            block.role === 'accent' ? 'fill-accent' : reversed ? 'fill-ground' : 'fill-ink',
+            block.role === 'accent' && animated && 'mark-pulse',
+          )}
         />
       ))}
     </svg>

@@ -1,63 +1,87 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { submitBriefAction, type BriefState } from '@/actions/order-brief';
+import { submitBriefAction, type BriefState, type BriefValues } from '@/actions/order-brief';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Field } from '@/components/ui/field';
+import { FormMessage } from '@/components/ui/form-message';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Radio } from '@/components/ui/radio';
+import { Textarea } from '@/components/ui/textarea';
 import { BRIEF_PAGE_OPTIONS } from '@/lib/brief';
 
 const initial: BriefState = { status: 'idle' };
 
+/**
+ * The fields that can come back invalid, in the order they are read.
+ *
+ * On a form this long the error is usually above the fold the visitor is looking
+ * at, so a rejected submit would leave them staring at an unchanged page. Moving
+ * focus to the first invalid field scrolls it into view and announces it.
+ */
+const FIELD_ORDER = ['businessName', 'activity', 'city', 'phone', 'email', 'googleUrl'] as const;
+
+const FORM_ERROR_ID = 'brief-error';
+
+const ASSET_CHOICES = [
+  { value: 'oui', label: 'Oui' },
+  { value: 'non', label: 'Non' },
+] as const;
+
 function Submit() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" size="lg" disabled={pending}>
-      {pending ? 'Envoi…' : 'Envoyer ma demande'}
+    <Button type="submit" size="lg" loading={pending}>
+      Envoyer ma demande
     </Button>
   );
 }
 
-function FieldError({ message }: { message?: string }) {
-  if (!message) return null;
+/** A group of choices is labelled by its legend, not by a `Field`. */
+function ChoiceGroup({ legend, children }: { legend: string; children: React.ReactNode }) {
   return (
-    <p className="text-danger mt-1 text-sm" role="alert">
-      {message}
-    </p>
-  );
-}
-
-function Field({
-  label,
-  hint,
-  children,
-  htmlFor,
-}: {
-  label: string;
-  hint?: string;
-  htmlFor: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <Label htmlFor={htmlFor}>
-        {label}
-        {hint ? <span className="text-ink-faint ml-1 font-normal">{hint}</span> : null}
-      </Label>
+    <fieldset>
+      <legend className="text-ink text-body-sm font-medium">{legend}</legend>
       <div className="mt-2">{children}</div>
-    </div>
+    </fieldset>
   );
 }
 
 export function BriefForm({ lineSlug }: { lineSlug: string }) {
   const [state, submit] = useActionState(submitBriefAction, initial);
   const errors = state.status === 'error' ? state.fieldErrors : undefined;
+  const error = (field: keyof NonNullable<typeof errors>) =>
+    errors?.[field] ? { error: errors[field] } : {};
+
+  // What the visitor typed, handed back by the action so a rejected submit does
+  // not empty the form. See `BriefState.attempt`.
+  const values = state.status === 'error' ? state.values : undefined;
+  const typed = (field: keyof BriefValues) => {
+    const value = values?.[field];
+    return typeof value === 'string' && value !== '' ? { defaultValue: value } : {};
+  };
+
+  useEffect(() => {
+    if (state.status !== 'error') return;
+    const firstInvalid = FIELD_ORDER.find((field) => errors?.[field]);
+    // Focusing scrolls it into view on its own, and announces it where the
+    // `role="alert"` alone would not move the keyboard.
+    document.getElementById(firstInvalid ?? FORM_ERROR_ID)?.focus();
+  }, [state, errors]);
 
   return (
-    <form action={submit} className="relative space-y-8">
+    <form
+      // Remounting on each rejected attempt is what lets the defaults below
+      // reach the inputs; React has already cleared them by this point.
+      key={state.status === 'error' ? state.attempt : 0}
+      action={submit}
+      className="relative flex flex-col gap-10"
+    >
       <input type="hidden" name="lineSlug" value={lineSlug} />
+      {/* Honeypot: off-screen rather than hidden, so a bot still fills it in. */}
       <div
         aria-hidden="true"
         className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden"
@@ -67,127 +91,135 @@ export function BriefForm({ lineSlug }: { lineSlug: string }) {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
-        <Field label="Nom de votre entreprise" htmlFor="businessName">
+        <Field label="Nom de votre entreprise" id="businessName" {...error('businessName')}>
           <Input
-            id="businessName"
             name="businessName"
             required
             maxLength={120}
             autoComplete="organization"
+            {...typed('businessName')}
           />
-          <FieldError message={errors?.businessName} />
         </Field>
 
-        <Field label="Votre activité" htmlFor="activity">
+        <Field label="Votre activité" id="activity" {...error('activity')}>
           <Input
-            id="activity"
             name="activity"
             required
             maxLength={160}
             placeholder="Garage deux-roues, boulangerie…"
+            {...typed('activity')}
           />
-          <FieldError message={errors?.activity} />
         </Field>
 
-        <Field label="Ville" htmlFor="city">
-          <Input id="city" name="city" required maxLength={80} autoComplete="address-level2" />
-          <FieldError message={errors?.city} />
-        </Field>
-
-        <Field label="Téléphone" htmlFor="phone">
+        <Field label="Ville" id="city" {...error('city')}>
           <Input
-            id="phone"
+            name="city"
+            required
+            maxLength={80}
+            autoComplete="address-level2"
+            {...typed('city')}
+          />
+        </Field>
+
+        <Field label="Téléphone" id="phone" {...error('phone')}>
+          <Input
             name="phone"
             type="tel"
             required
             inputMode="tel"
             autoComplete="tel"
             placeholder="06 12 34 56 78"
+            {...typed('phone')}
           />
-          <FieldError message={errors?.phone} />
         </Field>
 
-        <Field label="E-mail" hint="(facultatif)" htmlFor="email">
-          <Input id="email" name="email" type="email" maxLength={160} autoComplete="email" />
-          <FieldError message={errors?.email} />
-        </Field>
-
-        <Field label="Lien de votre fiche Google" hint="(facultatif)" htmlFor="googleUrl">
+        <Field label="E-mail" hint="(facultatif)" id="email" {...error('email')}>
           <Input
-            id="googleUrl"
+            name="email"
+            type="email"
+            maxLength={160}
+            autoComplete="email"
+            {...typed('email')}
+          />
+        </Field>
+
+        <Field
+          label="Lien de votre fiche Google"
+          hint="(facultatif)"
+          id="googleUrl"
+          {...error('googleUrl')}
+        >
+          <Input
             name="googleUrl"
             type="url"
             maxLength={500}
             placeholder="https://"
+            {...typed('googleUrl')}
           />
-          <FieldError message={errors?.googleUrl} />
         </Field>
       </div>
 
-      <Field label="Décrivez le site que vous voulez" hint="(facultatif)" htmlFor="description">
-        <textarea
-          id="description"
+      <Field label="Décrivez le site que vous voulez" hint="(facultatif)" id="description">
+        <Textarea
           name="description"
           rows={5}
           maxLength={3000}
-          className="border-line-strong bg-surface placeholder:text-ink-faint focus-visible:border-accent flex w-full rounded-md border px-3 py-2 text-base focus-visible:outline-none"
           placeholder="Ce que vous faites, à qui vous vous adressez, ce que le site doit permettre."
+          {...typed('description')}
         />
       </Field>
 
-      <fieldset>
-        <legend className="text-ink text-sm font-medium">Les pages dont vous avez besoin</legend>
-        <div className="mt-3 grid gap-2 sm:grid-cols-3">
+      <ChoiceGroup legend="Les pages dont vous avez besoin">
+        <div className="grid sm:grid-cols-3">
           {BRIEF_PAGE_OPTIONS.map((option) => (
-            <label key={option.value} className="text-ink-muted flex items-center gap-2.5">
-              <input
-                type="checkbox"
-                name="pages"
-                value={option.value}
-                className="border-line-strong size-4 rounded accent-[var(--color-accent)]"
-              />
-              {option.label}
-            </label>
+            <Checkbox
+              key={option.value}
+              name="pages"
+              value={option.value}
+              label={option.label}
+              defaultChecked={values?.pages.includes(option.value)}
+            />
           ))}
         </div>
-        <div className="mt-3">
-          <Label htmlFor="pagesOther" className="text-ink-muted text-sm font-normal">
-            Si « autre », précisez
-          </Label>
-          <Input id="pagesOther" name="pagesOther" maxLength={300} className="mt-1.5" />
+        <div className="mt-4">
+          <Field label="Si « autre », précisez" id="pagesOther">
+            <Input
+              name="pagesOther"
+              maxLength={300}
+              className="sm:max-w-sm"
+              {...typed('pagesOther')}
+            />
+          </Field>
         </div>
-      </fieldset>
+      </ChoiceGroup>
 
-      <Field label="Un ou deux sites que vous aimez" hint="(facultatif)" htmlFor="likedSites">
+      <Field label="Un ou deux sites que vous aimez" hint="(facultatif)" id="likedSites">
         <Input
-          id="likedSites"
           name="likedSites"
           maxLength={500}
           placeholder="Des adresses, ou juste des noms."
+          {...typed('likedSites')}
         />
       </Field>
 
-      <fieldset>
-        <legend className="text-ink text-sm font-medium">Avez-vous des photos ou un logo ?</legend>
-        <div className="mt-3 flex gap-6">
-          {['oui', 'non'].map((value) => (
-            <label key={value} className="text-ink-muted flex items-center gap-2.5 capitalize">
-              <input
-                type="radio"
-                name="hasAssets"
-                value={value}
-                className="border-line-strong size-4 accent-[var(--color-accent)]"
-              />
-              {value}
-            </label>
+      <ChoiceGroup legend="Avez-vous des photos ou un logo ?">
+        <div className="flex gap-8">
+          {ASSET_CHOICES.map((choice) => (
+            <Radio
+              key={choice.value}
+              name="hasAssets"
+              value={choice.value}
+              label={choice.label}
+              defaultChecked={values?.hasAssets === choice.value}
+            />
           ))}
         </div>
-      </fieldset>
+      </ChoiceGroup>
 
       {state.status === 'error' && !errors ? (
-        <p className="text-danger text-sm" role="alert">
+        <FormMessage tone="danger" id={FORM_ERROR_ID} tabIndex={-1}>
           {state.message}
-        </p>
+        </FormMessage>
       ) : null}
 
       <Submit />
