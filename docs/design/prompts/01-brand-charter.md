@@ -24,10 +24,16 @@ pourquoi.** Une charte qui laisse une question ouverte ne sert à rien.
 
 ### 1. Quelle marque ?
 
-_Hypothèse : l'atelier._ Pas un éditeur de logiciel, pas une agence : un artisan qui
-fabrique des sites pour d'autres artisans. Éditorial, chaud, tactile, direct. Une page qui
-tient de la lettre soignée plutôt que de la page d'atterrissage SaaS. Le client achète une
-personne, pas une plateforme — et il le voit avant de lire.
+_Hypothèse : l'atelier._ Pas une agence : quelqu'un qui fabrique des outils pour les gens
+qui n'ont pas les moyens de ceux des grands groupes. Éditorial, chaud, tactile, direct. Une
+page qui tient de la lettre soignée plutôt que de la page d'atterrissage SaaS. Le client
+achète une personne, pas une plateforme — et il le voit avant de lire.
+
+Attention au piège, et il est réel : **l'atelier ne doit pas devenir une identité de
+prestataire de services.** La création de sites est la première ligne ; les suivantes seront
+des logiciels métier vendus à l'abonnement, aux mêmes gens — voir « L'horizon » dans le
+contexte. Un artisan qui fabrique des outils peut porter les deux. Un artisan qui vend son
+temps ne portera que la première. Tranche en sachant cela.
 
 Ce que cela exclut : dégradés violets, verre dépoli, nuages de cartes flottantes, captures
 d'interface en perspective, illustrations abstraites de type _undraw_, « étoiles IA ».

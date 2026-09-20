@@ -33,6 +33,33 @@ Deux autres lignes sont annoncées sans autre promesse qu'une phrase : `pulsa-st
 L'acheteur type a plus de 40 ans, consulte sur téléphone, n'a pas de vocabulaire technique,
 et se méfie des agences. Il ne cherche pas une plateforme. Il cherche quelqu'un.
 
+## L'horizon — à savoir avant de dessiner, à ne pas écrire sur la page
+
+La création de sites est **la première ligne, pas le projet.** Elle sert à se faire la main
+et à financer la suite. Ce qui doit rendre PULSACITY rentable, ce sont des **logiciels
+métier vendus à l'abonnement** : du récurrent, adressé aux mêmes gens — TPE, PME,
+indépendants, artisans, commerçants.
+
+L'argument de fond, celui qui tient les lignes ensemble : **être l'outil de ceux d'en bas.**
+De ceux qui ne peuvent pas s'offrir les outils des grands groupes. Le nom se lit aussi comme
+cela — le cœur de la ville qui bat, celui sans lequel rien ne fonctionne pour les gens
+ordinaires.
+
+Deux conséquences, et elles tirent en sens contraire. Respecte les deux.
+
+1. **La direction artistique doit survivre au changement d'échelle.** Une identité de
+   prestataire de services — « l'artisan qui fait votre site » — se périmera à la première
+   ligne vendue à l'abonnement. Ce qui est décidé aujourd'hui doit encore tenir quand la
+   marque portera un logiciel avec un espace client et une facturation mensuelle. Une marque
+   de **fabricant d'outils** vieillit mieux ici qu'une marque de prestataire.
+2. **Rien de tout cela ne s'écrit sur la page.** Une ligne `coming` se limite à sa phrase :
+   le schéma refuse qu'elle ait des sections, et la règle 6 interdit d'annoncer ce qui
+   n'existe pas. Pas de « bientôt une suite d'outils », pas de feuille de route, pas de
+   promesse d'abonnement. Cet horizon informe **la forme**, jamais le texte.
+
+Dit autrement : dessine pour l'entreprise que PULSACITY sera, écris pour celle qu'elle est
+aujourd'hui.
+
 ## Le socle — la règle d'architecture qui prime sur tout
 
 **La page ne connaît aucune offre.** Elle rend des fichiers de contenu :
