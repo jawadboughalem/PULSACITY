@@ -102,6 +102,35 @@ export const SectionSchema = z.discriminatedUnion('type', [
 
 export type Section = z.infer<typeof SectionSchema>;
 
+/**
+ * The order journey, in the line's own words.
+ *
+ * `/commander`, `/commander/merci` and `/merci` describe what is being sold —
+ * what you get, when it goes live, what the invoice looks like. That is offer
+ * copy, so it lives here rather than in the pages (rule 1). The pages add one
+ * sentence of their own, built from `site.callbackDelay`, which is brand-level
+ * and stays the single source of that value.
+ */
+const JourneySchema = z.object({
+  /** `/commander` — the brief form. */
+  brief: z.object({ title: text(120), text: text(400) }),
+  /** `/commander/merci` — the brief is in, payment is still optional. */
+  sent: z.object({
+    title: text(120),
+    text: text(600),
+    payNowTitle: text(120),
+    payNowText: text(300),
+  }),
+  /** `/merci` — Stripe came back happy. */
+  paid: z.object({
+    title: text(120),
+    text: text(300),
+    steps: z.array(text(200)).min(1).max(6),
+  }),
+});
+
+export type Journey = z.infer<typeof JourneySchema>;
+
 /** What a line costs. Read server-side at checkout; never sent by the browser. */
 export const OfferSchema = z.object({
   priceHtCents: z.number().int().positive(),
@@ -120,6 +149,7 @@ export const LineSchema = z
     title: text(80),
     tagline: text(300),
     offer: OfferSchema.optional(),
+    journey: JourneySchema.optional(),
     sections: z.array(SectionSchema).default([]),
   })
   .superRefine((line, ctx) => {
@@ -128,6 +158,12 @@ export const LineSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Une ligne live doit avoir des sections.',
+        });
+      }
+      if (!line.journey) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Une ligne live doit décrire son parcours de commande (journey).',
         });
       }
       if (!line.offer) {

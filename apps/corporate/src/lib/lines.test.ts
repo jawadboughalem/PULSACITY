@@ -14,6 +14,16 @@ const validLive = {
   title: 'Une ligne',
   tagline: 'Une phrase.',
   offer: { priceHtCents: 50_000, productLabel: 'Une offre' },
+  journey: {
+    brief: { title: 'Demander', text: 'Trois minutes.' },
+    sent: {
+      title: 'Merci.',
+      text: 'On se parle bientôt.',
+      payNowTitle: 'Régler maintenant ?',
+      payNowText: 'Ce n’est pas nécessaire.',
+    },
+    paid: { title: 'Reçu.', text: 'Voici la suite.', steps: ['Une étape.'] },
+  },
   sections: [
     {
       type: 'hero',
@@ -42,6 +52,24 @@ describe('LineSchema', () => {
 
   it('refuses a live line without sections', () => {
     expect(LineSchema.safeParse({ ...validLive, sections: [] }).success).toBe(false);
+  });
+
+  it('refuses a live line that does not describe its order journey', () => {
+    // The three journey pages say what is being sold; leaving that to the
+    // components is what rule 1 forbids.
+    const { journey: _journey, ...withoutJourney } = validLive;
+    expect(LineSchema.safeParse(withoutJourney).success).toBe(false);
+  });
+
+  it('asks a line in preparation for no journey at all', () => {
+    const parsed = LineSchema.parse({
+      slug: 'a-venir',
+      order: 2,
+      status: 'coming',
+      title: 'À venir',
+      tagline: 'Une phrase.',
+    });
+    expect(parsed.journey).toBeUndefined();
   });
 
   it('refuses a live line that declares no offer', () => {

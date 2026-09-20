@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';
 
 import { OrderForm } from '@/components/order-form';
+import { SectionBand } from '@/components/sections/section-band';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
+import { SectionTitle } from '@/components/ui/section-title';
+import { Surface } from '@/components/ui/surface';
+import { TextLink } from '@/components/ui/text-link';
 import { liveLines } from '@/lib/lines';
 import { formatEurHt } from '@/lib/pricing';
 import { loadSite } from '@/lib/site-content';
@@ -21,7 +24,7 @@ export default async function BriefSentPage({
   searchParams: Promise<{ lead?: string }>;
 }) {
   const line = liveLines()[0];
-  if (!line?.offer) notFound();
+  if (!line?.offer || !line.journey) notFound();
 
   const site = loadSite();
   // Anything that is not a well-formed id is simply ignored.
@@ -29,39 +32,42 @@ export default async function BriefSentPage({
     .string()
     .uuid()
     .safeParse((await searchParams).lead).data;
+  const { sent } = line.journey;
 
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto w-full max-w-2xl px-4 py-20 sm:py-28">
-        <h1 className="text-title text-ink font-semibold">Merci.</h1>
-        <p className="text-lead text-ink-muted mt-4">Je vous appelle {site.callbackDelay}.</p>
-        <p className="text-ink-muted mt-3">
-          On cale ensemble les pages, le ton et les photos. Vous verrez votre site sur votre
-          téléphone avant de régler quoi que ce soit.
-        </p>
+      <main>
+        <SectionBand tone="ground" divided={false} width="narrow">
+          <div className="flex flex-col gap-6">
+            <SectionTitle as="h1" className="text-display">
+              {sent.title}
+            </SectionTitle>
+            <p className="text-lead text-ink-muted">Je vous appelle {site.callbackDelay}.</p>
+            <p className="text-ink-muted text-body">{sent.text}</p>
+          </div>
 
-        <div className="border-line bg-surface mt-12 rounded-lg border p-6">
-          <p className="text-ink font-medium">Vous préférez régler dès maintenant ?</p>
-          <p className="text-ink-muted mt-1 text-sm">
-            Ce n&apos;est pas nécessaire : vous pouvez attendre de voir votre site.
-          </p>
-          <OrderForm
-            offer={line.slug}
-            source="page"
-            {...(leadId ? { leadId } : {})}
-            label={`Régler maintenant — ${formatEurHt(line.offer.priceHtCents)}`}
-            variant="secondary"
-            className="mt-5"
-          />
-        </div>
+          <Surface
+            as="div"
+            tone="sunken"
+            className="border-line mt-title flex flex-col gap-2 rounded-lg border p-6 sm:p-8"
+          >
+            <p className="text-subtitle text-ink font-semibold">{sent.payNowTitle}</p>
+            <p className="text-ink-muted text-body-sm">{sent.payNowText}</p>
+            <OrderForm
+              offer={line.slug}
+              source="page"
+              {...(leadId ? { leadId } : {})}
+              label={`Régler maintenant — ${formatEurHt(line.offer.priceHtCents)}`}
+              variant="secondary"
+              className="mt-4"
+            />
+          </Surface>
 
-        <Link
-          href="/"
-          className="text-accent-ink mt-10 inline-block text-sm underline underline-offset-4"
-        >
-          ← Retour à l&apos;accueil
-        </Link>
+          <TextLink href="/" className="text-body-sm mt-title">
+            ← Retour à l’accueil
+          </TextLink>
+        </SectionBand>
       </main>
       <SiteFooter />
     </>

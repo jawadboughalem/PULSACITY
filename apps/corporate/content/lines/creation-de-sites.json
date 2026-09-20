@@ -10,6 +10,28 @@
     "extraChangeHtCents": 4900,
     "productLabel": "Site vitrine PULSACITY — 500 € HT tout compris"
   },
+  "journey": {
+    "brief": {
+      "title": "Demander mon site",
+      "text": "Trois minutes suffisent pour me décrire votre activité et le site que vous voulez."
+    },
+    "sent": {
+      "title": "Merci.",
+      "text": "On cale ensemble les pages, le ton et les photos. Vous verrez votre site sur votre téléphone avant de régler quoi que ce soit.",
+      "payNowTitle": "Vous préférez régler dès maintenant ?",
+      "payNowText": "Ce n’est pas nécessaire : vous pouvez attendre de voir votre site."
+    },
+    "paid": {
+      "title": "Votre paiement est bien reçu.",
+      "text": "Merci. Voici ce qui se passe maintenant.",
+      "steps": [
+        "Je réserve votre nom de domaine en .fr, à votre nom.",
+        "Je vous appelle pour relever vos dernières corrections.",
+        "Votre site est mis en ligne sous 72 h.",
+        "Votre facture vous est envoyée par Stripe."
+      ]
+    }
+  },
   "sections": [
     {
       "type": "hero",

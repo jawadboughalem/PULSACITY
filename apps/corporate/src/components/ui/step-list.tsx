@@ -3,7 +3,8 @@ import { cn } from '@/lib/utils';
 
 export interface Step {
   readonly title: string;
-  readonly text: string;
+  /** Optional: a step can be a single sentence with nothing to add. */
+  readonly text?: string;
 }
 
 /**
@@ -21,7 +22,7 @@ export function StepList({ steps, className }: { steps: readonly Step[]; classNa
         <li key={step.title} className="relative">
           <Dot size="md" className="ring-ground absolute left-[-32px] top-[0.4em] ring-4" />
           <h3 className="text-subtitle text-ink font-semibold">{step.title}</h3>
-          <p className="text-ink-muted text-body mt-1">{step.text}</p>
+          {step.text ? <p className="text-ink-muted text-body mt-1">{step.text}</p> : null}
         </li>
       ))}
     </ol>

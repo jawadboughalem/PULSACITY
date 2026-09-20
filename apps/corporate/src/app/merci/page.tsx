@@ -1,43 +1,43 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
+import { SectionBand } from '@/components/sections/section-band';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
+import { SectionTitle } from '@/components/ui/section-title';
+import { StepList } from '@/components/ui/step-list';
+import { TextLink } from '@/components/ui/text-link';
+import { liveLines } from '@/lib/lines';
 
 export const metadata: Metadata = {
   title: 'Merci',
   robots: { index: false, follow: false },
 };
 
-const NEXT_STEPS = [
-  'Je réserve votre nom de domaine en .fr, à votre nom.',
-  'Je vous appelle pour relever vos dernières corrections.',
-  'Votre site est mis en ligne sous 72 h.',
-  'Votre facture vous est envoyée par Stripe.',
-];
-
+/** Where Stripe sends a customer whose payment went through. */
 export default function MerciPage() {
+  const line = liveLines()[0];
+  if (!line?.journey) notFound();
+  const { paid } = line.journey;
+
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto flex w-full max-w-2xl flex-col px-4 py-20 sm:py-28">
-        <h1 className="text-title text-ink font-semibold">Votre paiement est bien reçu.</h1>
-        <p className="text-lead text-ink-muted mt-4">Merci. Voici ce qui se passe maintenant.</p>
+      <main>
+        <SectionBand tone="ground" divided={false} width="narrow">
+          <div className="flex flex-col gap-6">
+            <SectionTitle as="h1" className="text-display">
+              {paid.title}
+            </SectionTitle>
+            <p className="text-lead text-ink-muted">{paid.text}</p>
+          </div>
 
-        <ol className="mt-10 space-y-4">
-          {NEXT_STEPS.map((step, index) => (
-            <li key={step} className="flex gap-4">
-              <span className="bg-accent-soft text-accent-ink flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
-                {index + 1}
-              </span>
-              <span className="text-ink-muted">{step}</span>
-            </li>
-          ))}
-        </ol>
+          <StepList className="mt-title" steps={paid.steps.map((step) => ({ title: step }))} />
 
-        <Link href="/" className="text-accent-ink mt-12 text-sm underline underline-offset-4">
-          ← Retour à l&apos;accueil
-        </Link>
+          <TextLink href="/" className="text-body-sm mt-title">
+            ← Retour à l’accueil
+          </TextLink>
+        </SectionBand>
       </main>
       <SiteFooter />
     </>

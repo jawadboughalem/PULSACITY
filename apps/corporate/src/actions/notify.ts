@@ -9,7 +9,12 @@ import { notifyOwnerOfLead } from '@/lib/email';
 import { rateLimit } from '@/lib/rate-limit';
 
 export type NotifyState =
-  { status: 'idle' } | { status: 'sent'; message: string } | { status: 'error'; message: string };
+  | { status: 'idle' }
+  | { status: 'sent'; message: string }
+  /** `email` and `attempt` exist for the same reason as in the brief form: React
+   *  clears an uncontrolled form once its action resolves, so the address has to
+   *  come back and the form has to remount to take it. */
+  | { status: 'error'; message: string; email: string; attempt: number };
 
 const schema = z.object({
   email: z.string().trim().email('Adresse électronique invalide.'),
@@ -21,10 +26,13 @@ const schema = z.object({
 
 /** « Prévenez-moi » on a line still in preparation. Promises nothing else. */
 export async function notifyMeAction(
-  _previous: NotifyState,
+  previous: NotifyState,
   formData: FormData,
 ): Promise<NotifyState> {
   const sent: NotifyState = { status: 'sent', message: 'C’est noté. Je vous préviens.' };
+  const email = String(formData.get('email') ?? '');
+  const attempt = (previous.status === 'error' ? previous.attempt : 0) + 1;
+  const fail = (message: string): NotifyState => ({ status: 'error', message, email, attempt });
 
   if (String(formData.get('website') ?? '').trim() !== '') return sent;
 
@@ -33,20 +41,17 @@ export async function notifyMeAction(
     lineSlug: formData.get('lineSlug'),
   });
   if (!parsed.success) {
-    return {
-      status: 'error',
-      message: parsed.error.issues[0]?.message ?? 'Vérifiez votre saisie.',
-    };
+    return fail(parsed.error.issues[0]?.message ?? 'Vérifiez votre saisie.');
   }
 
   const store = await headers();
   const ip = store.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
   if (!rateLimit(`notify:${ip}`, { limit: 5, windowMs: 3_600_000 }).ok) {
-    return { status: 'error', message: 'Trop de tentatives. Réessayez plus tard.' };
+    return fail('Trop de tentatives. Réessayez plus tard.');
   }
 
   if (!isDatabaseConfigured()) {
-    return { status: 'error', message: 'Indisponible pour le moment. Réessayez plus tard.' };
+    return fail('Indisponible pour le moment. Réessayez plus tard.');
   }
 
   try {
@@ -58,7 +63,7 @@ export async function notifyMeAction(
     });
   } catch (error) {
     console.error('Enregistrement de la demande d’information impossible.', error);
-    return { status: 'error', message: 'Indisponible pour le moment. Réessayez plus tard.' };
+    return fail('Indisponible pour le moment. Réessayez plus tard.');
   }
 
   await notifyOwnerOfLead({
