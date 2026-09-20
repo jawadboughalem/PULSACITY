@@ -137,6 +137,20 @@ describe('the real content obeys the charter', () => {
     });
   }
 
+  it('offers every anchor the page is navigated by', () => {
+    // These are a public contract, not an implementation detail: the content links
+    // to them, and the smoke suite navigates by them. Dropping one leaves a link
+    // that still looks fine in the markup and goes nowhere — which is exactly how
+    // `#inclus` and `#prix` were lost when the sections were rewritten.
+    expect(anchorsOf(sections, empty).sort()).toEqual([
+      'faq',
+      'inclus',
+      'methode',
+      'prix',
+      'realisations',
+    ]);
+  });
+
   it('ends inked only because paper follows it', () => {
     // The line closes on its call to action, which is inked. The bottom edge of
     // the document is still paper: the "À venir" band and the footer come after,

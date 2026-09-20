@@ -30,10 +30,18 @@ const TONE_BY_TYPE: Record<Section['type'], Tone> = {
   cta: 'inverted',
 };
 
-/** Anchors the content links to, e.g. « Voir un site livré » → `#realisations`. */
+/**
+ * The anchor each band answers to.
+ *
+ * Two kinds of caller depend on these: the content, which links to them (« Voir un
+ * site livré » → `#realisations`), and the smoke suite, which navigates by them.
+ * Dropping one silently breaks a link that still looks fine in the markup.
+ */
 const ANCHOR_BY_TYPE: Partial<Record<Section['type'], string>> = {
+  features: 'inclus',
   showcase: 'realisations',
   steps: 'methode',
+  pricing: 'prix',
   faq: 'faq',
 };
 
