@@ -1,8 +1,6 @@
-import { Plus } from 'lucide-react';
-
+import { Disclosure } from '@/components/ui/disclosure';
+import { SectionTitle } from '@/components/ui/section-title';
 import type { Section } from '@/lib/lines';
-
-import { SectionShell } from './section-shell';
 
 type Faq = Extract<Section, { type: 'faq' }>;
 
@@ -18,20 +16,12 @@ export function FaqSection({ section }: { section: Faq }) {
   };
 
   return (
-    <SectionShell id="faq" title={section.title} width="narrow">
+    <div className="gap-title flex flex-col">
+      <SectionTitle>{section.title}</SectionTitle>
       <ul className="divide-line border-line divide-y border-y">
         {section.items.map((item) => (
           <li key={item.question}>
-            <details className="group py-5">
-              <summary className="text-ink flex cursor-pointer list-none items-start justify-between gap-6 font-medium marker:content-none">
-                {item.question}
-                <Plus
-                  aria-hidden="true"
-                  className="text-ink-faint mt-1 size-4 shrink-0 transition-transform duration-200 group-open:rotate-45"
-                />
-              </summary>
-              <p className="text-ink-muted mt-3 pr-10">{item.answer}</p>
-            </details>
+            <Disclosure summary={item.question}>{item.answer}</Disclosure>
           </li>
         ))}
       </ul>
@@ -41,6 +31,6 @@ export function FaqSection({ section }: { section: Faq }) {
         // Built from the same list the page renders, so the two cannot drift.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-    </SectionShell>
+    </div>
   );
 }

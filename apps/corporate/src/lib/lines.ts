@@ -42,10 +42,25 @@ const FeaturesSectionSchema = z.object({
   items: z.array(z.object({ title: text(80), text: text(600) })).min(1),
 });
 
-/** Renders `content/showcase.json`; disappears when that file is empty. */
+/**
+ * Renders `content/showcase.json`.
+ *
+ * `empty` is what the section says before a single site has been delivered — the
+ * page's main argument must not become a hole. It lives here rather than in a
+ * component because the page knows nothing about what is being sold. A line that
+ * omits it keeps the old behaviour: the section is left out rather than filled
+ * with something invented (rule 9).
+ */
 const ShowcaseSectionSchema = z.object({
   type: z.literal('showcase'),
   title: text(120),
+  empty: z
+    .object({
+      text: text(300),
+      /** What the delivered site will contain — named, not promised. */
+      items: z.array(text(60)).min(1).max(8),
+    })
+    .optional(),
 });
 
 const StepsSectionSchema = z.object({

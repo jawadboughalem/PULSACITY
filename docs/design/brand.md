@@ -354,19 +354,42 @@ suffisent à donner un relief à la page, sans une image de plus.
 5. **Le document commence et finit sur le papier.** Un bloc encré ne touche jamais le bord haut ni
    le bord bas.
 
-### 5.3 La partition de `creation-de-sites.json`
+### 5.3 La partition, dérivée et non listée
 
-| Section      | Surface            | Filet au-dessus | Pourquoi                                                               |
-| ------------ | ------------------ | --------------- | ---------------------------------------------------------------------- |
-| `hero`       | `ground`           | non             | C'est le haut du document.                                             |
-| `features`   | `ground`           | **oui**         | Même surface que la section précédente.                                |
-| `showcase`   | `surface-inverted` | non             | Bloc encré n° 1. Le changement de surface sépare.                      |
-| `steps`      | `ground`           | non             | On sort d'une autre surface.                                           |
-| `pricing`    | `surface-sunken`   | non             | L'encart creusé, sur `--container-narrow`. Il ne touche pas les bords. |
-| `faq`        | `ground`           | **oui**         | L'encart est posé sur le papier : on n'a pas changé de sol.            |
-| `cta`        | `surface-inverted` | non             | Bloc encré n° 2 : la sortie.                                           |
-| `à venir`    | `ground`           | **oui**         | —                                                                      |
-| pied de page | `ground`           | **oui**         | Le document finit sur le papier, comme il a commencé.                  |
+Le tableau ci-dessous n'est pas une consigne : c'est ce que produit la règle 2 appliquée au contenu
+réel. Il est calculé par `apps/corporate/src/lib/surface-score.ts`, et relu depuis le DOM de la page
+rendue. Une section ajoutée, déplacée ou retirée redonne une partition cohérente sans que personne
+ne retouche une liste.
+
+| Section      | Surface de la bande       | Filet au-dessus | Pourquoi                                               |
+| ------------ | ------------------------- | --------------- | ------------------------------------------------------ |
+| `hero`       | `ground`                  | non             | Haut du document.                                      |
+| `features`   | `ground`                  | **oui**         | Même surface que la bande précédente.                  |
+| `showcase`   | `surface-inverted`        | non             | La surface change : le changement est la séparation.   |
+| `steps`      | `ground`                  | non             | On sort de l'encre.                                    |
+| `pricing`    | `ground`, encart `sunken` | **oui**         | L'encart flotte sur le papier : le sol n'a pas changé. |
+| `faq`        | `ground`                  | **oui**         | Toujours le même sol.                                  |
+| `cta`        | `surface-inverted`        | non             | La surface change.                                     |
+| `à venir`    | `ground`                  | non             | On sort de l'encre.                                    |
+| pied de page | `ground`                  | **oui**         | Même surface. Le document finit sur le papier.         |
+
+> Deux lignes de ce tableau étaient fausses tant qu'il était écrit à la main : `pricing` ne prenait
+> pas de filet alors que sa bande est du papier posé sur du papier, et `à venir` en prenait un alors
+> qu'il sort d'un bloc encré. Écrire la règle plutôt que son résultat les a corrigées toutes seules.
+
+Le pied de page passe de `bg-surface` à `ground` : l'appel final en encre doit rester la dernière
+note forte, et le pied doit s'effacer derrière lui.
+
+------------ | ------------------ | --------------- | ---------------------------------------------------------------------- |
+| `hero` | `ground` | non | C'est le haut du document. |
+| `features` | `ground` | **oui** | Même surface que la section précédente. |
+| `showcase` | `surface-inverted` | non | Bloc encré n° 1. Le changement de surface sépare. |
+| `steps` | `ground` | non | On sort d'une autre surface. |
+| `pricing` | `surface-sunken` | non | L'encart creusé, sur `--container-narrow`. Il ne touche pas les bords. |
+| `faq` | `ground` | **oui** | L'encart est posé sur le papier : on n'a pas changé de sol. |
+| `cta` | `surface-inverted` | non | Bloc encré n° 2 : la sortie. |
+| `à venir` | `ground` | **oui** | — |
+| pied de page | `ground` | **oui** | Le document finit sur le papier, comme il a commencé. |
 
 Le pied de page passe de `bg-surface` à `ground` : l'appel final en encre doit rester la dernière
 note forte, et le pied doit s'effacer derrière lui.

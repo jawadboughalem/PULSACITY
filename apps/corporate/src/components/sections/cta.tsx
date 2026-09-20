@@ -1,25 +1,22 @@
 import Link from 'next/link';
 
 import { buttonVariants } from '@/components/ui/button';
+import { SectionTitle } from '@/components/ui/section-title';
 import type { Section } from '@/lib/lines';
-
-import { SectionShell } from './section-shell';
 
 type Cta = Extract<Section, { type: 'cta' }>;
 
+/** The way out, on ink. The second and last inked block of the page. */
 export function CtaSection({ section }: { section: Cta }) {
   return (
-    <SectionShell width="narrow">
-      <div className="reveal text-center">
-        <p className="text-title text-ink font-semibold">{section.title}</p>
-        <p className="text-ink-muted mt-3">{section.text}</p>
-        <Link
-          href={section.action.href}
-          className={buttonVariants({ size: 'lg', className: 'mt-8' })}
-        >
+    <div className="flex flex-col gap-6">
+      <SectionTitle className="text-display max-w-[18ch]">{section.title}</SectionTitle>
+      <p className="text-lead text-ink-muted max-w-narrow">{section.text}</p>
+      <div className="mt-2">
+        <Link href={section.action.href} className={buttonVariants({ size: 'lg' })}>
           {section.action.label}
         </Link>
       </div>
-    </SectionShell>
+    </div>
   );
 }
