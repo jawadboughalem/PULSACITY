@@ -382,7 +382,7 @@ pas.
 suit la graisse et dont l'alignement suit la fonte : il ne se règle pas. Il est remplacé par un
 `<span>` dont les dimensions sont exprimées en `em` :
 
-- diamètre `0.18em` de la hauteur de capitale ;
+- diamètre `0.18em`, relatif à la taille de police du mot ;
 - écart `0.10em` après le Y ;
 - posé sur la ligne de base.
 
@@ -480,8 +480,10 @@ aucune illustration, aucun rendu 3D.
 - **Toujours le haut de page, coupé net** à la hauteur de la fenêtre. Jamais un assemblage de
   défilement.
 - **La mobile est la principale** ; la bureau ne sert que si aucune mobile n'existe.
-- **Le cadre** : un filet `line`, 8 px de marge intérieure, rayon `--radius-phone` (téléphone) ou
-  `--radius-lg` (bureau). **Aucune ombre.**
+- **Le cadre** : un filet `line-strong`, 8 px de marge intérieure, rayon `--radius-phone`
+  (téléphone) ou `--radius-lg` (bureau). **Aucune ombre.** `line-strong` et non `line` : le cadre
+  doit se lire comme le bord d'un appareil, ce qu'un filet à 1,25:1 ne fait pas. C'est d'ailleurs ce
+  que dit déjà le rôle du jeton au §3.1.
 - **Posée sur l'encre**, la capture devient l'objet le plus clair de la page. C'est voulu : le
   produit est ce qui brille.
 - **Légende** : le nom, `secteur · ville`, le lien. Jamais un avis, jamais un chiffre.

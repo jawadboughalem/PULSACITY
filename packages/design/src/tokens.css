@@ -86,14 +86,32 @@
   --text-eyebrow--line-height: 1.2;
   --text-eyebrow--letter-spacing: 0.14em;
 
-  /* 8 px grid. Every dimension is a multiple of it, hairlines and type aside. */
-  --spacing: 0.5rem;
+  /*
+   * The spacing unit — Tailwind's default, and it has to stay there.
+   *
+   * `--spacing` is not the grid: it is the value ONE step is worth, and every
+   * numeric utility is `n × --spacing`. V0 set it to 0.5rem meaning "8 px grid",
+   * which instead doubled every spacing class already written against the 0.25rem
+   * default: `h-11` became 88 px rather than 44, `size-4` icons 32 px, `py-20`
+   * sections 160 px. The 8 px grid is honoured by using even steps — `p-2` is
+   * 8 px, `p-4` 16 px, `p-6` 24 px. `tokens.test.ts` pins this value.
+   */
+  --spacing: 0.25rem;
 
   /* Named rhythm, mobile first. `py-section`, `px-gutter`, `mt-title`. */
   --spacing-gutter: 1.5rem;
   --spacing-section: 5rem;
   --spacing-section-tight: 3rem;
   --spacing-title: 2.5rem;
+
+  /*
+   * The signature dot, in its two drawn roles: the list bullet and the step
+   * marker. Off the 8 px grid on purpose — like a hairline, a mark is sized by
+   * what the eye needs, not by the grid. The wordmark's dot is not here: it is
+   * expressed in `em`, relative to the cap height it sits beside.
+   */
+  --spacing-dot-sm: 5px;
+  --spacing-dot-md: 9px;
 
   /*
    * Container widths. `--container-*` is the namespace `max-w-*` reads.

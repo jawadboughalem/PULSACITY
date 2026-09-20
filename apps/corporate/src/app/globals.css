@@ -75,18 +75,19 @@
   }
 }
 
-/* Legal pages: Markdown converted to HTML, styled once here. */
+/* Legal pages: Markdown converted to HTML, styled once here — there is no React
+   element to hang a class on. Rendered by the `Prose` primitive. */
 .legal-prose {
-  @apply text-ink-muted text-[0.975rem] leading-relaxed;
+  @apply text-ink-muted text-body leading-relaxed;
 }
 .legal-prose h1 {
-  @apply text-title text-ink mb-6 font-semibold;
+  @apply font-display text-title text-ink mb-6;
 }
 .legal-prose h2 {
-  @apply text-ink mb-3 mt-10 text-xl font-semibold;
+  @apply text-subtitle text-ink mb-3 mt-10 font-semibold;
 }
 .legal-prose h3 {
-  @apply text-ink mb-2 mt-6 text-base font-semibold;
+  @apply text-body text-ink mb-2 mt-6 font-semibold;
 }
 .legal-prose p {
   @apply my-3;
