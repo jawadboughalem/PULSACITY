@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "generate": "drizzle-kit generate",
+    "check-url": "tsx src/check-url.ts",
     "migrate": "tsx src/migrate.ts",
     "seed": "tsx src/seed.ts",
     "studio": "drizzle-kit studio"
