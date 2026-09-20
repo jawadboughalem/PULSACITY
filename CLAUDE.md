@@ -1,39 +1,52 @@
 # PULSACITY — règles du monorepo
 
+## Le socle
+
+**La page ne connaît aucune offre.** Elle rend `content/site.json` (marque, prénom du fondateur,
+contact, mentions) et `content/lines/*.json`. Le paiement, les demandes et les sites hébergés sont
+génériques : un slug d'offre et un `payload` jsonb suffisent à les décrire.
+
+Conséquence pratique : **changer de concept ou ajouter une ligne, c'est changer des fichiers de
+contenu et des jetons de design — jamais le socle.** Une ligne live est une suite de sections
+typées (`hero`, `features`, `showcase`, `steps`, `pricing`, `faq`, `cta`) ; une ligne `coming` se
+limite à une phrase. Le code sait rendre des _types_ de section, il ignore ce qui est vendu.
+
+Si vous vous surprenez à écrire le nom d'une offre, un prix ou un argument de vente dans un
+composant, c'est que la chose appartient à `content/`.
+
 ## Produit
 
-PULSACITY vend **un seul produit, à un seul prix** : un site vitrine 5 pages
-(accueil, prestations, devis/tarifs, avis, contact-accès), mobile-first, rédigé à partir de la
-fiche Google du client et d'un court appel. Domaine .fr au nom du client, hébergement, SSL et
-sauvegardes inclus la première année. Mise en ligne sous 72 h après paiement.
+Une ligne est live aujourd'hui : **création de sites**, `content/lines/creation-de-sites.json`.
+`pulsa-store` et `logiciels-metier` sont annoncées, sans autre promesse qu'une phrase.
 
-- **500 € HT tout compris.** Année 2 et suivantes : 99 € HT/an. Modification hors forfait : 49 € HT.
-- Non inclus : e-commerce, création de logo, rédaction au-delà des 5 pages, photos professionnelles,
-  publicité.
-- Méthode : le site est fabriqué **avant** le premier contact, publié sur `demo.pulsacity.com/<slug>`,
-  envoyé par SMS, payé par lien Stripe, mis en ligne sous 72 h.
+Le ton de tous les textes visibles : **première personne du singulier**, vouvoiement, phrases
+courtes. Le prénom du fondateur vient de `content/site.json` ; vide, il n'est pas affiché.
 
 ## Règles non négociables
 
 1. **UI en français, code en anglais.** Tous les textes affichés sont en français (vouvoiement,
    phrases courtes, sobre, concret). Identifiants, noms de fichiers, commentaires, commits : anglais.
-2. **Montants en centimes**, toujours (`amount_total_cents`, `PRICE_HT_CENTS`…). Jamais de flottant
+2. **Montants en centimes**, toujours (`amount_total_cents`, `priceHtCents`…). Jamais de flottant
    pour de l'argent.
 3. **Timezone `Europe/Paris`** pour tout affichage de date. Stockage en UTC (`timestamptz`).
 4. **Aucune clé en dur.** Tout secret passe par une variable d'environnement listée dans
    `.env.example`. Aucun secret commité, aucune valeur de repli codée en dur.
 5. **`pnpm lint && pnpm typecheck && pnpm test` doit passer avant tout commit.**
-6. **Une démo ou un site ne provient que de données réelles** (fiche Google du prospect).
-   La fixture de développement (`pnpm db:seed`) est la seule exception : elle est explicitement
-   fictive, et le seed refuse de s'exécuter si `VERCEL_ENV=production`.
-7. **Prix unique, non négociable dans le code.** `PRICE_HT_CENTS = 50000` est une constante de
-   `apps/corporate/src/lib/pricing.ts`, jamais une variable d'environnement. Pas de code promo
+6. **Une démo, un site ou une référence ne provient que de données réelles.** La fixture de
+   développement (`pnpm db:seed`) est la seule exception : elle est explicitement fictive, et le
+   seed refuse de s'exécuter si `VERCEL_ENV=production`.
+7. **Le prix vit dans le fichier de la ligne**, `content/lines/<slug>.json`, et il est lu
+   **côté serveur** au moment du paiement. Jamais une variable d'environnement, jamais une valeur
+   envoyée par le navigateur. Une ligne a un prix : pas de code promo
    (`allow_promotion_codes: false`), pas d'option, pas de remise, pas de quantité variable.
 8. **Les démos sont toujours `noindex`** : balise meta robots, en-tête `X-Robots-Tag`, et
    `robots.txt` en `Disallow: /` sur l'hôte de démo. Seul `pulsacity.com` est indexable.
 9. **Aucun texte non remplacé.** Un test échoue si un gabarit, un contenu (`content/**`) ou une page
    légale rendue contient encore `{{...}}`. Une ligne dont la variable est vide est **omise**,
    jamais remplie par une valeur inventée.
+10. **Le design ne se change qu'en changeant les jetons** de `packages/design`. Aucune couleur, aucune
+    taille de police codée en dur dans un composant — ni dans `apps/corporate`, ni dans
+    `packages/templates`.
 
 ## Interdits de rédaction
 
@@ -49,12 +62,16 @@ apps/
   radar/            ← S2
   crm/              ← S2
 packages/
+  design/           ← V0 : jetons de design, seule source du look
   db/               ← V0 : Drizzle + Supabase Postgres
   templates/        ← V0 : contrat SiteContent + gabarit générique
   content-prompts/  ← S2
   sms/              ← S2
   billing/          ← S2
 ```
+
+Le contenu de la page vit à part, dans `apps/corporate/content/` : `site.json`, `lines/*.json`,
+`showcase.json` et `legal/*.md`.
 
 Ne crée pas les paquets S2 tant qu'ils ne sont pas demandés, mais respecte cette arborescence.
 

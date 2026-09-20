@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { contactDetails } from '@/lib/server-env';
+import { loadSite } from '@/lib/site-content';
 
 export const metadata: Metadata = {
   title: 'Commande indisponible',
@@ -10,21 +10,24 @@ export const metadata: Metadata = {
 
 /** Shown when the payment link cannot be created. */
 export default function CommandeIndisponiblePage() {
-  const contact = contactDetails();
+  const site = loadSite();
 
   return (
     <main className="mx-auto flex min-h-[60vh] w-full max-w-lg flex-col justify-center px-4 py-20">
-      <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
+      <h1 className="text-ink text-2xl font-semibold tracking-tight">
         La commande est momentanément indisponible.
       </h1>
-      <p className="mt-3 text-neutral-600">
+      <p className="text-ink-muted mt-3">
         Rien n&apos;a été débité. Réessayez dans quelques instants.
       </p>
-      {contact.email ? (
-        <p className="mt-3 text-neutral-600">
+      {site.contact.email ? (
+        <p className="text-ink-muted mt-3">
           Vous pouvez aussi nous écrire à{' '}
-          <a href={`mailto:${contact.email}`} className="text-accent underline underline-offset-2">
-            {contact.email}
+          <a
+            href={`mailto:${site.contact.email}`}
+            className="text-accent-ink underline underline-offset-4"
+          >
+            {site.contact.email}
           </a>
           .
         </p>

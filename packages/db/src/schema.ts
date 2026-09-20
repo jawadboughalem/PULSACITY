@@ -19,6 +19,8 @@ import {
 
 export const siteStatusEnum = pgEnum('site_status', ['demo', 'sold', 'live', 'archived']);
 export const leadStatusEnum = pgEnum('lead_status', ['new', 'contacted', 'converted', 'rejected']);
+/** What a visitor asked for. `order_brief` is a filled brief, `notify` a line still in preparation. */
+export const leadKindEnum = pgEnum('lead_kind', ['order_brief', 'notify', 'contact']);
 export const orderStatusEnum = pgEnum('order_status', ['paid']);
 export const domainTypeEnum = pgEnum('domain_type', ['corporate', 'demo', 'client']);
 export const vatModeEnum = pgEnum('vat_mode', ['franchise', 'standard']);
@@ -60,23 +62,38 @@ export const sites = pgTable(
   ],
 );
 
-/** Inbound request from the « Votre site est peut-être déjà prêt » form. */
+/**
+ * Any inbound request, whatever the offer line.
+ *
+ * `kind` says what was asked and therefore which fields are filled: a brief carries a
+ * business and a phone, a « prévenez-moi » carries only an e-mail. Everything specific
+ * to one form lives in `payload`, so a new line needs no migration.
+ */
 export const leads = pgTable(
   'leads',
   {
     id: uuid('id')
       .primaryKey()
       .default(sql`gen_random_uuid()`),
-    businessName: text('business_name').notNull(),
+    kind: leadKindEnum('kind').notNull(),
+    /** The offer line this request is about, e.g. `creation-de-sites`. */
+    lineSlug: text('line_slug'),
+    businessName: text('business_name'),
     city: text('city'),
     /** Normalised to E.164 before insertion. */
-    phoneE164: text('phone_e164').notNull(),
+    phoneE164: text('phone_e164'),
     email: text('email'),
-    source: text('source').notNull(),
+    /** The form's own answers: pages wanted, sites liked, free description. */
+    payload: jsonb('payload').notNull().default({}),
     status: leadStatusEnum('status').notNull().default('new'),
+    /** Set once this request turned into a paid order. */
+    convertedOrderId: uuid('converted_order_id'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [index('leads_created_at_idx').on(table.createdAt)],
+  (table) => [
+    index('leads_created_at_idx').on(table.createdAt),
+    index('leads_kind_idx').on(table.kind),
+  ],
 );
 
 /** One paid Stripe Checkout Session. Written only by the webhook. */
@@ -87,6 +104,10 @@ export const orders = pgTable(
       .primaryKey()
       .default(sql`gen_random_uuid()`),
     stripeSessionId: text('stripe_session_id').notNull(),
+    /** Which offer line was bought. Read back from the line's content file. */
+    offerSlug: text('offer_slug').notNull(),
+    /** The brief this order came from, when the buyer filled one first. */
+    leadId: uuid('lead_id'),
     paymentIntentId: text('payment_intent_id'),
     amountTotalCents: integer('amount_total_cents').notNull(),
     currency: text('currency').notNull(),
@@ -111,6 +132,7 @@ export const stripeEvents = pgTable('stripe_events', {
 
 export type Site = typeof sites.$inferSelect;
 export type NewSite = typeof sites.$inferInsert;
+export type LeadKind = (typeof leadKindEnum.enumValues)[number];
 export type Lead = typeof leads.$inferSelect;
 export type NewLead = typeof leads.$inferInsert;
 export type Order = typeof orders.$inferSelect;

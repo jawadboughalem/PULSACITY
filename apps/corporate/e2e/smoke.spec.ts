@@ -20,20 +20,30 @@ test.describe('page pulsacity.com', () => {
   test('affiche la promesse, le prix et les sections attendues', async ({ page }) => {
     await goto(page, '/');
 
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Le site de votre entreprise, déjà prêt.',
-    );
-    await expect(page.locator('#inclus')).toContainText('Ce qui est inclus');
-    await expect(page.locator('#methode')).toContainText('Comment ça marche');
-    await expect(page.locator('#mon-site')).toContainText('Votre site est peut-être déjà prêt');
+    // The texts come from content/lines/creation-de-sites.json.
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Votre site, fait pour vous.');
+    await expect(page.locator('#inclus')).toContainText('Vos mots');
+    await expect(page.locator('#methode')).toContainText('Comment ça se passe');
     await expect(page.locator('#prix')).toContainText('500');
     await expect(page.locator('#faq')).toContainText('Questions fréquentes');
+    await expect(page.locator('#a-venir')).toContainText('En préparation');
     await expect(page.locator('#contact')).toBeVisible();
   });
 
-  test('ne propose ni option ni remise', async ({ page }) => {
+  test('sert une page par ligne live', async ({ page }) => {
+    const response = await goto(page, '/creation-de-sites');
+    expect(response.status()).toBe(200);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Votre site, fait pour vous.');
+  });
+
+  test('404 sur une ligne qui n’est pas encore ouverte', async ({ page }) => {
+    const response = await goto(page, '/pulsa-store');
+    expect(response.status()).toBe(404);
+  });
+
+  test('annonce un prix unique', async ({ page }) => {
     await goto(page, '/');
-    await expect(page.locator('#prix')).toContainText("pas d'option, pas de remise");
+    await expect(page.locator('#prix')).toContainText('Un seul prix, pas de surprise.');
   });
 
   test('donne accès aux pages légales, sans texte non remplacé', async ({ page }) => {
@@ -44,15 +54,15 @@ test.describe('page pulsacity.com', () => {
     await expect(page.locator('body')).not.toContainText('{{');
   });
 
-  test('le formulaire de recherche répond', async ({ page }) => {
-    await goto(page, '/#mon-site');
-    await page.getByLabel('Nom de votre entreprise').fill('Entreprise Introuvable Xyz');
-    await page.getByRole('button', { name: 'Voir si mon site est déjà prêt' }).click();
-    // Either the request form opens, or the search reports itself unavailable.
-    // Both are correct; a blank screen is not.
-    await expect(
-      page.locator('text=/pas encore préparé|momentanément indisponible/').first(),
-    ).toBeVisible();
+  test('le formulaire de demande est atteignable et complet', async ({ page }) => {
+    await goto(page, '/');
+    await page.getByRole('link', { name: 'Demander mon site' }).first().click();
+    await page.waitForURL(/\/commander$/);
+
+    await expect(page.getByLabel(/Nom de votre entreprise/)).toBeVisible();
+    await expect(page.getByLabel(/Votre activité/)).toBeVisible();
+    await expect(page.getByLabel(/Téléphone/)).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Envoyer ma demande' })).toBeVisible();
   });
 
   test('est indexable et publie son sitemap', async ({ page }) => {
@@ -110,8 +120,9 @@ test.describe('routage par hôte', () => {
 test.describe('paiement', () => {
   test.skip(!stripeConfigured, 'STRIPE_SECRET_KEY absente : test ignoré.');
 
-  test('le bouton « Commander » mène à checkout.stripe.com', async ({ page }) => {
-    await goto(page, '/#prix');
+  test('le règlement immédiat mène à checkout.stripe.com', async ({ page }) => {
+    await goto(page, '/commander/merci');
+    await page.getByRole('button', { name: /Régler maintenant/ }).click();
     await page
       .locator('#prix')
       .getByRole('button', { name: /Commander/ })

@@ -4,6 +4,7 @@ import type Stripe from 'stripe';
 import {
   insertOrder,
   isDatabaseConfigured,
+  markLeadConverted,
   markSiteSold,
   recordStripeEvent,
   releaseStripeEvent,
@@ -42,13 +43,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
   const businessName = customFieldValue(session, 'businessName');
   const city = customFieldValue(session, 'city');
   const siteId = session.metadata?.site_id;
+  const leadId = session.metadata?.lead_id;
   const demoSlug = session.metadata?.demo_slug;
+  const offerSlug = session.metadata?.offer_slug ?? 'inconnu';
   const email = session.customer_details?.email ?? null;
   const phone = session.customer_details?.phone ?? null;
   const vatMode = vatModeOf(session);
 
   const order = await insertOrder({
     stripeSessionId: session.id,
+    offerSlug,
+    leadId: leadId ?? null,
     paymentIntentId: idOf(session.payment_intent) ?? null,
     amountTotalCents: session.amount_total ?? 0,
     currency: session.currency ?? 'eur',
@@ -71,6 +76,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
     await markSiteSold(siteId, order.createdAt);
   }
 
+  if (leadId) await markLeadConverted(leadId, order.id);
+
   await notifyOwnerOfSale({
     businessName: businessName ?? null,
     city: city ?? null,
@@ -78,6 +85,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
     email,
     amountCents: order.amountTotalCents,
     vatMode,
+    offerSlug,
     demoSlug: demoSlug ?? null,
   });
 

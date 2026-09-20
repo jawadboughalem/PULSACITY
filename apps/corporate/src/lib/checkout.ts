@@ -1,25 +1,31 @@
 /**
  * Stripe Checkout Session parameters.
  *
- * A pure builder, so both VAT modes are unit-tested without touching the network.
- * One product, one price, quantity 1, no promotion code (CLAUDE.md rule 7).
+ * A pure builder: the offer is handed in, already read from its content file, so both
+ * VAT modes are unit-tested without touching the network. Quantity is always 1 and
+ * promotion codes are always off — a line has one price.
  */
 import type Stripe from 'stripe';
 
-import { CURRENCY, PRICE_HT_CENTS, PRODUCT_NAME, VAT_FRANCHISE_NOTICE } from './pricing';
+import type { Offer } from './lines';
+import { CURRENCY, VAT_FRANCHISE_NOTICE } from './pricing';
 import type { VatMode } from './vat';
 
 export interface CheckoutInput {
-  /** Where the order started: the corporate page, or a prepared demo. */
+  /** The offer line being bought, e.g. `creation-de-sites`. */
+  offerSlug: string;
+  /** Where the order started: a page of the site, or a prepared demo. */
   source: 'page' | 'demo';
   demoSlug?: string | undefined;
   siteId?: string | undefined;
-  /** Prefills the Stripe custom field; the buyer can still correct it. */
+  /** The brief this order follows, when the buyer filled one. */
+  leadId?: string | undefined;
   businessName?: string | undefined;
   city?: string | undefined;
 }
 
 export interface CheckoutConfig {
+  offer: Offer;
   vatMode: VatMode;
   /** Required when `vatMode` is `standard`: the 20 % exclusive Stripe tax rate. */
   taxRateId?: string | undefined;
@@ -62,11 +68,13 @@ export function buildCheckoutSessionParams(
   const taxRates = config.vatMode === 'standard' ? [config.taxRateId as string] : undefined;
 
   const metadata: Record<string, string> = {
+    offer_slug: input.offerSlug,
     source: input.source,
     vat_mode: config.vatMode,
   };
   if (input.demoSlug) metadata.demo_slug = input.demoSlug;
   if (input.siteId) metadata.site_id = input.siteId;
+  if (input.leadId) metadata.lead_id = input.leadId;
 
   return {
     mode: 'payment',
@@ -76,13 +84,13 @@ export function buildCheckoutSessionParams(
         quantity: 1,
         price_data: {
           currency: CURRENCY,
-          unit_amount: PRICE_HT_CENTS,
-          product_data: { name: PRODUCT_NAME },
+          unit_amount: config.offer.priceHtCents,
+          product_data: { name: config.offer.productLabel },
         },
         ...(taxRates ? { tax_rates: taxRates } : {}),
       },
     ],
-    // One price, no discount: promotion codes stay off.
+    // One price per line: promotion codes stay off.
     allow_promotion_codes: false,
     phone_number_collection: { enabled: true },
     custom_fields: [

@@ -35,10 +35,6 @@ export function legalIdentity(): LegalIdentity {
   };
 }
 
-export function contactDetails(): { email?: string; phone?: string } {
-  return { email: read('CONTACT_EMAIL'), phone: read('CONTACT_PHONE') };
-}
-
 export function ownerEmail(): string | undefined {
   return read('OWNER_EMAIL');
 }

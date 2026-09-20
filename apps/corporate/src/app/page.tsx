@@ -1,25 +1,22 @@
-import { Faq } from '@/components/sections/faq';
-import { Hero } from '@/components/sections/hero';
-import { HowItWorks } from '@/components/sections/how-it-works';
-import { Included } from '@/components/sections/included';
-import { Pricing } from '@/components/sections/pricing';
-import { Showcase } from '@/components/sections/showcase';
-import { SiteCheckSection } from '@/components/sections/site-check-section';
+import { ComingLinesSection } from '@/components/sections/coming-lines';
+import { RenderSections } from '@/components/sections/render-section';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
+import { comingLines, liveLines } from '@/lib/lines';
 
+/**
+ * The home page is the live lines rendered one after another, then the lines still
+ * in preparation. It knows no offer of its own.
+ */
 export default function HomePage() {
   return (
     <>
       <SiteHeader />
       <main>
-        <Hero />
-        <Included />
-        <Showcase />
-        <HowItWorks />
-        <SiteCheckSection />
-        <Pricing />
-        <Faq />
+        {liveLines().map((line) => (
+          <RenderSections key={line.slug} sections={line.sections} />
+        ))}
+        <ComingLinesSection lines={comingLines()} />
       </main>
       <SiteFooter />
     </>
