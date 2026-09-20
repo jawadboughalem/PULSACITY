@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import { Wordmark } from '@/components/wordmark';
+import { Logo } from '@/components/wordmark';
 
 /** Sober 404: unknown host, unknown page. */
 export default function NotFound() {
   return (
     <main className="mx-auto flex min-h-[70vh] w-full max-w-lg flex-col justify-center px-4 py-20">
-      <Wordmark className="text-sm" />
+      <Logo markClassName="size-6" wordmarkClassName="text-sm" />
       <h1 className="text-title text-ink mt-4 font-semibold">Cette page n&apos;existe pas.</h1>
       <p className="text-ink-muted mt-3">
         Le lien est peut-être incomplet ou la page a été retirée.

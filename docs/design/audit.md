@@ -39,14 +39,17 @@ endroits qui pourraient montrer le produit (`showcase`, `steps`, le héros) n'en
 aucun. La règle 6 est respectée — aucune image inventée — mais rien n'a été conçu pour
 l'état « pas encore de capture », qui est justement l'état actuel.
 
-### 3. Le favicon est d'une autre marque
+### 3. Le favicon est d'une autre marque — corrigé
 
 `app/icon.svg` : un carré bleu `#2a4a9c` avec un « P » blanc. La palette du produit est
 neutre chaude et corail. Ce bleu n'apparaît nulle part ailleurs — ni dans les jetons, ni
 dans l'image de partage, ni dans le logotype. C'est le premier signe de marque que voit un
 visiteur, dans son onglet, et il contredit tout le reste.
 
-### 4. L'image de partage écrit le prix en dur
+> **Corrigé.** `icon.svg` et `apple-icon.png` sont désormais produits par
+> `pnpm brand:assets` à partir de la marque. Voir [`logo.md`](./logo.md).
+
+### 4. L'image de partage écrit le prix en dur — corrigé
 
 `app/opengraph-image.tsx` lit bien la marque et le titre du héros depuis le contenu, puis :
 
@@ -58,6 +61,12 @@ Trois manquements d'un coup : le prix vit dans `content/lines/<slug>.json` (règ
 ne connaît aucune offre (le socle), et les couleurs `INK`, `ACCENT`, `GROUND` y sont
 recopiées en hexadécimal au lieu de venir des jetons (règle 10). Le jour où le prix change,
 l'aperçu partagé sur WhatsApp continuera d'afficher l'ancien.
+
+> **Corrigé.** Le prix vient de l'offre de la ligne et disparaît si elle n'en déclare pas ;
+> les couleurs viennent de `@pulsacity/design/tokens`. En le faisant, on a découvert que les
+> trois valeurs recopiées à la main **ne correspondaient pas aux jetons** : `#2a2522` au lieu
+> de `#171310` pour l'encre, `#e2603c` au lieu de `#d33e25` pour le corail. L'image de partage
+> était dessinée dans d'autres couleurs que le site.
 
 ## Ce qui manque en tant que système
 
@@ -88,6 +97,10 @@ Conséquence directe, la règle 10 est déjà entamée :
 | `2.4s`, `duration-200`                   | `globals.css`, `sections/faq.tsx`                                      |
 | `size-8` / `size-7`                      | `sections/steps.tsx` et `merci/page.tsx` — le même objet, deux tailles |
 | `max-w-5xl` / `3xl` / `2xl` / `lg`       | choisis page par page, sans règle                                      |
+
+Les couleurs hexadécimales de `icon.svg` et de `opengraph-image.tsx` ont quitté cette liste :
+elles viennent maintenant de `packages/design/src/tokens.ts`, dérivé des mêmes valeurs OKLCH
+que `tokens.css`.
 
 Aucune de ces valeurs n'est grave isolément. Ensemble, elles signifient qu'un changement de
 look ne se fera pas dans un fichier.

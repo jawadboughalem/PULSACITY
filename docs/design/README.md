@@ -11,6 +11,7 @@ Rien ici n'est du code. Le code que ces prompts produisent va dans `packages/des
 | Fichier                                  | Rôle                                                              |
 | ---------------------------------------- | ----------------------------------------------------------------- |
 | [`audit.md`](./audit.md)                 | Ce qui ne va pas aujourd'hui, avec les fichiers et les lignes     |
+| [`logo.md`](./logo.md)                   | La marque : idée, fichiers, règles d'emploi, ce qu'on ne fait pas |
 | `prompts/00-context.md`                  | Le bloc de contexte à coller **avant chaque** prompt              |
 | `prompts/01-brand-charter.md`            | Charte graphique : idée de marque, couleur, typo, logo, motif     |
 | `prompts/02-design-tokens.md`            | La charte traduite en `packages/design` — la seule source du look |

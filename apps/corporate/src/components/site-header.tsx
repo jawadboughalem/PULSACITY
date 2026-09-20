@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { Wordmark } from '@/components/wordmark';
+import { Logo } from '@/components/wordmark';
 import { buttonVariants } from '@/components/ui/button';
 import { liveLines } from '@/lib/lines';
 
@@ -13,7 +13,7 @@ export function SiteHeader() {
     <header className="border-line bg-ground/90 sticky top-0 z-50 border-b backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-4 px-4">
         <Link href="/" aria-label="PULSACITY, accueil">
-          <Wordmark className="text-base" />
+          <Logo />
         </Link>
 
         {lines.length > 1 ? (

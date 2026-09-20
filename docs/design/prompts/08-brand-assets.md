@@ -14,7 +14,11 @@ premières et les seules images que voit un prospect.
 
 Deux d'entre elles sont aujourd'hui fausses.
 
-## 1. L'icône est d'une autre marque
+## 1. L'icône est d'une autre marque — fait
+
+> **Livré.** La marque existe, et `pnpm brand:assets` produit `icon.svg` et
+> `apple-icon.png`. Cette section reste comme trace de ce qui était demandé ; ce qui suit
+> décrit l'état d'avant.
 
 `apps/corporate/src/app/icon.svg` :
 
@@ -43,7 +47,10 @@ pas les variables du site ; et le `viewBox` doit tenir de 16 à 512 px sans reto
 Vérifie le résultat à 16 px sur fond clair **et** sur fond sombre : les navigateurs
 n'appliquent pas tous le même fond d'onglet.
 
-## 2. L'image de partage écrit le prix en dur
+## 2. L'image de partage écrit le prix en dur — fait
+
+> **Livré.** Le prix vient de l'offre de la ligne, les couleurs des jetons. Reste ouverte la
+> question des polices, ci-dessous : l'image sort toujours en police système.
 
 `apps/corporate/src/app/opengraph-image.tsx` lit bien la marque et le titre du héros dans le
 contenu, puis affiche :

@@ -1,11 +1,11 @@
-import { Wordmark } from '@/components/wordmark';
+import { Logo } from '@/components/wordmark';
 import { CORPORATE_HOST, corporateOrigin } from '@/lib/env';
 
 /** Shown when a demo is unknown, expired, or already sold. */
 export function DemoUnavailable() {
   return (
     <main className="mx-auto flex min-h-[70vh] w-full max-w-lg flex-col justify-center px-4 py-20">
-      <Wordmark className="text-sm" />
+      <Logo markClassName="size-6" wordmarkClassName="text-sm" />
       <h1 className="text-title text-ink mt-4 font-semibold">
         Cette démo n&apos;est plus disponible.
       </h1>

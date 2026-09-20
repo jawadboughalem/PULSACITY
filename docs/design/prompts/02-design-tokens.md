@@ -116,7 +116,7 @@ Remplace, dans `apps/corporate` et `packages/templates`, chaque valeur du tablea
 son jeton. Aucun changement visuel n'est attendu à cette étape, **sauf** ceux que la charte
 impose explicitement — et tu les listes alors un par un.
 
-Deux cas particuliers, à traiter ici et pas ailleurs :
+Deux cas particuliers, **déjà traités** — gardés ici pour que la démarche reste lisible :
 
 - `app/icon.svg` est un carré **bleu** `#2a4a9c`, hors charte. Il vient de la charte
   produite en `01`. Le prompt `08` s'occupe du jeu complet d'icônes ; ici, au minimum, la
