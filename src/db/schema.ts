@@ -31,7 +31,7 @@ export const user = pgTable("user", {
     .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),
-});
+}).enableRLS();
 
 export const session = pgTable(
   "session",
@@ -50,7 +50,7 @@ export const session = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
   },
   (table) => [index("session_userId_idx").on(table.userId)],
-);
+).enableRLS();
 
 export const account = pgTable(
   "account",
@@ -74,7 +74,7 @@ export const account = pgTable(
       .notNull(),
   },
   (table) => [index("account_userId_idx").on(table.userId)],
-);
+).enableRLS();
 
 export const verification = pgTable(
   "verification",
@@ -90,7 +90,7 @@ export const verification = pgTable(
       .notNull(),
   },
   (table) => [index("verification_identifier_idx").on(table.identifier)],
-);
+).enableRLS();
 
 export const planEnum = pgEnum("plan", PLAN_IDS);
 
@@ -152,7 +152,7 @@ export const spaces = pgTable(
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
   (table) => [index("spaces_user_id_idx").on(table.userId)],
-);
+).enableRLS();
 
 export const connections = pgTable(
   "connections",
@@ -169,7 +169,7 @@ export const connections = pgTable(
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
   (table) => [index("connections_space_id_idx").on(table.spaceId)],
-);
+).enableRLS();
 
 export const products = pgTable(
   "products",
@@ -185,7 +185,7 @@ export const products = pgTable(
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
   (table) => [unique("products_space_id_slug_unique").on(table.spaceId, table.slug)],
-);
+).enableRLS();
 
 export const productRefs = pgTable(
   "product_refs",
@@ -206,7 +206,7 @@ export const productRefs = pgTable(
     ),
     index("product_refs_product_id_idx").on(table.productId),
   ],
-);
+).enableRLS();
 
 export const customers = pgTable(
   "customers",
@@ -225,7 +225,7 @@ export const customers = pgTable(
     unique("customers_space_id_email_unique").on(table.spaceId, table.email),
     check("customers_email_lowercase_check", sql`${table.email} = lower(${table.email})`),
   ],
-);
+).enableRLS();
 
 export const purchases = pgTable(
   "purchases",
@@ -254,7 +254,7 @@ export const purchases = pgTable(
     index("purchases_product_id_idx").on(table.productId),
     index("purchases_connection_id_idx").on(table.connectionId),
   ],
-);
+).enableRLS();
 
 export const reviewRequests = pgTable(
   "review_requests",
@@ -279,7 +279,7 @@ export const reviewRequests = pgTable(
       table.reminderScheduledAt,
     ),
   ],
-);
+).enableRLS();
 
 export const testimonials = pgTable(
   "testimonials",
@@ -312,7 +312,7 @@ export const testimonials = pgTable(
       sql`${table.source} <> 'form' or (${table.consentAt} is not null and ${table.consentText} is not null)`,
     ),
   ],
-);
+).enableRLS();
 
 export type WidgetSettings = {
   theme?: "light" | "dark" | "auto";
@@ -335,7 +335,7 @@ export const widgets = pgTable(
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
   (table) => [index("widgets_space_id_idx").on(table.spaceId)],
-);
+).enableRLS();
 
 export const webhookEvents = pgTable(
   "webhook_events",
@@ -357,10 +357,10 @@ export const webhookEvents = pgTable(
       table.receivedAt,
     ),
   ],
-);
+).enableRLS();
 
 export const stripeEvents = pgTable("stripe_events", {
   id: text("id").primaryKey(),
   type: text("type").notNull(),
   processedAt: timestamptz("processed_at").notNull().defaultNow(),
-});
+}).enableRLS();
