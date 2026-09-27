@@ -1,117 +1,39 @@
 # PULSACITY
 
-Monorepo de PULSACITY. V0 : la page `pulsacity.com`, l'hôte de démonstration
-`demo.pulsacity.com` et le paiement Stripe.
+Vos ventes deviennent des témoignages, automatiquement.
 
-> Les règles de développement (UI en français, montants en centimes, prix unique,
-> démos `noindex`…) sont dans [`CLAUDE.md`](./CLAUDE.md). Lisez-le avant de contribuer.
+## Installer et lancer
 
-## Contenu
-
-| Paquet               | Rôle                                                            |
-| -------------------- | --------------------------------------------------------------- |
-| `apps/corporate`     | Next.js 15 (App Router) : page corporate, hôte démo, API Stripe |
-| `packages/db`        | Schéma Drizzle et requêtes (Supabase Postgres)                  |
-| `packages/templates` | Contrat `SiteContent` (zod) et gabarit générique `renderSite`   |
-
-`factory`, `radar`, `crm`, `content-prompts`, `sms` et `billing` arrivent en S2.
-
-## Démarrer
+Node.js 22.12 ou plus récent, et pnpm 10 (`corepack enable` suffit : la version est fixée dans
+`package.json`).
 
 ```bash
-nvm use            # Node 22 (.nvmrc)
 pnpm install
-cp .env.example .env.local   # puis remplissez les valeurs
-pnpm db:migrate    # nécessite DATABASE_URL
-pnpm db:seed       # fixture de développement (refusée en production)
+cp .env.example .env.local
 pnpm dev
 ```
 
-Le routage dépend du nom d'hôte. En développement, ouvrez :
-
-- <http://pulsacity.localhost:3000> — la page corporate ;
-- <http://demo.localhost:3000/garage-exemple-fixture> — la démo de la fixture.
-
-et réglez dans `.env.local` :
-
-```dotenv
-NEXT_PUBLIC_CORPORATE_HOST=pulsacity.localhost:3000
-NEXT_PUBLIC_DEMO_HOST=demo.localhost:3000
-```
-
-Les navigateurs récents résolvent `*.localhost` sans toucher à `/etc/hosts`.
-
-## Matrice de routage
-
-| Hôte                        | Cible                                             |
-| --------------------------- | ------------------------------------------------- |
-| `pulsacity.com`             | page corporate                                    |
-| `www.pulsacity.com`         | 308 vers l'apex, même chemin                      |
-| `pulsacity.fr`, `www.*.fr`  | 301 vers `https://pulsacity.com`, même chemin     |
-| `demo.pulsacity.com/<slug>` | démo (réécriture interne, toujours `noindex`)     |
-| `*.vercel.app`              | page corporate (déploiements de prévisualisation) |
-| tout autre hôte             | recherche dans `domains` → 404 sobre en V0        |
-
-La matrice est une fonction pure (`src/lib/host-routing.ts`) couverte par des tests.
-
 ## Commandes
 
-```bash
-pnpm lint          # ESLint + Prettier
-pnpm typecheck     # TypeScript strict
-pnpm test          # Vitest (unitaires)
-pnpm build         # build de production
-pnpm test:e2e      # Playwright (construit puis démarre l'application)
-```
+| Commande            | Effet                                                              |
+| ------------------- | ------------------------------------------------------------------ |
+| `pnpm dev`          | Serveur de développement, http://localhost:3000                    |
+| `pnpm build`        | Build du widget, puis build de production                          |
+| `pnpm build:widget` | Compile le widget vers `public/w.js`                               |
+| `pnpm lint`         | ESLint                                                             |
+| `pnpm typecheck`    | TypeScript strict                                                  |
+| `pnpm test`         | Tests Vitest                                                       |
+| `pnpm db:generate`  | Génère une migration depuis `src/db/schema.ts`                     |
+| `pnpm db:migrate`   | Applique les migrations sur `DATABASE_URL` (lit `.env.local`)      |
 
-`pnpm lint && pnpm typecheck && pnpm test` doit passer avant tout commit.
+Pour voir le widget : `pnpm build:widget`, puis ouvrir `widget/test.html` dans un navigateur.
 
-Les tests Playwright ont besoin d'un navigateur :
+## Variables d'environnement
 
-```bash
-pnpm --filter @pulsacity/corporate exec playwright install chromium
-```
+La liste complète est dans `.env.example`. Celles qui demandent une précision :
 
-Sur une image qui fournit déjà Chromium, indiquez son chemin plutôt que de le
-télécharger : `CHROMIUM_EXECUTABLE_PATH=/chemin/vers/chrome pnpm test:e2e`.
-
-## Base de données
-
-Connexion par le pooler Supabase en mode _transaction_ (`prepare: false`). Les
-migrations utilisent la connexion directe (`DIRECT_DATABASE_URL`, port 5432).
-
-```bash
-pnpm db:generate   # génère une migration depuis le schéma
-pnpm db:migrate    # applique les migrations
-pnpm db:seed       # fixture « Garage Exemple (fixture) »
-```
-
-Ces trois commandes lisent `.env.local` à la racine du dépôt. Une variable déjà présente
-dans l'environnement l'emporte, donc `DIRECT_DATABASE_URL=… pnpm db:migrate` reste possible.
-
-Sans poste de développement, les migrations se lancent depuis GitHub : onglet **Actions** →
-**Database migration** → **Run workflow**. Le workflow lit le secret `DIRECT_DATABASE_URL`
-(Settings → Secrets and variables → Actions).
-
-La migration `0001_search_indexes.sql` installe `pg_trgm` et `unaccent`, crée le
-wrapper immuable `pulsacity_unaccent()` et l'index GIN trigramme sur `sites.name` :
-c'est ce qui fait fonctionner « Votre site est peut-être déjà prêt ».
-
-## Sites livrés
-
-`apps/corporate/content/showcase.json` liste les sites réellement livrés
-(`name`, `sector`, `city`, `url`), trois au maximum. La section disparaît si le
-fichier est vide ; aucune carte fictive n'est jamais affichée.
-
-```bash
-pnpm showcase:shots   # captures desktop + mobile en WebP dans public/showcase/
-```
-
-## Déploiement (Vercel)
-
-- **Root Directory** : `apps/corporate`. Vercel détecte le workspace pnpm et installe
-  les dépendances à la racine du dépôt.
-- **Domaines** : `pulsacity.com` (apex), `www.pulsacity.com`, `demo.pulsacity.com`,
-  puis `pulsacity.fr` et `www.pulsacity.fr`.
-- Les redirections d'hôtes sont gérées par le middleware, pas par la configuration
-  Vercel : elles sont ainsi testées avec le reste du code.
+- `DATABASE_URL` : chaîne du pooler Supabase en mode transaction (port 6543), de la forme
+  `postgres://postgres.<ref-du-projet>:<mot-de-passe>@<hôte-du-pooler>:6543/postgres`.
+- `BETTER_AUTH_SECRET` : au moins 32 caractères aléatoires, par exemple `openssl rand -base64 32`.
+- `SENTRY_DSN` : facultatif. Vide, Sentry reste éteint. Il est aussi transmis au navigateur au build.
+- `LEGAL_VALIDATED` : `false` tant que les textes légaux ne sont pas relus.

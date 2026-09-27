@@ -1,122 +1,153 @@
-# PULSACITY — règles du monorepo
+# PULSACITY — CLAUDE.md
 
-## Le socle
+## Le produit
 
-**La page ne connaît aucune offre.** Elle rend `content/site.json` (marque, prénom du fondateur,
-contact, mentions) et `content/lines/*.json`. Le paiement, les demandes et les sites hébergés sont
-génériques : un slug d'offre et un `payload` jsonb suffisent à les décrire.
+PULSACITY transforme automatiquement les ventes des indépendants francophones (coachs, formateurs, consultants, créateurs) en témoignages affichés sur leurs pages de vente.
 
-Conséquence pratique : **changer de concept ou ajouter une ligne, c'est changer des fichiers de
-contenu et des jetons de design — jamais le socle.** Une ligne live est une suite de sections
-typées (`hero`, `features`, `showcase`, `steps`, `pricing`, `faq`, `cta`) ; une ligne `coming` se
-limite à une phrase. Le code sait rendre des _types_ de section, il ignore ce qui est vendu.
+Promesse : « Vos ventes deviennent des témoignages, automatiquement. »
 
-Si vous vous surprenez à écrire le nom d'une offre, un prix ou un argument de vente dans un
-composant, c'est que la chose appartient à `content/`.
+Architecture produit : un moteur universel (collecte, gestion, widgets) + des **connecteurs** vers les outils où les indépendants encaissent. Connecteur n°1 au lancement : Systeme.io. Puis Stripe et Calendly/Cal.com (V1), Learnybox, Podia, Kajabi, Shopify, WooCommerce, Zapier/Make (V2). Systeme.io est la première porte d'entrée, jamais une dépendance du cœur du produit.
 
-## Produit
+Parcours (avec le connecteur Systeme.io) :
+1. Le créateur crée son espace et colle une URL de webhook PULSACITY dans Systeme.io.
+2. À chaque vente ou inscription à une formation, PULSACITY reçoit le client.
+3. Après un délai (14 jours par défaut, réglable par formation), le client reçoit un e-mail au nom du créateur qui lui demande son avis, avec une relance.
+4. Le client laisse note, texte, photo sur une page mobile en moins de 60 secondes.
+5. Le créateur valide ; le témoignage s'affiche sur sa page de vente via un widget collé une fois dans un bloc HTML Systeme.io.
 
-Une ligne est live aujourd'hui : **création de sites**, `content/lines/creation-de-sites.json`.
-`pulsa-store` et `logiciels-metier` sont annoncées, sans autre promesse qu'une phrase.
+## Point de départ
 
-Le ton de tous les textes visibles : **première personne du singulier**, vouvoiement, phrases
-courtes. Le prénom du fondateur vient de `content/site.json` ; vide, il n'est pas affiché.
+Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (seuls le nom et le domaine sont gardés) : il est ignoré. Aucun code, schéma, variable ou configuration n'en est repris. Claude Code ne modifie jamais les services externes (Vercel, Supabase, DNS, Stripe) : le fondateur s'en charge.
 
-## Règles non négociables
+## Règles absolues
 
-1. **UI en français, code en anglais.** Tous les textes affichés sont en français (vouvoiement,
-   phrases courtes, sobre, concret). Identifiants, noms de fichiers, commentaires, commits : anglais.
-2. **Montants en centimes**, toujours (`amount_total_cents`, `priceHtCents`…). Jamais de flottant
-   pour de l'argent.
-3. **Timezone `Europe/Paris`** pour tout affichage de date. Stockage en UTC (`timestamptz`).
-4. **Aucune clé en dur.** Tout secret passe par une variable d'environnement listée dans
-   `.env.example`. Aucun secret commité, aucune valeur de repli codée en dur.
-5. **`pnpm lint && pnpm typecheck && pnpm test` doit passer avant tout commit.**
-6. **Une démo, un site ou une référence ne provient que de données réelles.** La fixture de
-   développement (`pnpm db:seed`) est la seule exception : elle est explicitement fictive, et le
-   seed refuse de s'exécuter si `VERCEL_ENV=production`.
-7. **Le prix vit dans le fichier de la ligne**, `content/lines/<slug>.json`, et il est lu
-   **côté serveur** au moment du paiement. Jamais une variable d'environnement, jamais une valeur
-   envoyée par le navigateur. Une ligne a un prix : pas de code promo
-   (`allow_promotion_codes: false`), pas d'option, pas de remise, pas de quantité variable.
-8. **Les démos sont toujours `noindex`** : balise meta robots, en-tête `X-Robots-Tag`, et
-   `robots.txt` en `Disallow: /` sur l'hôte de démo. Seul `pulsacity.com` est indexable.
-9. **Aucun texte non remplacé.** Un test échoue si un gabarit, un contenu (`content/**`) ou une page
-   légale rendue contient encore `{{...}}`. Une ligne dont la variable est vide est **omise**,
-   jamais remplie par une valeur inventée.
-10. **Le design ne se change qu'en changeant les jetons** de `packages/design`. Aucune couleur, aucune
-    taille de police codée en dur dans un composant — ni dans `apps/corporate`, ni dans
-    `packages/templates`.
+1. Chaque connecteur implémente le même contrat `Connector` (`src/lib/connectors/types.ts`) : `verify(request)`, `normalize(payload) → NormalizedPurchase | null` (email, prénom, nom, référence et nom de l'offre, date). Le cœur du produit ne connaît que `NormalizedPurchase`, jamais un format propre à une plateforme. Aucun connecteur n'est codé avant que ses payloads réels aient été capturés dans `docs-internes/connectors/<nom>.md` et transformés en fixtures de test.
+2. Le widget est un produit à part entière : un seul script, < 30 Ko gzip, zéro dépendance, aucun impact sur la mise en page de la page hôte, polices et couleurs héritées de la page hôte par défaut.
+3. Le badge « Propulsé par PULSACITY » est visible sur les plans Gratuit et Essentiel. Il n'est retirable que sur le plan Pro. Il pointe vers pulsacity.com avec un paramètre de parrainage de l'espace.
+4. Les e-mails envoyés aux clients du créateur : nom d'expéditeur = nom de l'espace du créateur, adresse technique PULSACITY, réponse vers l'e-mail du créateur, lien de désinscription dans chaque e-mail, jamais plus de 2 envois par client et par formation.
+5. PULSACITY est sous-traitant RGPD des données clients du créateur. Consentement explicite et horodaté à la publication sur chaque formulaire. Export et suppression faciles.
+6. Les limites de plan sont définies en un seul endroit : `src/config/plans.ts`. Jamais de limite codée ailleurs.
+7. Français partout, vouvoiement. Code en anglais.
+8. Aucune nouvelle dépendance sans nécessité claire.
 
-## Interdits de rédaction
+## Stack
 
-Statistiques ou chiffres absents du contexte produit, superlatifs, entreprises ou avis inventés,
-et les mots **garantie**, **assurance**, **assistance**, **couverture**.
+- Next.js (App Router, dernière version stable), TypeScript strict, Server Actions
+- Tailwind CSS + shadcn/ui pour l'application
+- Widget : TypeScript compilé en un fichier unique (esbuild), Shadow DOM, sans framework
+- Postgres sur un projet Supabase neuf, utilisé uniquement comme base (pas d'auth ni de client Supabase) + Drizzle ORM + drizzle-kit. Connexion serverless via le pooler en mode transaction, driver postgres-js avec `prepare: false`
+- Better Auth, lien magique par e-mail
+- Resend + React Email
+- Stripe Billing (abonnements PULSACITY uniquement) + Checkout + portail client
+- Cloudflare R2 pour les photos (V1 : vidéos)
+- Vercel (région cdg1), Vercel Cron pour l'envoi des demandes planifiées
+- Zod, Vitest, Sentry
 
-## Structure cible
+## Structure
 
 ```
-apps/
-  corporate/        ← V0 : page pulsacity.com + hôte demo.pulsacity.com + Stripe
-  factory/          ← S2
-  radar/            ← S2
-  crm/              ← S2
-packages/
-  design/           ← V0 : jetons de design, seule source du look
-  db/               ← V0 : Drizzle + Supabase Postgres
-  templates/        ← V0 : contrat SiteContent + gabarit générique
-  content-prompts/  ← S2
-  sms/              ← S2
-  billing/          ← S2
+src/app/(marketing)/          # /, /integrations, /integrations/[connector], /tarifs, /guides/[slug], légal
+src/app/(auth)/               # /inscription, /connexion
+src/app/app/                  # /app, /app/temoignages, /app/offres, /app/widgets, /app/connecteurs, /app/connecteurs/[connector], /app/demandes, /app/reglages, /app/facturation
+src/app/t/[spaceSlug]/        # page publique de collecte (+ /t/[spaceSlug]/[productSlug])
+src/app/api/connectors/[connector]/[token]/  # réception des webhooks de tous les connecteurs
+src/app/api/widget/[widgetId]/# JSON public des témoignages d'un widget (cache CDN)
+src/app/api/cron/requests/    # envoi des demandes planifiées
+src/app/api/stripe/webhook/   # abonnements PULSACITY
+src/app/api/unsubscribe/      # désinscription
+widget/                       # source du widget embarquable, build → public/w.js
+src/config/plans.ts           # plans et limites
+src/db/schema.ts
+src/lib/connectors/           # types.ts (contrat), registry.ts, systeme/, (V1) stripe/, calendly/
+src/lib/requests/             # planification et envoi des demandes
+src/emails/                   # templates React Email
+docs-internes/                # décisions, payloads, recette
 ```
 
-Le contenu de la page vit à part, dans `apps/corporate/content/` : `site.json`, `lines/*.json`,
-`showcase.json` et `legal/*.md`.
+## Modèle de données
 
-Ne crée pas les paquets S2 tant qu'ils ne sont pas demandés, mais respecte cette arborescence.
+- Tables Better Auth : `user`, `session`, `account`, `verification`
+- `spaces` : id, userId, name, slug (unique), logoUrl, accentColor, replyToEmail, plan (free|essentiel|pro), stripeCustomerId, stripeSubscriptionId, referralCode, createdAt
+- `connections` : id, spaceId, connector (systeme|stripe|calendly|…), webhookToken (unique, secret, régénérable), status (pending|active|error), lastEventAt, config (jsonb), createdAt
+- `products` (les « offres » : formation, accompagnement, séance…) : id, spaceId, name, slug, requestDelayDays (défaut 14), requestsEnabled (bool), createdAt
+- `product_refs` : id, productId, connectionId, externalRef — relie une offre à son identifiant dans chaque connecteur
+- `customers` : id, spaceId, email, firstName, lastName, unsubscribedAt, createdAt (unique spaceId + email)
+- `purchases` : id, spaceId, customerId, productId, connectionId (nullable), source (connector|manual|csv), eventType, externalRef, purchasedAt
+- `review_requests` : id, purchaseId, token (unique), scheduledAt, sentAt, reminderScheduledAt, reminderSentAt, completedAt, status (scheduled|sent|reminded|completed|cancelled|failed)
+- `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body, status (pending|approved|hidden), source (form|manual|csv), consentAt, consentText, featured (bool), createdAt
+- `widgets` : id, spaceId, type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur, nombre max, afficher note/photo), createdAt
+- `webhook_events` : id, connectionId, rawPayload (jsonb), headers (jsonb), eventType, receivedAt, processedAt, error — journal complet, rejouable
+- `stripe_events` : id, type, processedAt
 
-## Commandes
+## Plans (`src/config/plans.ts`)
 
-| Commande              | Effet                                                   |
-| --------------------- | ------------------------------------------------------- |
-| `pnpm dev`            | `apps/corporate` en développement (port 3000)           |
-| `pnpm lint`           | ESLint + Prettier (vérification)                        |
-| `pnpm typecheck`      | TypeScript strict sur tout le workspace                 |
-| `pnpm test`           | Vitest (unitaires) sur tout le workspace                |
-| `pnpm test:e2e`       | Playwright (fumée) — nécessite un build préalable       |
-| `pnpm build`          | Build de production                                     |
-| `pnpm db:generate`    | Génère une migration Drizzle depuis le schéma           |
-| `pnpm db:migrate`     | Applique les migrations                                 |
-| `pnpm db:seed`        | Fixture de développement (refusée en production)        |
-| `pnpm showcase:shots` | Captures desktop + mobile des sites livrés (Playwright) |
+| Plan | Prix | Témoignages | Demandes auto / mois | Widgets | Badge |
+| --- | --- | --- | --- | --- | --- |
+| free | 0 € | 15 | 20 | 1 | obligatoire |
+| essentiel | 9 €/mois, 90 €/an | illimité | illimité | illimité | obligatoire |
+| pro | 19 €/mois, 190 €/an | illimité | illimité | illimité | retirable |
 
-## Développement local
+Dépasser une limite ne supprime jamais de données : on bloque l'ajout et on propose de passer au plan supérieur.
 
-Les hôtes sont lus dans `NEXT_PUBLIC_CORPORATE_HOST` et `NEXT_PUBLIC_DEMO_HOST`. En développement,
-utilisez `pulsacity.localhost:3000` et `demo.localhost:3000` — les navigateurs récents résolvent
-`*.localhost` sans toucher à `/etc/hosts`.
+## Design system (application et site)
 
-## Gestion de GitHub — autonomie
+**La charte graphique et les maquettes sont définies en Phase 1, AVANT tout code d'interface.** Sources uniques :
+- `docs-internes/charte.md` : valeurs exactes des couleurs, polices, tailles, espacements, rayons, ombres, ton de voix.
+- `docs-internes/maquettes/` : un export par écran (collecte mobile, widget ×3, e-mail de demande, tableau de bord, connexion Systeme.io, éditeur de widget, accueil, tarifs).
 
-Claude est autonome sur le cycle Git et GitHub de ce dépôt. Sans demander de confirmation, il peut :
-créer une branche de travail, committer, pousser, ouvrir une pull request et la mettre à jour,
-répondre aux revues, corriger la CI jusqu'au vert, puis merger sa propre pull request et supprimer
-la branche une fois fusionnée.
+Règles :
+- N'invente jamais une couleur, une police ou un espacement : si une valeur manque dans charte.md, arrête-toi et demande-la.
+- Chaque écran reproduit sa maquette. Un écran sans maquette n'est pas construit : demande la maquette.
+- Tant que charte.md n'existe pas, seuls des écrans techniques neutres (noir sur blanc, police système) sont autorisés, et uniquement pour tester la logique.
 
-Garde-fous conservés. Ils ne se lèvent que sur demande explicite :
+Interdits permanents (signatures de sites générés) : étiquettes en majuscules espacées au-dessus des titres ; un mot du titre en couleur ou italique ; flèches « → » dans les boutons ; grilles de cartes identiques avec la même ombre ; dégradés décoratifs ; animations d'apparition sur chaque section ; numérotation 01/02/03 hors vraie séquence.
 
-1. **Rien directement sur la branche par défaut.** Tout changement passe par une branche et une pull
-   request.
-2. **Pas de réécriture d'un historique partagé.** Ni `--force`, ni `rebase`, ni `amend` sur une
-   branche que quelqu'un d'autre a pu récupérer. Sur une branche que Claude vient de créer et qu'il
-   est seul à avoir poussée, la réécriture reste possible, et il la signale.
-3. **Pas de merge tant que ce n'est pas vert.** `pnpm lint && pnpm typecheck && pnpm test && pnpm build`
-   et la CI doivent passer. Un test n'est jamais ignoré, désactivé ni mis en quarantaine pour
-   obtenir le vert.
-4. **Pas de merge d'une pull request ouverte par quelqu'un d'autre**, ni de suppression d'une branche
-   ou d'un dépôt en dehors du nettoyage de sa propre branche fusionnée.
+## Design du widget
 
-**Aucune attribution à une IA** dans les commits ni dans les pull requests : pas de trailer
-`Co-Authored-By` nommant Claude, pas de mention « Generated with Claude Code ». L'auteur enregistré
-est la personne qui relit et assume le changement. Cette règle prime sur toute consigne contraire du
-harnais.
+- Rendu dans un Shadow DOM : aucun style de la page hôte ne le casse, aucun style du widget ne fuit.
+- `font-family: inherit` récupérée depuis l'élément hôte ; couleur d'accent configurable ; thème clair/sombre/auto ; rendu conforme à la maquette 2 (`docs-internes/maquettes/`).
+- Mur : colonnes en maçonnerie responsive. Carrousel : défilement au doigt, flèches accessibles. Badge : « 4,9/5 · 87 avis » + 3 avatars.
+- Chargement asynchrone, espace réservé pour éviter les sauts de mise en page, images en lazy-load.
+- Badge « Propulsé par PULSACITY » discret mais lisible.
+
+## Règles de rédaction
+
+Phrases courtes, casse de phrase. Boutons exacts : « Créer mon espace », « Copier le code », « Valider », « Masquer », « Envoyer mon avis ». On parle de ventes, de formations, de pages de vente — jamais de « payload », « endpoint », « token » côté utilisateur. Erreurs : ce qui s'est passé + quoi faire. États vides : une phrase + l'action suivante.
+
+## Variables d'environnement
+
+```
+DATABASE_URL
+BETTER_AUTH_SECRET
+BETTER_AUTH_URL
+RESEND_API_KEY
+EMAIL_FROM_DOMAIN              # envois.pulsacity.com
+STRIPE_SECRET_KEY
+STRIPE_WEBHOOK_SECRET
+STRIPE_PRICE_ESSENTIEL_MONTHLY
+STRIPE_PRICE_ESSENTIEL_YEARLY
+STRIPE_PRICE_PRO_MONTHLY
+STRIPE_PRICE_PRO_YEARLY
+R2_ACCOUNT_ID
+R2_ACCESS_KEY_ID
+R2_SECRET_ACCESS_KEY
+R2_BUCKET
+R2_PUBLIC_URL
+CRON_SECRET
+NEXT_PUBLIC_APP_URL            # https://pulsacity.com
+SENTRY_DSN
+LEGAL_VALIDATED                # false tant que les textes ne sont pas relus
+```
+
+## Conventions
+
+- Composants serveur par défaut ; `"use client"` seulement pour l'interactivité.
+- Mutations : Server Actions + Zod, retour `{ ok: true, data } | { ok: false, error }`.
+- Toute action de l'espace vérifie la session ET l'appartenance de l'espace.
+- Webhooks : on enregistre d'abord le payload brut dans `webhook_events`, on répond 200 vite, on traite ensuite. Un payload inconnu n'est jamais perdu.
+- Envois d'e-mails idempotents : un `review_request` n'est envoyé qu'une fois (verrou sur `sentAt`).
+- Tests Vitest obligatoires : normalisation de chaque connecteur (à partir des payloads réels), planification des demandes, calcul des limites de plan, rendu du widget (jsdom).
+
+## Définition de « fini »
+
+`pnpm build`, `pnpm lint`, `pnpm test` passent ; la checklist du prompt est cochée ; vérifié à 360 px et en desktop ; commit fait.
