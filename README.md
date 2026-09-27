@@ -36,7 +36,8 @@ GitHub, sur `main`. Il lit le secret `DATABASE_URL` du dépôt.
 La liste complète est dans `.env.example`. Celles qui demandent une précision :
 
 - `DATABASE_URL` : chaîne du pooler Supabase en mode transaction (port 6543), de la forme
-  `postgres://postgres.<ref-du-projet>:<mot-de-passe>@<hôte-du-pooler>:6543/postgres`.
+  `postgres://postgres.<ref-du-projet>:<mot-de-passe>@<hôte-du-pooler>:6543/postgres?sslmode=require`.
+  Sans `?sslmode=require`, Supabase refuse la connexion.
 - `BETTER_AUTH_SECRET` : au moins 32 caractères aléatoires, par exemple `openssl rand -base64 32`.
 - `SENTRY_DSN` : facultatif. Vide, Sentry reste éteint. Il est aussi transmis au navigateur au build.
 - `LEGAL_VALIDATED` : `false` tant que les textes légaux ne sont pas relus.

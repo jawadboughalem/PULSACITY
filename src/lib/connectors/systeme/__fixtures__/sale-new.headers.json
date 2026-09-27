@@ -1,0 +1,18 @@
+{
+  "content-length": "1094",
+  "accept-encoding": "gzip",
+  "sentry-trace": "c08bb400ced14dc6aadf53c14395164d-ac420cf9b9a846f6",
+  "baggage": "sentry-trace_id=c08bb400ced14dc6aadf53c14395164d,sentry-sample_rand=0.787026,sentry-public_key=228cda379ba0793937760b7c9969540b,sentry-org_id=380824,sentry-release=a74d6282946cf428aca5984736ae06e2d56151a1,sentry-environment=prod",
+  "x-webhook-schema-version": "2",
+  "x-webhook-signature": "a782e59165d372689c48b905849337f614a217d9f929c3326701f2e258a7ee81",
+  "x-webhook-delivery-attempt-timestamp": "2026-09-27T20:16:28+00:00",
+  "x-webhook-delivery-attempt-id": "01a0e483-0a93-791e-8aa0-133b57df3f20",
+  "x-webhook-event-timestamp": "2026-09-27T20:16:27+00:00",
+  "x-webhook-event": "SALE_NEW",
+  "x-webhook-subscription-id": "01a0e461-30e6-7b5b-b3cb-4b3aceac6b6c",
+  "x-webhook-message-id": "01a0e483-09fb-7d11-ac67-be0fb3c6a98b",
+  "user-agent": "SystemeIO-Webhook",
+  "accept": "application/json",
+  "content-type": "application/json",
+  "host": "webhook.site"
+}
