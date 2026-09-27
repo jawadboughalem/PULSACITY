@@ -28,6 +28,9 @@ pnpm dev
 
 Pour voir le widget : `pnpm build:widget`, puis ouvrir `widget/test.html` dans un navigateur.
 
+Pour migrer la base Supabase : lancer le workflow « Database migration » depuis l'onglet Actions de
+GitHub, sur `main`. Il lit le secret `DATABASE_URL` du dépôt.
+
 ## Variables d'environnement
 
 La liste complète est dans `.env.example`. Celles qui demandent une précision :
