@@ -1,0 +1,20 @@
+<!doctype html>
+<!-- Host page for checking public/w.js: run `pnpm build:widget`, then open this file. -->
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page de test du widget</title>
+    <script src="../public/w.js" async></script>
+    <style>
+      /* A host page with its own font: the widget must inherit it. */
+      body {
+        font-family: serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Page hôte de test</h1>
+    <div data-pulsacity-widget="test"></div>
+  </body>
+</html>
