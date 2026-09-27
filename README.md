@@ -2,43 +2,38 @@
 
 Vos ventes deviennent des témoignages, automatiquement.
 
-`CLAUDE.md` est la source de vérité du produit et de ses règles. Les décisions techniques du socle sont
-consignées dans `docs-internes/decisions.md`.
+## Installer et lancer
 
-## Prérequis
-
-- Node.js 22.12 ou plus récent.
-- pnpm 10 : la version est fixée dans `package.json` (`packageManager`), `corepack enable` suffit.
-
-## Démarrer
+Node.js 22.12 ou plus récent, et pnpm 10 (`corepack enable` suffit : la version est fixée dans
+`package.json`).
 
 ```bash
 pnpm install
-cp .env.example .env.local   # puis remplissez les valeurs utiles
-pnpm dev                     # http://localhost:3000
+cp .env.example .env.local
+pnpm dev
 ```
 
 ## Commandes
 
-| Commande            | Effet                                                                 |
-| ------------------- | --------------------------------------------------------------------- |
-| `pnpm dev`          | Serveur de développement                                              |
-| `pnpm build`        | Build du widget, puis build de production Next.js                     |
-| `pnpm build:widget` | Compile `widget/src/index.ts` vers `public/w.js` (IIFE minifiée)      |
-| `pnpm lint`         | ESLint                                                                |
-| `pnpm typecheck`    | TypeScript strict                                                     |
-| `pnpm test`         | Tests Vitest                                                          |
-| `pnpm db:generate`  | Génère une migration depuis `src/db/schema.ts`                        |
-| `pnpm db:migrate`   | Applique les migrations de `src/db/migrations/` sur `DATABASE_URL`    |
+| Commande            | Effet                                                              |
+| ------------------- | ------------------------------------------------------------------ |
+| `pnpm dev`          | Serveur de développement, http://localhost:3000                    |
+| `pnpm build`        | Build du widget, puis build de production                          |
+| `pnpm build:widget` | Compile le widget vers `public/w.js`                               |
+| `pnpm lint`         | ESLint                                                             |
+| `pnpm typecheck`    | TypeScript strict                                                  |
+| `pnpm test`         | Tests Vitest                                                       |
+| `pnpm db:generate`  | Génère une migration depuis `src/db/schema.ts`                     |
+| `pnpm db:migrate`   | Applique les migrations sur `DATABASE_URL` (lit `.env.local`)      |
 
-## Base de données
+Pour voir le widget : `pnpm build:widget`, puis ouvrir `widget/test.html` dans un navigateur.
 
-`DATABASE_URL` est la chaîne du pooler Supabase en mode transaction (port 6543). Le client de
-l'application utilise postgres-js avec `prepare: false`. `pnpm db:migrate` lit `.env.local` et passe par
-ce même pooler.
+## Variables d'environnement
 
-## Widget
+La liste complète est dans `.env.example`. Celles qui demandent une précision :
 
-`pnpm build:widget`, puis ouvrez `widget/test.html` dans un navigateur : la page hôte de test affiche
-« PULSACITY widget OK » dans un Shadow DOM. Le build échoue si le script dépasse 30 Ko gzip ou importe
-un paquet.
+- `DATABASE_URL` : chaîne du pooler Supabase en mode transaction (port 6543), de la forme
+  `postgres://postgres.<ref-du-projet>:<mot-de-passe>@<hôte-du-pooler>:6543/postgres`.
+- `BETTER_AUTH_SECRET` : au moins 32 caractères aléatoires, par exemple `openssl rand -base64 32`.
+- `SENTRY_DSN` : facultatif. Vide, Sentry reste éteint. Il est aussi transmis au navigateur au build.
+- `LEGAL_VALIDATED` : `false` tant que les textes légaux ne sont pas relus.

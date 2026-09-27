@@ -1,4 +1,3 @@
-// Builds the embeddable widget: widget/src/index.ts → public/w.js.
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
@@ -7,10 +6,9 @@ import { build } from "esbuild";
 const entry = fileURLToPath(new URL("./src/index.ts", import.meta.url));
 const outfile = fileURLToPath(new URL("../public/w.js", import.meta.url));
 
-// CLAUDE.md, absolute rule 2: one script, under 30 KB gzipped, no dependency.
 const MAX_GZIP_BYTES = 30 * 1024;
+const SUPPORTED_BROWSERS = ["chrome111", "edge111", "firefox111", "safari16.4"];
 
-/** Fails the build on any package import: the widget ships with no dependency. */
 const noDependencies = {
   name: "no-dependencies",
   setup(pluginBuild) {
@@ -29,8 +27,7 @@ await build({
   format: "iife",
   minify: true,
   platform: "browser",
-  // The browsers Next.js 16 supports.
-  target: ["chrome111", "edge111", "firefox111", "safari16.4"],
+  target: SUPPORTED_BROWSERS,
   legalComments: "none",
   plugins: [noDependencies],
   logLevel: "warning",

@@ -16,17 +16,9 @@ import {
 import { PLAN_IDS } from "../config/plans";
 import type { ConnectionConfig, ConnectorId } from "../lib/connectors/types";
 
-/** Every timestamp is stored with its time zone (timestamptz). */
 function timestamptz(name: string) {
   return timestamp(name, { withTimezone: true });
 }
-
-// ---------------------------------------------------------------------------
-// Better Auth
-//
-// Same tables, columns and indexes as `auth generate` (Better Auth 1.7, magic
-// link plugin, Drizzle adapter for Postgres), with timestamptz columns.
-// ---------------------------------------------------------------------------
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -100,10 +92,6 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
-// ---------------------------------------------------------------------------
-// PULSACITY
-// ---------------------------------------------------------------------------
-
 export const planEnum = pgEnum("plan", PLAN_IDS);
 
 export const connectionStatusEnum = pgEnum("connection_status", [
@@ -166,7 +154,6 @@ export const spaces = pgTable(
   (table) => [index("spaces_user_id_idx").on(table.userId)],
 );
 
-/** A space's link to one platform account, fed by a secret webhook URL. */
 export const connections = pgTable(
   "connections",
   {
@@ -174,9 +161,7 @@ export const connections = pgTable(
     spaceId: uuid("space_id")
       .notNull()
       .references(() => spaces.id, { onDelete: "cascade" }),
-    /** Open list, checked against the connector registry. */
     connector: text("connector").$type<ConnectorId>().notNull(),
-    /** Secret part of the webhook URL. Regenerating it revokes the old URL. */
     webhookToken: text("webhook_token").notNull().unique(),
     status: connectionStatusEnum("status").notNull().default("pending"),
     lastEventAt: timestamptz("last_event_at"),
@@ -186,7 +171,6 @@ export const connections = pgTable(
   (table) => [index("connections_space_id_idx").on(table.spaceId)],
 );
 
-/** The creator's offers: a course, a coaching programme, a session… */
 export const products = pgTable(
   "products",
   {
@@ -200,11 +184,9 @@ export const products = pgTable(
     requestsEnabled: boolean("requests_enabled").notNull().default(true),
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
-  // The slug is the offer's segment in /t/[spaceSlug]/[productSlug].
   (table) => [unique("products_space_id_slug_unique").on(table.spaceId, table.slug)],
 );
 
-/** Links an offer to its identifier on each connected platform. */
 export const productRefs = pgTable(
   "product_refs",
   {
@@ -218,7 +200,6 @@ export const productRefs = pgTable(
     externalRef: text("external_ref").notNull(),
   },
   (table) => [
-    // An incoming offer reference resolves to a single offer.
     unique("product_refs_connection_id_external_ref_unique").on(
       table.connectionId,
       table.externalRef,
@@ -227,7 +208,6 @@ export const productRefs = pgTable(
   ],
 );
 
-/** The creator's own customers. PULSACITY processes them on the creator's behalf. */
 export const customers = pgTable(
   "customers",
   {
@@ -243,8 +223,6 @@ export const customers = pgTable(
   },
   (table) => [
     unique("customers_space_id_email_unique").on(table.spaceId, table.email),
-    // Keeps the unique pair case-insensitive: one person, one customer, so
-    // never more than two emails per customer and per offer.
     check("customers_email_lowercase_check", sql`${table.email} = lower(${table.email})`),
   ],
 );
@@ -282,14 +260,12 @@ export const reviewRequests = pgTable(
   "review_requests",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    /** One request per purchase: the first email and its single reminder. */
     purchaseId: uuid("purchase_id")
       .notNull()
       .unique()
       .references(() => purchases.id, { onDelete: "cascade" }),
     token: text("token").notNull().unique(),
     scheduledAt: timestamptz("scheduled_at").notNull(),
-    /** Set once, when the email leaves: the lock that makes sending idempotent. */
     sentAt: timestamptz("sent_at"),
     reminderScheduledAt: timestamptz("reminder_scheduled_at"),
     reminderSentAt: timestamptz("reminder_sent_at"),
@@ -297,7 +273,6 @@ export const reviewRequests = pgTable(
     status: reviewRequestStatusEnum("status").notNull().default("scheduled"),
   },
   (table) => [
-    // What the cron job looks for: requests and reminders that are due.
     index("review_requests_status_scheduled_at_idx").on(table.status, table.scheduledAt),
     index("review_requests_status_reminder_scheduled_at_idx").on(
       table.status,
@@ -332,8 +307,6 @@ export const testimonials = pgTable(
     index("testimonials_product_id_idx").on(table.productId),
     index("testimonials_customer_id_idx").on(table.customerId),
     check("testimonials_rating_check", sql`${table.rating} between 1 and 5`),
-    // Every testimonial left through a form carries a dated, explicit consent
-    // to its publication (CLAUDE.md, absolute rule 5).
     check(
       "testimonials_form_consent_check",
       sql`${table.source} <> 'form' or (${table.consentAt} is not null and ${table.consentText} is not null)`,
@@ -341,7 +314,6 @@ export const testimonials = pgTable(
   ],
 );
 
-/** Display settings of a widget. Absent keys fall back to the widget defaults. */
 export type WidgetSettings = {
   theme?: "light" | "dark" | "auto";
   accentColor?: string;
@@ -358,7 +330,6 @@ export const widgets = pgTable(
       .notNull()
       .references(() => spaces.id, { onDelete: "cascade" }),
     type: widgetTypeEnum("type").notNull(),
-    /** `null`: the testimonials of every offer. */
     productId: uuid("product_id").references(() => products.id, { onDelete: "cascade" }),
     settings: jsonb("settings").$type<WidgetSettings>().notNull().default({}),
     createdAt: timestamptz("created_at").notNull().defaultNow(),
@@ -366,7 +337,6 @@ export const widgets = pgTable(
   (table) => [index("widgets_space_id_idx").on(table.spaceId)],
 );
 
-/** Every webhook received, stored raw before any processing, and replayable. */
 export const webhookEvents = pgTable(
   "webhook_events",
   {
@@ -389,7 +359,6 @@ export const webhookEvents = pgTable(
   ],
 );
 
-/** Stripe events already handled, keyed by the Stripe event id. */
 export const stripeEvents = pgTable("stripe_events", {
   id: text("id").primaryKey(),
   type: text("type").notNull(),

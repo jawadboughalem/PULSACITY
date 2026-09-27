@@ -8,7 +8,7 @@ afterEach(() => {
 });
 
 describe("mountWidgets", () => {
-  it("renders inside a shadow root of every mount point", () => {
+  it("renders in a shadow root of every mount point, adding nothing to the page's own DOM", () => {
     document.body.innerHTML =
       '<div data-pulsacity-widget="a"></div><p>Page</p><div data-pulsacity-widget="b"></div>';
 
@@ -16,7 +16,6 @@ describe("mountWidgets", () => {
 
     for (const host of document.querySelectorAll(MOUNT_SELECTOR)) {
       expect(host.shadowRoot?.textContent).toBe("PULSACITY widget OK");
-      // Nothing is added to the host page's own DOM.
       expect(host.childNodes).toHaveLength(0);
     }
   });

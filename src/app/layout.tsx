@@ -3,7 +3,6 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "PULSACITY",
-  description: "Vos ventes deviennent des témoignages, automatiquement.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

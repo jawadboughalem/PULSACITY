@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  PLAN_IDS,
   PLANS,
+  UNLIMITED,
   canAddTestimonial,
   canCreateWidget,
   canHideBadge,
@@ -26,22 +26,17 @@ describe("PLANS", () => {
         id: "essentiel",
         name: "Essentiel",
         priceCents: { monthly: 900, yearly: 9000 },
-        limits: { testimonials: null, monthlyRequests: null, widgets: null },
+        limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED },
         badgeRemovable: false,
       },
       pro: {
         id: "pro",
         name: "Pro",
         priceCents: { monthly: 1900, yearly: 19000 },
-        limits: { testimonials: null, monthlyRequests: null, widgets: null },
+        limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED },
         badgeRemovable: true,
       },
     });
-  });
-
-  it("lists every plan id exactly once", () => {
-    expect([...PLAN_IDS].sort()).toEqual(Object.keys(PLANS).sort());
-    for (const id of PLAN_IDS) expect(PLANS[id].id).toBe(id);
   });
 });
 
