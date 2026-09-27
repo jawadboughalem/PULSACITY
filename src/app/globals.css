@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens.
+ *
+ * docs-internes/charte.md is the only source of colours, fonts, sizes,
+ * spacings, radii and shadows (CLAUDE.md, "Design system"). The default
+ * Tailwind theme is cleared so that a value the charter does not define
+ * cannot be used by accident: no palette, no spacing scale, no radius.
+ *
+ * charte.md does not exist yet, so this theme is intentionally empty and
+ * every screen stays a neutral technical screen (black on white, system
+ * font). Each charter value lands here as a CSS variable, together with the
+ * semantic variables shadcn/ui components expect.
+ */
+@theme {
+  --*: initial;
+}
