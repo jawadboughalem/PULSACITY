@@ -6,9 +6,7 @@ const twMerge = extendTailwindMerge({
     theme: {
       text: [
         "display",
-        "display-mobile",
         "h1",
-        "h1-mobile",
         "h2",
         "quote",
         "body",
@@ -20,7 +18,7 @@ const twMerge = extendTailwindMerge({
         "logo-22",
         "logo-15",
       ],
-      spacing: ["page-gutter-mobile", "page-gutter-desktop"],
+      spacing: ["page-gutter"],
       shadow: ["relief", "float"],
       container: ["text", "quote"],
       tracking: ["title"],

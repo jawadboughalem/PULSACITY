@@ -56,66 +56,80 @@ function match(text: string, pattern: RegExp): RegExpMatchArray {
   return found;
 }
 
-function charterTokens(): Record<string, string> {
-  const tokens: Record<string, string> = {};
+type Tokens = Record<string, string>;
+
+function charterTokens(): { theme: Tokens; desktop: Tokens } {
+  const theme: Tokens = {};
+  const desktop: Tokens = {};
+
+  for (const [name, width] of rows("Point de rupture")) {
+    theme[`breakpoint-${name}`] = `${width}px`;
+  }
 
   for (const [name, hex] of rows("Couleurs")) {
     const token = COLOR_TOKENS[name];
     assert(token, `Charter colour "${name}" has no token`);
-    tokens[`color-${token}`] = hex;
+    theme[`color-${token}`] = hex;
   }
 
   for (const [, , , weights] of rows("Typographie")) {
     for (const weight of weights.match(/\b[4-6]00\b/g) ?? []) {
-      tokens[`font-weight-${WEIGHT_TOKENS[weight]}`] = weight;
+      theme[`font-weight-${WEIGHT_TOKENS[weight]}`] = weight;
     }
   }
   const typography = section("Typographie");
-  tokens["tracking-title"] = `-0.${match(typography, /grand titre \(−0,(\d+)\s*em\)/)[1]}em`;
+  theme["tracking-title"] = `-0.${match(typography, /grand titre \(−0,(\d+)\s*em\)/)[1]}em`;
   const [, text, quote] = match(typography, /texte\s+(\d+)ch maximum, citations\s+(\d+)ch maximum/);
-  tokens["container-text"] = `${text}ch`;
-  tokens["container-quote"] = `${quote}ch`;
+  theme["container-text"] = `${text}ch`;
+  theme["container-quote"] = `${quote}ch`;
 
   for (const [name, size, lineHeight, usage] of rows("Échelle de tailles")) {
-    tokens[`text-${name}`] = `${size}px`;
-    tokens[`text-${name}--line-height`] = `${lineHeight}px`;
     const mobile = usage.match(/Mobile\s*:\s*(\d+)\/(\d+)/);
+    theme[`text-${name}`] = `${mobile ? mobile[1] : size}px`;
+    theme[`text-${name}--line-height`] = `${mobile ? mobile[2] : lineHeight}px`;
     if (mobile) {
-      tokens[`text-${name}-mobile`] = `${mobile[1]}px`;
-      tokens[`text-${name}-mobile--line-height`] = `${mobile[2]}px`;
+      desktop[`text-${name}`] = `${size}px`;
+      desktop[`text-${name}--line-height`] = `${lineHeight}px`;
     }
   }
   const logo = match(section("Échelle de tailles"), /propres tailles \(([\d,\s]+?)\s*px\).*interligne\s+(\d+)/);
   for (const size of logo[1].split(/,\s*/)) {
-    tokens[`text-logo-${size}`] = `${size}px`;
-    tokens[`text-logo-${size}--line-height`] = logo[2];
+    theme[`text-logo-${size}`] = `${size}px`;
+    theme[`text-logo-${size}--line-height`] = logo[2];
   }
 
   for (const [name, size] of rows("Espacements")) {
-    tokens[`spacing-${name.replace(/^space-/, "")}`] = `${size}px`;
+    const token = `spacing-${name.replace(/^space-/, "").replace(/-(mobile|desktop)$/, "")}`;
+    (name.endsWith("-desktop") ? desktop : theme)[token] = `${size}px`;
   }
 
   for (const [name, size] of rows("Rayons")) {
-    tokens[`radius-${RADIUS_TOKENS[name]}`] = `${size}px`;
+    theme[`radius-${RADIUS_TOKENS[name]}`] = `${size}px`;
   }
 
   for (const [name, value] of rows("Ombres")) {
-    tokens[name] = value;
+    theme[name] = value;
   }
 
-  return tokens;
+  return { theme, desktop };
 }
 
-function themeTokens(): Record<string, string> {
-  const theme = match(stylesheet, /@theme \{([\s\S]*?)\n\}/)[1];
+function declarations(block: string): Tokens {
   return Object.fromEntries(
-    [...theme.matchAll(/--([a-z0-9-]+): ([^;]+);/g)].map(([, name, value]) => [name, value]),
+    [...block.matchAll(/--([a-z0-9-]+): ([^;]+);/g)].map(([, name, value]) => [name, value]),
   );
 }
 
 describe("theme", () => {
+  const expected = charterTokens();
+
   it("declares every value of the charter, and nothing else", () => {
-    expect(themeTokens()).toEqual(charterTokens());
+    expect(declarations(match(stylesheet, /@theme \{([\s\S]*?)\n\}/)[1])).toEqual(expected.theme);
+  });
+
+  it("switches to the desktop values of the charter at its breakpoint", () => {
+    const desktopBlock = match(stylesheet, /@variant desktop \{([\s\S]*?)\n\s*\}/)[1];
+    expect(declarations(desktopBlock)).toEqual(expected.desktop);
   });
 
   it("starts from an empty Tailwind theme", () => {

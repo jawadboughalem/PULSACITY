@@ -6,6 +6,8 @@
 @theme {
   --*: initial;
 
+  --breakpoint-desktop: 1024px;
+
   --color-carmine: #A3243B;
   --color-carmine-dark: #861C30;
   --color-carmine-light: #F08A9A;
@@ -36,14 +38,10 @@
   --container-text: 68ch;
   --container-quote: 60ch;
 
-  --text-display: 48px;
-  --text-display--line-height: 52px;
-  --text-display-mobile: 36px;
-  --text-display-mobile--line-height: 42px;
-  --text-h1: 36px;
-  --text-h1--line-height: 42px;
-  --text-h1-mobile: 28px;
-  --text-h1-mobile--line-height: 34px;
+  --text-display: 36px;
+  --text-display--line-height: 42px;
+  --text-h1: 28px;
+  --text-h1--line-height: 34px;
   --text-h2: 28px;
   --text-h2--line-height: 34px;
   --text-quote: 20px;
@@ -74,8 +72,7 @@
   --spacing-7: 48px;
   --spacing-8: 64px;
   --spacing-9: 96px;
-  --spacing-page-gutter-mobile: 24px;
-  --spacing-page-gutter-desktop: 80px;
+  --spacing-page-gutter: 24px;
 
   --radius-sm: 2px;
   --radius-lg: 16px;
@@ -92,6 +89,16 @@
 }
 
 @layer base {
+  :root {
+    @variant desktop {
+      --text-display: 48px;
+      --text-display--line-height: 52px;
+      --text-h1: 36px;
+      --text-h1--line-height: 42px;
+      --spacing-page-gutter: 80px;
+    }
+  }
+
   body {
     background-color: var(--color-white);
     color: var(--color-ink-900);
