@@ -3,18 +3,18 @@ import postgres from "postgres";
 import { MissingDatabaseUrlError } from "./missing-database-url-error";
 import * as schema from "./schema";
 
-function createDb() {
+const createDb = () => {
   const url = process.env.DATABASE_URL;
   if (!url) throw new MissingDatabaseUrlError();
   const client = postgres(url, { prepare: false });
   return drizzle({ client, schema });
-}
+};
 
-export type Database = ReturnType<typeof createDb>;
+type PostgresDatabase = ReturnType<typeof createDb>;
 
-const globalForDb = globalThis as typeof globalThis & { pulsacityDb?: Database };
+const globalForDb = globalThis as typeof globalThis & { pulsacityDb?: PostgresDatabase };
 
-export function getDb(): Database {
+export const getDb = (): PostgresDatabase => {
   globalForDb.pulsacityDb ??= createDb();
   return globalForDb.pulsacityDb;
-}
+};
