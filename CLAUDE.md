@@ -35,12 +35,12 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 - Next.js (App Router, dernière version stable), TypeScript strict, Server Actions
 - Tailwind CSS + shadcn/ui pour l'application
 - Widget : TypeScript compilé en un fichier unique (esbuild), Shadow DOM, sans framework
-- Postgres sur un projet Supabase neuf, utilisé uniquement comme base (pas d'auth ni de client Supabase) + Drizzle ORM + drizzle-kit. Connexion serverless via le pooler en mode transaction, driver postgres-js avec `prepare: false`
+- Postgres sur un projet Supabase neuf (région eu-central-1, Francfort), utilisé uniquement comme base (pas d'auth ni de client Supabase) + Drizzle ORM + drizzle-kit. Connexion serverless via le pooler en mode transaction, driver postgres-js avec `prepare: false`
 - Better Auth, lien magique par e-mail
 - Resend + React Email
 - Stripe Billing (abonnements PULSACITY uniquement) + Checkout + portail client
 - Cloudflare R2 pour les photos (V1 : vidéos)
-- Vercel (région cdg1), Vercel Cron pour l'envoi des demandes planifiées
+- Vercel (région fra1, Francfort : les fonctions suivent la région de la base), Vercel Cron pour l'envoi des demandes planifiées
 - Zod, Vitest, Sentry
 
 ## Structure
