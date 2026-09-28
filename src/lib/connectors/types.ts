@@ -4,6 +4,8 @@ export type ConnectorId = (typeof CONNECTOR_IDS)[number];
 
 export type ConnectionConfig = Record<string, unknown>;
 
+export type WebhookHeaders = Record<string, string>;
+
 export type NormalizedPurchase = {
   email: string;
   firstName: string | null;
@@ -16,5 +18,5 @@ export type NormalizedPurchase = {
 export type Connector = {
   id: ConnectorId;
   verify(request: Request, config: ConnectionConfig): Promise<boolean>;
-  normalize(payload: unknown): NormalizedPurchase | null;
+  normalize(payload: unknown, headers: WebhookHeaders): NormalizedPurchase | null;
 };
