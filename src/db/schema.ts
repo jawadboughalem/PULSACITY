@@ -14,7 +14,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { PLAN_IDS } from "../config/plans";
-import type { ConnectionConfig, ConnectorId } from "../lib/connectors/types";
+import type { ConnectionConfig, ConnectorId, WebhookHeaders } from "../lib/connectors/types";
 
 function timestamptz(name: string) {
   return timestamp(name, { withTimezone: true });
@@ -345,7 +345,7 @@ export const webhookEvents = pgTable(
       .notNull()
       .references(() => connections.id, { onDelete: "cascade" }),
     rawPayload: jsonb("raw_payload").notNull(),
-    headers: jsonb("headers").$type<Record<string, string>>().notNull(),
+    headers: jsonb("headers").$type<WebhookHeaders>().notNull(),
     eventType: text("event_type"),
     receivedAt: timestamptz("received_at").notNull().defaultNow(),
     processedAt: timestamptz("processed_at"),

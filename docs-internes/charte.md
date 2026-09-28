@@ -66,6 +66,11 @@ Exceptions : le logo (logotype) suit ses propres tailles (96, 72, 28, 22, 15 px)
 
 Aucune autre valeur de marge, de padding ou d'écart. Seules exceptions : les chevauchements négatifs (avatars superposés : −8 à −10 px) et les alignements optiques d'icônes.
 
+## Point de rupture
+| Nom | Valeur px | Usage |
+| --- | --- | --- |
+| desktop | 1024 | À partir de cette largeur : tailles desktop et page-gutter-desktop. En dessous : tailles mobiles et page-gutter-mobile. |
+
 ## Rayons
 | Nom | Valeur px | Usage |
 | --- | --- | --- |
