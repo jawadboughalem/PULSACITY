@@ -17,7 +17,7 @@ Parcours (avec le connecteur Systeme.io) :
 
 ## Point de départ
 
-Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (seuls le nom et le domaine sont gardés) : il est ignoré. Aucun code, schéma, variable ou configuration n'en est repris. Claude Code ne modifie jamais les services externes (Vercel, Supabase, DNS, Stripe) : le fondateur s'en charge.
+Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (seuls le nom et le domaine sont gardés) : il est ignoré. Aucun code, schéma, variable ou configuration n'en est repris. Claude Code ne modifie jamais les services externes (Vercel, Supabase, DNS, Stripe) : le fondateur s'en charge, jamais sans aide (voir « Actions du fondateur »).
 
 ## Règles absolues
 
@@ -148,6 +148,16 @@ LEGAL_VALIDATED                # false tant que les textes ne sont pas relus
 - Envois d'e-mails idempotents : un `review_request` n'est envoyé qu'une fois (verrou sur `sentAt`).
 - Tests Vitest obligatoires : normalisation de chaque connecteur (à partir des payloads réels), planification des demandes, calcul des limites de plan, rendu du widget (jsdom).
 
+## Actions du fondateur
+
+Rien de ce que le fondateur fait de son côté ne se fait sans l'aide de Claude Code. Chaque action sur un service externe (Vercel, Supabase, Cloudflare, Resend, Stripe, DNS, réglages GitHub…) lui est livrée en prompt Claude in Chrome prêt à coller :
+- un prompt par service, numéroté dans l'ordre où les lancer ;
+- les valeurs exactes à saisir, et ce qu'il ne faut surtout pas toucher ;
+- la vérification qui prouve que c'est fait ;
+- un compte rendu à renvoyer à Claude Code, sans aucun secret.
+
+Un secret créé sur un service est collé directement là où il sert (variable Vercel, secret GitHub), jamais dans une conversation. La recette de chaque lot se prépare de la même façon : où tester, quoi tester, dans quel ordre.
+
 ## Définition de « fini »
 
-`pnpm build`, `pnpm lint`, `pnpm test` passent ; la checklist du prompt est cochée ; vérifié à 360 px et en desktop ; commit fait.
+`pnpm build`, `pnpm lint`, `pnpm test` passent ; la checklist du prompt est cochée ; vérifié à 360 px et en desktop ; commit fait ; les actions du fondateur et la recette du lot sont livrées en prompts Claude in Chrome.

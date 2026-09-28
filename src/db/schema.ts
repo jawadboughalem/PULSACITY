@@ -364,3 +364,9 @@ export const stripeEvents = pgTable("stripe_events", {
   type: text("type").notNull(),
   processedAt: timestamptz("processed_at").notNull().defaultNow(),
 }).enableRLS();
+
+export const rateLimits = pgTable("rate_limits", {
+  key: text("key").primaryKey(),
+  hits: integer("hits").notNull(),
+  windowStartedAt: timestamptz("window_started_at").notNull(),
+}).enableRLS();
