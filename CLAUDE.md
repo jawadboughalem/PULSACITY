@@ -158,6 +158,22 @@ Rien de ce que le fondateur fait de son côté ne se fait sans l'aide de Claude 
 
 Un secret créé sur un service est collé directement là où il sert (variable Vercel, secret GitHub), jamais dans une conversation. La recette de chaque lot se prépare de la même façon : où tester, quoi tester, dans quel ordre.
 
+## Environnement de production
+
+- Vercel : équipe « jawadboughalems-projects », projet « pulsacity », production sur `main`. pulsacity.com sert la production ; www.pulsacity.com, pulsacity.fr et www.pulsacity.fr y redirigent en 301. Les aperçus des PR n'ont que `DATABASE_URL`, qui pointe sur la base de production.
+- DNS de pulsacity.com : chez OVH. Les e-mails du fondateur en @pulsacity.com passent par OVH (MX et SPF de la racine) : ne jamais les modifier. DMARC en `p=none`.
+- Supabase : projet PULSACITY, eu-central-1. Migrations par le workflow GitHub « Database migration » sur `main`, avec le secret `DATABASE_URL` du dépôt.
+- Resend : domaine envois.pulsacity.com vérifié, région eu-west-1.
+- Cloudflare R2 : bucket `pulsacity-photos` (Europe de l'Ouest), jeton `pulsacity-production` limité à ce bucket, lecture publique par une adresse r2.dev. CORS : `PUT` depuis https://pulsacity.com seulement.
+- Recette : sur pulsacity.com tant que le produit n'est pas lancé. Le fondateur crée lui-même les comptes de test : un agent Claude in Chrome ne crée pas de compte sur un site en ligne.
+
+Avant le lancement public :
+- servir les photos depuis une adresse à nous (r2.dev est limité en débit) ;
+- séparer la recette de la production (base et adresse dédiées, `DATABASE_URL` retirée des aperçus) ;
+- renseigner `SENTRY_DSN`, pour que les erreurs de production remontent ;
+- effacer les données de test ;
+- ajouter la favicon.
+
 ## Définition de « fini »
 
 `pnpm build`, `pnpm lint`, `pnpm test` passent ; la checklist du prompt est cochée ; vérifié à 360 px et en desktop ; commit fait ; les actions du fondateur et la recette du lot sont livrées en prompts Claude in Chrome.
