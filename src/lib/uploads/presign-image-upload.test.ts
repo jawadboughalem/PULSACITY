@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { getUploadPublicUrl, presignImageUpload } from "./presign-image-upload";
+import { getUploadPublicUrl, presignImageUpload, readUploadKey } from "./presign-image-upload";
 
 beforeEach(() => {
   vi.stubEnv("R2_ACCOUNT_ID", "account-id");
@@ -36,5 +36,18 @@ describe("presignImageUpload", () => {
 describe("getUploadPublicUrl", () => {
   it("serves the key from the public bucket address", () => {
     expect(getUploadPublicUrl("logos/user/logo.png")).toBe("https://photos.pulsacity.com/logos/user/logo.png");
+  });
+});
+
+describe("readUploadKey", () => {
+  it("finds the key back in a public address of the bucket", () => {
+    expect(readUploadKey("https://photos.pulsacity.com/testimonial-photos/space/photo.jpg")).toBe(
+      "testimonial-photos/space/photo.jpg",
+    );
+  });
+
+  it("ignores an address outside the bucket", () => {
+    expect(readUploadKey("https://exemple.fr/testimonial-photos/space/photo.jpg")).toBeNull();
+    expect(readUploadKey("https://photos.pulsacity.com/")).toBeNull();
   });
 });

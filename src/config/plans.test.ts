@@ -6,6 +6,7 @@ import {
   canCreateWidget,
   canHideBadge,
   canSendRequest,
+  countTestimonialsLeft,
 } from "./plans";
 
 const free = { plan: "free" } as const;
@@ -51,6 +52,20 @@ describe("canAddTestimonial", () => {
   it("never blocks the paid plans", () => {
     expect(canAddTestimonial(essentiel, 10_000)).toBe(true);
     expect(canAddTestimonial(pro, 10_000)).toBe(true);
+  });
+});
+
+describe("countTestimonialsLeft", () => {
+  it("counts what the free plan can still hold, never below zero", () => {
+    expect(countTestimonialsLeft(free, 0)).toBe(15);
+    expect(countTestimonialsLeft(free, 12)).toBe(3);
+    expect(countTestimonialsLeft(free, 15)).toBe(0);
+    expect(countTestimonialsLeft(free, 40)).toBe(0);
+  });
+
+  it("has no bound on the paid plans", () => {
+    expect(countTestimonialsLeft(essentiel, 10_000)).toBe(UNLIMITED);
+    expect(countTestimonialsLeft(pro, 10_000)).toBe(UNLIMITED);
   });
 });
 

@@ -56,6 +56,11 @@ export function canAddTestimonial(space: SpacePlan, count: number): boolean {
   return isBelow(getPlan(space.plan).limits.testimonials, count);
 }
 
+export function countTestimonialsLeft(space: SpacePlan, count: number): Limit {
+  const limit = getPlan(space.plan).limits.testimonials;
+  return limit === UNLIMITED ? UNLIMITED : Math.max(0, limit - count);
+}
+
 export function canSendRequest(space: SpacePlan, monthCount: number): boolean {
   return isBelow(getPlan(space.plan).limits.monthlyRequests, monthCount);
 }
