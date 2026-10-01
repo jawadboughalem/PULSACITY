@@ -1,0 +1,21 @@
+# Postgres for local development: docker compose up -d, then pnpm db:migrate and pnpm db:seed.
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: pulsacity
+      # Local only: no password, and the port is open to this machine alone.
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "127.0.0.1:54322:5432"
+    volumes:
+      - pulsacity-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d pulsacity"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  pulsacity-db:
