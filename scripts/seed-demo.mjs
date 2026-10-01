@@ -93,9 +93,9 @@ await sql.begin(async (tx) => {
   const [slugTaken] = await tx`select id from spaces where slug = 'julie-nutrition'`;
   const slug = slugTaken ? `julie-nutrition-${randomUUID().slice(0, 6)}` : "julie-nutrition";
   const [space] = await tx`
-    insert into spaces (user_id, name, slug, reply_to_email, plan, referral_code,
+    insert into spaces (user_id, name, slug, accent_color, reply_to_email, plan, referral_code,
       collection_link_shared_at, first_day_celebrated_at, first_approval_celebrated_at)
-    values (${userId}, 'Julie Nutrition', ${slug}, ${email}, ${plan}, ${randomUUID().slice(0, 8)},
+    values (${userId}, 'Julie Nutrition', ${slug}, '#4F6F52', ${email}, ${plan}, ${randomUUID().slice(0, 8)},
       ${daysAgo(130)}, ${daysAgo(130)}, ${daysAgo(120)})
     returning id`;
   await tx`insert into widgets (space_id, type) values (${space.id}, 'wall')`;
