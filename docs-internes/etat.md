@@ -1,12 +1,13 @@
 # État du projet
 
-Mis à jour le 1er octobre 2026, après la recette du lot 4 sur l'aperçu. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 1er octobre 2026, à la fusion de la PR #19 : le lot 4 est terminé. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
 - Socle : Next.js à Francfort, base Supabase, connexion par lien magique, CI (PR #8 à #14).
 - Inscription, création de l'espace, onboarding des formations, page publique de collecte `/t/[espace]` et `/t/[espace]/[offre]` (PR #12).
-- Espace du créateur, maquette 4 : accueil, témoignages (liste, filtres, fiche, « Valider », « Masquer », « Mettre en avant », texte affiché, suppression définitive), ajout manuel, import CSV, offres. Identité v2 : logo, favicon, micro-animations (PR #15).
+- Espace du créateur, maquette 4 : accueil, témoignages (liste, filtres, fiche, « Valider », « Masquer », « Mettre en avant », texte affiché, suppression définitive). Identité v2 : logo, favicon, micro-animations (PR #15).
+- Ajout manuel (m15), import CSV (m16) et page Offres (m17), avec les corrections de la recette du lot 4, recettés sur l'aperçu (PR #19).
 - Trois environnements : local, recette sur chaque aperçu Vercel, migrations de production lancées à chaque fusion et attendues par Vercel avant la mise en ligne (PR #16).
 
 ## Pas encore construit
@@ -29,9 +30,9 @@ Mis à jour le 1er octobre 2026, après la recette du lot 4 sur l'aperçu. À li
 
 ## À faire
 
-1. Recette de la PR #19 sur l'aperçu, puis mise en ligne : corrections de la recette du lot 4, et ajout manuel, import CSV et page Offres alignés sur les maquettes m15 à m17.
-2. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
-3. Sentry, avant le lancement.
+1. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
+2. Sentry, avant le lancement.
+3. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
 
 Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
@@ -49,7 +50,6 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 ## Questions ouvertes
 
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
-
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
 - « Aide et contact » pointe vers `/aide`, qui n'existe pas : il manque l'adresse de support.
 - L'étape « Coller le widget » se cochera au premier affichage du widget, que le lot widget enregistrera.
