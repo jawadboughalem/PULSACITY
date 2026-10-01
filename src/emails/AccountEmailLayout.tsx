@@ -1,6 +1,18 @@
 import type { ReactNode } from "react";
-import { Body, Container, Head, Html, Preview, Text } from "react-email";
-import { EMAIL_MOBILE_STYLES, cardStyle, headerStyle, legalStyle, pageStyle } from "./email-styles";
+import { Body, Column, Container, Head, Html, Img, Preview, Row, Section, Text } from "react-email";
+import { getAppUrl } from "@/lib/app-url";
+import {
+  EMAIL_MOBILE_STYLES,
+  cardStyle,
+  headerNameStyle,
+  headerStyle,
+  headerSymbolCellStyle,
+  headerSymbolStyle,
+  legalStyle,
+  pageStyle,
+} from "./email-styles";
+
+export const EMAIL_SYMBOL_PATH = "/brand/email-symbole-48.png";
 
 type AccountEmailLayoutProps = {
   preview: string;
@@ -16,7 +28,16 @@ export const AccountEmailLayout = ({ preview, legalNotice, children }: AccountEm
     <Preview>{preview}</Preview>
     <Body lang="fr" style={pageStyle}>
       <Container className="email-card" style={cardStyle}>
-        <Text style={headerStyle}>PULSACITY</Text>
+        <Section style={headerStyle}>
+          <Row>
+            <Column style={headerSymbolCellStyle}>
+              <Img src={`${getAppUrl()}${EMAIL_SYMBOL_PATH}`} width="24" height="24" alt="" style={headerSymbolStyle} />
+            </Column>
+            <Column>
+              <Text style={headerNameStyle}>Pulsacity</Text>
+            </Column>
+          </Row>
+        </Section>
         {children}
       </Container>
       <Container className="email-legal" style={legalStyle}>

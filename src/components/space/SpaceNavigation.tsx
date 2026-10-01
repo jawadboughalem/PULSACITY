@@ -1,4 +1,4 @@
-import { Logotype } from "@/components/ui/Logotype";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
 import { SpaceNavigationLinks } from "./SpaceNavigationLinks";
 
@@ -14,7 +14,7 @@ export const SpaceNavigation = ({ spaceName, logoUrl, accountEmail, pendingTesti
     aria-label="Navigation principale"
     className="sticky top-[0] flex h-dvh w-[248px] shrink-0 flex-col gap-6 border-r border-hairline-200 bg-white px-4 pt-6 pb-5"
   >
-    <Logotype className="px-3 text-logo-28" />
+    <BrandLogo variant="small" height={27} alt="Pulsacity" className="mx-3" />
     <SpaceNavigationLinks pendingTestimonials={pendingTestimonials} />
     <div className="mt-auto flex items-center gap-3 border-t border-hairline-200 px-3 pt-4">
       <SpaceAvatar name={spaceName} logoUrl={logoUrl} size={44} background="paper" />

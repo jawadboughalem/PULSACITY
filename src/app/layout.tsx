@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Newsreader, Public_Sans } from "next/font/google";
 import "./globals.css";
 
@@ -18,6 +18,18 @@ const publicSans = Public_Sans({
 
 export const metadata: Metadata = {
   title: "PULSACITY",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#16213E",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

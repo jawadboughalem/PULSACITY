@@ -44,10 +44,27 @@ export const headerStyle: CSSProperties = {
   margin: "0 0 24px",
   paddingBottom: "24px",
   borderBottom: `1px solid ${EMAIL_COLORS.hairline200}`,
-  fontFamily: SANS,
-  fontSize: "16px",
+};
+
+export const headerSymbolCellStyle: CSSProperties = {
+  width: "32px",
+  verticalAlign: "middle",
+};
+
+export const headerSymbolStyle: CSSProperties = {
+  display: "block",
+  width: "24px",
+  height: "24px",
+  border: 0,
+};
+
+export const headerNameStyle: CSSProperties = {
+  margin: 0,
+  fontFamily: SERIF,
+  fontSize: "20px",
   lineHeight: "24px",
-  fontWeight: 600,
+  fontWeight: 700,
+  color: EMAIL_COLORS.ink900,
 };
 
 export const paragraphStyle: CSSProperties = {
