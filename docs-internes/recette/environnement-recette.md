@@ -2,6 +2,8 @@
 
 Objectif : chaque PR a son aperçu Vercel, branché sur une base, un bucket et une clé d'e-mail de recette, jamais sur la production. On teste la PR sur son aperçu, puis on fusionne.
 
+État : prompts 1 à 7 faits le 1er octobre 2026 par la session locale du bureau. Le prompt 8 reste à lancer. Compte rendu en bas de page.
+
 Les prompts sont à coller dans Claude in Chrome, dans l'ordre. Chaque secret va directement du service qui le crée à l'endroit où il sert (Vercel ou GitHub). Il n'apparaît jamais dans un compte rendu ni dans une conversation.
 
 À lancer après la fusion de la PR « environnements » sur `main` : les workflows de recette n'apparaissent dans GitHub qu'à ce moment-là.
@@ -24,7 +26,7 @@ Où : https://supabase.com/dashboard/projects
 Étapes :
 1. Clique sur « New project ». Choisis la même organisation que le projet « PULSACITY ».
 2. Nom du projet : pulsacity-recette
-3. Database Password : clique sur « Generate a password ». Garde cet onglet ouvert : tu en auras besoin à l'étape 6. Ne l'écris nulle part ailleurs.
+3. Database Password : clique sur « Generate a password ». Le mot de passe ne doit contenir que des lettres et des chiffres : sinon, régénère-le, car un caractère spécial casse l'adresse de connexion (« URI malformed »). Il ne doit jamais reprendre celui de la production. Garde cet onglet ouvert : tu en auras besoin à l'étape 6. Ne l'écris nulle part ailleurs.
 4. Region : « Central EU (Frankfurt) » (eu-central-1). Plan : Free.
 5. Clique sur « Create new project » et attends qu'il soit prêt (deux minutes environ).
 6. Dans le projet pulsacity-recette, clique sur « Connect » en haut. Onglet « Connection string », mode « Transaction pooler » (port 6543). Copie la chaîne. Remplace [YOUR-PASSWORD] par le mot de passe de l'étape 3, puis ajoute ?sslmode=require à la fin. Garde la chaîne complète pour les prompts 2 et 5, sans la noter ailleurs.
@@ -123,7 +125,7 @@ Tu m'aides à brancher les aperçus Vercel de PULSACITY (l'environnement « Prev
 Où : https://vercel.com/jawadboughalems-projects/pulsacity/settings/environment-variables
 
 Étapes :
-1. Repère la variable DATABASE_URL existante. Ouvre-la (« Edit »). Dans « Environments », décoche « Preview » et laisse « Production ». Enregistre. Cette variable pointe sur la production : les aperçus ne doivent plus la voir.
+1. Repère les lignes DATABASE_URL. S'il en existe déjà une pour « Preview » seul, remplace sa valeur à l'étape 2 au lieu d'en créer une. Sinon, ouvre celle de la production (« Edit »), décoche « Preview » dans « Environments », laisse « Production » et enregistre : les aperçus ne doivent plus voir la base de production.
 2. Ajoute ces variables, chacune avec seulement « Preview » coché (ni Production, ni Development) :
    - DATABASE_URL = la chaîne de connexion de pulsacity-recette (prompt Supabase)
    - BETTER_AUTH_SECRET = une valeur neuve : ouvre https://generate-secret.vercel.app/32 dans un nouvel onglet et copie la valeur affichée
@@ -194,3 +196,46 @@ Ne touche surtout pas : à pulsacity.com, ni à aucun réglage Vercel.
 
 Compte rendu à me donner : l'adresse de l'aperçu, et pour chaque étape « OK » ou ce que tu vois. Ne recopie aucun lien de connexion.
 ```
+
+## 8. Supabase — un mot de passe propre à la base de recette
+
+```
+Tu m'aides à donner à la base de recette pulsacity-recette un mot de passe qui lui est propre, puis à le reporter dans GitHub et dans Vercel. Tu ne touches pas à la production.
+
+Où : https://supabase.com/dashboard/projects, projet pulsacity-recette.
+
+Étapes :
+1. Dans pulsacity-recette, ouvre Project Settings › Database, rubrique « Database password », et clique sur « Reset database password ».
+2. Clique sur « Generate a password ». Il ne doit contenir que des lettres et des chiffres : sinon, régénère-le. Arrête-toi et demande-moi de le copier moi-même, puis enregistre.
+3. Demande-moi de préparer la chaîne de connexion : « Connect », onglet « Connection string », mode « Transaction pooler » (port 6543), [YOUR-PASSWORD] remplacé par le nouveau mot de passe, ?sslmode=require à la fin.
+4. Ouvre https://github.com/jawadboughalem/PULSACITY/settings/secrets/actions, puis RECETTE_DATABASE_URL › « Update secret ». Demande-moi de coller la chaîne, puis enregistre.
+5. Ouvre https://vercel.com/jawadboughalems-projects/pulsacity/settings/environment-variables, puis la ligne DATABASE_URL de « Preview » › « Edit ». Demande-moi de coller la chaîne, puis enregistre.
+6. Sur https://github.com/jawadboughalem/PULSACITY/actions, lance « Recette database migration » sur main et attends qu'il soit vert.
+7. Dans Vercel › Deployments, redéploie le dernier déploiement « Preview » et attends « Ready ».
+
+Ne touche surtout pas :
+- au projet PULSACITY (la production) ni à son mot de passe ;
+- au secret DATABASE_URL du dépôt ;
+- à la ligne DATABASE_URL de « Production » dans Vercel.
+
+Vérification : « Recette database migration » est vert avec le nouveau secret. Sur l'aperçu redéployé, après connexion, l'accueil montre toujours l'espace « Julie Nutrition ».
+
+Compte rendu à me donner : la date du changement, le statut du workflow et celui du redéploiement. Ne recopie jamais le mot de passe ni la chaîne de connexion.
+```
+
+---
+
+## Compte rendu du 1er octobre 2026
+
+- Prompts 1 à 7 faits.
+- Écart au prompt 5 : DATABASE_URL avait déjà une ligne « Preview » séparée. Sa valeur a été remplacée, et la ligne de production n'a pas été modifiée.
+- Première exécution de « Recette database migration » en échec, « URI malformed » : le mot de passe contenait un caractère spécial. Elle est passée au vert après changement du mot de passe. Les journaux GitHub n'affichent pas la chaîne de connexion.
+- « Recette demo space » est vert, et l'espace « Julie Nutrition » existe sur la recette.
+- Deployment Checks : « Lint, typecheck, test, build » et « Apply pending migrations ». Attribution automatique du domaine de production activée.
+- Vérification de bout en bout sur l'aperçu de la branche `claude/testimonials-dashboard-ui-6mpnf8` : l'accueil affiche « Bonjour Julie », 10 validés, 4,7/5, 2 en attente et 38 %. Sophie D. et Nadia B. sont « En attente ».
+
+Restent à vérifier :
+- le prompt 8 ;
+- l'envoi d'une photo depuis un aperçu (bucket et CORS de recette) ;
+- que le lien de connexion reçu par e-mail commence par l'adresse de l'aperçu ;
+- au prochain déploiement de production, que Vercel attend les deux checks avant la mise en ligne.
