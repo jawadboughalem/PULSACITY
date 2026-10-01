@@ -6,6 +6,7 @@ import { IMPORT_TESTIMONIALS_HREF, TESTIMONIALS_SECTION_HREF } from "@/component
 import { ManualTestimonialForm } from "@/components/testimonials/ManualTestimonialForm";
 import { getDb } from "@/db";
 import { readParisDate } from "@/lib/dates/paris-date";
+import { quoteInFrench } from "@/lib/french/typography";
 import { getCurrentSpace } from "@/lib/spaces/get-current-space";
 import { listSpaceProducts } from "@/lib/spaces/list-space-products";
 
@@ -13,8 +14,8 @@ export const metadata: Metadata = {
   title: "Ajouter un témoignage · PULSACITY",
 };
 
-const formatIsoDay = ({ year, month, day }: { year: number; month: number; day: number }) =>
-  `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+const formatFrenchDay = ({ year, month, day }: { year: number; month: number; day: number }) =>
+  `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`;
 
 const AddTestimonialPage = async () => {
   const { space } = await getCurrentSpace();
@@ -23,28 +24,44 @@ const AddTestimonialPage = async () => {
   return (
     <>
       <BackBar href={TESTIMONIALS_SECTION_HREF} label="Témoignages" />
-      <SpacePage className="desktop:max-w-[768px]">
+      <SpacePage className="desktop:max-w-[1192px]">
         <Breadcrumb parentHref={TESTIMONIALS_SECTION_HREF} parentLabel="Témoignages" current="Ajouter un témoignage" />
-        <div className="flex flex-col gap-2 border-b border-ink-900 pb-5 desktop:pb-6">
+        <div className="flex flex-col gap-2">
           <h1 className="font-serif text-h1 font-medium">Ajouter un témoignage</h1>
           <p className="max-w-text text-body text-slate-600">
-            Reçu par WhatsApp, par e-mail ou de vive voix : recopiez-le ici. Il est validé dès son ajout.
-          </p>
-          <p className="text-body text-slate-600">
-            Vous en avez beaucoup ?{" "}
-            <Link
-              href={IMPORT_TESTIMONIALS_HREF}
-              className="font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
-            >
-              Importez un fichier CSV
-            </Link>
+            Pour un avis reçu ailleurs : un message WhatsApp, un e-mail, un mot après une séance.
           </p>
         </div>
-        <ManualTestimonialForm
-          products={products}
-          today={formatIsoDay(readParisDate(new Date()))}
-          detailHrefPrefix={TESTIMONIALS_SECTION_HREF}
-        />
+        <div className="flex flex-col gap-7 min-[1280px]:grid min-[1280px]:grid-cols-[minmax(0,632px)_minmax(280px,368px)] min-[1280px]:items-start min-[1280px]:gap-8">
+          <ManualTestimonialForm
+            products={products}
+            dateExample={formatFrenchDay(readParisDate(new Date()))}
+            testimonialsHref={TESTIMONIALS_SECTION_HREF}
+            importHref={IMPORT_TESTIMONIALS_HREF}
+          />
+          <aside className="hidden flex-col gap-4 bg-paper-100 p-5 min-[1280px]:flex">
+            <h2 className="font-serif text-quote font-medium">Bon à savoir</h2>
+            <p className="text-small">
+              Vous l&apos;ajoutez vous-même : le témoignage arrive directement en <strong>Validé</strong> et peut
+              s&apos;afficher tout de suite.
+            </p>
+            <p className="text-small">
+              Gardez une capture du message de votre côté. Elle prouve l&apos;accord de la personne.
+            </p>
+            <p className="text-small">
+              Il porte la mention {quoteInFrench("Ajouté par vous")} dans votre espace. Vos visiteurs ne la voient pas.
+            </p>
+            <div className="flex flex-col gap-2 border-t border-hairline-200 pt-4">
+              <p className="text-small font-semibold">Vous en avez beaucoup ?</p>
+              <Link
+                href={IMPORT_TESTIMONIALS_HREF}
+                className="self-start text-small font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+              >
+                Importer un fichier CSV
+              </Link>
+            </div>
+          </aside>
+        </div>
       </SpacePage>
     </>
   );
