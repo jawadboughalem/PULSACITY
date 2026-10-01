@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import {
@@ -16,6 +15,7 @@ import {
   SECONDARY_BUTTON_CLASSES,
 } from "@/components/ui/button-styles";
 import { Checkbox } from "@/components/ui/Checkbox";
+import { Breadcrumb } from "@/components/space/BackBar";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
@@ -171,15 +171,7 @@ export const TestimonialDetailView = ({
 
   return (
     <div className="flex flex-col gap-5 desktop:gap-6">
-      <nav aria-label="Fil d'Ariane" className="hidden items-center gap-3 text-small desktop:flex">
-        <Link href={listHref} className={LINK_CLASSES}>
-          Témoignages
-        </Link>
-        <Icon name="chevronRight" size={16} className="text-slate-600" />
-        <span aria-current="page" className="text-slate-600">
-          {testimonial.authorName}
-        </span>
-      </nav>
+      <Breadcrumb parentHref={listHref} parentLabel="Témoignages" current={testimonial.authorName} />
 
       <header className="flex flex-col gap-5 border-b border-ink-900 pb-5 desktop:flex-row desktop:items-start desktop:justify-between desktop:pb-6">
         <div className="flex items-start gap-4 desktop:gap-5">
