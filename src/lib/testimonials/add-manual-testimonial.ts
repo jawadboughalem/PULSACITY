@@ -4,6 +4,7 @@ import type { Database } from "@/db/database";
 import { products, spaces, testimonials } from "@/db/schema";
 import { getUploadPublicUrl } from "@/lib/uploads/presign-image-upload";
 import { isTestimonialPhotoKeyOf } from "@/lib/uploads/upload-keys";
+import { claimFirstApproval } from "./claim-first-approval";
 import { countApprovedTestimonials } from "./count-approved-testimonials";
 import { MANUAL_CONSENT_TEXT } from "./manual-consent";
 
@@ -18,7 +19,12 @@ export type ManualTestimonial = {
 };
 
 export type AddManualTestimonialResult =
-  | { status: "added"; testimonialId: string; plan: { name: string; testimonialLimit: number | null } | null }
+  | {
+      status: "added";
+      testimonialId: string;
+      isFirstApproval: boolean;
+      plan: { name: string; testimonialLimit: number | null } | null;
+    }
   | { status: "space-not-found" }
   | { status: "product-not-found" }
   | { status: "invalid-photo" };
@@ -74,6 +80,7 @@ export const addManualTestimonial = (
     return {
       status: "added",
       testimonialId: inserted.id,
+      isFirstApproval: isWithinPlan && (await claimFirstApproval(transaction, space.id, now)),
       plan: isWithinPlan ? null : { name: plan.name, testimonialLimit: plan.limits.testimonials },
     };
   });

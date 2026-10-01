@@ -5,6 +5,7 @@ import { BackBar } from "@/components/space/BackBar";
 import { SpacePage } from "@/components/space/SpacePage";
 import { TESTIMONIALS_SECTION_HREF } from "@/components/space/space-sections";
 import { FirstApprovalCelebration } from "@/components/testimonials/FirstApprovalCelebration";
+import { FIRST_APPROVAL_SEARCH_PARAM } from "@/components/testimonials/first-approval-param";
 import { TestimonialDetailView } from "@/components/testimonials/TestimonialDetailView";
 import { canAddTestimonial } from "@/config/plans";
 import { getDb } from "@/db";
@@ -17,8 +18,9 @@ export const metadata: Metadata = {
   title: "Témoignage · PULSACITY",
 };
 
-const TestimonialPage = async ({ params }: PageProps<"/app/temoignages/[testimonialId]">) => {
+const TestimonialPage = async ({ params, searchParams }: PageProps<"/app/temoignages/[testimonialId]">) => {
   const { testimonialId } = await params;
+  const isFirstApproval = (await searchParams)[FIRST_APPROVAL_SEARCH_PARAM] === "1";
   if (!z.uuid().safeParse(testimonialId).success) notFound();
 
   const { space } = await getCurrentSpace();
@@ -34,7 +36,7 @@ const TestimonialPage = async ({ params }: PageProps<"/app/temoignages/[testimon
     <>
       <BackBar href={TESTIMONIALS_SECTION_HREF} label="Témoignages" />
       <SpacePage>
-        <FirstApprovalCelebration>
+        <FirstApprovalCelebration isInitiallyShown={isFirstApproval && testimonial.status === "approved"}>
           <TestimonialDetailView
             key={testimonial.id}
             testimonial={testimonial}

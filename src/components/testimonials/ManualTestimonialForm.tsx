@@ -24,6 +24,7 @@ import {
   MAX_AUTHOR_TITLE_LENGTH,
   MAX_TESTIMONIAL_LENGTH,
 } from "@/lib/testimonials/testimonial-form-schema";
+import { FIRST_APPROVAL_SEARCH_PARAM } from "./first-approval-param";
 import { RatingInput } from "./RatingInput";
 
 const FIELD_MESSAGES: Record<ManualTestimonialField, Partial<Record<ManualTestimonialFieldError, string>>> = {
@@ -89,7 +90,8 @@ export const ManualTestimonialForm = ({ products, today, detailHrefPrefix }: Man
         return;
       }
       if (result.ok) {
-        router.push(`${detailHrefPrefix}/${result.data.testimonialId}`);
+        const celebration = result.data.isFirstApproval ? `?${FIRST_APPROVAL_SEARCH_PARAM}=1` : "";
+        router.push(`${detailHrefPrefix}/${result.data.testimonialId}${celebration}`);
         return;
       }
       if (result.error === "invalid-input") setFieldErrors(result.fieldErrors);

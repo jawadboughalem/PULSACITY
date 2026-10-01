@@ -56,6 +56,7 @@ describe("importTestimonialCsv", () => {
     expect(report).toMatchObject({
       status: "imported",
       importedCount: 47,
+      isFirstApproval: true,
       pendingCount: 0,
       createdProductNames: ["Atelier cuisine"],
       plan: { name: "Essentiel", testimonialsLeft: null },
@@ -97,7 +98,12 @@ describe("importTestimonialCsv", () => {
     const corrected = csv.replace(";;5;Un texte sans nom.;;", "Léa P.;;5;Un texte sans nom.;;");
     const report = await importTestimonialCsv(database, userId, spaceId, corrected, NOW);
 
-    expect(report).toMatchObject({ status: "imported", importedCount: 1, createdProductNames: [] });
+    expect(report).toMatchObject({
+      status: "imported",
+      importedCount: 1,
+      isFirstApproval: false,
+      createdProductNames: [],
+    });
     expect(await findSpaceTestimonials()).toHaveLength(48);
   });
 

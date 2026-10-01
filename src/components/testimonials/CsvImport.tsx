@@ -14,6 +14,7 @@ import { decodeCsvFile } from "@/lib/testimonials/csv/decode-csv-file";
 import { CSV_COLUMNS, CSV_FILE_ERRORS, type CsvRow, MAX_CSV_LENGTH } from "@/lib/testimonials/csv/read-testimonial-csv";
 import { formatExcerpt } from "@/lib/testimonials/format-excerpt";
 import { CSV_CONSENT_TEXT } from "@/lib/testimonials/manual-consent";
+import { FirstApprovalBanner } from "./FirstApprovalCelebration";
 
 const TEMPLATE = `${CSV_COLUMNS.join(";")}\nCamille R.;Enseignante, Lyon;5;"En 30 jours j'ai arrêté de grignoter le soir.";Programme 30 jours;14/03/2026\n`;
 
@@ -95,6 +96,7 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
     const { report } = step;
     return (
       <div className="flex flex-col gap-6">
+        {report.isFirstApproval ? <FirstApprovalBanner /> : null}
         <StatusBanner
           tone="success"
           title={`${countLines(report.importedCount, "témoignage importé", "témoignages importés")}.`}

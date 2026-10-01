@@ -5,6 +5,7 @@ import { products, spaces, testimonials } from "@/db/schema";
 import { readParisDate } from "@/lib/dates/paris-date";
 import { addProduct } from "@/lib/spaces/add-product";
 import { slugify } from "@/lib/spaces/slugify";
+import { claimFirstApproval } from "../claim-first-approval";
 import { countApprovedTestimonials } from "../count-approved-testimonials";
 import { CSV_CONSENT_TEXT } from "../manual-consent";
 import { type CsvRow, isReadyCsvRow, readTestimonialCsv } from "./read-testimonial-csv";
@@ -24,6 +25,7 @@ export type CsvImportReport =
   | {
       status: "imported";
       importedCount: number;
+      isFirstApproval: boolean;
       pendingCount: number;
       createdProductNames: string[];
       notImported: CsvRow[];
@@ -124,6 +126,7 @@ export const importTestimonialCsv = (
     return {
       status: "imported",
       importedCount: readyRows.length,
+      isFirstApproval: approvedCount > 0 && (await claimFirstApproval(transaction, result.space.id, now)),
       pendingCount,
       createdProductNames: result.reading.newProductNames,
       notImported: result.reading.rows.filter((row) => !isReadyCsvRow(row)),

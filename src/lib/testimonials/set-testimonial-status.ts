@@ -1,7 +1,8 @@
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { canAddTestimonial, getPlan } from "@/config/plans";
 import type { Database } from "@/db/database";
-import { spaces, testimonials } from "@/db/schema";
+import { testimonials } from "@/db/schema";
+import { claimFirstApproval } from "./claim-first-approval";
 import { countApprovedTestimonials } from "./count-approved-testimonials";
 import { findOwnedTestimonial } from "./find-owned-testimonial";
 
@@ -40,14 +41,8 @@ export const setTestimonialStatus = (
       .update(testimonials)
       .set({ status })
       .where(and(eq(testimonials.id, testimonial.id), eq(testimonials.spaceId, testimonial.spaceId)));
-    if (!isApproving || (await countApprovedTestimonials(transaction, testimonial.spaceId)) !== 1) {
-      return { status: "updated", isFirstApproval: false };
-    }
-
-    const celebrated = await transaction
-      .update(spaces)
-      .set({ firstApprovalCelebratedAt: now })
-      .where(and(eq(spaces.id, testimonial.spaceId), isNull(spaces.firstApprovalCelebratedAt)))
-      .returning({ id: spaces.id });
-    return { status: "updated", isFirstApproval: celebrated.length > 0 };
+    return {
+      status: "updated",
+      isFirstApproval: isApproving && (await claimFirstApproval(transaction, testimonial.spaceId, now)),
+    };
   });
