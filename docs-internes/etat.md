@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 1er octobre 2026, après la fusion de la PR #16. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 1er octobre 2026, après la fusion de la PR #17. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -20,11 +20,16 @@ Mis à jour le 1er octobre 2026, après la fusion de la PR #16. À lire au débu
 
 ## À faire hors code
 
-1. Recette du lot 4 sur pulsacity.com : prompts 2, 3 et 4 de `docs-internes/recette/lot-4-espace.md`. Le prompt 1 (migrations 0003 et 0004) est fait.
-2. Prompt 8 de `docs-internes/recette/environnement-recette.md`.
-3. Envoyer une photo depuis un aperçu, pour valider le bucket de recette et sa règle CORS.
-4. Au prochain déploiement de production, vérifier que Vercel attend « CI » et « Database migration » avant la mise en ligne.
-5. Sur un aperçu, vérifier que le lien de connexion reçu par e-mail commence par l'adresse de l'aperçu.
+Les prompts sont dans `docs-internes/recette/actions-1er-octobre.md`, dans l'ordre :
+1. Donner à la base de recette son propre mot de passe.
+2. Recette du lot 4 sur l'aperçu, pas sur pulsacity.com : le lot 4 est en ligne depuis la PR #15, fusionnée avant que la recette existe. Le prompt 1 de `lot-4-espace.md` (migrations 0003 et 0004) est fait.
+3. Envoi d'une photo et lien de connexion, sur l'aperçu.
+4. Protéger `main` sur GitHub.
+5. Classer l'alerte GitGuardian 37781349 en faux positif.
+6. Dépôt privé ou public : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
+7. Sentry, avant le lancement.
+
+Fait : Vercel attend bien « CI » et « Database migration » avant de mettre la production en ligne (vérifié sur la fusion de la PR #17).
 
 ## Questions ouvertes
 
