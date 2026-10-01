@@ -1,7 +1,6 @@
-import { readRequiredEnvironmentVariable } from "@/lib/environment/read-required-environment-variable";
+import { readDeploymentUrl } from "@/lib/environment/read-deployment-url";
 
-export const getAppUrl = (): string =>
-  readRequiredEnvironmentVariable("NEXT_PUBLIC_APP_URL").replace(/\/+$/, "");
+export const getAppUrl = (): string => readDeploymentUrl("NEXT_PUBLIC_APP_URL");
 
 export const buildCollectionUrl = (spaceSlug: string, productSlug?: string): string =>
   `${getAppUrl()}/t/${spaceSlug}${productSlug ? `/${productSlug}` : ""}`;

@@ -1,6 +1,10 @@
 name: Database migration
 
+# Runs on every push to main, migrations or not: Vercel waits for this check before it puts a
+# production deployment online, so the new code never meets a database without its columns.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:

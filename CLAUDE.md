@@ -17,7 +17,7 @@ Parcours (avec le connecteur Systeme.io) :
 
 ## Point de départ
 
-Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (seuls le nom et le domaine sont gardés) : il est ignoré. Aucun code, schéma, variable ou configuration n'en est repris. Claude Code ne modifie jamais les services externes (Vercel, Supabase, DNS, Stripe) : le fondateur s'en charge, jamais sans aide (voir « Actions du fondateur »).
+Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (seuls le nom et le domaine sont gardés) : il est ignoré. Aucun code, schéma, variable ou configuration n'en est repris. Claude Code ne modifie jamais un service externe (Vercel, Supabase, DNS, Stripe) avec ses propres accès : il agit dans le navigateur du fondateur, ou lui donne un prompt (voir « Actions du fondateur »).
 
 ## Règles absolues
 
@@ -62,6 +62,8 @@ src/lib/connectors/           # types.ts (contrat), registry.ts, systeme/, (V1) 
 src/lib/requests/             # planification et envoi des demandes
 src/emails/                   # templates React Email
 docs-internes/                # décisions, payloads, recette
+scripts/seed-demo.mjs         # espace de démonstration (local, recette)
+compose.yaml                  # Postgres local
 ```
 
 ## Modèle de données
@@ -150,28 +152,41 @@ LEGAL_VALIDATED                # false tant que les textes ne sont pas relus
 
 ## Actions du fondateur
 
-Rien de ce que le fondateur fait de son côté ne se fait sans l'aide de Claude Code. Chaque action sur un service externe (Vercel, Supabase, Cloudflare, Resend, Stripe, DNS, réglages GitHub…) lui est livrée en prompt Claude in Chrome prêt à coller :
+Rien de ce que le fondateur fait de son côté ne se fait sans l'aide de Claude Code. Chaque action sur un service externe (Vercel, Supabase, Cloudflare, Resend, Stripe, DNS, réglages GitHub…) est d'abord écrite en prompt Claude in Chrome dans `docs-internes/recette/` :
 - un prompt par service, numéroté dans l'ordre où les lancer ;
 - les valeurs exactes à saisir, et ce qu'il ne faut surtout pas toucher ;
 - la vérification qui prouve que c'est fait ;
 - un compte rendu à renvoyer à Claude Code, sans aucun secret.
 
-Un secret créé sur un service est collé directement là où il sert (variable Vercel, secret GitHub), jamais dans une conversation. La recette de chaque lot se prépare de la même façon : où tester, quoi tester, dans quel ordre.
+Qui lance ces prompts :
+- Au bureau, avec deux écrans : Claude Code fait les actions lui-même, avec Claude in Chrome, dans le groupe d'onglets « PULSACITY ». Il faut pour cela que la session tourne sur l'ordinateur du fondateur (app Claude Desktop, ou `claude remote-control` dans le dossier du projet) : une session dans le cloud n'atteint pas son navigateur. Claude Code ne demande au fondateur que ce qui doit passer par lui : fusionner une PR, se connecter à un service, copier et coller un secret, créer un compte de test.
+- À la maison, avec un seul écran : le fondateur colle les prompts lui-même dans Claude in Chrome.
 
-## Environnement de production
+Un secret créé sur un service est collé directement là où il sert (variable Vercel, secret GitHub), jamais dans une conversation : c'est le fondateur qui le copie et le colle, même quand Claude Code fait le reste. La recette de chaque lot se prépare de la même façon : où tester, quoi tester, dans quel ordre.
 
-- Vercel : équipe « jawadboughalems-projects », projet « pulsacity », production sur `main`. pulsacity.com sert la production ; www.pulsacity.com, pulsacity.fr et www.pulsacity.fr y redirigent en 301. Les aperçus des PR n'ont que `DATABASE_URL`, qui pointe sur la base de production.
+## Environnements
+
+Mise en ligne : branche, PR, CI verte, recette sur l'aperçu de la PR, fusion sur `main`.
+
+- Local : Postgres 16 dans Docker (`compose.yaml`, port 54322), `.env.local`, `pnpm db:migrate`, puis `pnpm db:seed <e-mail>` pour un espace de démonstration complet. Sans `RESEND_API_KEY`, les e-mails s'affichent dans le terminal de `pnpm dev`. Voir le README.
+- Recette : l'aperçu Vercel de chaque PR, branché sur la base Supabase `pulsacity-recette`, le bucket `pulsacity-photos-recette` et la clé Resend `pulsacity-recette` (variables de l'environnement Preview uniquement). Sur un aperçu, les adresses de l'application viennent de `VERCEL_BRANCH_URL`, jamais de `BETTER_AUTH_URL` ni de `NEXT_PUBLIC_APP_URL`. Migrations par le workflow « Recette database migration » (secret `RECETTE_DATABASE_URL`) à chaque PR qui en apporte, puis sur `main`. Espace de démonstration par le workflow « Recette demo space ». Mise en place de la recette et des Deployment Checks : `docs-internes/recette/environnement-recette.md`. Tant qu'elle n'est pas faite, les aperçus lisent encore la base de production.
+- Production : pulsacity.com, sur `main`.
+
+Migrations : une PR n'ajoute que des colonnes facultatives ou des tables, compatibles avec le code déjà en ligne. Retirer ou renommer se fait dans une PR suivante, quand plus rien ne lit l'ancienne colonne. Si la base de recette s'écarte de `main` (migration d'une PR abandonnée), on la vide et on relance les deux workflows de recette.
+
+### Production
+
+- Vercel : équipe « jawadboughalems-projects », projet « pulsacity », production sur `main`. pulsacity.com sert la production ; www.pulsacity.com, pulsacity.fr et www.pulsacity.fr y redirigent en 301. Un déploiement de production ne passe en ligne qu'une fois les workflows « CI » et « Database migration » verts sur son commit (Deployment Checks de Vercel).
 - DNS de pulsacity.com : chez OVH. Les e-mails du fondateur en @pulsacity.com passent par OVH (MX et SPF de la racine) : ne jamais les modifier. DMARC en `p=none`.
-- Supabase : projet PULSACITY, eu-central-1. Migrations par le workflow GitHub « Database migration » sur `main`, avec le secret `DATABASE_URL` du dépôt.
+- Supabase : projet PULSACITY, eu-central-1. Migrations par le workflow GitHub « Database migration », lancé à chaque fusion sur `main`, avec le secret `DATABASE_URL` du dépôt.
 - Resend : domaine envois.pulsacity.com vérifié, région eu-west-1.
 - Cloudflare R2 : bucket `pulsacity-photos` (Europe de l'Ouest), jeton `pulsacity-production` limité à ce bucket, lecture publique par une adresse r2.dev. CORS : `PUT` depuis https://pulsacity.com seulement.
-- Recette : sur pulsacity.com tant que le produit n'est pas lancé. Le fondateur crée lui-même les comptes de test : un agent Claude in Chrome ne crée pas de compte sur un site en ligne.
+- Comptes de test : le fondateur les crée lui-même, ou par le workflow « Recette demo space » sur la recette. Un agent Claude in Chrome ne crée pas de compte sur un site en ligne.
 
 Avant le lancement public :
 - servir les photos depuis une adresse à nous (r2.dev est limité en débit) ;
-- séparer la recette de la production (base et adresse dédiées, `DATABASE_URL` retirée des aperçus) ;
 - renseigner `SENTRY_DSN`, pour que les erreurs de production remontent ;
-- effacer les données de test.
+- effacer les données de test de la production.
 
 ## Définition de « fini »
 
