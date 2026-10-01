@@ -29,14 +29,14 @@ export const CopyWidgetCodeButton = ({ snippet }: { snippet: string }) => {
   );
 };
 
-export const SendWidgetCodeButton = () => {
+export const SendWidgetCodeButton = ({ widgetId }: { widgetId?: string }) => {
   const [isSending, startSending] = useTransition();
   const [result, setResult] = useState<SendWidgetCodeResult | null>(null);
 
   const handleSend = () => {
     startSending(async () => {
       try {
-        setResult(await sendWidgetCodeByEmail());
+        setResult(await sendWidgetCodeByEmail(widgetId));
       } catch {
         setResult({ ok: false, error: "not-sent" });
       }

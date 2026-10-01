@@ -44,12 +44,15 @@ export const countTestimonialsForAnswer = (type: WidgetType, maxItems: number, o
   return WIDGET_MORE_PAGE_SIZE;
 };
 
+/** pulsacity.com with the space's referral code, as « Propulsé par PULSACITY » links to it. */
+export const buildReferralUrl = (appUrl: string, referralCode: string): string =>
+  `${appUrl}/?ref=${encodeURIComponent(referralCode)}`;
+
 export const buildPoweredByUrl = (
   appUrl: string,
   space: SpacePlan & { referralCode: string },
   settings: Pick<ResolvedWidgetSettings, "hidePoweredBy">,
-): string | null =>
-  settings.hidePoweredBy && canHideBadge(space) ? null : `${appUrl}/?ref=${encodeURIComponent(space.referralCode)}`;
+): string | null => (settings.hidePoweredBy && canHideBadge(space) ? null : buildReferralUrl(appUrl, space.referralCode));
 
 const toPublicTestimonial = (
   testimonial: WidgetTestimonialSource,
