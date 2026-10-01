@@ -37,7 +37,7 @@ const OffersPage = async () => {
               const collectionUrl = buildCollectionUrl(space.slug, offer.slug);
               return (
                 <OfferRow
-                  key={`${offer.id}-${offer.name}-${offer.requestDelayDays}-${offer.requestsEnabled}`}
+                  key={offer.id}
                   offer={offer}
                   collectionUrl={collectionUrl}
                   collectionAddress={displayUrl(collectionUrl)}
