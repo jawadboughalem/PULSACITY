@@ -1,7 +1,11 @@
 import type { ComponentProps } from "react";
 import { render } from "react-email";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NewTestimonialEmail, buildNewTestimonialSubject } from "./NewTestimonialEmail";
+
+beforeEach(() => {
+  vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://pulsacity.com");
+});
 
 const TESTIMONIAL: ComponentProps<typeof NewTestimonialEmail> = {
   spaceName: "Julie Nutrition",

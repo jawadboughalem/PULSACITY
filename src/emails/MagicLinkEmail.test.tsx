@@ -1,6 +1,10 @@
 import { render } from "react-email";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MagicLinkEmail } from "./MagicLinkEmail";
+
+beforeEach(() => {
+  vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://pulsacity.com");
+});
 
 const LINK = "https://pulsacity.com/api/auth/magic-link/verify?token=abc&callbackURL=%2Fapp";
 
@@ -13,6 +17,14 @@ describe("MagicLinkEmail", () => {
     expect(html).toContain("valable 15 minutes");
     expect(html).toContain('lang="fr"');
     expect(html).not.toContain('lang="en"');
+  });
+
+  it("signs with the symbol and the name, readable with images blocked", async () => {
+    const html = await render(<MagicLinkEmail url={LINK} lifetimeMinutes={15} />);
+
+    expect(html).toMatch(/<img alt="" height="24" src="https:\/\/pulsacity\.com\/brand\/email-symbole-48\.png"/);
+    expect(html).toMatch(/>Pulsacity<\/p>/);
+    expect(html).not.toContain(">PULSACITY<");
   });
 
   it("reads as plain text for clients without HTML", async () => {

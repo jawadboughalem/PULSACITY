@@ -13,12 +13,42 @@ const WIDGETS: SpaceSection = { label: "Widgets", href: "/app/widgets", icon: "g
 const CONNECTORS: SpaceSection = { label: "Connecteurs", href: "/app/connecteurs", icon: "connection" };
 const REQUESTS: SpaceSection = { label: "Demandes", href: "/app/demandes", icon: "mail" };
 const SETTINGS: SpaceSection = { label: "Réglages", href: "/app/reglages", icon: "sliders" };
-const MORE: SpaceSection = { label: "Plus", href: "/app/reglages", icon: "more" };
+const MORE: SpaceSection = { label: "Plus", href: "/app/plus", icon: "more" };
 
 export const DESKTOP_SECTIONS = [HOME, TESTIMONIALS, OFFERS, WIDGETS, CONNECTORS, REQUESTS, SETTINGS];
 
-export const MOBILE_SECTIONS = [HOME, TESTIMONIALS, REQUESTS, WIDGETS, MORE];
+export const MOBILE_SECTIONS = [HOME, TESTIMONIALS, REQUESTS, MORE];
+
+export const MORE_SECTIONS = [OFFERS, WIDGETS, CONNECTORS, SETTINGS];
+
+export const ACCOUNT_SECTIONS: SpaceSection[] = [
+  { label: "Mon compte", href: "/app/reglages", icon: "user" },
+  { label: "Abonnement et factures", href: "/app/facturation", icon: "card" },
+  { label: "Aide et contact", href: "/aide", icon: "help" },
+];
 
 export const TESTIMONIALS_SECTION_HREF = TESTIMONIALS.href;
 
+export const ADD_TESTIMONIAL_HREF = `${TESTIMONIALS.href}/ajouter`;
+
+export const IMPORT_TESTIMONIALS_HREF = `${TESTIMONIALS.href}/importer`;
+
+export const OFFERS_SECTION_HREF = OFFERS.href;
+
+export const REQUESTS_SECTION_HREF = REQUESTS.href;
+
+export const WIDGETS_SECTION_HREF = WIDGETS.href;
+
 export const SYSTEME_CONNECTOR_HREF = `${CONNECTORS.href}/systeme`;
+
+export const BILLING_HREF = "/app/facturation";
+
+const isWithin = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
+export const isSectionActive = (section: SpaceSection, pathname: string): boolean => {
+  if (section === HOME) return pathname === HOME.href;
+  if (section === MORE) {
+    return isWithin(pathname, MORE.href) || [...MORE_SECTIONS, ...ACCOUNT_SECTIONS].some((other) => isWithin(pathname, other.href));
+  }
+  return isWithin(pathname, section.href);
+};

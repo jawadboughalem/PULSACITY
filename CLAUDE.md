@@ -67,15 +67,15 @@ docs-internes/                # décisions, payloads, recette
 ## Modèle de données
 
 - Tables Better Auth : `user`, `session`, `account`, `verification`
-- `spaces` : id, userId, name, slug (unique), logoUrl, accentColor, replyToEmail, plan (free|essentiel|pro), stripeCustomerId, stripeSubscriptionId, referralCode, createdAt
+- `spaces` : id, userId, name, slug (unique), logoUrl, accentColor, replyToEmail, plan (free|essentiel|pro), stripeCustomerId, stripeSubscriptionId, referralCode, collectionLinkSharedAt, firstDayCelebratedAt, firstApprovalCelebratedAt (moments de marque déjà joués), createdAt
 - `connections` : id, spaceId, connector (systeme|stripe|calendly|…), webhookToken (unique, secret, régénérable), status (pending|active|error), lastEventAt, config (jsonb), createdAt
 - `products` (les « offres » : formation, accompagnement, séance…) : id, spaceId, name, slug, requestDelayDays (défaut 14), requestsEnabled (bool), createdAt
 - `product_refs` : id, productId, connectionId, externalRef — relie une offre à son identifiant dans chaque connecteur
 - `customers` : id, spaceId, email, firstName, lastName, unsubscribedAt, createdAt (unique spaceId + email)
 - `purchases` : id, spaceId, customerId, productId, connectionId (nullable), source (connector|manual|csv), eventType, externalRef, purchasedAt
 - `review_requests` : id, purchaseId, token (unique), scheduledAt, sentAt, reminderScheduledAt, reminderSentAt, completedAt, status (scheduled|sent|reminded|completed|cancelled|failed)
-- `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body, status (pending|approved|hidden), source (form|manual|csv), consentAt, consentText, featured (bool), createdAt
-- `widgets` : id, spaceId, type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur, nombre max, afficher note/photo), createdAt
+- `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body (original, jamais modifié), displayBody (texte affiché, null = original), displayEditedAt, status (pending|approved|hidden), source (form|manual|csv), consentAt, consentText, featured (bool), createdAt
+- `widgets` : id, spaceId, type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur, nombre max, afficher note/photo), firstLoadedAt (premier affichage sur une page), createdAt
 - `webhook_events` : id, connectionId, rawPayload (jsonb), headers (jsonb), eventType, receivedAt, processedAt, error — journal complet, rejouable
 - `stripe_events` : id, type, processedAt
 
@@ -87,7 +87,7 @@ docs-internes/                # décisions, payloads, recette
 | essentiel | 9 €/mois, 90 €/an | illimité | illimité | illimité | obligatoire |
 | pro | 19 €/mois, 190 €/an | illimité | illimité | illimité | retirable |
 
-Dépasser une limite ne supprime jamais de données : on bloque l'ajout et on propose de passer au plan supérieur.
+Dépasser une limite ne supprime jamais de données : on bloque l'ajout et on propose de passer au plan supérieur. La limite de témoignages compte les témoignages validés : au-delà, les nouveaux arrivent et restent en attente.
 
 ## Design system (application et site)
 
@@ -171,8 +171,7 @@ Avant le lancement public :
 - servir les photos depuis une adresse à nous (r2.dev est limité en débit) ;
 - séparer la recette de la production (base et adresse dédiées, `DATABASE_URL` retirée des aperçus) ;
 - renseigner `SENTRY_DSN`, pour que les erreurs de production remontent ;
-- effacer les données de test ;
-- ajouter la favicon.
+- effacer les données de test.
 
 ## Définition de « fini »
 

@@ -1,4 +1,6 @@
-export const MOUNT_SELECTOR = "[data-pulsacity-widget]";
+import { MOUNT_SELECTOR_ATTRIBUTE } from "./mount-attribute";
+
+export const MOUNT_SELECTOR = `[${MOUNT_SELECTOR_ATTRIBUTE}]`;
 
 export function mountWidgets(root: ParentNode = document): number {
   let mounted = 0;

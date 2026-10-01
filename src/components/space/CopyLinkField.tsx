@@ -2,6 +2,7 @@
 
 import { PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
+import { markLinkShared } from "./mark-link-shared";
 import { useCopyLink } from "./useCopyLink";
 
 type CopyLinkFieldProps = {
@@ -9,7 +10,7 @@ type CopyLinkFieldProps = {
 };
 
 export const CopyLinkField = ({ url }: CopyLinkFieldProps) => {
-  const { isCopied, handleCopy } = useCopyLink(url);
+  const { isCopied, handleCopy } = useCopyLink(url, markLinkShared);
 
   return (
     <div className="flex max-w-text flex-col gap-3">

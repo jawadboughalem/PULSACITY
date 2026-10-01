@@ -27,7 +27,10 @@ export const RatingField = ({ rating, hasError, firstStarRef, onChange }: Rating
       {RATINGS.map((value) => (
         <label
           key={value}
-          className="flex size-[56px] cursor-pointer items-center justify-center rounded-sm has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink-900"
+          className={cn(
+            "pz-note-etoile flex size-[56px] cursor-pointer items-center justify-center rounded-sm has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink-900",
+            value === rating && "is-choisie",
+          )}
         >
           <input
             ref={value === 1 ? firstStarRef : undefined}

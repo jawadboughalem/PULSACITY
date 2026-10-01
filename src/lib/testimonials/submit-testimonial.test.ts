@@ -162,6 +162,7 @@ describe("submitTestimonial", () => {
     for (let index = 0; index < 15; index += 1) {
       await submitTestimonial(database, CAMILLE);
     }
+    await database.update(testimonials).set({ status: "approved" }).where(eq(testimonials.spaceId, spaceId));
 
     const sixteenth = await submitTestimonial(database, CAMILLE);
 
@@ -170,6 +171,14 @@ describe("submitTestimonial", () => {
       notification: { isOverPlanLimit: true, planName: "Gratuit", planTestimonialLimit: 15 },
     });
     expect(await findTestimonials()).toHaveLength(16);
+  });
+
+  it("counts only the validated testimonials against the free plan", async () => {
+    for (let index = 0; index < 15; index += 1) {
+      await submitTestimonial(database, CAMILLE);
+    }
+
+    expect(await submitTestimonial(database, CAMILLE)).toMatchObject({ notification: { isOverPlanLimit: false } });
   });
 
   it("finds no limit on a paid plan", async () => {

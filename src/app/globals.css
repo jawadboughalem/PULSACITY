@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./pulsacity-motion.css";
 
 @source not "../../docs-internes";
 @source not "../../*.md";

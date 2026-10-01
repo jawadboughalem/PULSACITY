@@ -6,12 +6,9 @@ import { getDb } from "@/db";
 import { requireSignedInUser } from "@/lib/auth/require-signed-in-user";
 import { addProduct } from "@/lib/spaces/add-product";
 import { findOwnedSpace } from "@/lib/spaces/find-owned-space";
+import { productNameSchema } from "@/lib/spaces/product-rules";
 import { ONBOARDING_FORMATIONS_STEP_PATH } from "@/lib/spaces/space-paths";
 import { removeProduct } from "@/lib/spaces/remove-product";
-
-const MAX_FORMATION_NAME_LENGTH = 80;
-
-const formationNameSchema = z.string().trim().min(2).max(MAX_FORMATION_NAME_LENGTH);
 
 export type AddFormationResult =
   | { ok: true; data: { productId: string } }
@@ -24,7 +21,7 @@ export const addFormation = async (
   formData: FormData,
 ): Promise<AddFormationResult> => {
   const signedInUser = await requireSignedInUser();
-  const parsedName = formationNameSchema.safeParse(formData.get("name"));
+  const parsedName = productNameSchema.safeParse(formData.get("name"));
   if (!parsedName.success) return { ok: false, error: "invalid-name" };
 
   const database = getDb();

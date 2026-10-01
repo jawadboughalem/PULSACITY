@@ -22,6 +22,20 @@
       "when": 1790617810625,
       "tag": "0002_rate_limits",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790793045622,
+      "tag": "0003_displayed_text_and_widget_load",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790838479567,
+      "tag": "0004_space_milestones",
+      "breakpoints": true
     }
   ]
 }

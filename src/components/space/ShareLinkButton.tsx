@@ -3,6 +3,7 @@
 import { PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
+import { markLinkShared } from "./mark-link-shared";
 import { useCopyLink } from "./useCopyLink";
 
 type ShareLinkButtonProps = {
@@ -10,7 +11,7 @@ type ShareLinkButtonProps = {
 };
 
 export const ShareLinkButton = ({ url }: ShareLinkButtonProps) => {
-  const { isCopied, handleShare } = useCopyLink(url);
+  const { isCopied, handleShare } = useCopyLink(url, markLinkShared);
 
   return (
     <>
