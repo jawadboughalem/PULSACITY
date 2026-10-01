@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
-import { MOBILE_SECTIONS } from "./space-sections";
+import { MOBILE_SECTIONS, isSectionActive } from "./space-sections";
 
 export const SpaceTabBar = () => {
   const pathname = usePathname();
@@ -15,7 +15,7 @@ export const SpaceTabBar = () => {
       className="fixed inset-x-[0] bottom-[0] flex h-[84px] border-t border-hairline-200 bg-white px-2 pt-1 pb-5"
     >
       {MOBILE_SECTIONS.map((section) => {
-        const isActive = section.href === pathname;
+        const isActive = isSectionActive(section, pathname);
         return (
           <Link
             key={section.label}

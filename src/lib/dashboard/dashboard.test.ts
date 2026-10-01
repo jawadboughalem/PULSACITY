@@ -1,7 +1,8 @@
 import { randomUUID } from "node:crypto";
+import { eq } from "drizzle-orm";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { Database } from "@/db/database";
-import { connections, customers, products, purchases, reviewRequests, widgets } from "@/db/schema";
+import { connections, customers, products, purchases, reviewRequests, spaces, widgets } from "@/db/schema";
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import { insertTestTestimonial } from "@/db/testimonial-fixtures";
@@ -19,7 +20,9 @@ const insertSale = async (options: {
   firstName: string | null;
   purchasedAt: Date;
   sentAt?: Date | null;
+  reminderScheduledAt?: Date | null;
   reminderSentAt?: Date | null;
+  isAnswered?: boolean;
   connectionId?: string | null;
 }) => {
   const [customer] = await database
@@ -42,8 +45,9 @@ const insertSale = async (options: {
     token: randomUUID(),
     scheduledAt: options.purchasedAt,
     sentAt: options.sentAt ?? null,
+    reminderScheduledAt: options.reminderScheduledAt ?? null,
     reminderSentAt: options.reminderSentAt ?? null,
-    status: options.sentAt ? "sent" : "scheduled",
+    status: options.isAnswered ? "completed" : options.sentAt ? "sent" : "scheduled",
   });
 };
 
@@ -75,13 +79,31 @@ describe("countDashboardFigures", () => {
       pending: 1,
       averageRating: 14 / 3,
       requestsSentThisMonth: 0,
+      requestsAnsweredThisMonth: 0,
+      remindersScheduled: 0,
     });
   });
 
   it("counts the requests sent since the first of the month in Paris", async () => {
     await insertSale({ firstName: "Août", purchasedAt: new Date("2026-08-10T10:00:00Z"), sentAt: new Date("2026-08-31T21:59:00Z") });
-    await insertSale({ firstName: "Début", purchasedAt: new Date("2026-08-20T10:00:00Z"), sentAt: new Date("2026-08-31T22:01:00Z") });
-    await insertSale({ firstName: "Milieu", purchasedAt: new Date("2026-09-01T10:00:00Z"), sentAt: new Date("2026-09-15T08:00:00Z") });
+    await insertSale({
+      firstName: "Début",
+      purchasedAt: new Date("2026-08-20T10:00:00Z"),
+      sentAt: new Date("2026-08-31T22:01:00Z"),
+      isAnswered: true,
+    });
+    await insertSale({
+      firstName: "Milieu",
+      purchasedAt: new Date("2026-09-01T10:00:00Z"),
+      sentAt: new Date("2026-09-15T08:00:00Z"),
+      reminderScheduledAt: new Date("2026-09-19T08:00:00Z"),
+    });
+    await insertSale({
+      firstName: "Relancé",
+      purchasedAt: new Date("2026-07-01T10:00:00Z"),
+      sentAt: new Date("2026-07-15T08:00:00Z"),
+      reminderScheduledAt: new Date("2026-10-02T08:00:00Z"),
+    });
     await insertSale({ firstName: "Prévue", purchasedAt: new Date("2026-09-25T10:00:00Z") });
 
     expect(await countDashboardFigures(database, spaceId, NOW)).toEqual({
@@ -89,6 +111,8 @@ describe("countDashboardFigures", () => {
       pending: 0,
       averageRating: null,
       requestsSentThisMonth: 2,
+      requestsAnsweredThisMonth: 1,
+      remindersScheduled: 2,
     });
   });
 });
@@ -158,10 +182,23 @@ describe("listLatestActivity", () => {
 });
 
 describe("readSetupSteps", () => {
+  it("sees the link shared once copied, or once a client has used it", async () => {
+    await database.update(spaces).set({ collectionLinkSharedAt: NOW }).where(eq(spaces.id, spaceId));
+    expect(await readSetupSteps(database, spaceId)).toMatchObject({ isLinkShared: true });
+
+    await database.update(spaces).set({ collectionLinkSharedAt: null }).where(eq(spaces.id, spaceId));
+    await insertTestTestimonial(database, { spaceId, source: "form", consentAt: NOW, consentText: "J'accepte." });
+    expect(await readSetupSteps(database, spaceId)).toMatchObject({ isLinkShared: true });
+  });
+
   it("has nothing done on a new space", async () => {
     await database.insert(widgets).values({ spaceId, type: "wall" });
 
-    expect(await readSetupSteps(database, spaceId)).toEqual({ systeme: "none", isWidgetPasted: false });
+    expect(await readSetupSteps(database, spaceId)).toEqual({
+      isLinkShared: false,
+      systeme: "none",
+      isWidgetPasted: false,
+    });
   });
 
   it("sees Systeme.io connected and the widget shown on a page", async () => {
@@ -171,7 +208,11 @@ describe("readSetupSteps", () => {
     ]);
     await database.insert(widgets).values({ spaceId, type: "wall", firstLoadedAt: NOW });
 
-    expect(await readSetupSteps(database, spaceId)).toEqual({ systeme: "active", isWidgetPasted: true });
+    expect(await readSetupSteps(database, spaceId)).toEqual({
+      isLinkShared: false,
+      systeme: "active",
+      isWidgetPasted: true,
+    });
   });
 
   it("waits for the first sale of a Systeme.io connection", async () => {

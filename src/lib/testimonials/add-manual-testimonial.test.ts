@@ -41,7 +41,7 @@ describe("addManualTestimonial", () => {
   it("adds a validated testimonial with source manual and the creator's consent", async () => {
     const result = await addManualTestimonial(database, userId, spaceId, NADIA, NOW);
 
-    expect(result).toMatchObject({ status: "added" });
+    expect(result).toMatchObject({ status: "added", plan: null });
     expect(await findSpaceTestimonials()).toEqual([
       expect.objectContaining({
         authorName: "Nadia B.",
@@ -97,14 +97,15 @@ describe("addManualTestimonial", () => {
     expect(await findSpaceTestimonials()).toHaveLength(0);
   });
 
-  it("blocks the 16th testimonial of the free plan and keeps the 15 others", async () => {
-    for (let index = 0; index < 15; index += 1) await insertTestTestimonial(database, { spaceId });
+  it("keeps the 16th testimonial of the free plan pending, and says why", async () => {
+    for (let index = 0; index < 15; index += 1) await insertTestTestimonial(database, { spaceId, status: "approved" });
 
-    expect(await addManualTestimonial(database, userId, spaceId, NADIA)).toEqual({
-      status: "plan-limit-reached",
-      planName: "Gratuit",
-      testimonialLimit: 15,
-    });
-    expect(await findSpaceTestimonials()).toHaveLength(15);
+    const result = await addManualTestimonial(database, userId, spaceId, NADIA);
+
+    expect(result).toMatchObject({ status: "added", plan: { name: "Gratuit", testimonialLimit: 15 } });
+    expect(await findSpaceTestimonials()).toHaveLength(16);
+    expect((await findSpaceTestimonials()).filter((testimonial) => testimonial.status === "pending")).toEqual([
+      expect.objectContaining({ authorName: "Nadia B.", source: "manual" }),
+    ]);
   });
 });

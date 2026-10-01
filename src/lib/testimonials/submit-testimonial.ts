@@ -1,4 +1,4 @@
-import { and, count, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { canAddTestimonial, getPlan } from "@/config/plans";
 import type { Database } from "@/db/database";
 import { products, purchases, reviewRequests, spaces, testimonials, user } from "@/db/schema";
@@ -6,6 +6,7 @@ import { getUploadPublicUrl } from "@/lib/uploads/presign-image-upload";
 import { isTestimonialPhotoKeyOf } from "@/lib/uploads/upload-keys";
 import { isReviewRequestActive } from "./active-review-request-statuses";
 import { buildConsentText } from "./build-consent-text";
+import { countApprovedTestimonials } from "./count-approved-testimonials";
 import { findCollectionProduct } from "./load-collection-page";
 
 export type TestimonialSubmission = {
@@ -89,10 +90,7 @@ export const submitTestimonial = async (
       product = { id: request.productId, name: request.productName, slug: request.productSlug };
     }
 
-    const [{ testimonialCount }] = await transaction
-      .select({ testimonialCount: count() })
-      .from(testimonials)
-      .where(eq(testimonials.spaceId, space.id));
+    const approvedCount = await countApprovedTestimonials(transaction, space.id);
     const authorPhotoUrl = submission.photoKey ? getUploadPublicUrl(submission.photoKey) : null;
 
     await transaction.insert(testimonials).values({
@@ -124,7 +122,7 @@ export const submitTestimonial = async (
         body: submission.body,
         planName: plan.name,
         planTestimonialLimit: plan.limits.testimonials,
-        isOverPlanLimit: !canAddTestimonial(space, testimonialCount),
+        isOverPlanLimit: !canAddTestimonial(space, approvedCount),
       },
     };
   });

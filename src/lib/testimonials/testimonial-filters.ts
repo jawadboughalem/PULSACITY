@@ -7,13 +7,16 @@ export type TestimonialStatus = (typeof TESTIMONIAL_STATUSES)[number];
 
 export const WITHOUT_PRODUCT = "none";
 
+export const MAX_SEARCH_LENGTH = 80;
+
 export type TestimonialFilters = {
+  query: string | null;
   status: TestimonialStatus | null;
   productId: string | typeof WITHOUT_PRODUCT | null;
   rating: (typeof RATINGS)[number] | null;
 };
 
-export const NO_TESTIMONIAL_FILTER: TestimonialFilters = { status: null, productId: null, rating: null };
+export const NO_TESTIMONIAL_FILTER: TestimonialFilters = { query: null, status: null, productId: null, rating: null };
 
 export const STATUS_SEARCH_VALUES = {
   pending: "en-attente",
@@ -22,6 +25,7 @@ export const STATUS_SEARCH_VALUES = {
 } as const satisfies Record<TestimonialStatus, string>;
 
 export const TESTIMONIAL_SEARCH_PARAMS = {
+  query: "recherche",
   status: "statut",
   productId: "offre",
   rating: "note",
@@ -48,9 +52,13 @@ const readProductId = (value: string | undefined): TestimonialFilters["productId
   return z.uuid().safeParse(value).success ? (value as string) : null;
 };
 
+const readQuery = (value: string | undefined): string | null =>
+  value?.replace(/\s+/g, " ").trim().slice(0, MAX_SEARCH_LENGTH) || null;
+
 export const readTestimonialFilters = (searchParams: SearchParams): TestimonialFilters => {
   const rating = ratingSchema.safeParse(readFirst(searchParams[TESTIMONIAL_SEARCH_PARAMS.rating]));
   return {
+    query: readQuery(readFirst(searchParams[TESTIMONIAL_SEARCH_PARAMS.query])),
     status: STATUS_BY_SEARCH_VALUE.get(readFirst(searchParams[TESTIMONIAL_SEARCH_PARAMS.status]) ?? "") ?? null,
     productId: readProductId(readFirst(searchParams[TESTIMONIAL_SEARCH_PARAMS.productId])),
     rating: rating.success ? (rating.data as TestimonialFilters["rating"]) : null,
@@ -64,6 +72,7 @@ export const readTestimonialPage = (searchParams: SearchParams): number => {
 
 export const buildTestimonialSearch = (filters: TestimonialFilters, page = 1): string => {
   const search = new URLSearchParams();
+  if (filters.query) search.set(TESTIMONIAL_SEARCH_PARAMS.query, filters.query);
   if (filters.status) search.set(TESTIMONIAL_SEARCH_PARAMS.status, STATUS_SEARCH_VALUES[filters.status]);
   if (filters.productId) {
     search.set(
@@ -78,4 +87,4 @@ export const buildTestimonialSearch = (filters: TestimonialFilters, page = 1): s
 };
 
 export const hasTestimonialFilter = (filters: TestimonialFilters): boolean =>
-  filters.status !== null || filters.productId !== null || filters.rating !== null;
+  filters.query !== null || filters.status !== null || filters.productId !== null || filters.rating !== null;

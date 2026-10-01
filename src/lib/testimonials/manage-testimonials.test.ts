@@ -7,8 +7,9 @@ import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import { insertTestTestimonial } from "@/db/testimonial-fixtures";
 import { deleteTestimonial } from "./delete-testimonial";
 import { getDisplayedBody } from "./displayed-body";
-import { editTestimonialDisplay, restoreTestimonialOriginal } from "./edit-testimonial-display";
-import { countTestimonialsByStatus, listSpaceTestimonials } from "./list-space-testimonials";
+import { editTestimonialPresentation, setTestimonialProduct } from "./edit-testimonial-presentation";
+import { restoreTestimonialOriginal } from "./restore-testimonial-original";
+import { countTestimonialsByStatus, listLatestTestimonials, listSpaceTestimonials } from "./list-space-testimonials";
 import { setTestimonialFeatured } from "./set-testimonial-featured";
 import { setTestimonialStatus } from "./set-testimonial-status";
 import { NO_TESTIMONIAL_FILTER, WITHOUT_PRODUCT } from "./testimonial-filters";
@@ -67,6 +68,7 @@ describe("listSpaceTestimonials", () => {
     expect(withoutFormation.testimonials.map((testimonial) => testimonial.id)).toEqual([pending]);
 
     const fourStars = await listSpaceTestimonials(database, spaceId, {
+      query: null,
       status: null,
       productId: programme.id,
       rating: 4,
@@ -87,6 +89,45 @@ describe("listSpaceTestimonials", () => {
   });
 });
 
+describe("searching the testimonials", () => {
+  it("finds a first name or a word, in the original or the displayed text, literally", async () => {
+    const nadia = await insertTestTestimonial(database, { spaceId, authorName: "Nadia B.", body: "Horaires décalés." });
+    const sophie = await insertTestTestimonial(database, {
+      spaceId,
+      authorName: "Sophie D.",
+      authorTitle: "Maman de 3 enfants",
+      body: "Toute la famille mange mieux.",
+      displayBody: "La famille mange mieux, 100% conquise.",
+    });
+
+    const search = async (query: string) =>
+      (await listSpaceTestimonials(database, spaceId, { ...NO_TESTIMONIAL_FILTER, query })).testimonials.map(
+        (testimonial) => testimonial.id,
+      );
+    expect(await search("nadia")).toEqual([nadia]);
+    expect(await search("FAMILLE")).toEqual([sophie]);
+    expect(await search("100%")).toEqual([sophie]);
+    expect(await search("maman")).toEqual([sophie]);
+    expect(await search("_")).toEqual([]);
+  });
+});
+
+describe("listLatestTestimonials", () => {
+  it("lists the latest testimonials of the space, whatever their status", async () => {
+    for (let day = 1; day <= 6; day += 1) {
+      await insertTestTestimonial(database, {
+        spaceId,
+        authorName: `Client ${day}`,
+        status: day % 2 ? "pending" : "approved",
+        createdAt: new Date(Date.UTC(2026, 8, day)),
+      });
+    }
+
+    const latest = await listLatestTestimonials(database, spaceId);
+    expect(latest.map((testimonial) => testimonial.authorName)).toEqual(["Client 6", "Client 5", "Client 4", "Client 3"]);
+  });
+});
+
 describe("countTestimonialsByStatus", () => {
   it("counts each status of the space", async () => {
     await insertTestTestimonial(database, { spaceId, status: "pending" });
@@ -102,7 +143,10 @@ describe("quick actions", () => {
   it("approves, hides and features a testimonial of the space", async () => {
     const id = await insertTestTestimonial(database, { spaceId, status: "pending" });
 
-    expect(await setTestimonialStatus(database, userId, id, "approved")).toEqual({ status: "updated" });
+    expect(await setTestimonialStatus(database, userId, id, "approved")).toEqual({
+      status: "updated",
+      isFirstApproval: true,
+    });
     expect(await findTestimonial(id)).toMatchObject({ status: "approved" });
 
     await setTestimonialFeatured(database, userId, id, true);
@@ -119,23 +163,65 @@ describe("quick actions", () => {
       status: "testimonial-not-found",
     });
     expect(await setTestimonialFeatured(database, otherUserId, id, true)).toEqual({ status: "testimonial-not-found" });
-    expect(await editTestimonialDisplay(database, otherUserId, id, "Autre texte")).toEqual({
-      status: "testimonial-not-found",
-    });
+    expect(
+      await editTestimonialPresentation(database, otherUserId, id, {
+        displayBody: "Autre texte",
+        authorName: "Autre",
+        authorTitle: null,
+      }),
+    ).toEqual({ status: "testimonial-not-found" });
     expect(await deleteTestimonial(database, otherUserId, id)).toEqual({ status: "testimonial-not-found" });
     expect(await findTestimonial(id)).toMatchObject({ status: "pending", featured: false, displayBody: null });
   });
 });
 
-describe("editTestimonialDisplay", () => {
-  it("changes the displayed text and keeps the original intact", async () => {
-    const original = "Super formation, j'ai apris plein de choses. Le groupe WhatsApp aussi était top.";
-    const id = await insertTestTestimonial(database, { spaceId, body: original });
+describe("setTestimonialStatus", () => {
+  it("refuses a 16th validated testimonial on the free plan, and keeps it pending", async () => {
+    for (let index = 0; index < 15; index += 1) await insertTestTestimonial(database, { spaceId, status: "approved" });
+    const id = await insertTestTestimonial(database, { spaceId, status: "pending" });
 
-    await editTestimonialDisplay(database, userId, id, "  Super formation, j'ai appris plein de choses.  ");
+    expect(await setTestimonialStatus(database, userId, id, "approved")).toEqual({
+      status: "plan-limit-reached",
+      planName: "Gratuit",
+      testimonialLimit: 15,
+    });
+    expect(await findTestimonial(id)).toMatchObject({ status: "pending" });
+    expect(await setTestimonialStatus(database, userId, id, "hidden")).toEqual({
+      status: "updated",
+      isFirstApproval: false,
+    });
+  });
+
+  it("celebrates the first validated testimonial once, never again", async () => {
+    const first = await insertTestTestimonial(database, { spaceId, status: "pending" });
+    const second = await insertTestTestimonial(database, { spaceId, status: "pending" });
+
+    expect(await setTestimonialStatus(database, userId, first, "approved")).toMatchObject({ isFirstApproval: true });
+    await setTestimonialStatus(database, userId, first, "hidden");
+    expect(await setTestimonialStatus(database, userId, second, "approved")).toMatchObject({ isFirstApproval: false });
+  });
+});
+
+describe("editTestimonialPresentation", () => {
+  const presentation = (displayBody: string) => ({ displayBody, authorName: "Camille R.", authorTitle: null });
+
+  it("changes the displayed text, name and title, and keeps the original text intact", async () => {
+    const original = "Super formation, j'ai apris plein de choses. Le groupe WhatsApp aussi était top.";
+    const id = await insertTestTestimonial(database, { spaceId, body: original, authorName: "camille r" });
+
+    await editTestimonialPresentation(database, userId, id, {
+      displayBody: "  Super formation, j'ai appris plein de choses.  ",
+      authorName: " Camille R. ",
+      authorTitle: " Enseignante ",
+    });
 
     const edited = await findTestimonial(id);
-    expect(edited).toMatchObject({ body: original, displayBody: "Super formation, j'ai appris plein de choses." });
+    expect(edited).toMatchObject({
+      body: original,
+      displayBody: "Super formation, j'ai appris plein de choses.",
+      authorName: "Camille R.",
+      authorTitle: "Enseignante",
+    });
     expect(edited.displayEditedAt).toBeInstanceOf(Date);
     expect(getDisplayedBody(edited)).toBe("Super formation, j'ai appris plein de choses.");
   });
@@ -143,15 +229,36 @@ describe("editTestimonialDisplay", () => {
   it("goes back to the original, by request or when the text matches it again", async () => {
     const id = await insertTestTestimonial(database, { spaceId, body: "Texte d'origine." });
 
-    await editTestimonialDisplay(database, userId, id, "Texte corrigé.");
+    await editTestimonialPresentation(database, userId, id, presentation("Texte corrigé."));
     await restoreTestimonialOriginal(database, userId, id);
     expect(await findTestimonial(id)).toMatchObject({ displayBody: null, displayEditedAt: null });
 
-    await editTestimonialDisplay(database, userId, id, "Texte corrigé.");
-    await editTestimonialDisplay(database, userId, id, "Texte d'origine.\r\n");
+    await editTestimonialPresentation(database, userId, id, presentation("Texte corrigé."));
+    await editTestimonialPresentation(database, userId, id, presentation("Texte d'origine.\r\n"));
     const restored = await findTestimonial(id);
     expect(restored).toMatchObject({ body: "Texte d'origine.", displayBody: null, displayEditedAt: null });
     expect(getDisplayedBody(restored)).toBe("Texte d'origine.");
+  });
+});
+
+describe("setTestimonialProduct", () => {
+  it("links an offer of the space, or none, and refuses an offer of another space", async () => {
+    const [product] = await database
+      .insert(products)
+      .values({ spaceId, name: "Suivi individuel", slug: "suivi-individuel" })
+      .returning({ id: products.id });
+    const otherSpaceId = await insertTestSpace(database, otherUserId, "marc-autre");
+    const [otherProduct] = await database
+      .insert(products)
+      .values({ spaceId: otherSpaceId, name: "Coaching", slug: "coaching" })
+      .returning({ id: products.id });
+    const id = await insertTestTestimonial(database, { spaceId });
+
+    expect(await setTestimonialProduct(database, userId, id, product.id)).toEqual({ status: "updated" });
+    expect(await findTestimonial(id)).toMatchObject({ productId: product.id });
+    expect(await setTestimonialProduct(database, userId, id, otherProduct.id)).toEqual({ status: "product-not-found" });
+    expect(await setTestimonialProduct(database, userId, id, null)).toEqual({ status: "updated" });
+    expect(await findTestimonial(id)).toMatchObject({ productId: null });
   });
 });
 

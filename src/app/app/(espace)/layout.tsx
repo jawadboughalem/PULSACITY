@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { SpaceMobileHeader } from "@/components/space/SpaceMobileHeader";
+import { buildSpaceAccount } from "@/components/space/build-space-account";
 import { SpaceNavigation } from "@/components/space/SpaceNavigation";
 import { SpaceTabBar } from "@/components/space/SpaceTabBar";
 import { getCurrentSpace } from "@/lib/spaces/get-current-space";
@@ -12,21 +12,14 @@ type SpaceLayoutProps = {
 const SpaceLayout = async ({ children }: SpaceLayoutProps) => {
   const { signedInUser, space } = await getCurrentSpace();
   const counts = await getCurrentSpaceCounts(space.id);
+  const account = buildSpaceAccount(signedInUser, space);
 
   return (
     <div className="flex min-h-dvh">
       <div className="hidden desktop:flex">
-        <SpaceNavigation
-          spaceName={space.name}
-          logoUrl={space.logoUrl}
-          accountEmail={signedInUser.email}
-          pendingTestimonials={counts.pending}
-        />
+        <SpaceNavigation account={account} pendingTestimonials={counts.pending} />
       </div>
       <div className="flex min-w-[0] flex-1 flex-col">
-        <div className="desktop:hidden">
-          <SpaceMobileHeader spaceName={space.name} logoUrl={space.logoUrl} />
-        </div>
         {children}
         <div className="desktop:hidden">
           <SpaceTabBar />

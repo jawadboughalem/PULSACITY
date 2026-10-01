@@ -1,4 +1,4 @@
-import { type SQL, and, count, desc, eq, isNull, sql } from "drizzle-orm";
+import { type SQL, and, count, desc, eq, ilike, isNull, or, sql } from "drizzle-orm";
 import type { Database } from "@/db/database";
 import { products, testimonials } from "@/db/schema";
 import { type TestimonialFilters, type TestimonialStatus, WITHOUT_PRODUCT } from "./testimonial-filters";
@@ -30,8 +30,20 @@ export type SpaceTestimonialPage = {
 
 export type TestimonialStatusCounts = Record<TestimonialStatus | "all", number>;
 
+const escapeLikePattern = (text: string) => text.replace(/[\\%_]/g, (character) => `\\${character}`);
+
 const buildConditions = (spaceId: string, filters: TestimonialFilters): SQL[] => {
   const conditions = [eq(testimonials.spaceId, spaceId)];
+  if (filters.query) {
+    const pattern = `%${escapeLikePattern(filters.query)}%`;
+    const matches = or(
+      ilike(testimonials.authorName, pattern),
+      ilike(testimonials.authorTitle, pattern),
+      ilike(testimonials.body, pattern),
+      ilike(testimonials.displayBody, pattern),
+    );
+    if (matches) conditions.push(matches);
+  }
   if (filters.status) conditions.push(eq(testimonials.status, filters.status));
   if (filters.productId === WITHOUT_PRODUCT) conditions.push(isNull(testimonials.productId));
   else if (filters.productId) conditions.push(eq(testimonials.productId, filters.productId));
@@ -39,17 +51,8 @@ const buildConditions = (spaceId: string, filters: TestimonialFilters): SQL[] =>
   return conditions;
 };
 
-export const listSpaceTestimonials = async (
-  database: Database,
-  spaceId: string,
-  filters: TestimonialFilters,
-  page = 1,
-): Promise<SpaceTestimonialPage> => {
-  const where = and(...buildConditions(spaceId, filters));
-  const [{ total }] = await database.select({ total: count() }).from(testimonials).where(where);
-  const pageCount = Math.max(1, Math.ceil(total / TESTIMONIALS_PAGE_SIZE));
-
-  const rows = await database
+const selectSpaceTestimonials = (database: Database) =>
+  database
     .select({
       id: testimonials.id,
       authorName: testimonials.authorName,
@@ -67,7 +70,31 @@ export const listSpaceTestimonials = async (
       productName: products.name,
     })
     .from(testimonials)
-    .leftJoin(products, eq(products.id, testimonials.productId))
+    .leftJoin(products, eq(products.id, testimonials.productId));
+
+export const LATEST_TESTIMONIALS_LIMIT = 4;
+
+export const listLatestTestimonials = (
+  database: Database,
+  spaceId: string,
+  limit = LATEST_TESTIMONIALS_LIMIT,
+): Promise<SpaceTestimonial[]> =>
+  selectSpaceTestimonials(database)
+    .where(eq(testimonials.spaceId, spaceId))
+    .orderBy(desc(testimonials.createdAt), desc(testimonials.id))
+    .limit(limit);
+
+export const listSpaceTestimonials = async (
+  database: Database,
+  spaceId: string,
+  filters: TestimonialFilters,
+  page = 1,
+): Promise<SpaceTestimonialPage> => {
+  const where = and(...buildConditions(spaceId, filters));
+  const [{ total }] = await database.select({ total: count() }).from(testimonials).where(where);
+  const pageCount = Math.max(1, Math.ceil(total / TESTIMONIALS_PAGE_SIZE));
+
+  const rows = await selectSpaceTestimonials(database)
     .where(where)
     .orderBy(desc(testimonials.createdAt), desc(testimonials.id))
     .limit(TESTIMONIALS_PAGE_SIZE)

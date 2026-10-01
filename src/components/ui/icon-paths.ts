@@ -25,6 +25,19 @@ export const ICON_PATHS = {
   mail: ["M3 5h18v14H3z", "M3.5 6l8.5 7 8.5-7"],
   sliders: ["M4 7h10M18 7h2M4 17h4M12 17h8", drawCircle(16, 7, 2), drawCircle(10, 17, 2)],
   more: [drawCircle(5, 12, 1.2), drawCircle(12, 12, 1.2), drawCircle(19, 12, 1.2)],
+  user: [drawCircle(12, 8, 4), "M4 20.5c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"],
+  card: ["M3 6h18v12H3z", "M3 10h18"],
+  help: [drawCircle(12, 12, 9), "M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6", "M12 17.2v.1"],
+  logout: ["M14 4H5v16h9", "M10 12h10", "M17 9l3 3-3 3"],
+  chevronDown: ["M6 9l6 6 6-6"],
+  chevronRight: ["M9 6l6 6-6 6"],
+  chevronLeft: ["M15 6l-6 6 6 6"],
+  bookmark: ["M6 3h12v18l-6-5-6 5z"],
+  search: [drawCircle(11, 11, 6.5), "M16 16l4.5 4.5"],
+  plus: ["M12 5v14", "M5 12h14"],
+  info: [drawCircle(12, 12, 9), "M12 11v6", "M12 7.2v.1"],
+  hidden: ["M4 12s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6z", drawCircle(12, 12, 2.5), "M4 4l16 16"],
+  upload: ["M12 15V4", "M8 8l4-4 4 4", "M5 15v5h14v-5"],
 } as const;
 
 export type IconName = keyof typeof ICON_PATHS;

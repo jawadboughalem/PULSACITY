@@ -56,6 +56,7 @@ describe("importTestimonialCsv", () => {
     expect(report).toMatchObject({
       status: "imported",
       importedCount: 47,
+      pendingCount: 0,
       createdProductNames: ["Atelier cuisine"],
       plan: { name: "Essentiel", testimonialsLeft: null },
     });
@@ -100,10 +101,12 @@ describe("importTestimonialCsv", () => {
     expect(await findSpaceTestimonials()).toHaveLength(48);
   });
 
-  it("stops at the free plan limit without touching what is already there", async () => {
+  it("imports past the free plan limit as pending, without touching what is already there", async () => {
     const freeUserId = await insertTestUser(database, "marc@exemple.fr");
     const freeSpaceId = await insertTestSpace(database, freeUserId, "marc-coaching");
-    for (let index = 0; index < 13; index += 1) await insertTestTestimonial(database, { spaceId: freeSpaceId });
+    for (let index = 0; index < 13; index += 1) {
+      await insertTestTestimonial(database, { spaceId: freeSpaceId, status: "approved" });
+    }
 
     const report = await importTestimonialCsv(
       database,
@@ -115,15 +118,20 @@ describe("importTestimonialCsv", () => {
 
     expect(report).toMatchObject({
       status: "imported",
-      importedCount: 2,
+      importedCount: 4,
+      pendingCount: 2,
+      notImported: [],
       plan: { name: "Gratuit", testimonialLimit: 15, testimonialsLeft: 0 },
     });
-    if (report.status !== "imported") return;
-    expect(report.notImported.map((row) => [row.line, row.status])).toEqual([
-      [4, "over-limit"],
-      [5, "over-limit"],
+    const imported = await database
+      .select({ authorName: testimonials.authorName, status: testimonials.status })
+      .from(testimonials)
+      .where(eq(testimonials.spaceId, freeSpaceId));
+    expect(imported.filter((testimonial) => testimonial.status === "approved")).toHaveLength(15);
+    expect(imported.filter((testimonial) => testimonial.status === "pending").map((row) => row.authorName)).toEqual([
+      "C",
+      "D",
     ]);
-    expect(await database.select().from(testimonials).where(eq(testimonials.spaceId, freeSpaceId))).toHaveLength(15);
   });
 
   it("refuses the space of another creator", async () => {

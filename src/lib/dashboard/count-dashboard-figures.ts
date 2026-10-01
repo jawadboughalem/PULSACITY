@@ -1,4 +1,4 @@
-import { and, count, eq, gte, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import type { Database } from "@/db/database";
 import { purchases, reviewRequests, testimonials } from "@/db/schema";
 import { startOfParisMonth } from "@/lib/dates/paris-date";
@@ -8,6 +8,8 @@ export type DashboardFigures = {
   pending: number;
   averageRating: number | null;
   requestsSentThisMonth: number;
+  requestsAnsweredThisMonth: number;
+  remindersScheduled: number;
 };
 
 export const countDashboardFigures = async (
@@ -15,6 +17,7 @@ export const countDashboardFigures = async (
   spaceId: string,
   now = new Date(),
 ): Promise<DashboardFigures> => {
+  const monthStart = startOfParisMonth(now);
   const [[testimonialFigures], [requestFigures]] = await Promise.all([
     database
       .select({
@@ -25,10 +28,18 @@ export const countDashboardFigures = async (
       .from(testimonials)
       .where(eq(testimonials.spaceId, spaceId)),
     database
-      .select({ sent: count() })
+      .select({
+        sent: sql<number>`count(*) filter (where ${reviewRequests.sentAt} >= ${monthStart.toISOString()}::timestamptz)`.mapWith(Number),
+        answered: sql<number>`count(*) filter (where ${reviewRequests.sentAt} >= ${monthStart.toISOString()}::timestamptz and ${reviewRequests.status} = 'completed')`.mapWith(
+          Number,
+        ),
+        remindersScheduled: sql<number>`count(*) filter (where ${reviewRequests.status} = 'sent' and ${reviewRequests.reminderScheduledAt} is not null and ${reviewRequests.reminderSentAt} is null)`.mapWith(
+          Number,
+        ),
+      })
       .from(reviewRequests)
       .innerJoin(purchases, eq(purchases.id, reviewRequests.purchaseId))
-      .where(and(eq(purchases.spaceId, spaceId), gte(reviewRequests.sentAt, startOfParisMonth(now)))),
+      .where(eq(purchases.spaceId, spaceId)),
   ]);
   const averageRating = testimonialFigures?.averageRating;
   return {
@@ -36,5 +47,7 @@ export const countDashboardFigures = async (
     pending: testimonialFigures?.pending ?? 0,
     averageRating: averageRating === null || averageRating === undefined ? null : Number(averageRating),
     requestsSentThisMonth: requestFigures?.sent ?? 0,
+    requestsAnsweredThisMonth: requestFigures?.answered ?? 0,
+    remindersScheduled: requestFigures?.remindersScheduled ?? 0,
   };
 };

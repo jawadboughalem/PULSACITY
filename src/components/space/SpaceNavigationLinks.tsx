@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
-import { DESKTOP_SECTIONS, TESTIMONIALS_SECTION_HREF } from "./space-sections";
+import { DESKTOP_SECTIONS, TESTIMONIALS_SECTION_HREF, isSectionActive } from "./space-sections";
 
 type SpaceNavigationLinksProps = {
   pendingTestimonials: number;
@@ -16,7 +16,7 @@ export const SpaceNavigationLinks = ({ pendingTestimonials }: SpaceNavigationLin
   return (
     <ul className="flex flex-col gap-1">
       {DESKTOP_SECTIONS.map((section) => {
-        const isActive = section.href === pathname;
+        const isActive = isSectionActive(section, pathname);
         return (
           <li key={section.label}>
             <Link

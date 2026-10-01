@@ -25,10 +25,9 @@ const MANUAL_PHOTO_UPLOADS_PER_USER: RateLimitRule = {
 };
 
 export type AddManualTestimonialFormResult =
-  | { ok: true; data: { testimonialId: string } }
+  | { ok: true; data: { testimonialId: string; pendingPlan: { name: string; testimonialLimit: number | null } | null } }
   | { ok: false; error: "invalid-input"; fieldErrors: ManualTestimonialFieldErrors }
-  | { ok: false; error: "space-not-found" | "product-not-found" | "invalid-photo" }
-  | { ok: false; error: "plan-limit-reached"; planName: string; testimonialLimit: number | null };
+  | { ok: false; error: "space-not-found" | "product-not-found" | "invalid-photo" };
 
 export const addManualTestimonialForm = async (input: unknown): Promise<AddManualTestimonialFormResult> => {
   const signedInUser = await requireSignedInUser();
@@ -51,11 +50,10 @@ export const addManualTestimonialForm = async (input: unknown): Promise<AddManua
     receivedAt,
     photoKey,
   });
-  if (result.status === "plan-limit-reached") return { ok: false, error: "plan-limit-reached", ...result };
   if (result.status !== "added") return { ok: false, error: result.status };
 
   revalidatePath(SPACE_HOME_PATH, "layout");
-  return { ok: true, data: { testimonialId: result.testimonialId } };
+  return { ok: true, data: { testimonialId: result.testimonialId, pendingPlan: result.plan } };
 };
 
 export const requestManualTestimonialPhotoUpload = async (

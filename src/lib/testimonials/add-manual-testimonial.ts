@@ -1,9 +1,10 @@
-import { and, count, eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { canAddTestimonial, getPlan } from "@/config/plans";
 import type { Database } from "@/db/database";
 import { products, spaces, testimonials } from "@/db/schema";
 import { getUploadPublicUrl } from "@/lib/uploads/presign-image-upload";
 import { isTestimonialPhotoKeyOf } from "@/lib/uploads/upload-keys";
+import { countApprovedTestimonials } from "./count-approved-testimonials";
 import { MANUAL_CONSENT_TEXT } from "./manual-consent";
 
 export type ManualTestimonial = {
@@ -17,11 +18,10 @@ export type ManualTestimonial = {
 };
 
 export type AddManualTestimonialResult =
-  | { status: "added"; testimonialId: string }
+  | { status: "added"; testimonialId: string; plan: { name: string; testimonialLimit: number | null } | null }
   | { status: "space-not-found" }
   | { status: "product-not-found" }
-  | { status: "invalid-photo" }
-  | { status: "plan-limit-reached"; planName: string; testimonialLimit: number | null };
+  | { status: "invalid-photo" };
 
 export const addManualTestimonial = (
   database: Database,
@@ -51,14 +51,8 @@ export const addManualTestimonial = (
       return { status: "invalid-photo" };
     }
 
-    const [{ testimonialCount }] = await transaction
-      .select({ testimonialCount: count() })
-      .from(testimonials)
-      .where(eq(testimonials.spaceId, space.id));
-    if (!canAddTestimonial(space, testimonialCount)) {
-      const plan = getPlan(space.plan);
-      return { status: "plan-limit-reached", planName: plan.name, testimonialLimit: plan.limits.testimonials };
-    }
+    const isWithinPlan = canAddTestimonial(space, await countApprovedTestimonials(transaction, space.id));
+    const plan = getPlan(space.plan);
 
     const [inserted] = await transaction
       .insert(testimonials)
@@ -70,12 +64,16 @@ export const addManualTestimonial = (
         authorPhotoUrl: testimonial.photoKey ? getUploadPublicUrl(testimonial.photoKey) : null,
         rating: testimonial.rating,
         body: testimonial.body,
-        status: "approved",
+        status: isWithinPlan ? "approved" : "pending",
         source: "manual",
         consentAt: now,
         consentText: MANUAL_CONSENT_TEXT,
         createdAt: testimonial.receivedAt ?? now,
       })
       .returning({ id: testimonials.id });
-    return { status: "added", testimonialId: inserted.id };
+    return {
+      status: "added",
+      testimonialId: inserted.id,
+      plan: isWithinPlan ? null : { name: plan.name, testimonialLimit: plan.limits.testimonials },
+    };
   });

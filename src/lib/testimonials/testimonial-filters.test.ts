@@ -12,12 +12,14 @@ const PRODUCT_ID = "0f8d1c2e-6a4b-4c3d-9e8f-7a6b5c4d3e2f";
 
 describe("readTestimonialFilters", () => {
   it("reads the French search parameters", () => {
-    expect(readTestimonialFilters({ statut: "en-attente", offre: PRODUCT_ID, note: "4" })).toEqual({
+    expect(readTestimonialFilters({ recherche: "  Nadia  B ", statut: "en-attente", offre: PRODUCT_ID, note: "4" })).toEqual({
+      query: "Nadia B",
       status: "pending",
       productId: PRODUCT_ID,
       rating: 4,
     });
-    expect(readTestimonialFilters({ statut: "masques", offre: "sans" })).toEqual({
+    expect(readTestimonialFilters({ statut: "masques", offre: "sans", recherche: " " })).toEqual({
+      query: null,
       status: "hidden",
       productId: WITHOUT_PRODUCT,
       rating: null,
@@ -35,10 +37,10 @@ describe("readTestimonialFilters", () => {
 
 describe("buildTestimonialSearch", () => {
   it("writes back what readTestimonialFilters reads", () => {
-    const filters = { status: "approved", productId: WITHOUT_PRODUCT, rating: 5 } as const;
+    const filters = { query: "recettes", status: "approved", productId: WITHOUT_PRODUCT, rating: 5 } as const;
     const search = buildTestimonialSearch(filters, 2);
 
-    expect(search).toBe("?statut=valides&offre=sans&note=5&page=2");
+    expect(search).toBe("?recherche=recettes&statut=valides&offre=sans&note=5&page=2");
     const params = Object.fromEntries(new URLSearchParams(search));
     expect(readTestimonialFilters(params)).toEqual(filters);
     expect(readTestimonialPage(params)).toBe(2);

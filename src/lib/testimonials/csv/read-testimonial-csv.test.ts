@@ -34,6 +34,7 @@ describe("readTestimonialCsv", () => {
         productId: "programme-id",
         date: new Date("2026-03-14T12:00:00Z"),
         status: "ready",
+        isPending: false,
         problems: [],
       },
     ]);
@@ -110,13 +111,17 @@ describe("readTestimonialCsv", () => {
     ]);
   });
 
-  it("keeps the rows beyond the plan limit out, and lists the formations to create", () => {
+  it("leaves the rows beyond the validated testimonials of the plan pending, and lists the formations to create", async () => {
     const { rows, newProductNames } = readRows(
       "nom;note;texte;formation\nA;5;Un;Coaching\nB;5;Deux;coaching\nC;5;Trois;Atelier",
       { testimonialsLeft: 2 },
     );
 
-    expect(rows.map((row) => row.status)).toEqual(["ready", "ready", "over-limit"]);
-    expect(newProductNames).toEqual(["Coaching"]);
+    expect(rows.map((row) => [row.status, row.isPending])).toEqual([
+      ["ready", false],
+      ["ready", false],
+      ["ready", true],
+    ]);
+    expect(newProductNames).toEqual(["Coaching", "Atelier"]);
   });
 });

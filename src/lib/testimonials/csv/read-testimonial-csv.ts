@@ -26,7 +26,7 @@ export const MAX_CSV_ROWS = 1000;
 
 export const MAX_CSV_LENGTH = 500_000;
 
-export type CsvRowStatus = "ready" | "invalid" | "duplicate" | "over-limit";
+export type CsvRowStatus = "ready" | "invalid" | "duplicate";
 
 export type CsvRow = {
   line: number;
@@ -38,6 +38,8 @@ export type CsvRow = {
   productId: string | null;
   date: Date | null;
   status: CsvRowStatus;
+  /** Ready, but past the validated testimonials of the plan: it will wait in pending. */
+  isPending: boolean;
   problems: string[];
 };
 
@@ -52,6 +54,7 @@ export type CsvReading =
 export type CsvContext = {
   products: readonly { id: string; name: string }[];
   existingTestimonials: readonly { authorName: string; body: string }[];
+  /** How many more validated testimonials the plan allows. */
   testimonialsLeft: Limit;
   today: CalendarDate;
 };
@@ -146,7 +149,7 @@ export const readTestimonialCsv = (text: string, context: CsvContext): CsvReadin
       "space",
     ]),
   );
-  let readyLeft = context.testimonialsLeft;
+  let approvedLeft = context.testimonialsLeft;
 
   const rows = lines.map(({ cells: rawCells, line }): CsvRow => {
     const cells = Object.fromEntries(
@@ -169,6 +172,7 @@ export const readTestimonialCsv = (text: string, context: CsvContext): CsvReadin
       productId: product?.id ?? null,
       date: date ? calendarDateToTimestamp(date) : null,
       status: "ready",
+      isPending: false,
       problems: readProblems(cells, rating, date, context.today),
     };
     if (row.problems.length > 0) return { ...row, status: "invalid" };
@@ -184,10 +188,10 @@ export const readTestimonialCsv = (text: string, context: CsvContext): CsvReadin
     }
     seenKeys.set(duplicateKey, line);
 
-    if (readyLeft !== null && readyLeft <= 0) return { ...row, status: "over-limit" };
-    if (readyLeft !== null) readyLeft -= 1;
     if (productSlug && !product && !newProductNames.has(productSlug)) newProductNames.set(productSlug, cells.formation);
-    return row;
+    if (approvedLeft === null) return row;
+    approvedLeft -= 1;
+    return approvedLeft < 0 ? { ...row, isPending: true } : row;
   });
 
   return { status: "read", rows, newProductNames: [...newProductNames.values()] };

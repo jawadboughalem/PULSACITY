@@ -52,6 +52,7 @@ function isBelow(limit: Limit, count: number): boolean {
   return limit === UNLIMITED || count < limit;
 }
 
+/** `count` is the number of validated testimonials: past the limit, new ones wait in pending. */
 export function canAddTestimonial(space: SpacePlan, count: number): boolean {
   return isBelow(getPlan(space.plan).limits.testimonials, count);
 }
