@@ -40,7 +40,10 @@ beforeEach(async () => {
   await emptyTestDatabase(database);
   userId = await insertTestUser(database, "julie@exemple.fr");
   spaceId = await insertTestSpace(database, userId, "julie-nutrition", "essentiel");
-  await database.insert(products).values({ spaceId, name: "Programme 30 jours", slug: "programme-30-jours" });
+  await database.insert(products).values([
+    { spaceId, name: "Programme 30 jours", slug: "programme-30-jours" },
+    { spaceId, name: "Atelier cuisine", slug: "atelier-cuisine" },
+  ]);
 });
 
 describe("importTestimonialCsv", () => {
@@ -48,7 +51,7 @@ describe("importTestimonialCsv", () => {
     const csv = buildFiftyLineCsv();
 
     const preview = await previewTestimonialCsv(database, userId, spaceId, csv, NOW);
-    expect(preview).toMatchObject({ status: "previewed", newProductNames: ["Atelier cuisine"] });
+    expect(preview).toMatchObject({ status: "previewed" });
     expect(await findSpaceTestimonials()).toHaveLength(0);
 
     const report = await importTestimonialCsv(database, userId, spaceId, csv, NOW);
@@ -58,13 +61,12 @@ describe("importTestimonialCsv", () => {
       importedCount: 47,
       isFirstApproval: true,
       pendingCount: 0,
-      createdProductNames: ["Atelier cuisine"],
       plan: { name: "Essentiel", testimonialsLeft: null },
     });
     if (report.status !== "imported") return;
     expect(report.notImported.map((row) => [row.line, row.problems])).toEqual([
-      [12, ["La note « 6 » n'est pas reconnue. Indiquez un chiffre de 1 à 5."]],
-      [27, ["Le nom est vide. Indiquez le nom de la personne."]],
+      [12, ["La note « 6 » n'existe pas : elle doit aller de 1 à 5."]],
+      [27, ["Le nom est vide."]],
       [
         41,
         [
@@ -87,7 +89,7 @@ describe("importTestimonialCsv", () => {
       body: "Avis numéro 2 ; sur deux lignes\nc'est possible.",
       createdAt: new Date("2026-08-03T12:00:00Z"),
       consentAt: NOW,
-      consentText: "J'ai l'accord de chaque personne de ce fichier pour publier son témoignage.",
+      consentText: "J'ai l'accord de chacune de ces personnes pour publier son témoignage.",
     });
   });
 
@@ -102,7 +104,6 @@ describe("importTestimonialCsv", () => {
       status: "imported",
       importedCount: 1,
       isFirstApproval: false,
-      createdProductNames: [],
     });
     expect(await findSpaceTestimonials()).toHaveLength(48);
   });

@@ -41,6 +41,8 @@ export type CsvRow = {
   /** Ready, but past the validated testimonials of the plan: it will wait in pending. */
   isPending: boolean;
   problems: string[];
+  /** The cells as written in the file, to hand back the lines that were not imported. */
+  cells: Record<CsvColumn, string>;
 };
 
 export type ReadyCsvRow = CsvRow & { status: "ready"; rating: number };
@@ -48,7 +50,7 @@ export type ReadyCsvRow = CsvRow & { status: "ready"; rating: number };
 export const isReadyCsvRow = (row: CsvRow): row is ReadyCsvRow => row.status === "ready" && row.rating !== null;
 
 export type CsvReading =
-  | { status: "read"; rows: CsvRow[]; newProductNames: string[] }
+  | { status: "read"; rows: CsvRow[] }
   | { status: "file-error"; message: string };
 
 export type CsvContext = {
@@ -102,19 +104,29 @@ const describeLength = (subject: string, maxLength: number) =>
 
 type Cells = Record<CsvColumn, string>;
 
-const readProblems = (cells: Cells, rating: number | null, date: CalendarDate | null, today: CalendarDate) => {
+const readProblems = (
+  cells: Cells,
+  rating: number | null,
+  date: CalendarDate | null,
+  hasUnknownFormation: boolean,
+  today: CalendarDate,
+) => {
   const problems: string[] = [];
-  if (!cells.nom) problems.push("Le nom est vide. Indiquez le nom de la personne.");
+  if (!cells.nom) problems.push("Le nom est vide.");
   else if (cells.nom.length > MAX_AUTHOR_NAME_LENGTH) problems.push(describeLength("Le nom", MAX_AUTHOR_NAME_LENGTH));
   if (cells.titre.length > MAX_AUTHOR_TITLE_LENGTH) problems.push(describeLength("Le titre", MAX_AUTHOR_TITLE_LENGTH));
-  if (!cells.note) problems.push("La note est vide. Indiquez un chiffre de 1 à 5.");
+  if (!cells.note) problems.push("La note est vide : elle doit aller de 1 à 5.");
   else if (rating === null) {
-    problems.push(`La note ${quoteInFrench(cells.note)} n'est pas reconnue. Indiquez un chiffre de 1 à 5.`);
+    problems.push(`La note ${quoteInFrench(cells.note)} n'existe pas : elle doit aller de 1 à 5.`);
   }
   if (!cells.texte) problems.push("Le texte est vide. Collez le témoignage dans la colonne texte.");
   else if (cells.texte.length > MAX_TESTIMONIAL_LENGTH) problems.push(describeLength("Le texte", MAX_TESTIMONIAL_LENGTH));
   if (cells.formation && cells.formation.length > MAX_PRODUCT_NAME_LENGTH) {
     problems.push(describeLength("Le nom de la formation", MAX_PRODUCT_NAME_LENGTH));
+  } else if (hasUnknownFormation) {
+    problems.push(
+      `La formation ${quoteInFrench(cells.formation)} ne correspond à aucune de vos offres. Laissez la case vide ou utilisez le nom exact d'une offre.`,
+    );
   }
   if (cells.date && date === null) {
     problems.push(`La date ${quoteInFrench(cells.date)} n'est pas reconnue. Écrivez-la sous la forme 14/03/2026.`);
@@ -142,7 +154,6 @@ export const readTestimonialCsv = (text: string, context: CsvContext): CsvReadin
   if (lines.length > MAX_CSV_ROWS) return { status: "file-error", message: CSV_FILE_ERRORS.tooManyRows };
 
   const productsBySlug = new Map(context.products.map((product) => [slugify(product.name), product] as const));
-  const newProductNames = new Map<string, string>();
   const seenKeys = new Map<string, number | "space">(
     context.existingTestimonials.map((testimonial) => [
       buildDuplicateKey(testimonial.authorName, testimonial.body),
@@ -173,7 +184,8 @@ export const readTestimonialCsv = (text: string, context: CsvContext): CsvReadin
       date: date ? calendarDateToTimestamp(date) : null,
       status: "ready",
       isPending: false,
-      problems: readProblems(cells, rating, date, context.today),
+      problems: readProblems(cells, rating, date, Boolean(productSlug) && !product, context.today),
+      cells,
     };
     if (row.problems.length > 0) return { ...row, status: "invalid" };
 
@@ -188,11 +200,10 @@ export const readTestimonialCsv = (text: string, context: CsvContext): CsvReadin
     }
     seenKeys.set(duplicateKey, line);
 
-    if (productSlug && !product && !newProductNames.has(productSlug)) newProductNames.set(productSlug, cells.formation);
     if (approvedLeft === null) return row;
     approvedLeft -= 1;
     return approvedLeft < 0 ? { ...row, isPending: true } : row;
   });
 
-  return { status: "read", rows, newProductNames: [...newProductNames.values()] };
+  return { status: "read", rows };
 };
