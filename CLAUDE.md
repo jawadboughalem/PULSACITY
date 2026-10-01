@@ -17,7 +17,7 @@ Parcours (avec le connecteur Systeme.io) :
 
 ## Point de départ
 
-Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (seuls le nom et le domaine sont gardés) : il est ignoré. Aucun code, schéma, variable ou configuration n'en est repris. Claude Code ne modifie jamais les services externes (Vercel, Supabase, DNS, Stripe) : le fondateur s'en charge, jamais sans aide (voir « Actions du fondateur »).
+Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (seuls le nom et le domaine sont gardés) : il est ignoré. Aucun code, schéma, variable ou configuration n'en est repris. Claude Code ne modifie jamais un service externe (Vercel, Supabase, DNS, Stripe) avec ses propres accès : il agit dans le navigateur du fondateur, ou lui donne un prompt (voir « Actions du fondateur »).
 
 ## Règles absolues
 
@@ -152,13 +152,17 @@ LEGAL_VALIDATED                # false tant que les textes ne sont pas relus
 
 ## Actions du fondateur
 
-Rien de ce que le fondateur fait de son côté ne se fait sans l'aide de Claude Code. Chaque action sur un service externe (Vercel, Supabase, Cloudflare, Resend, Stripe, DNS, réglages GitHub…) lui est livrée en prompt Claude in Chrome prêt à coller :
+Rien de ce que le fondateur fait de son côté ne se fait sans l'aide de Claude Code. Chaque action sur un service externe (Vercel, Supabase, Cloudflare, Resend, Stripe, DNS, réglages GitHub…) est d'abord écrite en prompt Claude in Chrome dans `docs-internes/recette/` :
 - un prompt par service, numéroté dans l'ordre où les lancer ;
 - les valeurs exactes à saisir, et ce qu'il ne faut surtout pas toucher ;
 - la vérification qui prouve que c'est fait ;
 - un compte rendu à renvoyer à Claude Code, sans aucun secret.
 
-Un secret créé sur un service est collé directement là où il sert (variable Vercel, secret GitHub), jamais dans une conversation. La recette de chaque lot se prépare de la même façon : où tester, quoi tester, dans quel ordre.
+Qui lance ces prompts :
+- Au bureau, avec deux écrans : Claude Code fait les actions lui-même, avec Claude in Chrome, dans le groupe d'onglets « PULSACITY ». Il faut pour cela que la session tourne sur l'ordinateur du fondateur (app Claude Desktop, ou `claude remote-control` dans le dossier du projet) : une session dans le cloud n'atteint pas son navigateur. Claude Code ne demande au fondateur que ce qui doit passer par lui : fusionner une PR, se connecter à un service, copier et coller un secret, créer un compte de test.
+- À la maison, avec un seul écran : le fondateur colle les prompts lui-même dans Claude in Chrome.
+
+Un secret créé sur un service est collé directement là où il sert (variable Vercel, secret GitHub), jamais dans une conversation : c'est le fondateur qui le copie et le colle, même quand Claude Code fait le reste. La recette de chaque lot se prépare de la même façon : où tester, quoi tester, dans quel ordre.
 
 ## Environnements
 
