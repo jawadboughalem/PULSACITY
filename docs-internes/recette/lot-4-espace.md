@@ -67,16 +67,16 @@ B. Accueil (https://pulsacity.com/app)
 
 C. Ajout manuel
 5. Va sur « Témoignages », clique sur « Ajouter un témoignage ».
-6. Clique sur « Ajouter le témoignage » sans rien remplir : un message rouge s'affiche sous le nom, la note, le texte et la case d'accord.
+6. Clique sur « Ajouter le témoignage » sans rien remplir : un bloc rouge en haut liste les points à corriger, et un message rouge s'affiche sous le nom, la note, le texte et la case d'accord. Tape un nom : son message disparaît aussitôt.
 7. Remplis : Nom affiché « Recette Manuelle », note 4 étoiles, texte « Reçu par WhatsApp : merci pour tout. », coche « J'ai l'accord de cette personne pour publier son témoignage. ». Clique sur « Ajouter le témoignage ».
 8. La fiche du témoignage s'ouvre, avec le badge « Validé ». Si c'est le premier témoignage validé de l'espace, un bandeau vert dit « Votre premier témoignage est en ligne. ». Recharge la page : le bandeau ne revient pas.
 
 D. Import CSV
-9. Va sur « Témoignages › Ajouter un témoignage », puis clique sur « Importez un fichier CSV ».
+9. Va sur « Témoignages › Ajouter un témoignage », puis clique sur « Importer un fichier CSV » (dans l'encadré « Bon à savoir », ou en bas du formulaire sur un écran plus étroit).
 10. Arrête-toi et demande-moi de choisir le fichier « temoignages-50-lignes.csv ». Attends que je te dise que c'est fait.
-11. L'aperçu annonce « 47 témoignages prêts, 3 lignes à revoir ». Le bloc rouge liste la ligne 12 (note « 6 » non reconnue), la ligne 27 (nom vide) et la ligne 41 (texte vide et date « 35/08/2026 » non reconnue). Si l'espace est en plan Gratuit, un bloc gris dit combien de témoignages resteront en attente.
+11. Les étapes en haut sont sur « Vérifier ». L'aperçu annonce « 47 témoignages prêts, 3 lignes à revoir ». Le bloc rouge liste la ligne 12 (la note « 6 » n'existe pas), la ligne 27 (nom vide) et la ligne 41 (texte vide et date « 35/08/2026 » non reconnue). Les boutons « Toutes (50) », « Prêtes (47) » et « À revoir (3) » filtrent l'aperçu. Si l'espace est en plan Gratuit, un bloc gris dit combien de témoignages resteront en attente. L'espace doit avoir les offres « Programme 30 jours » et « Atelier cuisine » : une formation inconnue est refusée.
 12. Clique sur « Importer 47 témoignages » sans cocher la case : un message demande de la cocher. Coche-la, puis clique à nouveau.
-13. Le rapport dit « 47 témoignages importés. » et liste les 3 lignes non importées, avec leurs raisons.
+13. Le rapport dit « 47 témoignages importés. » et liste les 3 lignes non importées, avec leurs raisons. « Télécharger ces 3 lignes » télécharge un fichier qui ne contient qu'elles.
 
 E. Liste
 14. Clique sur « Voir mes témoignages ». En haut : le nombre de validés, en attente et masqués.
@@ -95,10 +95,10 @@ F. Fiche d'un témoignage
 25. En bas de la fiche, clique sur « Supprimer définitivement », puis sur « Supprimer l'avis » : tu reviens à la liste, et « Recette Manuelle » n'y est plus.
 
 G. Offres
-26. Va sur « Offres ». Ajoute l'offre « Recette Offre ». Note son lien de collecte.
+26. Va sur « Offres ». Clique sur « Ajouter une offre », écris « Recette Offre », puis clique sur « Ajouter l'offre ». Note son lien de collecte.
 27. Clique sur « Renommer », écris « Recette Offre 2 », clique sur « Enregistrer » : le nom change, le lien de collecte reste le même.
-28. Mets le délai à 7, puis appuie sur Entrée : « Délai enregistré. » s'affiche. Décoche « Demander un avis après chaque vente » : « Demandes automatiques désactivées. » s'affiche. Recharge : les deux réglages sont gardés.
-29. Clique sur « Retirer », puis sur « Retirer l'offre » : elle disparaît.
+28. Mets le délai à 7, puis appuie sur Entrée : « Délai enregistré. » s'affiche, et la phrase sous le délai annonce la date de départ d'une demande. Désactive l'interrupteur « Demander un avis après chaque vente » : « Demandes automatiques désactivées. » s'affiche et le délai se grise. Recharge : les deux réglages sont gardés.
+29. Clique sur « Retirer » : un cadre demande « Retirer « Recette Offre 2 » ? ». Clique sur « Retirer l'offre » : elle disparaît. Sur une offre qui a des ventes, « Retirer » affiche à la place « Cette offre a déjà des ventes : elle ne peut pas être retirée. »
 
 H. Compte
 30. En bas de la colonne de gauche, clique sur ton nom : un menu s'ouvre avec « Mon compte », « Abonnement et factures », « Aide et contact » et « Se déconnecter ». Ne clique pas sur « Se déconnecter ».

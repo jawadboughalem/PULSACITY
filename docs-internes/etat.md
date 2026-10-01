@@ -29,7 +29,7 @@ Mis à jour le 1er octobre 2026, après la recette du lot 4 sur l'aperçu. À li
 
 ## À faire
 
-1. Aligner l'ajout manuel, l'import CSV et la page Offres sur les maquettes m15 à m17.
+1. Recette de la PR #19 sur l'aperçu, puis mise en ligne : corrections de la recette du lot 4, et ajout manuel, import CSV et page Offres alignés sur les maquettes m15 à m17.
 2. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 3. Sentry, avant le lancement.
 
@@ -39,7 +39,16 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - un premier clic sur « Importez un fichier CSV » n'a rien fait une fois, le second a ouvert la page ;
 - les liens Widgets, Connecteurs, Demandes et Réglages mènent à des pages pas encore construites.
 
+## Décisions du 1er octobre (maquettes m15 à m17)
+
+- Import CSV : une formation qui ne correspond à aucune offre est refusée, avec le message de la maquette. L'import ne crée plus d'offre.
+- Prix des offres (m17) : il s'affichera avec le connecteur Systeme.io, qui le fournit. En attendant, chaque offre montre son nombre de témoignages.
+- Identifiants par connecteur (« Modifier », « Associer un produit Systeme.io ») : avec le connecteur. En attendant : « Aucun outil connecté ».
+- Un témoignage ajouté à la main arrive en « Validé ».
+
 ## Questions ouvertes
+
+- Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
 - « Aide et contact » pointe vers `/aide`, qui n'existe pas : il manque l'adresse de support.
