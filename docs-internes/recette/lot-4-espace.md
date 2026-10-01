@@ -80,7 +80,7 @@ D. Import CSV
 
 E. Liste
 14. Clique sur « Voir mes témoignages ». En haut : le nombre de validés, en attente et masqués.
-15. Tape « Recette » dans « Rechercher », puis Entrée : seul « Recette Manuelle » reste. Efface la recherche.
+15. Tape « Manuelle » dans « Rechercher », puis Entrée : seul « Recette Manuelle » reste. Efface la recherche.
 16. Choisis « En attente » dans « Statut » : la liste ne garde que les témoignages en attente.
 17. Sur une ligne en attente, clique sur « Valider » : le badge passe à « Validé » tout de suite, sans recharger la page. Si le bouton est grisé, lis le texte sous la ligne : il doit dire « Pour l'afficher : passez au plan Essentiel, ou masquez un témoignage déjà publié. ».
 18. Sur une ligne validée, clique sur le marque-page de la colonne « En avant » : il se remplit tout de suite.
@@ -90,7 +90,7 @@ E. Liste
 F. Fiche d'un témoignage
 21. Ouvre « Recette Manuelle » (bouton « ··· » puis « Ouvrir », ou clic sur le nom).
 22. Dans « Texte affiché », remplace le texte par « Merci pour tout. », puis clique sur « Enregistrer les modifications » : la page dit « Modifications enregistrées. ».
-23. Ouvre « Texte original de Recette » : l'original « Reçu par WhatsApp : merci pour tout. » est toujours là, marqué « conservé tel quel, non modifiable ».
+23. Recharge la page : « Texte affiché » montre « Merci pour tout. ». Le bloc « Texte original de Recette » est ouvert, avec l'original « Reçu par WhatsApp : merci pour tout. », marqué « conservé tel quel, non modifiable ».
 24. Clique sur « Télécharger la preuve de consentement » : un fichier texte se télécharge, avec le texte coché et sa date.
 25. En bas de la fiche, clique sur « Supprimer définitivement », puis sur « Supprimer l'avis » : tu reviens à la liste, et « Recette Manuelle » n'y est plus.
 
