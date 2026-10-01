@@ -29,8 +29,8 @@ type Step =
 
 const countLines = (count: number, singular: string, plural: string) => `${count} ${count > 1 ? plural : singular}`;
 
-const describePlanPending = (pendingCount: number, planName: string, limit: number | null) =>
-  `${countLines(pendingCount, "restera", "resteront")} en attente : votre plan ${planName} affiche ${limit} témoignages validés au plus.`;
+const describePlanPending = (pendingCount: number, planName: string, limit: number | null, isDone: boolean) =>
+  `${isDone ? countLines(pendingCount, "reste", "restent") : countLines(pendingCount, "restera", "resteront")} en attente : votre plan ${planName} affiche ${limit} témoignages validés au plus.`;
 
 type CsvImportProps = {
   testimonialsHref: string;
@@ -103,7 +103,7 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
         >
           {[
             report.pendingCount > 0
-              ? describePlanPending(report.pendingCount, report.plan.name, report.plan.testimonialLimit)
+              ? describePlanPending(report.pendingCount, report.plan.name, report.plan.testimonialLimit, true)
               : null,
             report.createdProductNames.length > 0 ? `Offres créées : ${report.createdProductNames.join(", ")}.` : null,
           ]
@@ -147,7 +147,7 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
           <StatusBanner tone="waiting" title="Avant d'importer">
             {[
               pendingCount > 0
-                ? describePlanPending(pendingCount, preview.plan.name, preview.plan.testimonialLimit)
+                ? describePlanPending(pendingCount, preview.plan.name, preview.plan.testimonialLimit, false)
                 : null,
               preview.newProductNames.length > 0
                 ? `Ces offres seront créées : ${preview.newProductNames.join(", ")}.`

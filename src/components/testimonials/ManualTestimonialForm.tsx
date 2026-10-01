@@ -73,6 +73,11 @@ export const ManualTestimonialForm = ({ products, today, detailHrefPrefix }: Man
   const [fieldErrors, setFieldErrors] = useState<ManualTestimonialFieldErrors>({});
   const [submitError, setSubmitError] = useState<keyof typeof SUBMIT_ERRORS | null>(null);
 
+  const updateField = <Field extends keyof typeof form>(field: Field, value: (typeof form)[Field]) => {
+    setForm({ ...form, [field]: value });
+    if (field in fieldErrors) setFieldErrors({ ...fieldErrors, [field]: undefined });
+  };
+
   const messageFor = (field: ManualTestimonialField) => {
     const error = fieldErrors[field];
     return error ? FIELD_MESSAGES[field][error] : undefined;
@@ -114,7 +119,7 @@ export const ManualTestimonialForm = ({ products, today, detailHrefPrefix }: Man
           maxLength={MAX_AUTHOR_NAME_LENGTH}
           autoComplete="off"
           placeholder="Par exemple : Camille R."
-          onChange={(event) => setForm({ ...form, authorName: event.target.value })}
+          onChange={(event) => updateField("authorName", event.target.value)}
           error={messageFor("authorName")}
         />
         <TextField
@@ -128,14 +133,14 @@ export const ManualTestimonialForm = ({ products, today, detailHrefPrefix }: Man
           maxLength={MAX_AUTHOR_TITLE_LENGTH}
           autoComplete="off"
           placeholder="Par exemple : Enseignante, Lyon"
-          onChange={(event) => setForm({ ...form, authorTitle: event.target.value })}
+          onChange={(event) => updateField("authorTitle", event.target.value)}
           error={messageFor("authorTitle")}
         />
       </div>
       <RatingInput
         rating={form.rating}
         error={messageFor("rating")}
-        onChange={(rating) => setForm({ ...form, rating })}
+        onChange={(rating) => updateField("rating", rating)}
       />
       <div className="flex flex-col gap-2">
         <label htmlFor="manual-body" className="text-small font-semibold">
@@ -147,7 +152,7 @@ export const ManualTestimonialForm = ({ products, today, detailHrefPrefix }: Man
           maxLength={MAX_TESTIMONIAL_LENGTH}
           aria-invalid={fieldErrors.body ? true : undefined}
           aria-describedby={fieldErrors.body ? "manual-body-error" : "manual-body-hint"}
-          onChange={(event) => setForm({ ...form, body: event.target.value })}
+          onChange={(event) => updateField("body", event.target.value)}
           className={cn(
             "min-h-[176px] w-full rounded-sm border border-gray-400 bg-white p-4 font-serif text-quote text-ink-900 focus:border-2 focus:border-ink-900 focus:p-[15px] focus:outline-none",
             fieldErrors.body && "border-2 border-error p-[15px]",
@@ -170,7 +175,7 @@ export const ManualTestimonialForm = ({ products, today, detailHrefPrefix }: Man
             <select
               id="manual-offer"
               value={form.productId}
-              onChange={(event) => setForm({ ...form, productId: event.target.value })}
+              onChange={(event) => updateField("productId", event.target.value)}
               className="h-[48px] w-full appearance-none rounded-sm border border-gray-400 bg-white pr-7 pl-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:pl-[15px] focus:outline-none"
             >
               <option value="">Sans offre</option>
@@ -194,7 +199,7 @@ export const ManualTestimonialForm = ({ products, today, detailHrefPrefix }: Man
           value={form.receivedAt}
           max={today}
           hint="Sans date, c'est la date du jour."
-          onChange={(event) => setForm({ ...form, receivedAt: event.target.value })}
+          onChange={(event) => updateField("receivedAt", event.target.value)}
           error={messageFor("receivedAt")}
         />
       </div>
@@ -204,7 +209,7 @@ export const ManualTestimonialForm = ({ products, today, detailHrefPrefix }: Man
             checked={form.hasConsent}
             hasError={Boolean(fieldErrors.hasConsent)}
             aria-describedby={fieldErrors.hasConsent ? "manual-consent-error" : undefined}
-            onChange={(event) => setForm({ ...form, hasConsent: event.target.checked })}
+            onChange={(event) => updateField("hasConsent", event.target.checked)}
           />
           <span>{MANUAL_CONSENT_TEXT}</span>
         </label>
