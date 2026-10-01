@@ -1,0 +1,45 @@
+name: Recette database migration
+
+# The recette database follows every pull request that brings a migration, and main.
+# It reads RECETTE_DATABASE_URL only: never the production DATABASE_URL.
+on:
+  pull_request:
+    paths:
+      - "src/db/migrations/**"
+  push:
+    branches: [main]
+    paths:
+      - "src/db/migrations/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: db-migrate-recette
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    name: Apply pending migrations to the recette database
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check that the recette database is configured
+        env:
+          RECETTE_DATABASE_URL: ${{ secrets.RECETTE_DATABASE_URL }}
+        run: |
+          if [ -z "$RECETTE_DATABASE_URL" ]; then
+            echo "::error::The repository secret RECETTE_DATABASE_URL is missing. See docs-internes/recette/environnement-recette.md."
+            exit 1
+          fi
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.RECETTE_DATABASE_URL }}
