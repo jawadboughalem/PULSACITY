@@ -1,0 +1,44 @@
+/* PULSACITY — micro-animations (identité v2). Ne rien ajouter sans validation Design. */
+:root {
+  --motion-instant: 120ms;   /* survol, focus : couleur seulement */
+  --motion-rapide: 200ms;    /* étoile choisie, couleurs du badge */
+  --motion-trace: 240ms;     /* coche du badge Validé */
+  --motion-marque: 640ms;    /* décollage */
+  --motion-attente: 1400ms;  /* boucle d'attente */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-decollage: cubic-bezier(0.6, 0, 0.2, 1);
+  --ease-souffle: cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Parties du symbole (classes présentes dans les SVG fournis) */
+.pz-fusee, .pz-etoile { transform-box: fill-box; }
+.pz-fusee { transform-origin: 50% 100%; }
+.pz-etoile { transform-origin: 50% 0%; }
+
+/* 1. Étoile choisie — sélecteur de note de la page de collecte */
+@keyframes pz-etoile-choisie { 0% { transform: scale(1); } 45% { transform: scale(1.18); } 100% { transform: scale(1); } }
+.pz-note-etoile.is-choisie svg { animation: pz-etoile-choisie var(--motion-rapide) var(--ease-standard); }
+
+/* 2. Attente — composant ChargementMarque, uniquement après 1 s d'attente */
+@keyframes pz-attente { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.9); } }
+.pz-chargement .pz-etoile { animation: pz-attente var(--motion-attente) var(--ease-souffle) infinite; }
+
+/* 3. Décollage — une seule fois par compte et par moment */
+@keyframes pz-decollage-fusee { 0% { transform: translateY(0); } 18% { transform: translateY(0.6px); } 60% { transform: translateY(-3px); } 100% { transform: translateY(0); } }
+@keyframes pz-decollage-etoile { 0% { transform: scale(1); } 18% { transform: scale(.9); } 45% { transform: scale(1.14); } 100% { transform: scale(1); } }
+.pz-decollage .pz-fusee { animation: pz-decollage-fusee var(--motion-marque) var(--ease-decollage) 1; }
+.pz-decollage .pz-etoile { animation: pz-decollage-etoile var(--motion-marque) var(--ease-decollage) 1; }
+/* Les valeurs en px de translateY sont en unités de la grille 32 du SVG : elles suivent la taille du symbole. */
+
+/* 4. Témoignage validé — badge de statut */
+@keyframes pz-coche { from { stroke-dashoffset: 12; } to { stroke-dashoffset: 0; } }
+.pz-badge-valide .pz-coche { stroke-dasharray: 12; animation: pz-coche var(--motion-trace) var(--ease-standard) both; }
+.pz-badge { transition: background-color var(--motion-rapide) var(--ease-standard), color var(--motion-rapide) var(--ease-standard); }
+
+/* Réduire les animations : toujours respecté */
+@media (prefers-reduced-motion: reduce) {
+  .pz-note-etoile svg, .pz-chargement .pz-etoile, .pz-decollage .pz-fusee, .pz-decollage .pz-etoile, .pz-badge-valide .pz-coche {
+    animation: none !important;
+  }
+  .pz-badge { transition: none !important; }
+}
