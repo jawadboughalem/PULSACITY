@@ -38,6 +38,7 @@ export const ICON_PATHS = {
   info: [drawCircle(12, 12, 9), "M12 11v6", "M12 7.2v.1"],
   hidden: ["M4 12s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6z", drawCircle(12, 12, 2.5), "M4 4l16 16"],
   upload: ["M12 15V4", "M8 8l4-4 4 4", "M5 15v5h14v-5"],
+  download: ["M12 4v11", "M8 11l4 4 4-4", "M5 15v5h14v-5"],
 } as const;
 
 export type IconName = keyof typeof ICON_PATHS;
