@@ -113,14 +113,14 @@ Tu m'aides à vérifier le widget de PULSACITY sur une vraie page Systeme.io de 
 5. Note ce que l'éditeur montre à cet endroit : le code ne s'y exécute pas, c'est normal.
 6. Enregistre la page, puis ouvre son aperçu. Si l'aperçu n'affiche pas les avis, ouvre l'adresse publique de la page.
 7. Sur cette page, fenêtre en grand :
-   a. le mur d'avis s'affiche : en haut à droite les étoiles, la note moyenne et le nombre d'avis ; dessous les cartes en trois colonnes ; en bas à droite « Propulsé par » et le logo Pulsacity ;
+   a. le mur d'avis s'affiche : au-dessus, les étoiles, la note moyenne et le nombre d'avis ; puis les cartes en colonnes ; dessous, « Propulsé par » et le logo Pulsacity. Note le nombre de colonnes : trois quand la zone du widget fait au moins 1024 px de large, deux en dessous ;
    b. les cartes reprennent la police de la page Systeme.io ;
    c. survole « Propulsé par Pulsacity » sans cliquer : le lien mène à https://pulsacity.com/?ref= suivi d'un code ;
    d. le reste de la page n'a ni bougé ni changé de style.
 8. Dans PULSACITY, passe le type sur « Carrousel ». Attends une minute, puis recharge deux fois la page Systeme.io : le carrousel remplace le mur, et ses flèches font défiler les avis.
 9. Passe le type sur « Badge ». Attends une minute, recharge deux fois : une pilule avec trois visages ou initiales, des étoiles et « x,x/5 · N avis ».
 10. Remets le type sur « Mur », attends une minute et recharge deux fois : le mur revient.
-11. Dans PULSACITY, page « Widgets » : la ligne dit « Sur une page depuis le » suivi de la date du jour. Sur l'accueil, l'étape « Coller le widget » est cochée.
+11. Dans PULSACITY, page « Widgets » : la ligne dit « Sur une page depuis le » suivi de la date du jour. Sur l'accueil, si le bloc « Étapes restantes » est affiché, l'étape « Coller le widget sur votre page de vente » y est cochée.
 
 Ne touche surtout pas :
 - aux tunnels, pages, contacts et réglages existants de Systeme.io (domaine, e-mails, paiements) ;
