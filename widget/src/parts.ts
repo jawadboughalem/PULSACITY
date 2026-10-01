@@ -30,12 +30,17 @@ const fillOf = (position: number, rounded: number): StarFill => {
 };
 
 /** Five stars, rounded to the nearest half for an average, always with their value in words. */
-export const stars = (rating: number, label: string, size: "small" | "regular" | "large" = "regular"): HTMLElement => {
+/** Without a label, the stars only repeat a text already read, and screen readers skip them. */
+export const stars = (
+  rating: number,
+  label: string | null,
+  size: "small" | "regular" | "large" = "regular",
+): HTMLElement => {
   const rounded = Math.round(rating * 2) / 2;
   const sizeClass = size === "regular" ? "stars" : `stars ${size}`;
   return h(
     "span",
-    { class: sizeClass, role: "img", "aria-label": label },
+    label === null ? { class: sizeClass, "aria-hidden": "true" } : { class: sizeClass, role: "img", "aria-label": label },
     ...[1, 2, 3, 4, 5].map((position) => star(fillOf(position, rounded))),
   );
 };

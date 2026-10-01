@@ -9,17 +9,22 @@ import type { WidgetPayload } from "./payload";
  * page when there is one, and « Propulsé par » goes beside it, or below it when the page is centred or narrow.
  */
 export const renderBadge = (payload: WidgetPayload, context: LayoutContext): HTMLElement => {
-  const label = describeSummary(payload.average, payload.total);
+  // Read « Note moyenne 4,8 sur 5, 47 avis » rather than the figures shown, which only repeat it.
   const content = () => [
-    h("span", { class: "faces" }, ...payload.avatars.map((face) => avatar(face.initials, face.photo))),
-    payload.average === null ? null : stars(payload.average, label, "small"),
-    h("span", { class: "badge-text" }, summarize(payload.average, payload.total)),
+    h("span", { class: "sr-only" }, describeSummary(payload.average, payload.total)),
+    h(
+      "span",
+      { class: "faces", "aria-hidden": "true" },
+      ...payload.avatars.map((face) => avatar(face.initials, face.photo)),
+    ),
+    payload.average === null ? null : stars(payload.average, null, "small"),
+    h("span", { class: "badge-text", "aria-hidden": "true" }, summarize(payload.average, payload.total)),
   ];
 
   const buildBadge = (): HTMLElement => {
     const target = context.reviews?.find() ?? null;
-    if (!target) return h("div", { class: "badge", role: "img", "aria-label": label }, ...content());
-    const link = h("a", { class: "badge", href: "#", "aria-label": label }, ...content());
+    if (!target) return h("div", { class: "badge" }, ...content());
+    const link = h("a", { class: "badge", href: "#" }, ...content());
     link.addEventListener("click", (event) => {
       event.preventDefault();
       target.host.scrollIntoView({ behavior: context.prefersReducedMotion() ? "auto" : "smooth", block: "start" });

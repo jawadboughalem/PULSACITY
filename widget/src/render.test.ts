@@ -136,7 +136,7 @@ describe("the carousel", () => {
   it("shows the stars, the quote, then the author with their title and the date", () => {
     const { root } = render(carousel);
 
-    const slides = root.querySelectorAll(".slides > li");
+    const slides = root.querySelectorAll(".slides > .slide");
     expect(slides).toHaveLength(4);
     expect(slides[0].getAttribute("aria-label")).toBe("1 sur 4");
     const card = slides[0].querySelector(".card");
@@ -184,12 +184,14 @@ describe("the badge", () => {
   it("shows three faces, the stars and the average, with its value in words", () => {
     const { root } = render(SAMPLE_BADGE_PAYLOAD);
 
-    const badge = root.querySelector(".badge");
-    expect(badge?.getAttribute("aria-label")).toBe("Note moyenne 4,8 sur 5, 47 avis");
+    expect(root.querySelector(".badge .sr-only")?.textContent).toBe("Note moyenne 4,8 sur 5, 47 avis");
     expect(texts(root.querySelectorAll(".faces .avatar")).slice(0, 2)).toEqual(["CR", "TL"]);
     expect(root.querySelector(".faces .avatar img")?.getAttribute("src")).toBe("https://photos.exemple.fr/sophie.jpg");
     expect(root.querySelector(".badge-text")?.textContent).toBe("4,8/5 · 47 avis");
     expect(root.querySelectorAll(".badge .stars svg")).toHaveLength(5);
+    for (const shown of root.querySelectorAll(".badge > :not(.sr-only)")) {
+      expect(shown.getAttribute("aria-hidden")).toBe("true");
+    }
   });
 
   it("links to the wall of the page once there is one", () => {

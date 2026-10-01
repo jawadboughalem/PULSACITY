@@ -26,7 +26,7 @@ export const renderCarousel = (payload: WidgetPayload, context: LayoutContext): 
   const total = payload.testimonials.length;
   const slides = payload.testimonials.map((testimonial, index) =>
     h(
-      "li",
+      "div",
       { class: "slide", role: "group", "aria-roledescription": "avis", "aria-label": `${index + 1} sur ${total}` },
       carouselCard(testimonial),
     ),
@@ -34,7 +34,7 @@ export const renderCarousel = (payload: WidgetPayload, context: LayoutContext): 
   const track = h(
     "div",
     { class: "track", role: "region", "aria-roledescription": "carrousel", "aria-label": "Avis clients", tabindex: 0 },
-    h("ul", { class: "slides" }, ...slides),
+    h("div", { class: "slides" }, ...slides),
   );
   const previous = arrowButton("prev", "Avis précédent", CHEVRON_LEFT);
   const next = arrowButton("next", "Avis suivant", CHEVRON_RIGHT);

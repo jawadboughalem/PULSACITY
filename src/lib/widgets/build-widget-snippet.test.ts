@@ -8,7 +8,7 @@ describe("buildWidgetSnippet", () => {
     const snippet = buildWidgetSnippet("https://pulsacity.com", "0f8d1c2e");
 
     expect(snippet).toBe(
-      '<div data-pulsacity-widget="0f8d1c2e"></div>\n<script src="https://pulsacity.com/w.js" async></script>',
+      '<div data-pulsacity-widget="0f8d1c2e"></div><script async src="https://pulsacity.com/w.js"></script>',
     );
     const host = new DOMParser().parseFromString(snippet, "text/html").querySelector(MOUNT_SELECTOR);
     expect(host?.getAttribute("data-pulsacity-widget")).toBe("0f8d1c2e");
