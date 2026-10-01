@@ -6,7 +6,7 @@ Dans l'ordre. Chaque bloc est un prompt à coller tel quel dans Claude in Chrome
 - Prompts 4 à 6 : sur pulsacity.com et une vraie page Systeme.io de test, après la fusion. Les aperçus sont protégés par Vercel Authentication : une page Systeme.io ne peut pas y charger le widget, d'où ce test en production.
 - Prompt 7 : pour Claude Design.
 
-Adresse de l'aperçu : dans la PR #20, le commentaire de Vercel, lien « Visit Preview ». Pour la connexion, prenez l'adresse du lien reçu par e-mail : c'est celle de la branche, qui commence par `https://pulsacity-git-claude-amazing-`. Elle sert pour toute la recette.
+Adresse de l'aperçu qui sert à la recette : https://pulsacity-git-claude-amazing-ar-eb60d3-jawadboughalems-projects.vercel.app. C'est l'adresse de la branche : le lien de connexion reçu par e-mail y mène aussi. Elle fait tourner le code de la PR #20, sur la base de recette.
 
 Déjà vérifié par Claude Code dans son conteneur :
 - les trois types rendus en jsdom à partir d'un JSON d'exemple, et aucun style qui sort du Shadow DOM ni n'y entre (tests Vitest) ;
