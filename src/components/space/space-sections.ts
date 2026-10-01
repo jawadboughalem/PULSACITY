@@ -41,6 +41,10 @@ export const WIDGETS_SECTION_HREF = WIDGETS.href;
 
 export const SYSTEME_CONNECTOR_HREF = `${CONNECTORS.href}/systeme`;
 
+export const CONNECTORS_SECTION_HREF = CONNECTORS.href;
+
+export const MORE_SECTION_HREF = MORE.href;
+
 export const BILLING_HREF = "/app/facturation";
 
 const isWithin = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);

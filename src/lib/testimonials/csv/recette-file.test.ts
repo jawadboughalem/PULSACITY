@@ -8,7 +8,10 @@ const RECETTE_FILE = new URL("../../../../docs-internes/recette/temoignages-50-l
 describe("the acceptance file of the CSV import", () => {
   it("holds 50 testimonials, 3 of them invalid on lines 12, 27 and 41", () => {
     const reading = readTestimonialCsv(decodeCsvFile(readFileSync(RECETTE_FILE)), {
-      products: [{ id: "programme", name: "Programme 30 jours" }],
+      products: [
+        { id: "programme", name: "Programme 30 jours" },
+        { id: "atelier", name: "Atelier cuisine" },
+      ],
       existingTestimonials: [],
       testimonialsLeft: null,
       today: { year: 2026, month: 10, day: 1 },
@@ -19,6 +22,5 @@ describe("the acceptance file of the CSV import", () => {
     expect(reading.rows).toHaveLength(50);
     expect(reading.rows.filter((row) => row.status === "ready")).toHaveLength(47);
     expect(reading.rows.filter((row) => row.status !== "ready").map((row) => row.line)).toEqual([12, 27, 41]);
-    expect(reading.newProductNames).toEqual(["Atelier cuisine"]);
   });
 });

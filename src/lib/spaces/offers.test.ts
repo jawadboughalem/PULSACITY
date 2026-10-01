@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { Database } from "@/db/database";
-import { connections, productRefs, products } from "@/db/schema";
+import { connections, customers, productRefs, products, purchases } from "@/db/schema";
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import { insertTestTestimonial } from "@/db/testimonial-fixtures";
@@ -30,7 +30,7 @@ beforeEach(async () => {
 });
 
 describe("listSpaceOffers", () => {
-  it("lists each offer with its settings, its testimonials and its connector references", async () => {
+  it("lists each offer with its settings, its testimonials, its sales and its connector references", async () => {
     const [connection] = await database
       .insert(connections)
       .values({ spaceId, connector: "systeme", webhookToken: randomUUID(), status: "active" })
@@ -42,6 +42,13 @@ describe("listSpaceOffers", () => {
     await insertTestTestimonial(database, { spaceId, productId });
     await insertTestTestimonial(database, { spaceId, productId });
     await database.insert(products).values({ spaceId, name: "Suivi individuel", slug: "suivi-individuel" });
+    const [customer] = await database
+      .insert(customers)
+      .values({ spaceId, email: "alice@exemple.fr" })
+      .returning({ id: customers.id });
+    await database
+      .insert(purchases)
+      .values({ spaceId, customerId: customer.id, productId, source: "manual", purchasedAt: new Date() });
 
     expect(await listSpaceOffers(database, spaceId)).toEqual([
       {
@@ -51,12 +58,13 @@ describe("listSpaceOffers", () => {
         requestDelayDays: 14,
         requestsEnabled: true,
         testimonialCount: 2,
+        hasSales: true,
         connectorRefs: [
           { connector: "systeme", externalRef: "course-1" },
           { connector: "systeme", externalRef: "offer-price-2" },
         ],
       },
-      expect.objectContaining({ name: "Suivi individuel", testimonialCount: 0, connectorRefs: [] }),
+      expect.objectContaining({ name: "Suivi individuel", testimonialCount: 0, hasSales: false, connectorRefs: [] }),
     ]);
   });
 });

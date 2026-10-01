@@ -216,3 +216,42 @@ Note : `m1-collecte-mobile-05-lien-inactif.png` remplace la version précédente
 | c0-charte-12-micro-animations.png | Micro-animations · spécification |
 
 La planche « Micro-animations · démo » est interactive (mode Play) et n'a pas d'export.
+
+
+# Espace — 1er oct. 2026
+
+## m15 — Ajouter un témoignage reçu ailleurs (page « Espace · ajout, import, offres »)
+| Fichier | Planche · état |
+| --- | --- |
+| m15-ajout-manuel-mobile-01-vide.png | Ajout manuel · Vide · 360 |
+| m15-ajout-manuel-desktop-01-vide.png | Ajout manuel · Vide · 1440 |
+| m15-ajout-manuel-mobile-02-erreurs.png | Ajout manuel · Erreurs sous les champs · 360 |
+| m15-ajout-manuel-desktop-02-erreurs.png | Ajout manuel · Erreurs sous les champs · 1440 |
+| m15-ajout-manuel-mobile-03-envoi-en-cours.png | Ajout manuel · Envoi en cours · 360 |
+| m15-ajout-manuel-desktop-03-envoi-en-cours.png | Ajout manuel · Envoi en cours · 1440 |
+
+## m16 — Importer un fichier CSV
+| Fichier | Planche · état |
+| --- | --- |
+| m16-import-csv-mobile-01-choix-fichier.png | Import CSV · Choix du fichier · 360 |
+| m16-import-csv-desktop-01-choix-fichier.png | Import CSV · Choix du fichier · 1440 |
+| m16-import-csv-mobile-02-apercu.png | Import CSV · Aperçu ligne par ligne · 360 |
+| m16-import-csv-desktop-02-apercu.png | Import CSV · Aperçu ligne par ligne · 1440 |
+| m16-import-csv-mobile-03-rapport.png | Import CSV · Rapport final · 360 |
+| m16-import-csv-desktop-03-rapport.png | Import CSV · Rapport final · 1440 |
+
+## m17 — Offres
+| Fichier | Planche · état |
+| --- | --- |
+| m17-offres-mobile-01-liste.png | Offres · Liste · 360 |
+| m17-offres-desktop-01-liste.png | Offres · Liste · 1440 |
+| m17-offres-mobile-02-renommage.png | Offres · Renommer une offre · 360 |
+| m17-offres-desktop-02-renommage.png | Offres · Renommer une offre · 1440 |
+| m17-offres-mobile-03-ajout.png | Offres · Ajouter une offre · 360 |
+| m17-offres-desktop-03-ajout.png | Offres · Ajouter une offre · 1440 |
+| m17-offres-mobile-04-retrait.png | Offres · Retirer une offre · 360 |
+| m17-offres-desktop-04-retrait.png | Offres · Retirer une offre · 1440 |
+| m17-offres-mobile-05-retrait-impossible.png | Offres · Retrait impossible · 360 |
+| m17-offres-desktop-05-retrait-impossible.png | Offres · Retrait impossible · 1440 |
+| m17-offres-mobile-06-vide.png | Offres · État vide · 360 |
+| m17-offres-desktop-06-vide.png | Offres · État vide · 1440 |

@@ -25,7 +25,7 @@ export const TextField = ({ id, label, hint, error, ...inputProps }: TextFieldPr
         aria-describedby={describedBy || undefined}
         className={cn(
           "h-[48px] w-full rounded-sm border border-gray-400 bg-white px-4 text-body text-ink-900 placeholder:text-slate-600",
-          "focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none",
+          "focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none disabled:cursor-not-allowed disabled:bg-paper-100",
           error && "border-2 border-error px-[15px]",
         )}
         {...inputProps}

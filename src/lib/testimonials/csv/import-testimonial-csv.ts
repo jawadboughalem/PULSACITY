@@ -3,8 +3,6 @@ import { type Limit, countTestimonialsLeft, getPlan } from "@/config/plans";
 import type { Database } from "@/db/database";
 import { products, spaces, testimonials } from "@/db/schema";
 import { readParisDate } from "@/lib/dates/paris-date";
-import { addProduct } from "@/lib/spaces/add-product";
-import { slugify } from "@/lib/spaces/slugify";
 import { claimFirstApproval } from "../claim-first-approval";
 import { countApprovedTestimonials } from "../count-approved-testimonials";
 import { CSV_CONSENT_TEXT } from "../manual-consent";
@@ -17,7 +15,7 @@ export type CsvPlan = {
 };
 
 export type CsvPreview =
-  | { status: "previewed"; rows: CsvRow[]; newProductNames: string[]; plan: CsvPlan }
+  | { status: "previewed"; rows: CsvRow[]; plan: CsvPlan }
   | { status: "file-error"; message: string }
   | { status: "space-not-found" };
 
@@ -27,7 +25,6 @@ export type CsvImportReport =
       importedCount: number;
       isFirstApproval: boolean;
       pendingCount: number;
-      createdProductNames: string[];
       notImported: CsvRow[];
       plan: CsvPlan;
     }
@@ -75,12 +72,7 @@ export const previewTestimonialCsv = async (
   const result = await readCsvAgainstSpace(database, userId, spaceId, text, now);
   if (!result) return { status: "space-not-found" };
   if (result.reading.status === "file-error") return result.reading;
-  return {
-    status: "previewed",
-    rows: result.reading.rows,
-    newProductNames: result.reading.newProductNames,
-    plan: result.plan,
-  };
+  return { status: "previewed", rows: result.reading.rows, plan: result.plan };
 };
 
 export const importTestimonialCsv = (
@@ -96,18 +88,12 @@ export const importTestimonialCsv = (
     if (!result) return { status: "space-not-found" };
     if (result.reading.status === "file-error") return result.reading;
 
-    const productIds = new Map<string, string>();
-    for (const name of result.reading.newProductNames) {
-      const added = await addProduct(transaction, userId, result.space.id, name);
-      if (added.status === "added") productIds.set(slugify(name), added.product.id);
-    }
-
     const readyRows = result.reading.rows.filter(isReadyCsvRow);
     if (readyRows.length > 0) {
       await transaction.insert(testimonials).values(
         readyRows.map((row) => ({
           spaceId: result.space.id,
-          productId: row.productId ?? (row.productName ? (productIds.get(slugify(row.productName)) ?? null) : null),
+          productId: row.productId,
           authorName: row.authorName,
           authorTitle: row.authorTitle,
           rating: row.rating,
@@ -128,7 +114,6 @@ export const importTestimonialCsv = (
       importedCount: readyRows.length,
       isFirstApproval: approvedCount > 0 && (await claimFirstApproval(transaction, result.space.id, now)),
       pendingCount,
-      createdProductNames: result.reading.newProductNames,
       notImported: result.reading.rows.filter((row) => !isReadyCsvRow(row)),
       plan: {
         ...result.plan,

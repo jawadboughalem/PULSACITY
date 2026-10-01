@@ -18,11 +18,10 @@ const readRows = (text: string, context: Partial<CsvContext> = {}) => {
 
 describe("readTestimonialCsv", () => {
   it("reads every column, matches the formation and dates the testimonial", () => {
-    const { rows, newProductNames } = readRows(
+    const { rows } = readRows(
       "nom;titre;note;texte;formation;date\nCamille R.;Enseignante, Lyon;5;Top.;programme 30 jours;14/03/2026",
     );
 
-    expect(newProductNames).toEqual([]);
     expect(rows).toEqual([
       {
         line: 2,
@@ -36,6 +35,14 @@ describe("readTestimonialCsv", () => {
         status: "ready",
         isPending: false,
         problems: [],
+        cells: {
+          nom: "Camille R.",
+          titre: "Enseignante, Lyon",
+          note: "5",
+          texte: "Top.",
+          formation: "programme 30 jours",
+          date: "14/03/2026",
+        },
       },
     ]);
   });
@@ -82,8 +89,8 @@ describe("readTestimonialCsv", () => {
         4,
         "invalid",
         [
-          "Le nom est vide. Indiquez le nom de la personne.",
-          "La note « 6 » n'est pas reconnue. Indiquez un chiffre de 1 à 5.",
+          "Le nom est vide.",
+          "La note « 6 » n'existe pas : elle doit aller de 1 à 5.",
           "Le texte est vide. Collez le témoignage dans la colonne texte.",
           "La date « 31/02/2026 » n'est pas reconnue. Écrivez-la sous la forme 14/03/2026.",
         ],
@@ -92,7 +99,7 @@ describe("readTestimonialCsv", () => {
         5,
         "invalid",
         [
-          "La note « 4,5 » n'est pas reconnue. Indiquez un chiffre de 1 à 5.",
+          "La note « 4,5 » n'existe pas : elle doit aller de 1 à 5.",
           "La date « 01/10/2026 » est dans le futur. Vérifiez-la.",
         ],
       ],
@@ -111,17 +118,30 @@ describe("readTestimonialCsv", () => {
     ]);
   });
 
-  it("leaves the rows beyond the validated testimonials of the plan pending, and lists the formations to create", async () => {
-    const { rows, newProductNames } = readRows(
-      "nom;note;texte;formation\nA;5;Un;Coaching\nB;5;Deux;coaching\nC;5;Trois;Atelier",
-      { testimonialsLeft: 2 },
-    );
+  it("leaves the rows beyond the validated testimonials of the plan pending", () => {
+    const { rows } = readRows("nom;note;texte\nA;5;Un\nB;5;Deux\nC;5;Trois", { testimonialsLeft: 2 });
 
     expect(rows.map((row) => [row.status, row.isPending])).toEqual([
       ["ready", false],
       ["ready", false],
       ["ready", true],
     ]);
-    expect(newProductNames).toEqual(["Coaching", "Atelier"]);
+  });
+
+  it("refuses a formation that matches none of the offers, instead of creating it", () => {
+    const { rows } = readRows("nom;note;texte;formation\nA;5;Un;PROGRAMME 30 jours\nB;5;Deux;Atelier cuisine\nC;5;Trois;");
+
+    expect(rows.map((row) => [row.line, row.status, row.productId, row.problems])).toEqual([
+      [2, "ready", "programme-id", []],
+      [
+        3,
+        "invalid",
+        null,
+        [
+          "La formation « Atelier cuisine » ne correspond à aucune de vos offres. Laissez la case vide ou utilisez le nom exact d'une offre.",
+        ],
+      ],
+      [4, "ready", null, []],
+    ]);
   });
 });

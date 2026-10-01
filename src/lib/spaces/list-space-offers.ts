@@ -1,6 +1,6 @@
 import { asc, count, eq, inArray } from "drizzle-orm";
 import type { Database } from "@/db/database";
-import { connections, productRefs, products, testimonials } from "@/db/schema";
+import { connections, productRefs, products, purchases, testimonials } from "@/db/schema";
 import type { ConnectorId } from "@/lib/connectors/types";
 
 export type OfferConnectorRef = {
@@ -15,6 +15,8 @@ export type SpaceOffer = {
   requestDelayDays: number;
   requestsEnabled: boolean;
   testimonialCount: number;
+  /** An offer with sales stays: removing it would orphan them. */
+  hasSales: boolean;
   connectorRefs: OfferConnectorRef[];
 };
 
@@ -33,7 +35,7 @@ export const listSpaceOffers = async (database: Database, spaceId: string): Prom
   if (offers.length === 0) return [];
 
   const offerIds = offers.map((offer) => offer.id);
-  const [refs, testimonialCounts] = await Promise.all([
+  const [refs, testimonialCounts, saleCounts] = await Promise.all([
     database
       .select({ productId: productRefs.productId, connector: connections.connector, externalRef: productRefs.externalRef })
       .from(productRefs)
@@ -45,12 +47,19 @@ export const listSpaceOffers = async (database: Database, spaceId: string): Prom
       .from(testimonials)
       .where(inArray(testimonials.productId, offerIds))
       .groupBy(testimonials.productId),
+    database
+      .select({ productId: purchases.productId, saleCount: count() })
+      .from(purchases)
+      .where(inArray(purchases.productId, offerIds))
+      .groupBy(purchases.productId),
   ]);
   const countByOffer = new Map(testimonialCounts.map((row) => [row.productId, row.testimonialCount] as const));
+  const offersWithSales = new Set(saleCounts.map((row) => row.productId));
 
   return offers.map((offer) => ({
     ...offer,
     testimonialCount: countByOffer.get(offer.id) ?? 0,
+    hasSales: offersWithSales.has(offer.id),
     connectorRefs: refs
       .filter((ref) => ref.productId === offer.id)
       .map(({ connector, externalRef }) => ({ connector, externalRef })),

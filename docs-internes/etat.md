@@ -1,12 +1,13 @@
 # État du projet
 
-Mis à jour le 1er octobre 2026, après la fusion de la PR #17. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 1er octobre 2026, à la fusion de la PR #19 : le lot 4 est terminé. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
 - Socle : Next.js à Francfort, base Supabase, connexion par lien magique, CI (PR #8 à #14).
 - Inscription, création de l'espace, onboarding des formations, page publique de collecte `/t/[espace]` et `/t/[espace]/[offre]` (PR #12).
-- Espace du créateur, maquette 4 : accueil, témoignages (liste, filtres, fiche, « Valider », « Masquer », « Mettre en avant », texte affiché, suppression définitive), ajout manuel, import CSV, offres. Identité v2 : logo, favicon, micro-animations (PR #15).
+- Espace du créateur, maquette 4 : accueil, témoignages (liste, filtres, fiche, « Valider », « Masquer », « Mettre en avant », texte affiché, suppression définitive). Identité v2 : logo, favicon, micro-animations (PR #15).
+- Ajout manuel (m15), import CSV (m16) et page Offres (m17), avec les corrections de la recette du lot 4, recettés sur l'aperçu (PR #19).
 - Trois environnements : local, recette sur chaque aperçu Vercel, migrations de production lancées à chaque fusion et attendues par Vercel avant la mise en ligne (PR #16).
 
 ## Pas encore construit
@@ -18,22 +19,37 @@ Mis à jour le 1er octobre 2026, après la fusion de la PR #17. À lire au débu
 - Stripe (abonnements, Checkout, portail) et page Tarifs.
 - Site : accueil (maquette 7), intégrations, guides, pages légales.
 
-## À faire hors code
+## Fait le 1er octobre (prompts de `docs-internes/recette/actions-1er-octobre.md`)
 
-Les prompts sont dans `docs-internes/recette/actions-1er-octobre.md`, dans l'ordre :
-1. Donner à la base de recette son propre mot de passe.
-2. Recette du lot 4 sur l'aperçu, pas sur pulsacity.com : le lot 4 est en ligne depuis la PR #15, fusionnée avant que la recette existe. Le prompt 1 de `lot-4-espace.md` (migrations 0003 et 0004) est fait.
-3. Envoi d'une photo et lien de connexion, sur l'aperçu.
-4. Protéger `main` sur GitHub.
-5. Classer l'alerte GitGuardian 37781349 en faux positif.
-6. Dépôt privé ou public : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
-7. Sentry, avant le lancement.
+- Base de recette avec son propre mot de passe ; jeton R2 de production vérifié (Object Read & Write sur `pulsacity-photos` seul).
+- Recette du lot 4 sur l'aperçu : 30 points sur 31 sur ordinateur, 7 sur 9 à 360 px. Les trois écarts sont corrigés dans la PR qui suit : messages « Délai enregistré. » et « Demandes automatiques désactivées. » absents, filtres « Statut / Offre / Note » qui débordaient à 360 px.
+- Envoi d'une photo et lien de connexion vérifiés sur l'aperçu.
+- `main` protégée sur GitHub ; alerte GitGuardian 37781349 classée (« test credential »).
+- Vercel attend bien « CI » et « Database migration » avant de mettre la production en ligne.
+- Claude Design a livré les maquettes m15 (ajout manuel), m16 (import CSV) et m17 (offres).
 
-Fait : Vercel attend bien « CI » et « Database migration » avant de mettre la production en ligne (vérifié sur la fusion de la PR #17).
+## À faire
+
+1. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
+2. Sentry, avant le lancement.
+3. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
+
+Remarques de la recette, à reprendre quand on touchera ces écrans :
+- la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
+- les compteurs du haut de la liste se mettent à jour environ une seconde après « Valider » ou « Masquer » ;
+- un premier clic sur « Importez un fichier CSV » n'a rien fait une fois, le second a ouvert la page ;
+- les liens Widgets, Connecteurs, Demandes et Réglages mènent à des pages pas encore construites.
+
+## Décisions du 1er octobre (maquettes m15 à m17)
+
+- Import CSV : une formation qui ne correspond à aucune offre est refusée, avec le message de la maquette. L'import ne crée plus d'offre.
+- Prix des offres (m17) : il s'affichera avec le connecteur Systeme.io, qui le fournit. En attendant, chaque offre montre son nombre de témoignages.
+- Identifiants par connecteur (« Modifier », « Associer un produit Systeme.io ») : avec le connecteur. En attendant : « Aucun outil connecté ».
+- Un témoignage ajouté à la main arrive en « Validé ».
 
 ## Questions ouvertes
 
+- Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
 - « Aide et contact » pointe vers `/aide`, qui n'existe pas : il manque l'adresse de support.
 - L'étape « Coller le widget » se cochera au premier affichage du widget, que le lot widget enregistrera.
-- Ajout manuel, import CSV et page des offres ont été construits sans maquette, à la demande du lot 4 : ils sont à faire relire par Design.

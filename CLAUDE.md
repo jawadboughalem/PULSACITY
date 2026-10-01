@@ -158,9 +158,9 @@ Rien de ce que le fondateur fait de son côté ne se fait sans l'aide de Claude 
 - la vérification qui prouve que c'est fait ;
 - un compte rendu à renvoyer à Claude Code, sans aucun secret.
 
-Postes de travail :
-- Bureau, Windows, deux écrans. Le code se fait dans une session Claude Code dans le cloud (claude.ai/code, sur ce dépôt). Les actions dans le navigateur se font par une session Claude Code locale, avec Claude in Chrome, dans le groupe d'onglets « PULSACITY » : PowerShell en fenêtre normale (pas en administrateur), `cd $HOME\pulsacity`, puis `claude --chrome`. Chrome y est activé par défaut, et Remote Control permet de la suivre depuis l'app Claude. Le dossier est vide : la session locale lit les prompts sur GitHub, dans Chrome. La session cloud ne voit pas la session locale : elle prépare une consigne d'une phrase qui pointe vers le prompt sur GitHub, et le fondateur la colle dans PowerShell (clic droit pour coller).
-- Maison, Mac, un écran. Même session cloud pour le code. Le fondateur colle les prompts lui-même dans l'extension Claude in Chrome. Pour travailler comme au bureau : installer Claude Code (`curl -fsSL https://claude.ai/install.sh | bash`), puis `claude --chrome` dans un dossier `~/pulsacity`.
+Postes de travail : bureau sous Windows (deux écrans), maison sous Mac (un écran). Partout, le code se fait dans une session Claude Code dans le cloud (claude.ai/code, sur ce dépôt), et les actions dans le navigateur passent par l'extension Claude in Chrome, dans le groupe d'onglets « PULSACITY ». La session cloud n'atteint ni le navigateur du fondateur, ni une session sur son ordinateur.
+
+Livraison des prompts : directement dans la conversation, un bloc par prompt, numérotés dans l'ordre, en disant où coller chacun (Claude in Chrome ou Claude Design). Le fondateur les colle un par un et renvoie chaque compte rendu. Une copie est gardée dans `docs-internes/recette/`. Une session locale `claude --chrome` peut aussi les lancer (PowerShell au bureau dans `$HOME\pulsacity` ; sur Mac, après `curl -fsSL https://claude.ai/install.sh | bash`, dans `~/pulsacity`), mais le fondateur préfère l'extension pour l'instant.
 
 Claude Code ne demande au fondateur que ce qui doit passer par lui : fusionner une PR, se connecter à un service, copier et coller un secret, créer un compte de test.
 
@@ -171,7 +171,7 @@ Un secret créé sur un service est collé directement là où il sert (variable
 1. Le fondateur donne le lot dans la session cloud. Claude Code lit d'abord `docs-internes/etat.md`.
 2. Claude Code développe sur sa branche et vérifie dans son conteneur : Postgres local, espace de démonstration, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, écrans à 360 px et en desktop dans Chromium, à côté de leur maquette.
 3. Claude Code ouvre la PR et la suit jusqu'au vert (CI, GitGuardian). Vercel construit l'aperçu, branché sur la recette. « Recette database migration » y applique les migrations de la PR.
-4. Recette sur l'aperçu, avec un compte rempli par « Recette demo space » : par la session locale au bureau, par les prompts à la maison. Le conteneur de la session cloud n'atteint ni les aperçus ni pulsacity.com.
+4. Recette sur l'aperçu, avec un compte rempli par « Recette demo space », par des prompts Claude in Chrome. Le conteneur de la session cloud n'atteint ni les aperçus ni pulsacity.com.
 5. Fusion sur `main`. Vercel construit la production et la met en ligne une fois « CI » et « Database migration » verts.
 6. Vérification sur pulsacity.com, puis mise à jour de `docs-internes/etat.md`.
 
@@ -199,6 +199,7 @@ En place depuis le 1er octobre 2026 (`docs-internes/recette/environnement-recett
 ### Production
 
 - Vercel : équipe « jawadboughalems-projects », projet « pulsacity », production sur `main`. pulsacity.com sert la production ; www.pulsacity.com, pulsacity.fr et www.pulsacity.fr y redirigent en 301. Un déploiement de production ne passe en ligne qu'une fois verts, sur son commit, les deux Deployment Checks de Vercel : « Lint, typecheck, test, build » (workflow CI) et « Apply pending migrations » (workflow Database migration).
+- GitHub : `main` est protégée par le ruleset « main » : PR obligatoire (0 approbation, le fondateur est seul), checks « Lint, typecheck, test, build » et « GitGuardian Security Checks » verts avant fusion, ni suppression ni force-push.
 - DNS de pulsacity.com : chez OVH. Les e-mails du fondateur en @pulsacity.com passent par OVH (MX et SPF de la racine) : ne jamais les modifier. DMARC en `p=none`.
 - Supabase : projet PULSACITY, eu-central-1. Migrations par le workflow GitHub « Database migration », lancé à chaque fusion sur `main`, avec le secret `DATABASE_URL` du dépôt.
 - Resend : domaine envois.pulsacity.com vérifié, région eu-west-1.
