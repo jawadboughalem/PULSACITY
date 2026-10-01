@@ -20,17 +20,17 @@ export const FilterSelect = ({ name, label, options, value, onChange }: FilterSe
   const isFiltered = value !== "" && selected !== undefined;
 
   return (
-    <label className="relative flex flex-col gap-2 max-desktop:shrink-0">
+    <label className="relative flex flex-col gap-2 max-desktop:max-w-full">
       <span className="text-small font-semibold max-desktop:sr-only">{label}</span>
       <span
         aria-hidden="true"
         className={cn(
-          "flex h-[48px] items-center gap-2 rounded-sm border border-ink-900 px-4 text-body font-semibold whitespace-nowrap desktop:hidden",
+          "flex h-[48px] max-w-full items-center gap-2 rounded-sm border border-ink-900 px-3 text-body font-semibold whitespace-nowrap desktop:hidden",
           isFiltered ? "bg-ink-900 text-white" : "bg-white text-ink-900",
         )}
       >
-        {isFiltered ? selected.label : label}
-        <Icon name="chevronDown" size={16} />
+        <span className="truncate">{isFiltered ? selected.label : label}</span>
+        <Icon name="chevronDown" size={16} className="shrink-0" />
       </span>
       <span className="relative flex max-desktop:absolute max-desktop:inset-[0]">
         <select

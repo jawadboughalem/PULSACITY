@@ -80,7 +80,7 @@ export const TestimonialFiltersForm = ({ action, filters, products }: Testimonia
           />
         </span>
       </label>
-      <div className="flex gap-3 desktop:contents">
+      <div className="flex flex-wrap gap-2 desktop:contents">
         <FilterSelect
           name={TESTIMONIAL_SEARCH_PARAMS.status}
           label="Statut"
