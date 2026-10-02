@@ -2,7 +2,7 @@
 
 Dans l'ordre. Chaque bloc est un prompt à coller tel quel dans Claude in Chrome, sauf le dernier, pour Claude Design.
 
-- Prompts 1 à 3 : sur l'aperçu de la PR #21, avant la fusion.
+- Prompts 1 à 3, puis 3 bis : sur l'aperçu de la PR #21, avant la fusion.
 - Prompt 4 : sur pulsacity.com et la page Systeme.io de test du 2 octobre, après la fusion.
 - Prompt 5 : pour Claude Design.
 
@@ -64,7 +64,7 @@ Avant ce prompt : chargez l'aperçu dans un cadre de 360 × 800, comme pour la r
 ```
 Tu fais la recette des nouveaux écrans du widget de PULSACITY en largeur téléphone (360 × 800), sur l'aperçu de la PR où je suis connecté. Tu ne crées aucun compte. Pour chaque point, note « OK » ou décris ce que tu vois.
 
-1. Onglet « Plus », puis « Widgets » : miniature, titre et état les uns sous les autres, et « Modifier » en bouton sur toute la largeur. L'encadré du plan Essentiel est dessous. Rien ne déborde sur le côté.
+1. Onglet « Plus », puis « Widgets » : la miniature à gauche, et à sa droite le titre, « Mur · Toutes les offres » et l'état, les uns sous les autres. Dessous, « Modifier » en bouton sur toute la largeur, puis l'encadré du plan Essentiel. Rien ne déborde sur le côté.
 2. Touche « Modifier ». Sous le titre « Modifier le widget » : « Avis de la page Programme 30 jours · Enregistré automatiquement », puis deux onglets, « Réglages » (choisi, souligné) et « Aperçu ».
 3. Dans « Réglages » : le nom, le type, l'offre, le nombre, l'affichage, la couleur, le thème, les coins des cartes et « Masquer « Propulsé par PULSACITY » ».
 4. Plus bas, « Installer le widget » : un encadré gris « Plus simple depuis un ordinateur » avec le bouton « M'envoyer le code » et « Il part à …, avec le guide. ». Puis « Ou copiez-le depuis ce téléphone », le bouton « Copier le code » et le lien « Voir le guide « Coller dans Systeme.io » ».
@@ -76,9 +76,23 @@ Tu fais la recette des nouveaux écrans du widget de PULSACITY en largeur télé
 Compte rendu à me donner : les points 1 à 8 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK.
 ```
 
+## 3 bis. Contre-recette sur téléphone, sur l'aperçu
+
+Le 2 octobre, prompt 3 : à 360 px, l'aperçu de l'éditeur passait « Camille R. » et « Thomas L. » sur deux lignes, l'initiale seule dessous. L'aperçu dessine maintenant la page à 390 px, la largeur de m2 mobile, réduite au cadre. Le point 1 n'était pas un écart : m18 mobile met bien la miniature à gauche.
+
+Avant ce prompt : attendez que Claude Code confirme que l'aperçu est à jour, puis chargez-le dans un cadre de 360 × 800.
+
+```
+Tu refais un point de la recette de PULSACITY en largeur téléphone (360 × 800), sur l'aperçu de la PR où je suis connecté. Tu ne modifies rien.
+
+1. Onglet « Plus », « Widgets », puis « Modifier ». Touche l'onglet « Aperçu ». La page réduite « Julie Nutrition » montre « Ce qu'en disent mes clients », la note, puis le mur sur deux colonnes. Chaque nom tient sur une ligne : « Camille R. » et « Thomas L. » n'ont plus leur initiale seule dessous. Le texte des cartes reste lisible, et rien ne déborde sur le côté.
+
+Compte rendu à me donner : « OK » ou ta description, et une capture d'écran du haut du mur.
+```
+
 ---
 
-Après les prompts 2 et 3 : envoyez les comptes rendus à Claude Code. S'il n'y a rien à corriger, la PR #21 est fusionnée, puis attendez que la production soit « Ready » dans Vercel.
+Après les prompts 2, 3 et 3 bis : envoyez les comptes rendus à Claude Code. S'il n'y a rien à corriger, la PR #21 est fusionnée, puis attendez que la production soit « Ready » dans Vercel.
 
 ## 4. Systeme.io — le nouveau code, et assez d'avis pour tout voir (production)
 
@@ -114,7 +128,7 @@ Puis, sur la même page, en largeur téléphone (cadre de 360 × 800), collez :
 ```
 Tu vérifies le widget de PULSACITY sur la page Systeme.io de test, en largeur téléphone (360 × 800). Tu ne modifies rien.
 
-1. Le mur : deux colonnes, puis « Voir les 3 autres avis » sur toute la largeur. Touche-le : les cartes s'ajoutent.
+1. Le mur : deux colonnes, puis « Voir les 3 autres avis » sur toute la largeur. Touche-le : les cartes s'ajoutent. Note aussi les noms qui passent sur deux lignes, l'initiale seule dessous (par exemple « Camille », puis « R. »).
 2. Demande-moi de passer le type sur « Carrousel », attends ma réponse, puis une minute, et recharge deux fois. Une carte à la fois. Fais-la glisser vers la gauche : la suivante arrive, et le compteur sous la carte passe de « 1 sur 12 » à « 2 sur 12 » tout de suite.
 3. Demande-moi de remettre le type sur « Mur ».
 
@@ -127,7 +141,7 @@ Compte rendu à me donner : les points 1 à 3 avec « OK » ou ta description, e
 
 ```
 Pour PULSACITY, merci pour les maquettes du lot widget du 2 octobre : elles sont construites. Quatre points à aligner, sans rien redessiner d'autre :
-1. m6 mobile, « Aperçu » : la phrase « Sur la vraie page, les avis s'affichent en une colonne sur mobile » contredit m2 et la charte, qui montrent deux colonnes sous 1024 px. Le widget garde deux colonnes et l'éditeur dit seulement « L'aperçu suit vos réglages. ». Confirme, ou redessine m2 mobile en une colonne.
+1. m6 mobile, « Aperçu » : la phrase « Sur la vraie page, les avis s'affichent en une colonne sur mobile » contredit m2 et la charte, qui montrent deux colonnes sous 1024 px. Le widget garde deux colonnes et l'éditeur dit seulement « L'aperçu suit vos réglages. ». Pour trancher : sur un téléphone de 360 px avec 20 px de marge, les cartes du mur font environ 150 px, et un nom court comme « Camille R. » passe sur deux lignes en Georgia, l'initiale seule dessous. m2 mobile, dessinée à 390 px, n'a pas ce cas ; l'aperçu de l'éditeur dessine donc la page à 390 px. Choisis : deux colonnes jusqu'à 360 px, avec ce retour à la ligne, ou une colonne sous une largeur que tu fixes. Puis mets m2 mobile et m6 mobile d'accord.
 2. m2 mobile, chargement du carrousel : les deux flèches y sont groupées au centre, alors que le carrousel chargé les place de part et d'autre des points. Le squelette suit le carrousel chargé, pour que rien ne bouge à l'arrivée des avis. Mets la maquette à jour dans ce sens.
 3. m18, encadré du plan Gratuit : le choix d'une offre reste ouvert à tous les plans. Le texte devient « Avec le plan Essentiel, à 9 € HT par mois, vous créez autant de widgets que vous voulez : un pour chaque page de vente. ». Mets la maquette à jour.
 4. Guide mobile : la ligne « Bloquée à une étape ? Écrivez-nous » attend une adresse de support, qui n'existe pas encore. Elle n'est pas affichée en attendant. Garde-la dans la maquette.

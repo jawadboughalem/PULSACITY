@@ -46,9 +46,15 @@ Mis à jour le 2 octobre 2026, avec la PR #21 : le lot 5 (widget) est en ligne e
   - sans couleur d'accent dans l'espace, les étoiles prennent la couleur des liens de la page (bleu sur une page vierge).
 - Les maquettes du 2 octobre (m18, éditeur mobile, chargements, nom, coins des cartes) sont construites dans la PR #21.
 
+## Recette de la PR #21 sur l'aperçu (2 octobre)
+
+- Prompt 1 : migration 0005 appliquée à la base de recette (« Recette database migration » n° 5, vert).
+- Prompt 2 : 9 points sur 9 sur ordinateur (nom, coins des cartes, code copié, code avec son type).
+- Prompt 3 : 6 points sur 8 à 360 px. Le point 1 venait du prompt : m18 mobile met la miniature à gauche, et l'écran la suit. Point 7 : l'aperçu passait « Camille R. » et « Thomas L. » sur deux lignes, l'initiale seule dessous ; il dessine maintenant la page à 390 px, comme m2 mobile. Contre-recette : prompt 3 bis.
+
 ## À faire
 
-1. Recette de la PR #21 : prompts 1 à 3 de `docs-internes/recette/lot-5-widget-suite.md` sur l'aperçu, puis, après la fusion, le prompt 4 sur la page Systeme.io de test.
+1. Recette de la PR #21 : contre-recette (prompt 3 bis de `docs-internes/recette/lot-5-widget-suite.md`) sur l'aperçu, puis, après la fusion, le prompt 4 sur la page Systeme.io de test et le prompt 5 pour Design.
 2. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 3. Sentry, avant le lancement.
 4. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
@@ -98,7 +104,7 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Le code à coller nomme le type du widget (`data-pulsacity-type`), toujours sur une ligne. `w.js` montre le squelette de ce type pendant le chargement, même dans le premier écran, comme les nouvelles maquettes m2. Changer le type ensuite ne demande pas de recoller le code : seul le squelette garde l'ancien type le temps du chargement. Un code collé avant le 2 octobre garde l'ancien comportement.
 - Nom du widget : nouvelle colonne facultative `widgets.name` (migration 0005), 80 caractères au plus, jamais montrée aux visiteurs. Vide, le nom reste « Mur · Toutes les offres ».
 - Coins des cartes : « Droits » (2 px, par défaut) ou « Arrondis » (16 px), dans `settings.cardStyle`.
-- Éditeur sur téléphone : onglets « Réglages » et « Aperçu », puis « Installer le widget », l'e-mail d'abord. L'aperçu dessine la page à 360 px au moins, réduite au cadre : plus étroit, les deux colonnes du mur coupaient les noms. Le guide a sa propre page (`/app/widgets/[id]/guide`).
+- Éditeur sur téléphone : onglets « Réglages » et « Aperçu », puis « Installer le widget », l'e-mail d'abord. L'aperçu dessine la page à 390 px au moins, la largeur de m2 mobile, réduite au cadre : à 360 px, les deux colonnes du mur passaient « Camille R. » sur deux lignes, l'initiale seule dessous. Le guide a sa propre page (`/app/widgets/[id]/guide`).
 - L'e-mail du code contient maintenant le guide en quatre étapes, du même texte que l'éditeur, comme l'annonce m6 mobile (« Il part à …, avec le guide »).
 
 ## Questions ouvertes
@@ -106,6 +112,6 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
 - Adresse de support : « Aide et contact » pointe vers `/aide`, qui n'existe pas, et la page du guide sur mobile (« Bloquée à une étape ? Écrivez-nous ») l'attend aussi : sa ligne n'est pas affichée en attendant.
-- m6 mobile, « Aperçu » : la maquette dit que les avis passent en une colonne sur mobile, alors que m2 et la charte en montrent deux. Le widget garde deux colonnes, la phrase n'est pas reprise. À aligner par Design.
+- m6 mobile, « Aperçu » : la maquette dit que les avis passent en une colonne sur mobile, alors que m2 et la charte en montrent deux. Le widget garde deux colonnes, la phrase n'est pas reprise. À aligner par Design, qui sait aussi qu'à 360 px de large, avec 20 px de marge, un nom court comme « Camille R. » passe sur deux lignes, l'initiale seule dessous.
 - m2 mobile, chargement du carrousel : la maquette groupe les deux flèches au centre, alors que le carrousel chargé les met de part et d'autre des points. Le squelette suit le carrousel chargé, pour que rien ne bouge à l'arrivée des avis.
 - « 9 € HT par mois » (m18) : le prix du plan Essentiel est-il bien hors taxes ? À confirmer avant la page Tarifs.

@@ -8,10 +8,11 @@ import { type RenderedWidget, renderWidget } from "../../../widget/src/render";
 
 /**
  * On a computer, a sales page 1280 px wide reduced to the frame. On a phone, the page at the phone's own size, but
- * never under the charter's 360 px: narrower, the wall's two columns would break the names.
+ * never under the 390 px of maquette 2 on mobile: narrower, the wall's two columns break short names such as
+ * « Camille R. » before their initial.
  */
 const DESKTOP_PAGE_WIDTH = 1280;
-const PHONE_PAGE_MIN_WIDTH = 360;
+const PHONE_PAGE_MIN_WIDTH = 390;
 
 const PHONE_FRAME_BELOW = 600;
 
