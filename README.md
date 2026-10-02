@@ -66,7 +66,10 @@ l'utilise.
 | `pnpm db:migrate`   | Applique les migrations sur `DATABASE_URL` (lit `.env.local`)      |
 | `pnpm db:seed`      | Remplit un espace de démonstration (voir plus haut)                |
 
-Pour voir le widget : `pnpm build:widget`, puis ouvrir `widget/test.html` dans un navigateur.
+Pour voir le widget sur une page hôte : `pnpm build:widget` et `pnpm dev`, puis ouvrez dans un navigateur
+`widget/test.html?widget=<identifiant>` (l'identifiant termine l'adresse de l'éditeur, `/app/widgets/<identifiant>` ;
+plusieurs, séparés par des virgules). Avec `&agressif`, la page casse tous les styles qu'elle peut : le
+widget doit rester intact.
 
 Migrations des bases Supabase, par GitHub Actions :
 

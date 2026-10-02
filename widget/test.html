@@ -4,15 +4,60 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Page de test du widget</title>
-    <script src="../public/w.js" async></script>
+    <!--
+      Une page hôte pour essayer w.js en local, comme sur une page de vente :
+        1. pnpm dev, puis ouvrez un widget dans /app/widgets : son identifiant est à la fin de l'adresse ;
+        2. ouvrez ce fichier dans le navigateur avec ?widget=<identifiant> (plusieurs : séparés par des virgules) ;
+        3. ajoutez &agressif pour des styles qui cassent tout ce qui n'est pas protégé : le widget doit rester intact.
+    -->
     <style>
       body {
-        font-family: serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px;
+        font-family: Georgia, serif;
+        color: #1f2a24;
       }
+    </style>
+    <style id="aggressive" media="not all">
+      * { all: unset !important; }
+      html, body, div, section, p, h1, h2 { display: block !important; }
+      body {
+        font-family: "Courier New", monospace !important;
+        font-size: 30px !important;
+        line-height: 3 !important;
+        letter-spacing: 4px !important;
+        text-transform: uppercase !important;
+        font-style: italic !important;
+        font-weight: 900 !important;
+        white-space: nowrap !important;
+      }
+      div { padding: 10px !important; }
+      [data-pulsacity-widget] { display: none !important; }
+      a, button { color: lime !important; background: red !important; border: 5px dashed blue !important; }
+      img, svg { width: 600px !important; height: 600px !important; display: none !important; }
+      .card, .root, .wall, .grid, .avatar, .stars, .badge { display: none !important; color: red !important; }
     </style>
   </head>
   <body>
     <h1>Page hôte de test</h1>
-    <div data-pulsacity-widget="test"></div>
+    <p id="usage">Ajoutez ?widget=&lt;identifiant&gt; à l'adresse de cette page.</p>
+    <div id="widgets"></div>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const ids = (params.get("widget") ?? "").split(",").filter(Boolean);
+      if (ids.length > 0) document.getElementById("usage").remove();
+      if (params.has("agressif")) document.getElementById("aggressive").media = "all";
+      for (const id of ids) {
+        const section = document.createElement("section");
+        const title = document.createElement("h2");
+        title.textContent = `Widget ${id}`;
+        const host = document.createElement("div");
+        host.setAttribute("data-pulsacity-widget", id);
+        section.append(title, host);
+        document.getElementById("widgets").append(section);
+      }
+    </script>
+    <script async src="http://localhost:3000/w.js"></script>
   </body>
 </html>

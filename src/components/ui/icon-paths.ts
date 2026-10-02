@@ -39,6 +39,9 @@ export const ICON_PATHS = {
   hidden: ["M4 12s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6z", drawCircle(12, 12, 2.5), "M4 4l16 16"],
   upload: ["M12 15V4", "M8 8l4-4 4 4", "M5 15v5h14v-5"],
   download: ["M12 4v11", "M8 11l4 4 4-4", "M5 15v5h14v-5"],
+  wall: ["M4 4h6.5v9.5H4z", "M13.5 4H20v4.5h-6.5z", "M4 16.5h6.5V20H4z", "M13.5 11.5H20V20h-6.5z"],
+  carousel: ["M6.5 5h11v14h-11z", "M3.5 8v8", "M20.5 8v8"],
+  badge: ["M3.5 8.5h17v7h-17z", drawCircle(8, 12, 1.5)],
 } as const;
 
 export type IconName = keyof typeof ICON_PATHS;

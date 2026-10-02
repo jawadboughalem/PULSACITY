@@ -51,3 +51,9 @@ export const startOfParisMonth = (now: Date): Date => {
 
 export const compareCalendarDates = (left: CalendarDate, right: CalendarDate): number =>
   left.year - right.year || left.month - right.month || left.day - right.day;
+
+/** « 2026-09-26 » for the day `date` falls on in Paris. */
+export const toParisIsoDay = (date: Date): string => {
+  const { year, month, day } = readParisDate(date);
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+};

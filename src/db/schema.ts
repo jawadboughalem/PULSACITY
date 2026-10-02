@@ -13,6 +13,7 @@ import {
   unique,
   uuid,
 } from "drizzle-orm/pg-core";
+import { WIDGET_TYPES, type WidgetCardStyle, type WidgetTheme } from "../../widget/src/payload";
 import { PLAN_IDS } from "../config/plans";
 import type { ConnectionConfig, ConnectorId, WebhookHeaders } from "../lib/connectors/types";
 
@@ -127,11 +128,7 @@ export const testimonialSourceEnum = pgEnum("testimonial_source", [
   "csv",
 ]);
 
-export const widgetTypeEnum = pgEnum("widget_type", [
-  "wall",
-  "carousel",
-  "badge",
-]);
+export const widgetTypeEnum = pgEnum("widget_type", WIDGET_TYPES);
 
 export const spaces = pgTable(
   "spaces",
@@ -320,11 +317,14 @@ export const testimonials = pgTable(
 ).enableRLS();
 
 export type WidgetSettings = {
-  theme?: "light" | "dark" | "auto";
-  accentColor?: string;
+  theme?: WidgetTheme;
+  accentColor?: string | null;
   maxItems?: number;
   showRating?: boolean;
   showPhoto?: boolean;
+  showDate?: boolean;
+  hidePoweredBy?: boolean;
+  cardStyle?: WidgetCardStyle;
 };
 
 export const widgets = pgTable(

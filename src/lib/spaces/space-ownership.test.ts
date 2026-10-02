@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { assert, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { Database } from "@/db/database";
-import { customers, products, purchases } from "@/db/schema";
+import { customers, products, purchases, widgets } from "@/db/schema";
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import { addProduct } from "./add-product";
@@ -57,6 +57,20 @@ describe("removeProduct", () => {
 
     expect(await removeProduct(database, julieId, added.product.id)).toEqual({ status: "removed" });
     expect(await listSpaceProducts(database, julieSpaceId)).toEqual([]);
+  });
+
+  it("keeps the widget filtered on a removed formation, now showing every offer", async () => {
+    const added = await addProduct(database, julieId, julieSpaceId, "Programme 30 jours");
+    assert(added.status === "added");
+    const [widget] = await database
+      .insert(widgets)
+      .values({ spaceId: julieSpaceId, type: "wall", productId: added.product.id })
+      .returning({ id: widgets.id });
+
+    expect(await removeProduct(database, julieId, added.product.id)).toEqual({ status: "removed" });
+    expect(await database.select({ productId: widgets.productId }).from(widgets).where(eq(widgets.id, widget.id))).toEqual([
+      { productId: null },
+    ]);
   });
 
   it("removes nothing from the space of another creator", async () => {

@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import type { Database } from "@/db/database";
-import { products, purchases, spaces } from "@/db/schema";
+import { products, purchases, spaces, widgets } from "@/db/schema";
 
 export type RemoveProductResult = { status: "removed" } | { status: "product-not-found" } | { status: "has-sales" };
 
@@ -24,6 +24,10 @@ export const removeProduct = async (
     .limit(1);
   if (sale) return { status: "has-sales" };
 
-  await database.delete(products).where(and(eq(products.id, product.id), eq(products.spaceId, product.spaceId)));
+  await database.transaction(async (tx) => {
+    // A widget filtered on this offer is already on a page: it shows every offer rather than disappear.
+    await tx.update(widgets).set({ productId: null }).where(eq(widgets.productId, product.id));
+    await tx.delete(products).where(and(eq(products.id, product.id), eq(products.spaceId, product.spaceId)));
+  });
   return { status: "removed" };
 };
