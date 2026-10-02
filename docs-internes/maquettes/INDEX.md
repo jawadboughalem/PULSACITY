@@ -73,6 +73,7 @@ Tous les fichiers listés ici sont présents dans ce dossier : PNG à l'échelle
 | m6-editeur-desktop-04-theme-sombre.png | Éditeur · Play : thème Sombre |
 | m6-editeur-desktop-05-filtre-offre.png | Éditeur · Play : offre « Suivi individuel 3 mois » |
 | m6-editeur-desktop-06-code-copie.png | Éditeur · état « Code copié » |
+| m6-editeur-desktop-07-coins-arrondis.png | Éditeur · Play : coins des cartes « Arrondis » |
 
 ## m7 — Page d'accueil (page « Page d'accueil »)
 | Fichier | Planche · état |
@@ -255,3 +256,39 @@ La planche « Micro-animations · démo » est interactive (mode Play) et n'a pa
 | m17-offres-desktop-05-retrait-impossible.png | Offres · Retrait impossible · 1440 |
 | m17-offres-mobile-06-vide.png | Offres · État vide · 360 |
 | m17-offres-desktop-06-vide.png | Offres · État vide · 1440 |
+
+
+# Lot widget — 2 oct. 2026
+
+## m2 — Chargement du carrousel et du badge (page « Widgets »)
+| Fichier | Planche · état |
+| --- | --- |
+| m2-widgets-desktop-05-carrousel-chargement-clair.png | Carrousel · chargement (page A, desktop) |
+| m2-widgets-desktop-06-carrousel-chargement-sombre.png | Carrousel · chargement (page B, desktop) |
+| m2-widgets-desktop-07-badge-chargement-clair.png | Badge · chargement (page A, desktop) |
+| m2-widgets-desktop-08-badge-chargement-sombre.png | Badge · chargement (page B, desktop) |
+| m2-widgets-mobile-04-carrousel-chargement-clair.png | Carrousel · chargement (page A, mobile) |
+| m2-widgets-mobile-05-carrousel-chargement-sombre.png | Carrousel · chargement (page B, mobile) |
+| m2-widgets-mobile-06-badge-chargement-clair.png | Badge · chargement (page A, mobile) |
+| m2-widgets-mobile-07-badge-chargement-sombre.png | Badge · chargement (page B, mobile) |
+
+## m6 — Éditeur de widget, mobile 360 (page « Widgets : éditeur et liste »)
+| Fichier | Planche · état |
+| --- | --- |
+| m6-editeur-mobile-01-reglages.png | Éditeur mobile · Réglages · 360 |
+| m6-editeur-mobile-02-apercu.png | Éditeur mobile · Aperçu en direct · 360 |
+| m6-editeur-mobile-03-code-copie.png | Éditeur mobile · Code copié · 360 |
+| m6-editeur-mobile-04-code-envoye.png | Éditeur mobile · Code envoyé par e-mail · 360 |
+| m6-editeur-mobile-05-guide-systemeio.png | Éditeur mobile · Guide « Coller dans Systeme.io » · 360 |
+
+## m18 — Liste des widgets (page « Widgets : éditeur et liste »)
+| Fichier | Planche · état |
+| --- | --- |
+| m18-widgets-mobile-01-liste.png | Widgets · Liste (plan Essentiel) · 360 |
+| m18-widgets-desktop-01-liste.png | Widgets · Liste (plan Essentiel) · 1440 |
+| m18-widgets-mobile-02-plan-gratuit.png | Widgets · Plan Gratuit, limite atteinte · 360 |
+| m18-widgets-desktop-02-plan-gratuit.png | Widgets · Plan Gratuit, limite atteinte · 1440 |
+| m18-widgets-mobile-03-vide.png | Widgets · État vide · 360 |
+| m18-widgets-desktop-03-vide.png | Widgets · État vide · 1440 |
+
+Corrigés dans ce lot : m6-editeur-desktop-01 à 06 (champ « Nom du widget », réglage « Coins des cartes ») ; m6-editeur-desktop-06 (montre bien « Code copié ») ; m8-tarifs-desktop-02 (montre bien l’annuel) ; m4-espace-desktop-04 (sans pastille d’attente).
