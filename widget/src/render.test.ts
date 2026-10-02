@@ -186,6 +186,34 @@ describe("the carousel", () => {
     expect(root.querySelector(".dots .count")?.textContent).toBe("2 sur 10");
   });
 
+  it("keeps showing where an arrow goes while the track scrolls there", () => {
+    vi.spyOn(Element.prototype, "clientWidth", "get").mockReturnValue(345);
+    vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+      callback(0);
+      return 0;
+    });
+    const ten = Array.from({ length: 10 }, (_, index) => ({ ...carousel.testimonials[index % 4], name: `Client ${index}` }));
+    const { root } = render({ ...carousel, testimonials: ten }, { width: 345 });
+    const track = root.querySelector<HTMLElement>(".track");
+    if (!track) throw new Error("No track");
+    track.scrollTo = vi.fn();
+    root.querySelectorAll<HTMLElement>(".slide").forEach((slide, index) => {
+      Object.defineProperty(slide, "offsetLeft", { configurable: true, get: () => index * 333 });
+    });
+    Object.defineProperty(track, "scrollWidth", { configurable: true, get: () => 3330 });
+    const scrollTo = (left: number) => {
+      track.scrollLeft = left;
+      track.dispatchEvent(new Event("scroll"));
+    };
+
+    root.querySelector<HTMLButtonElement>("button.next")?.click();
+    scrollTo(8);
+    expect(root.querySelector(".dots .count")?.textContent).toBe("2 sur 10");
+    scrollTo(333);
+    scrollTo(666);
+    expect(root.querySelector(".dots .count")?.textContent).toBe("3 sur 10");
+  });
+
   it("hides the arrows when every testimonial already shows", () => {
     const { root } = render({ ...carousel, testimonials: carousel.testimonials.slice(0, 2) }, { width: 1200 });
 

@@ -89,11 +89,21 @@ export const renderCarousel = (payload: WidgetPayload, context: LayoutContext): 
     [...dots.children].forEach((dot, index) => dot.setAttribute("aria-current", String(index === position)));
   };
 
+  /** Where an arrow or a point is taking the track: the points show it until the track gets there. */
+  let destination: number | null = null;
+
   const goTo = (target: number) => {
     position = Math.min(Math.max(target, 0), positionCount() - 1);
+    destination = position;
     track.scrollTo({ left: position * step(), behavior: context.prefersReducedMotion() ? "auto" : "smooth" });
     announcer.textContent = describeView(position + 1, visibleCount(), total);
     show();
+  };
+
+  const isAt = (target: number, distance: number) =>
+    Math.abs(track.scrollLeft - Math.min(target * distance, track.scrollWidth - track.clientWidth)) <= 2;
+  const letGo = () => {
+    destination = null;
   };
 
   previous.addEventListener("click", () => goTo(position - 1));
@@ -112,12 +122,20 @@ export const renderCarousel = (payload: WidgetPayload, context: LayoutContext): 
       frame = requestAnimationFrame(() => {
         const distance = step();
         if (distance <= 0) return;
+        if (destination !== null) {
+          if (!isAt(destination, distance)) return;
+          letGo();
+        }
         position = Math.min(Math.round(track.scrollLeft / distance), positionCount() - 1);
         show();
       });
     },
     { passive: true },
   );
+  // A finger or a wheel takes the track back, and so does the end of any scroll.
+  for (const type of ["pointerdown", "touchstart", "wheel", "scrollend"]) {
+    track.addEventListener(type, letGo, { passive: true });
+  }
   context.onDestroy(() => cancelAnimationFrame(frame));
   context.onLayout(() => {
     position = Math.min(position, positionCount() - 1);
