@@ -11,7 +11,7 @@ import { sendAccountEmail } from "@/lib/email/send-email";
 import { type RateLimitRule, consumeRateLimit } from "@/lib/rate-limit/consume-rate-limit";
 import { findOwnedSpace } from "@/lib/spaces/find-owned-space";
 import { buildWidgetSnippet } from "@/lib/widgets/build-widget-snippet";
-import { findDefaultWidgetId } from "@/lib/widgets/find-default-widget";
+import { type DefaultWidget, findDefaultWidget } from "@/lib/widgets/find-default-widget";
 import { findOwnedWidget } from "@/lib/widgets/space-widgets";
 
 const WIDGET_CODE_EMAILS_PER_USER: RateLimitRule = { name: "widget-code-email", limit: 5, windowSeconds: 60 * 60 };
@@ -21,13 +21,17 @@ export type SendWidgetCodeResult =
   | { ok: false; error: "widget-not-found" | "too-many-emails" | "not-sent" };
 
 /** The widget being edited, or else the first widget of the space, as on the home of the space. */
-const findWidgetToSend = async (database: Database, userId: string, widgetId: string | undefined) => {
+const findWidgetToSend = async (
+  database: Database,
+  userId: string,
+  widgetId: string | undefined,
+): Promise<DefaultWidget | null> => {
   if (widgetId !== undefined) {
     if (!z.uuid().safeParse(widgetId).success) return null;
-    return (await findOwnedWidget(database, userId, widgetId))?.id ?? null;
+    return findOwnedWidget(database, userId, widgetId);
   }
   const space = await findOwnedSpace(database, userId);
-  return space ? findDefaultWidgetId(database, space.id) : null;
+  return space ? findDefaultWidget(database, space.id) : null;
 };
 
 export const sendWidgetCodeByEmail = async (widgetId?: string): Promise<SendWidgetCodeResult> => {

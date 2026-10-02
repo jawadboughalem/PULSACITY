@@ -49,16 +49,48 @@ const skeletonCard = ({ height, lines, hasPhoto }: SkeletonCard) => {
 const status = (isVisible: boolean) =>
   h("p", { class: isVisible ? "status" : "sr-only", role: "status" }, LOADING_TEXT);
 
+const repeat = (count: number, make: () => HTMLElement) => Array.from({ length: count }, make);
+
+/** Maquette 2, « Carrousel · chargement »: the stars and the quote on top, the author at the bottom. */
+const carouselSkeletonCard = () =>
+  h(
+    "div",
+    { class: "sk-card sk-slide" },
+    h("div", { class: "sk-stars-row" }, ...repeat(5, () => bar("sk-star"))),
+    bar("sk-text"),
+    bar("sk-text long"),
+    bar("sk-text short"),
+    h("div", { class: "sk-author sk-bottom" }, bar("sk-avatar"), h("div", { class: "sk-lines" }, bar("sk-name"), bar("sk-title"))),
+  );
+
+/** The arrows and the points sit where the carousel will put them, so that nothing moves when it arrives. */
+const carouselSkeleton = (isWide: boolean) =>
+  h(
+    "div",
+    { class: "sk-carousel" },
+    h("div", { class: "sk-track" }, h("div", { class: "sk-row" }, ...repeat(isWide ? 3 : 1, carouselSkeletonCard))),
+    h("span", { class: "sk-arrow prev" }),
+    h("span", { class: "sk-arrow next" }),
+    h("div", { class: "sk-dots" }, ...repeat(3, () => h("span", { class: "sk-dot" }))),
+  );
+
+/** Maquette 2, « Badge · chargement »: the pill keeps its place next to the buy button. */
+const badgeSkeleton = () =>
+  h(
+    "div",
+    { class: "sk-badge" },
+    h("span", { class: "sk-faces" }, ...repeat(3, () => bar("sk-face"))),
+    bar("sk-badge-stars"),
+    bar("sk-badge-text"),
+  );
+
 /** A space of fixed height while the testimonials load, so that the page does not jump when they arrive. */
 export const renderLoadingState = (type: WidgetType, isWide: boolean): HTMLElement => {
   if (type === "badge") {
-    return h("div", { class: "loading badge-loading", "aria-busy": "true" }, status(false), bar("sk-pill"));
+    return h("div", { class: "loading badge-loading", "aria-busy": "true" }, status(false), badgeSkeleton());
   }
   if (type === "carousel") {
-    const cards = Array.from({ length: isWide ? 3 : 1 }, () =>
-      h("div", { class: "sk-card" }, bar("sk-stars"), bar("sk-text"), bar("sk-text"), bar("sk-text short")),
-    );
-    return h("div", { class: "loading carousel-loading", "aria-busy": "true" }, status(true), h("div", { class: "sk-row" }, ...cards));
+    return h("div", { class: "loading carousel-loading", "aria-busy": "true" }, status(true), carouselSkeleton(isWide));
   }
   const columns = WALL_COLUMNS[isWide ? "wide" : "narrow"];
   return h(

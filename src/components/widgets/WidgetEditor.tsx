@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
-import { SendWidgetCodeButton } from "@/components/dashboard/WidgetCodeButtons";
+import { useCallback, useId, useMemo, useState } from "react";
 import { BILLING_HREF, TESTIMONIALS_SECTION_HREF, WIDGETS_SECTION_HREF } from "@/components/space/space-sections";
 import { useCopyLink } from "@/components/space/useCopyLink";
 import { PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
@@ -13,10 +12,12 @@ import { Switch } from "@/components/ui/Switch";
 import { cn } from "@/lib/cn";
 import { MIN_ACCENT_CONTRAST_RATIO, calculateContrastRatio } from "@/lib/colors/contrast-ratio";
 import { type PreviewLook, buildPreviewPayload } from "@/lib/widgets/build-preview-payload";
+import { buildWidgetSnippet } from "@/lib/widgets/build-widget-snippet";
 import type { WidgetPreviewData } from "@/lib/widgets/load-widget-preview";
 import {
   type EditableWidget,
   MAX_WIDGET_MAX_ITEMS,
+  MAX_WIDGET_NAME_LENGTH,
   MIN_WIDGET_MAX_ITEMS,
   type WidgetEdit,
 } from "@/lib/widgets/widget-settings";
@@ -24,11 +25,13 @@ import type { WidgetPayload } from "../../../widget/src/payload";
 import { ALL_OFFERS_LABEL, describeWidget } from "./describe-widget";
 import { SystemePasteGuide } from "./SystemePasteGuide";
 import { TYPING_PAUSE_MS, type SaveState, useWidgetAutosave } from "./useWidgetAutosave";
+import { COPIED_BUTTON_CLASSES, WidgetInstallPanel } from "./WidgetInstallPanel";
 import { WidgetPreview } from "./WidgetPreview";
 import {
   type AccentWarning,
   AccentSwatches,
   AccentWarningNote,
+  CardStyleSelector,
   INK,
   ThemeSelector,
   WidgetTypePicker,
@@ -77,49 +80,51 @@ const describeAccentWarning = (accent: string | null, theme: WidgetEdit["theme"]
     : null;
 };
 
-const SaveStatus = ({ saveState, onRetry }: { saveState: SaveState; onRetry: () => void }) => (
-  <div aria-live="polite" className="flex min-h-[20px] flex-wrap items-center gap-x-3 text-small">
-    {saveState === "failed" ? (
-      <>
-        <span className="flex items-center gap-2 text-error">
-          <Icon name="alert" size={20} />
-          Vos derniers réglages ne sont pas enregistrés.
-        </span>
-        <button type="button" onClick={onRetry} className={cn(LINK_CLASSES, "min-h-[44px]")}>
-          Réessayer
-        </button>
-      </>
-    ) : (
-      <span className="text-slate-600">{saveState === "saving" ? "Enregistrement…" : "Enregistré automatiquement"}</span>
-    )}
+const SAVE_LABELS: Record<Exclude<SaveState, "failed">, string> = {
+  saving: "Enregistrement…",
+  saved: "Enregistré automatiquement",
+};
+
+const SaveStatus = ({ saveState, onRetry }: { saveState: SaveState; onRetry: () => void }) =>
+  saveState === "failed" ? (
+    <span className="inline-flex flex-wrap items-center gap-x-3">
+      <span className="inline-flex items-center gap-2 text-error">
+        <Icon name="alert" size={20} />
+        Vos derniers réglages ne sont pas enregistrés.
+      </span>
+      <button type="button" onClick={onRetry} className={cn(LINK_CLASSES, "min-h-[44px]")}>
+        Réessayer
+      </button>
+    </span>
+  ) : (
+    <span className="text-slate-600">{SAVE_LABELS[saveState]}</span>
+  );
+
+/** Maquette 6, desktop: « Code copié » in green, and where to paste it next. */
+const CopyCodeBlock = ({ isCopied, onCopy }: { isCopied: boolean; onCopy: () => void }) => (
+  <div className="flex flex-col gap-3">
+    <button
+      type="button"
+      onClick={onCopy}
+      className={cn(isCopied ? COPIED_BUTTON_CLASSES : PRIMARY_BUTTON_CLASSES, "h-[56px] w-full")}
+    >
+      <Icon name={isCopied ? "valid" : "copy"} size={20} />
+      {isCopied ? "Code copié" : "Copier le code"}
+    </button>
+    <p aria-live="polite" className="text-small text-slate-600">
+      {isCopied
+        ? "Collez-le maintenant dans Systeme.io : suivez les 4 étapes ci-dessous."
+        : "Un seul code pour ce widget : vos réglages s'appliquent même après l'avoir collé."}
+    </p>
   </div>
 );
 
-const CopyCodeBlock = ({ snippet, widgetId, isPhone }: { snippet: string; widgetId: string; isPhone: boolean }) => {
-  const { isCopied, handleCopy } = useCopyLink(snippet);
-  return (
-    <div className="flex flex-col gap-3">
-      <button type="button" onClick={handleCopy} className={cn(PRIMARY_BUTTON_CLASSES, "h-[56px] w-full")}>
-        <Icon name={isCopied ? "valid" : "copy"} size={20} />
-        {isCopied ? "Code copié" : "Copier le code"}
-      </button>
-      <p aria-live="polite" className="sr-only">
-        {isCopied ? "Le code est copié." : ""}
-      </p>
-      <p className="text-small text-slate-600">
-        Un seul code pour ce widget : vos réglages s&apos;appliquent même après l&apos;avoir collé.
-      </p>
-      {isPhone ? (
-        <>
-          <p className="pt-2 text-small text-slate-600">
-            Plus simple depuis un ordinateur : nous pouvons vous envoyer le code par e-mail.
-          </p>
-          <SendWidgetCodeButton widgetId={widgetId} />
-        </>
-      ) : null}
-    </div>
-  );
-};
+type EditorTab = "settings" | "preview";
+
+const TABS: Array<{ value: EditorTab; label: string }> = [
+  { value: "settings", label: "Réglages" },
+  { value: "preview", label: "Aperçu" },
+];
 
 type WidgetEditorProps = {
   widget: EditableWidget;
@@ -127,13 +132,20 @@ type WidgetEditorProps = {
   preview: WidgetPreviewData;
   look: PreviewLook;
   spaceName: string;
-  snippet: string;
+  appUrl: string;
+  email: string;
+  guideHref: string;
 };
 
-/** Maquette 6: the settings on the left, saved as they change, the creator's page with the widget on the right. */
-export const WidgetEditor = ({ widget, offers, preview, look, spaceName, snippet }: WidgetEditorProps) => {
+/**
+ * Maquette 6. On a computer, the settings on the left, saved as they change, and the creator's page with the widget
+ * on the right. On a phone, « Réglages » and « Aperçu » take turns, and « Installer le widget » follows both.
+ */
+export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl, email, guideHref }: WidgetEditorProps) => {
   const { id: widgetId, ...initialEdit } = widget;
   const [edit, setEdit] = useState<WidgetEdit>(initialEdit);
+  const [tab, setTab] = useState<EditorTab>("settings");
+  const tabsId = useId();
   const [maxItemsText, setMaxItemsText] = useState(String(initialEdit.maxItems));
   const [isMaxItemsTouched, setIsMaxItemsTouched] = useState(false);
   const { saveState, schedule, retry } = useWidgetAutosave(widgetId);
@@ -162,10 +174,32 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, snippet
   const isMaxItemsValid = readMaxItems(maxItemsText) !== null;
   const showsMaxItemsError = !isMaxItemsValid && (isMaxItemsTouched || maxItemsText.trim() !== "");
   const isEmpty = !hasSomethingToShow(payload);
-  const label = describeWidget(edit.type, offerName);
+  const derivedName = describeWidget(edit.type, offerName);
+  const label = edit.name?.trim() || derivedName;
+  const snippet = buildWidgetSnippet(appUrl, { id: widgetId, type: edit.type });
+  const { isCopied, handleCopy } = useCopyLink(snippet);
 
   const settings = (
     <>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="widget-name" className="text-small font-semibold">
+          Nom du widget <span className="font-normal text-slate-600">(facultatif)</span>
+        </label>
+        <input
+          id="widget-name"
+          type="text"
+          value={edit.name ?? ""}
+          maxLength={MAX_WIDGET_NAME_LENGTH}
+          placeholder={derivedName}
+          aria-describedby="widget-name-hint"
+          onChange={(event) => change({ name: event.target.value }, TYPING_PAUSE_MS)}
+          className="h-[48px] w-full rounded-sm border border-gray-400 bg-white px-4 text-body text-ink-900 placeholder:text-gray-400 focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none"
+        />
+        <p id="widget-name-hint" className="text-small text-slate-600">
+          Pour le retrouver dans votre liste. Vos visiteurs ne le voient pas.
+          <span className="hidden desktop:inline">{` Laissé vide : « ${derivedName} ».`}</span>
+        </p>
+      </div>
       <WidgetTypePicker value={edit.type} onChange={(type) => change({ type })} />
       <div className="flex flex-col gap-2">
         <label htmlFor="widget-offer" className="text-small font-semibold">
@@ -226,6 +260,7 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, snippet
       <AccentSwatches swatches={swatches} value={edit.accentColor} onChange={(accentColor) => change({ accentColor })} />
       <ThemeSelector value={edit.theme} onChange={(theme) => change({ theme })} />
       <AccentWarningNote warning={accentWarning} onUseInk={() => change({ accentColor: INK })} />
+      <CardStyleSelector value={edit.cardStyle} onChange={(cardStyle) => change({ cardStyle })} />
       <div className="flex items-start justify-between gap-4 border-t border-hairline-200 pt-5">
         <div className="flex min-w-[0] flex-col gap-1">
           <span id="widget-hide-powered-label" className={cn("text-body", !look.canHideBadge && "text-slate-600")}>
@@ -252,6 +287,8 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, snippet
     </>
   );
 
+  const tabId = (value: EditorTab) => `${tabsId}-${value}`;
+
   return (
     <div className="flex flex-col">
       <header className="hidden items-center justify-between gap-5 border-b border-hairline-200 px-7 py-4 desktop:flex">
@@ -264,30 +301,70 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, snippet
           </nav>
           <h1 className="font-serif text-h2 font-medium">Modifier le widget</h1>
         </div>
-        <SaveStatus saveState={saveState} onRetry={retry} />
+        <p aria-live="polite" className="min-h-[20px] text-small">
+          <SaveStatus saveState={saveState} onRetry={retry} />
+        </p>
       </header>
       <div className="flex flex-col gap-2 px-5 pt-5 desktop:hidden">
         <h1 className="font-serif text-h1 font-medium">Modifier le widget</h1>
-        <p className="text-small text-slate-600">{label}</p>
-        <SaveStatus saveState={saveState} onRetry={retry} />
+        <p aria-live="polite" className="text-small text-slate-600">
+          {`${label} · `}
+          <SaveStatus saveState={saveState} onRetry={retry} />
+        </p>
+        <div role="tablist" aria-label="Modifier le widget" className="mt-3 grid grid-cols-2 border-b border-hairline-200">
+          {TABS.map((option) => {
+            const isChosen = option.value === tab;
+            return (
+              <button
+                key={option.value}
+                id={tabId(option.value)}
+                type="button"
+                role="tab"
+                aria-selected={isChosen}
+                aria-controls={`${tabId(option.value)}-panel`}
+                onClick={() => setTab(option.value)}
+                className={cn(
+                  "-mb-px h-[48px] border-b-2 text-body focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900",
+                  isChosen ? "border-ink-900 font-semibold text-ink-900" : "border-transparent text-slate-600",
+                )}
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="flex flex-col desktop:min-h-[1194px] desktop:flex-row">
-        <div className="flex flex-col gap-6 px-5 py-5 desktop:w-[380px] desktop:shrink-0 desktop:border-r desktop:border-hairline-200 desktop:py-6 desktop:pr-6 desktop:pl-7">
+        <div
+          id={`${tabId("settings")}-panel`}
+          role="tabpanel"
+          aria-labelledby={tabId("settings")}
+          className={cn(
+            "flex-col gap-6 px-5 py-5 desktop:flex desktop:w-[380px] desktop:shrink-0 desktop:border-r desktop:border-hairline-200 desktop:py-6 desktop:pr-6 desktop:pl-7",
+            tab === "settings" ? "flex" : "hidden",
+          )}
+        >
           {settings}
           <div className="mt-auto hidden pt-7 desktop:block">
-            <CopyCodeBlock snippet={snippet} widgetId={widgetId} isPhone={false} />
+            <CopyCodeBlock isCopied={isCopied} onCopy={handleCopy} />
           </div>
         </div>
         <section
-          aria-labelledby="widget-preview-title"
-          className="flex min-w-[0] flex-col gap-4 bg-paper-100 px-5 py-5 desktop:flex-1 desktop:px-6 desktop:py-6"
+          id={`${tabId("preview")}-panel`}
+          role="tabpanel"
+          aria-labelledby={tabId("preview")}
+          className={cn(
+            "min-w-[0] flex-col gap-4 bg-paper-100 px-5 py-5 desktop:flex desktop:flex-1 desktop:px-6 desktop:py-6",
+            tab === "preview" ? "flex" : "hidden",
+          )}
         >
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            <h2 id="widget-preview-title" className="text-small font-semibold">
-              Aperçu en direct
-            </h2>
-            <p className="text-small text-slate-600">Votre page de vente, réduite</p>
+            <h2 className="text-small font-semibold">Aperçu en direct</h2>
+            <p className="text-small text-slate-600">
+              <span className="desktop:hidden">Votre page, sur mobile</span>
+              <span className="hidden desktop:inline">Votre page de vente, réduite</span>
+            </p>
           </div>
           {isEmpty ? (
             <p className="text-small">
@@ -306,14 +383,15 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, snippet
             pageAccent={look.spaceAccentColor}
             loadMore={loadMore}
           />
+          <p className="text-small text-slate-600 desktop:hidden">L&apos;aperçu suit vos réglages.</p>
         </section>
-        <div className="px-5 py-5 desktop:hidden">
-          <CopyCodeBlock snippet={snippet} widgetId={widgetId} isPhone />
-        </div>
       </div>
 
-      <div className="px-5 pb-[108px] desktop:px-7 desktop:pb-7">
-        <SystemePasteGuide />
+      <div className="px-5 pt-2 pb-[108px] desktop:hidden">
+        <WidgetInstallPanel widgetId={widgetId} snippet={snippet} email={email} guideHref={guideHref} />
+      </div>
+      <div className="hidden px-7 pb-7 desktop:block">
+        <SystemePasteGuide isCodeCopied={isCopied} />
       </div>
     </div>
   );

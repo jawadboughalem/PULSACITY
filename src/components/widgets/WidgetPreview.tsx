@@ -6,8 +6,13 @@ import { readLinkColor } from "../../../widget/src/page";
 import type { WidgetPayload } from "../../../widget/src/payload";
 import { type RenderedWidget, renderWidget } from "../../../widget/src/render";
 
-/** The preview is a sales page drawn at its real width, then reduced to the frame: 1280 px, or 390 px on a phone. */
-const PAGE_WIDTH = { desktop: 1280, phone: 390 } as const;
+/**
+ * On a computer, a sales page 1280 px wide reduced to the frame. On a phone, the page at the phone's own size, but
+ * never under the 390 px of maquette 2 on mobile: narrower, the wall's two columns break short names such as
+ * « Camille R. » before their initial.
+ */
+const DESKTOP_PAGE_WIDTH = 1280;
+const PHONE_PAGE_MIN_WIDTH = 390;
 
 const PHONE_FRAME_BELOW = 600;
 
@@ -90,8 +95,10 @@ export const WidgetPreview = ({ payload, isEmpty, spaceName, pageTitle, pageAcce
   }, []);
 
   const isPhone = size.frameWidth > 0 && size.frameWidth < PHONE_FRAME_BELOW;
-  const pageWidth = isPhone ? PAGE_WIDTH.phone : PAGE_WIDTH.desktop;
+  const pageWidth = isPhone ? Math.max(size.frameWidth, PHONE_PAGE_MIN_WIDTH) : DESKTOP_PAGE_WIDTH;
   const scale = size.frameWidth > 0 ? size.frameWidth / pageWidth : 0;
+  // Maquette 6 on a phone goes straight to the testimonials; a badge stays next to its buy button.
+  const showsHero = !isPhone || payload.type === "badge";
   const brandColor = pageAccent ?? INK;
   const widget = isEmpty ? null : <WidgetHost payload={payload} loadMore={loadMore} />;
 
@@ -124,7 +131,7 @@ export const WidgetPreview = ({ payload, isEmpty, spaceName, pageTitle, pageAcce
               </span>
             )}
           </header>
-          <div className={isPhone ? "px-5 py-7" : "px-[80px] py-8"}>
+          <div className={cn(isPhone ? "px-5 py-7" : "px-[80px] py-8", !showsHero && "hidden")}>
             <p
               className={cn("max-w-[900px] font-semibold", isPhone ? "text-[32px] leading-[38px]" : "text-[52px] leading-[64px]")}
             >

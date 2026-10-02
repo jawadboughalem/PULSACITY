@@ -15,6 +15,7 @@ let marcId: string;
 let marcSpaceId: string;
 
 const EDIT: WidgetEdit = {
+  name: null,
   type: "carousel",
   productId: null,
   theme: "dark",
@@ -24,6 +25,7 @@ const EDIT: WidgetEdit = {
   showRating: true,
   showDate: false,
   hidePoweredBy: false,
+  cardStyle: "sharp",
 };
 
 const insertWidget = async (values: Partial<typeof widgets.$inferInsert> & { spaceId: string }) => {
@@ -69,9 +71,10 @@ describe("listSpaceWidgets", () => {
     await insertWidget({ spaceId: marcSpaceId });
 
     expect(await listSpaceWidgets(database, julieSpaceId)).toEqual([
-      { id: wall, type: "wall", productId: null, productName: null, firstLoadedAt: null },
+      { id: wall, name: null, type: "wall", productId: null, productName: null, firstLoadedAt: null },
       {
         id: badge,
+        name: null,
         type: "badge",
         productId: programmeId,
         productName: "Programme 30 jours",
@@ -122,13 +125,19 @@ describe("createWidget", () => {
 });
 
 describe("updateWidget", () => {
-  it("saves the type, the offer and the settings, and keeps those the editor does not show", async () => {
-    const widgetId = await insertWidget({ spaceId: julieSpaceId, settings: { cardStyle: "soft" } });
+  it("saves the name, the type, the offer and the settings", async () => {
+    const widgetId = await insertWidget({ spaceId: julieSpaceId });
 
-    expect(await updateWidget(database, julieId, widgetId, { ...EDIT, productId: programmeId })).toEqual({
-      status: "updated",
-    });
+    expect(
+      await updateWidget(database, julieId, widgetId, {
+        ...EDIT,
+        name: "Avis de la page Programme 30 jours",
+        productId: programmeId,
+        cardStyle: "soft",
+      }),
+    ).toEqual({ status: "updated" });
     expect(await readWidget(widgetId)).toMatchObject({
+      name: "Avis de la page Programme 30 jours",
       type: "carousel",
       productId: programmeId,
       settings: {

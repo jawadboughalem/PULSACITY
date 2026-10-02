@@ -334,6 +334,8 @@ export const widgets = pgTable(
     spaceId: uuid("space_id")
       .notNull()
       .references(() => spaces.id, { onDelete: "cascade" }),
+    /** The creator's own name for the widget, never shown to visitors. Null: named after its type and offer. */
+    name: text("name"),
     type: widgetTypeEnum("type").notNull(),
     productId: uuid("product_id").references(() => products.id, { onDelete: "cascade" }),
     settings: jsonb("settings").$type<WidgetSettings>().notNull().default({}),

@@ -250,11 +250,39 @@ a.badge:hover .badge-text { text-decoration: underline; text-underline-offset: 3
 .sk-text.short { width: 70%; }
 .sk-photo { width: 100%; height: 140px; }
 .wide .sk-photo { height: 180px; }
+.sk-carousel { display: grid; grid-template-columns: 48px minmax(0, 1fr) 48px; align-items: center; gap: 16px 8px; }
+.wide .sk-carousel { gap: 24px; }
+.sk-track { grid-row: 1; grid-column: 1 / -1; overflow: hidden; }
+.wide .sk-track { grid-column: 2; }
 .sk-row { display: flex; gap: 12px; }
 .wide .sk-row { gap: 24px; }
-.sk-row .sk-card { flex: 1; height: 320px; }
+.sk-row .sk-card { flex: 1; min-width: 0; height: 320px; }
 .wide .sk-row .sk-card { height: 344px; }
-.sk-pill { width: 300px; height: 42px; border-radius: 999px; }
+.sk-slide { padding: 24px; }
+.wide .sk-slide { padding: 32px; }
+.sk-stars-row { display: flex; gap: 4px; }
+.sk-star { width: 16px; height: 16px; border-radius: 999px; }
+.sk-text.long { width: 90%; }
+.sk-bottom { margin-top: auto; }
+.sk-arrow { width: 48px; height: 48px; border: 1px solid var(--card-line); border-radius: 999px; }
+.sk-arrow.next { justify-self: end; }
+.sk-dots { grid-row: 2; grid-column: 2; display: flex; justify-content: center; align-items: center; gap: 12px; min-height: 44px; }
+.sk-dot { width: 10px; height: 10px; border-radius: 999px; background: var(--card-line); }
+.sk-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 16px 4px 4px;
+  border: 1px solid var(--card-line);
+  border-radius: 999px;
+  background: var(--card-bg);
+}
+.sk-faces { display: inline-flex; }
+.sk-face { width: 32px; height: 32px; border: 2px solid var(--card-bg); border-radius: 999px; }
+.sk-face + .sk-face { margin-left: -8px; }
+.sk-badge-stars { width: 72px; }
+.sk-badge-text { width: 96px; }
 @keyframes pulse { 50% { opacity: 0.6; } }
 @media (prefers-reduced-motion: reduce) {
   .bar { animation: none; }

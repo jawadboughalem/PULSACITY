@@ -1,4 +1,6 @@
+import { Fragment } from "react";
 import { Section, Text } from "react-email";
+import { PASTE_GUIDE_DURATION, PASTE_GUIDE_STEPS } from "@/lib/widgets/paste-guide-steps";
 import { AccountEmailLayout } from "./AccountEmailLayout";
 import { EMAIL_COLORS, paragraphStyle, smallStyle } from "./email-styles";
 
@@ -30,6 +32,18 @@ export const WidgetCodeEmail = ({ snippet }: WidgetCodeEmailProps) => (
         {snippet}
       </Text>
     </Section>
-    <Text style={paragraphStyle}>Vos avis validés s&apos;afficheront ensuite tout seuls.</Text>
+    <Text style={{ ...paragraphStyle, fontWeight: 600 }}>{`Coller dans Systeme.io : ${PASTE_GUIDE_DURATION}`}</Text>
+    {PASTE_GUIDE_STEPS.map((parts, index) => (
+      <Text key={index} style={paragraphStyle}>
+        {`${index + 1}. `}
+        {parts.map((part, partIndex) =>
+          typeof part === "string" ? (
+            <Fragment key={partIndex}>{part}</Fragment>
+          ) : (
+            <strong key={partIndex}>{part.strong}</strong>
+          ),
+        )}
+      </Text>
+    ))}
   </AccountEmailLayout>
 );

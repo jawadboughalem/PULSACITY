@@ -39,6 +39,11 @@ export const REQUESTS_SECTION_HREF = REQUESTS.href;
 
 export const WIDGETS_SECTION_HREF = WIDGETS.href;
 
+export const widgetEditorHref = (widgetId: string) => `${WIDGETS.href}/${widgetId}`;
+
+/** « Coller dans Systeme.io » on its own page, for a phone. */
+export const widgetGuideHref = (widgetId: string) => `${widgetEditorHref(widgetId)}/guide`;
+
 export const SYSTEME_CONNECTOR_HREF = `${CONNECTORS.href}/systeme`;
 
 export const CONNECTORS_SECTION_HREF = CONNECTORS.href;

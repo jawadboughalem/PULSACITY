@@ -34,6 +34,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 const EDIT = {
+  name: "  Badge de la page d'accueil  ",
   type: "badge",
   productId: null,
   theme: "light",
@@ -43,6 +44,7 @@ const EDIT = {
   showRating: true,
   showDate: true,
   hidePoweredBy: false,
+  cardStyle: "soft",
 };
 
 let julieSpaceId: string;
@@ -76,11 +78,15 @@ beforeEach(async () => {
 });
 
 describe("saveWidget", () => {
-  it("saves the settings of one's own widget, the accent color written in capitals", async () => {
+  it("saves the settings of one's own widget, its name trimmed and the accent color in capitals", async () => {
     const widgetId = await insertWidget(julieSpaceId);
 
     expect(await saveWidget(widgetId, EDIT)).toEqual({ ok: true, data: null });
-    expect(await readWidget(widgetId)).toMatchObject({ type: "badge", settings: { theme: "light", accentColor: "#4F6F52" } });
+    expect(await readWidget(widgetId)).toMatchObject({
+      name: "Badge de la page d'accueil",
+      type: "badge",
+      settings: { theme: "light", accentColor: "#4F6F52", cardStyle: "soft" },
+    });
   });
 
   it("refuses settings out of bounds, and leaves the widget as it was", async () => {
@@ -92,6 +98,8 @@ describe("saveWidget", () => {
       { ...EDIT, accentColor: "red" },
       { ...EDIT, type: "slider" },
       { ...EDIT, productId: "pas-une-offre" },
+      { ...EDIT, name: "x".repeat(81) },
+      { ...EDIT, cardStyle: "ovale" },
       null,
     ]) {
       expect(await saveWidget(widgetId, edit)).toEqual({ ok: false, error: "invalid-settings" });

@@ -36,6 +36,13 @@
       "when": 1790838479567,
       "tag": "0004_space_milestones",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790937753932,
+      "tag": "0005_widget_name",
+      "breakpoints": true
     }
   ]
 }

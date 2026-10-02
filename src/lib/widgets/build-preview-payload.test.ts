@@ -30,6 +30,7 @@ const DATA: WidgetPreviewData = {
 };
 
 const EDIT: WidgetEdit = {
+  name: null,
   type: "wall",
   productId: null,
   theme: "auto",
@@ -39,10 +40,10 @@ const EDIT: WidgetEdit = {
   showRating: true,
   showDate: true,
   hidePoweredBy: false,
+  cardStyle: "sharp",
 };
 
 const LOOK: PreviewLook = {
-  cardStyle: "sharp",
   spaceAccentColor: "#4F6F52",
   poweredByUrl: "https://pulsacity.com/?ref=julie42",
   canHideBadge: false,

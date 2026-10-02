@@ -17,4 +17,12 @@ describe("WidgetCodeEmail", () => {
     expect(html).not.toContain('<script async src="https://pulsacity.com/w.js"');
     expect(text).toContain('data-pulsacity-widget="abc"');
   });
+
+  it("carries the guide « Coller dans Systeme.io », its four steps in order", async () => {
+    const text = await render(<WidgetCodeEmail snippet={SNIPPET} />, { plainText: true });
+
+    expect(text).toContain("Coller dans Systeme.io : 4 étapes, environ 2 minutes");
+    expect(text.indexOf("1. Dans l'éditeur de votre page Systeme.io")).toBeLessThan(text.indexOf("2. Cliquez sur l'élément"));
+    expect(text).toContain("4. Enregistrez la page, puis ouvrez son aperçu");
+  });
 });
