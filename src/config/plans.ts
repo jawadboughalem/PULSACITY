@@ -30,14 +30,14 @@ export const PLANS = {
   essentiel: {
     id: "essentiel",
     name: "Essentiel",
-    priceCents: { monthly: 900, yearly: 9000 },
+    priceCents: { monthly: 999, yearly: 9900 },
     limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED },
     badgeRemovable: false,
   },
   pro: {
     id: "pro",
     name: "Pro",
-    priceCents: { monthly: 1900, yearly: 19000 },
+    priceCents: { monthly: 1999, yearly: 19900 },
     limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED },
     badgeRemovable: true,
   },

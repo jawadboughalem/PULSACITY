@@ -86,8 +86,8 @@ compose.yaml                  # Postgres local
 | Plan | Prix | Témoignages | Demandes auto / mois | Widgets | Badge |
 | --- | --- | --- | --- | --- | --- |
 | free | 0 € | 15 | 20 | 1 | obligatoire |
-| essentiel | 9 €/mois, 90 €/an | illimité | illimité | illimité | obligatoire |
-| pro | 19 €/mois, 190 €/an | illimité | illimité | illimité | retirable |
+| essentiel | 9,99 €/mois, 99 €/an | illimité | illimité | illimité | obligatoire |
+| pro | 19,99 €/mois, 199 €/an | illimité | illimité | illimité | retirable |
 
 Prix TVA comprise : le montant affiché est celui que le créateur paie (`docs-internes/decision_tarifs.md`).
 

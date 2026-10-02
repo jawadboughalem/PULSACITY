@@ -125,7 +125,7 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Coins des cartes : « Droits » (2 px, par défaut) ou « Arrondis » (16 px), dans `settings.cardStyle`.
 - Éditeur sur téléphone : onglets « Réglages » et « Aperçu », puis « Installer le widget », l'e-mail d'abord. L'aperçu dessine la page à 390 px au moins, la largeur de m2 mobile, réduite au cadre : à 360 px, les deux colonnes du mur passaient « Camille R. » sur deux lignes, l'initiale seule dessous. Le guide a sa propre page (`/app/widgets/[id]/guide`).
 - L'e-mail du code contient maintenant le guide en quatre étapes, du même texte que l'éditeur, comme l'annonce m6 mobile (« Il part à …, avec le guide »).
-- Prix TVA comprise : 9 € et 19 € par mois, 90 € et 190 € par an, ce que le créateur paie. Arguments et conséquences (textes, Stripe) dans `docs-internes/decision_tarifs.md`. L'application écrit « 9 € par mois », sans « HT ».
+- Prix TVA comprise, ce que le créateur paie : 9,99 € et 19,99 € par mois, 99 € et 199 € par an (montants fixés par le fondateur, pour garder 8,33 € HT par abonné Essentiel). Arguments, chiffres et conséquences (textes, Stripe) dans `docs-internes/decision_tarifs.md`. L'application écrit « 9,99 € par mois », sans « HT ».
 - L'éditeur enregistre réglage par réglage : chaque enregistrement ne porte que ce qui vient de changer, et ils partent l'un après l'autre. Un réglage qui n'a pas pu s'enregistrer repart avec le suivant, ou avec « Réessayer ».
 
 ## Questions ouvertes
@@ -133,5 +133,6 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
 - Adresse de support : « Aide et contact » pointe vers `/aide`, qui n'existe pas, et la page du guide sur mobile (« Bloquée à une étape ? Écrivez-nous ») l'attend aussi : sa ligne n'est pas affichée en attendant.
-- Page Tarifs (m8) : à redessiner par Design avant son lot, pour les prix TVA comprise et « Tri par offre » dans tous les plans.
+- Page Tarifs (m8) : à redessiner par Design avant son lot, pour les prix TVA comprise (9,99 €, 19,99 €, 99 €, 199 €) et « Tri par offre » dans tous les plans.
+- Effet de 9,99 € sur le passage au payant : à vérifier avec les premiers chiffres de Stripe.
 - La page de vente dessinée dans l'aperçu de l'éditeur reste générique (nom de l'espace, nom de l'offre, « Ce qu'en disent mes clients ») : m6 y montre la page de Julie Nutrition (menu, prix, « Tous les avis »). Écart gardé depuis le lot 5.

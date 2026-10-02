@@ -32,7 +32,7 @@ A. Deux éditeurs ouverts sur le même widget
 7. Remets le type et les coins notés au point 1, puis ferme l'onglet B.
 
 B. Le prix du plan Essentiel
-8. Reviens sur « Widgets ». Sous la liste, l'encadré gris dit « Avec le plan Essentiel, à 9 € par mois, vous créez autant de widgets que vous voulez : un pour chaque page de vente. », sans « HT ».
+8. Reviens sur « Widgets ». Sous la liste, l'encadré gris dit « Avec le plan Essentiel, à 9,99 € par mois, vous créez autant de widgets que vous voulez : un pour chaque page de vente. », sans « HT ».
 
 Ne touche à aucun autre réglage de l'espace.
 
@@ -74,11 +74,11 @@ Dites simplement à Claude Code « OK » ou ce que vous avez vu.
 ## 3. Pour Claude Design (hors Chrome)
 
 ```
-Pour PULSACITY, merci pour les réponses du 2 octobre : la règle d'une colonne sous 340 px est construite, et les PNG sont dans le dépôt. Une décision change la page Tarifs avant qu'on la construise : les prix sont TVA comprise. Le montant affiché est celui que le créateur paie (9 € et 19 € par mois, 90 € et 190 € par an). À aligner, sans rien redessiner d'autre :
-1. m8, sous chaque prix : « par mois » (ou « par an » en annuel), sans « HT ».
+Pour PULSACITY, merci pour les réponses du 2 octobre : la règle d'une colonne sous 340 px est construite, et les PNG sont dans le dépôt. Une décision change la page Tarifs avant qu'on la construise : les prix sont TVA comprise, et leurs montants changent. Le montant affiché est celui que le créateur paie. À aligner, sans rien redessiner d'autre :
+1. m8, prix : Essentiel 9,99 € par mois et 99 € par an, Pro 19,99 € par mois et 199 € par an (« Annuel : 2 mois offerts » reste vrai). Sous chaque prix : « par mois » (ou « par an » en annuel), sans « HT ». Garde les centimes lisibles mais posés, dans l'esprit sobre de la charte.
 2. m8, sous le titre : « Commencez gratuitement. Passez à Essentiel quand les avis arrivent. Sans engagement, TVA comprise. »
-3. m8, question « Les prix incluent-ils la TVA ? », nouvelle réponse : « Oui. Le prix affiché est celui que vous payez, TVA comprise. Si votre entreprise récupère la TVA, la facture la détaille : Essentiel vous revient à 7,50 € HT par mois. Avec un numéro de TVA d'un autre pays de l'Union européenne, la TVA est autoliquidée : vous payez 9 €, sans TVA. »
+3. m8, question « Les prix incluent-ils la TVA ? », nouvelle réponse : « Oui. Le prix affiché est celui que vous payez, TVA comprise. Si votre entreprise récupère la TVA, la facture la détaille : Essentiel vous revient à 8,33 € HT par mois. Avec un numéro de TVA d'un autre pays de l'Union européenne, la TVA est autoliquidée : vous payez 9,99 €, sans TVA. »
 4. m8, « Tri par offre » : le choix d'une offre par widget est ouvert à tous les plans. Retire-le des avantages d'Essentiel (garde les trois autres lignes) et, dans le comparatif, montre-le inclus dans les trois plans.
-5. m18, encadré du plan Gratuit, en desktop et en mobile : « à 9 € par mois » au lieu de « à 9 € HT par mois ».
+5. m18, encadré du plan Gratuit, en desktop et en mobile : « à 9,99 € par mois » au lieu de « à 9 € HT par mois ».
 Exporte seulement les PNG modifiés, avec leurs noms actuels.
 ```
