@@ -28,9 +28,14 @@ Mis à jour le 1er octobre 2026, avec la PR #20 : le lot 5 (widget) est construi
 - Vercel attend bien « CI » et « Database migration » avant de mettre la production en ligne.
 - Claude Design a livré les maquettes m15 (ajout manuel), m16 (import CSV) et m17 (offres).
 
+## Recette du lot 5 sur l'aperçu (2 octobre)
+
+- Prompts 1 à 3 : 17 points sur 18 sur ordinateur, 7 sur 7 à 360 px. Le point manqué venait du test : le champ « Rechercher » coupe à 80 caractères, et le code copié, lu ailleurs, était correct.
+- Trois remarques, corrigées dans la PR #20 : l'avertissement de couleur en thème sombre proposait Encre et poussait le sélecteur de thème ; les initiales du badge se coupaient ; à 360 px, dix points du carrousel touchaient les flèches. Contre-recette : prompt 3 bis.
+
 ## À faire
 
-1. Recette du lot 5 : prompts 1 à 3 de `docs-internes/recette/lot-5-widget.md` sur l'aperçu de la PR #20, puis, après la fusion, prompts 4 à 6 sur une vraie page Systeme.io de test.
+1. Recette du lot 5 : prompt 3 bis de `docs-internes/recette/lot-5-widget.md` sur l'aperçu de la PR #20, puis, après la fusion, prompts 4 à 6 sur une vraie page Systeme.io de test.
 2. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 3. Sentry, avant le lancement.
 4. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
@@ -65,6 +70,9 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Une offre retirée ne supprime plus le widget filtré sur elle : il montre alors toutes les offres.
 - Guide « Coller dans Systeme.io » : les quatre étapes de la consigne du lot (élément Code HTML, « Modifier le code », coller, enregistrer puis aperçu), illustrées par des dessins à la place des captures prévues par m6.
 - Espace de démonstration : la couleur d'accent #4F6F52, le vert de m2 et m6.
+- Contraste insuffisant : l'avertissement s'affiche sous le thème, pour ne jamais déplacer le contrôle utilisé. Il propose Encre sur les cartes claires seulement (la charte) ; sur les cartes sombres, il annonce le carmin clair.
+- Initiales du badge superposées de −8 px, la valeur basse de la charte (−8 à −10), pour qu'elles se lisent en entier.
+- Carrousel : chaque point garde sa zone de 44 × 44 (la charte). Quand ils ne tiennent plus entre les flèches, « 2 sur 10 » les remplace.
 
 ## Questions ouvertes
 

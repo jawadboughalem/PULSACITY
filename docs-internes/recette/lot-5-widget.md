@@ -35,9 +35,9 @@ Ne touche surtout pas :
 - au workflow « Database migration » (la production) : ne le lance pas ;
 - aux secrets du dépôt (Settings › Secrets).
 
-Vérification : l'exécution est verte, et son journal se termine par « Espace « Julie Nutrition » prêt pour … ».
+Vérification : l'exécution est verte, et son journal contient la ligne « Espace « Julie Nutrition » prêt pour … ».
 
-Compte rendu à me donner : le statut de l'exécution et sa dernière ligne, sans l'adresse e-mail.
+Compte rendu à me donner : le statut de l'exécution et cette ligne, sans l'adresse e-mail.
 ```
 
 ## 2. Recette sur ordinateur, sur l'aperçu
@@ -58,17 +58,17 @@ B. Éditeur
 6. Nombre maximum : mets 4. L'aperçu garde 4 cartes et montre « Voir les 6 autres avis ». Clique dessus : 6 cartes s'ajoutent et le bouton disparaît. Écris 0 : un message rouge dit « Indiquez un nombre entre 1 et 50. ». Remets 12.
 7. Afficher : décoche « Date », puis « Note en étoiles » : les dates, puis les étoiles et la note moyenne disparaissent de l'aperçu. Recoche les deux.
 8. Couleur d'accent : clique sur la pastille bleu nuit, puis sur la rouge : les étoiles changent de couleur. Reviens sur la verte.
-9. Thème : clique sur « Sombre » : les cartes deviennent sombres. Reviens sur « Auto » : la page étant claire, elles redeviennent blanches. Sous le sélecteur : « Auto suit le fond de votre page. »
+9. Thème : clique sur « Sombre » : les cartes deviennent sombres, et leurs étoiles passent en carmin clair, car le vert ressort trop peu sur ce fond. Sous le sélecteur, sans le déplacer, un avertissement le dit, sans proposer Encre. Reviens sur « Auto » : la page étant claire, les cartes redeviennent blanches, les étoiles vertes, et l'avertissement disparaît. Sous le sélecteur : « Auto suit le fond de votre page. »
 10. « Masquer « Propulsé par PULSACITY » » : l'interrupteur est grisé et ne bouge pas quand tu cliques, avec « Disponible avec le plan Pro · Voir les plans ».
 11. Offre : choisis « Atelier cuisine ». L'en-tête dit « Widgets / Mur · Atelier cuisine ». L'aperçu ne garde que 3 avis (Hugo P., Emma S., Jade K.) et « 4,3/5 · 3 avis ». Reviens sur « Toutes les offres ».
 12. Type « Carrousel » : l'aperçu montre trois cartes côte à côte, une flèche ronde de chaque côté et des points dessous. Clique sur la flèche de droite : les cartes avancent d'une.
-13. Type « Badge » : « Nombre maximum de témoignages » disparaît. Sous le bouton « Je m'inscris » de l'aperçu : une pilule avec trois initiales, cinq étoiles et « 4,7/5 · 10 avis », et « Propulsé par Pulsacity » à côté.
+13. Type « Badge » : « Nombre maximum de témoignages » disparaît. Sous le bouton « Je m'inscris » de l'aperçu : une pilule avec trois ronds d'initiales qui se chevauchent sans couper les lettres, cinq étoiles et « 4,7/5 · 10 avis », et « Propulsé par Pulsacity » à côté.
 14. Reviens sur « Mur ». À chaque changement, en haut à droite, « Enregistrement… » passe à « Enregistré automatiquement ». Recharge la page : le mur, « Toutes les offres », 12, le vert et « Auto » sont toujours là.
-15. Clique sur « Copier le code » : le bouton dit « Code copié » quelques secondes. Ouvre « Témoignages » dans un nouvel onglet, clique dans « Rechercher » et colle (Ctrl+V, ou Cmd+V sur Mac), sans appuyer sur Entrée. Le texte collé est une seule ligne, de la forme <div data-pulsacity-widget="…"></div><script async src="…/w.js"></script>, où le second « … » est l'adresse de l'aperçu. Efface le champ et ferme l'onglet.
+15. Clique sur « Copier le code » : le bouton dit « Code copié » quelques secondes. Pour lire le presse-papiers, ajoute à la page un champ de texte temporaire, colles-y le contenu (Ctrl+V, ou Cmd+V sur Mac), lis-le, puis retire ce champ : le champ « Rechercher » des Témoignages coupe à 80 caractères. Le texte collé est une seule ligne, de la forme <div data-pulsacity-widget="…"></div><script async src="…/w.js"></script>, où le second « … » est l'adresse de l'aperçu.
 16. Sous l'éditeur, le cadre « Coller dans Systeme.io », « 4 étapes, environ 2 minutes » : quatre dessins, et dessous : 1. glisser un élément Code HTML, 2. cliquer sur « Modifier le code », 3. coller le code puis valider, 4. enregistrer la page puis ouvrir son aperçu, car le code ne s'exécute pas dans l'éditeur.
 
 C. Données publiques du widget
-17. Repère l'identifiant du widget : la fin de l'adresse de l'éditeur, après /app/widgets/. Ouvre dans un nouvel onglet l'adresse de l'aperçu suivie de /api/widget/ et de cet identifiant. La page montre du texte JSON avec "type":"wall", "total":10, "average":4.7, une liste "testimonials" où chaque avis n'a que name, initials, title, photo, rating, text et date, et "poweredBy" qui se termine par /?ref= suivi d'un code. Aucune adresse e-mail n'y figure.
+17. Repère l'identifiant du widget : la fin de l'adresse de l'éditeur, après /app/widgets/. Ouvre dans un nouvel onglet l'adresse de l'aperçu suivie de /api/widget/ et de cet identifiant. La page montre du texte JSON avec "type":"wall", "total":10, "average":4.7, et aussi v, theme, accentColor, cardStyle, avatars et next. Dans la liste "testimonials", chaque avis n'a que name, initials, title, photo, rating, text et date. "poweredBy" se termine par /?ref= suivi d'un code. Aucune adresse e-mail n'y figure.
 18. Reviens sur « Widgets » : la ligne dit toujours « Pas encore collé sur une page ». Ouvrir ces données dans le navigateur ne compte pas comme un affichage sur une page.
 
 Compte rendu à me donner : les points 1 à 18 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK. Ne recopie ni l'adresse e-mail du compte, ni l'identifiant du widget.
@@ -87,14 +87,29 @@ Tu fais la recette du widget de PULSACITY en largeur téléphone, sur l'aperçu 
 4. Plus bas, « Aperçu en direct » : une page de téléphone réduite, avec le mur sur deux colonnes.
 5. Sous l'aperçu : « Copier le code », puis « Plus simple depuis un ordinateur : nous pouvons vous envoyer le code par e-mail. » et le bouton « M'envoyer le code par e-mail ». Touche ce bouton : « Le code est parti vers … » s'affiche. Demande-moi si l'e-mail « Le code de votre widget PULSACITY » est bien arrivé, avec le code dedans. Attends ma réponse.
 6. Tout en bas, « Coller dans Systeme.io » : les 4 étapes, l'une sous l'autre, chacune avec son dessin.
-7. Choisis le type « Carrousel » : dans l'aperçu, une carte à la fois, avec les flèches et les points dessous. Reviens sur « Mur ».
+7. Choisis le type « Carrousel » : dans l'aperçu, une carte à la fois. Dessous, entre les deux flèches, « 1 sur 10 » à la place des points, qui ne tiendraient pas. Touche la flèche de droite : « 2 sur 10 ». Reviens sur « Mur ».
 
 Compte rendu à me donner : les points 1 à 7 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK.
 ```
 
+## 3 bis. Contre-recette des corrections, sur l'aperçu
+
+La recette du 2 octobre a relevé trois points, corrigés depuis : l'avertissement de couleur en thème sombre, les initiales du badge, les points du carrousel sur téléphone. Attendez que le commentaire de Vercel dans la PR #20 soit revenu à « Ready », puis, fenêtre en grand, collez :
+
+```
+Tu vérifies trois corrections du widget de PULSACITY sur l'aperçu de la PR, dans l'onglet où je suis connecté avec mon compte de recette. Tu ne crées aucun compte et tu ne changes rien hors de cet espace. Pour chaque point, note « OK » ou décris ce que tu vois.
+
+1. Ouvre « Widgets », puis le widget « Mur · Toutes les offres ». Note la position du sélecteur de thème, puis clique sur « Sombre » : le sélecteur ne bouge pas. Sous lui, un avertissement orange dit « La couleur d'accent ressort peu sur des cartes sombres : vos étoiles s'afficheront en carmin clair. », sans lien « Utiliser Encre ». Clique sur « Auto » : l'avertissement disparaît.
+2. Type « Badge » : dans la pilule de l'aperçu, les trois ronds se chevauchent toujours, mais chaque paire d'initiales se lit en entier.
+3. Type « Carrousel ». Charge l'éditeur dans un cadre de 360 × 800 à la même adresse, comme pour la recette sur téléphone. Dans l'aperçu, sous la carte, entre les deux flèches : « 1 sur 10 », à la place des points. La flèche de droite le fait passer à « 2 sur 10 ». En fenêtre normale, l'aperçu garde ses points, au nombre de 8.
+4. Remets le type sur « Mur » et le thème sur « Auto ».
+
+Compte rendu à me donner : les points 1 à 4 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK.
+```
+
 ---
 
-Après les prompts 2 et 3 : envoyez les comptes rendus à Claude Code. S'il n'y a rien à corriger, fusionnez la PR #20, puis attendez que le déploiement de production soit « Ready » dans Vercel.
+Après les prompts 2, 3 et 3 bis : envoyez les comptes rendus à Claude Code. S'il n'y a rien à corriger, fusionnez la PR #20, puis attendez que le déploiement de production soit « Ready » dans Vercel.
 
 ## 4. Systeme.io — coller le widget sur une vraie page de test (production)
 
@@ -185,7 +200,7 @@ Pour PULSACITY, dessine ce qui manque au lot widget, dans la charte et les compo
 1. Widgets : la liste des widgets de l'espace, avec pour chacun son type (mur, carrousel, badge), son offre, « Sur une page depuis le 12 sept. 2026 » ou « Pas encore collé sur une page », et « Modifier ». Le bouton « Créer un widget », et son état au plan Gratuit, limité à un widget, avec le lien vers les plans.
 2. L'éditeur de widget en mobile 360 px : réglages, aperçu en direct, « Copier le code », l'envoi du code par e-mail (« Plus simple depuis un ordinateur »), et le guide « Coller dans Systeme.io ».
 3. Le bouton « Copier le code » une fois le code copié : l'export m6-editeur-desktop-06-code-copie est identique au 01.
-4. Le chargement du carrousel et du badge, sur page claire et sombre (m2 ne dessine que celui du mur).
+4. Le chargement du carrousel et du badge, sur page claire et sombre (m2 ne dessine que celui du mur). Et le carrousel sur téléphone quand ses points ne tiennent plus entre les flèches : aujourd'hui « 2 sur 10 » les remplace.
 5. Le nom d'un widget : m6 affiche « Avis de la page Programme 30 jours ». Faut-il un champ pour le nommer ? Sans lui, le nom reste dérivé du type et de l'offre : « Mur · Toutes les offres ».
 6. L'arrondi des cartes du widget (anguleuses ou arrondies) : faut-il un réglage dans l'éditeur ? Aujourd'hui elles sont anguleuses, comme dans m2.
 Exporte un PNG par état, nommés m18-widgets-…, m6-editeur-mobile-… et m2-widgets-…-chargement-…
