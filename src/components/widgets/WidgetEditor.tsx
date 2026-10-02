@@ -25,7 +25,15 @@ import { ALL_OFFERS_LABEL, describeWidget } from "./describe-widget";
 import { SystemePasteGuide } from "./SystemePasteGuide";
 import { TYPING_PAUSE_MS, type SaveState, useWidgetAutosave } from "./useWidgetAutosave";
 import { WidgetPreview } from "./WidgetPreview";
-import { AccentSwatches, INK, ThemeSelector, WidgetTypePicker, buildSwatches } from "./WidgetSettingsControls";
+import {
+  type AccentWarning,
+  AccentSwatches,
+  AccentWarningNote,
+  INK,
+  ThemeSelector,
+  WidgetTypePicker,
+  buildSwatches,
+} from "./WidgetSettingsControls";
 
 const LINK_CLASSES =
   "font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
@@ -51,15 +59,21 @@ const hasSomethingToShow = (payload: WidgetPayload) =>
   payload.total > 0 && (payload.type === "badge" ? payload.avatars.length > 0 : payload.testimonials.length > 0);
 
 /** The charter asks 3:1 of the accent on the cards: the editor warns, the widget falls back. */
-const describeAccentWarning = (accent: string | null, theme: WidgetEdit["theme"]): string | null => {
+const describeAccentWarning = (accent: string | null, theme: WidgetEdit["theme"]): AccentWarning | null => {
   if (!accent) return null;
   if (theme === "dark") {
     return calculateContrastRatio(accent, DARK_CARD) < MIN_ACCENT_CONTRAST_RATIO
-      ? "Cette couleur ressort peu sur des cartes sombres : vos étoiles s'afficheront en carmin clair."
+      ? {
+          text: "La couleur d'accent ressort peu sur des cartes sombres : vos étoiles s'afficheront en carmin clair.",
+          offersInk: false,
+        }
       : null;
   }
   return calculateContrastRatio(accent, LIGHT_CARD) < MIN_ACCENT_CONTRAST_RATIO
-    ? "Cette couleur ressort peu sur des cartes blanches : vos étoiles s'afficheront en Encre."
+    ? {
+        text: "La couleur d'accent ressort peu sur des cartes blanches : vos étoiles s'afficheront en Encre.",
+        offersInk: true,
+      }
     : null;
 };
 
@@ -209,14 +223,9 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, snippet
           </label>
         ))}
       </fieldset>
-      <AccentSwatches
-        swatches={swatches}
-        value={edit.accentColor}
-        warning={accentWarning}
-        onChange={(accentColor) => change({ accentColor })}
-        onUseInk={() => change({ accentColor: INK })}
-      />
+      <AccentSwatches swatches={swatches} value={edit.accentColor} onChange={(accentColor) => change({ accentColor })} />
       <ThemeSelector value={edit.theme} onChange={(theme) => change({ theme })} />
+      <AccentWarningNote warning={accentWarning} onUseInk={() => change({ accentColor: INK })} />
       <div className="flex items-start justify-between gap-4 border-t border-hairline-200 pt-5">
         <div className="flex min-w-[0] flex-col gap-1">
           <span id="widget-hide-powered-label" className={cn("text-body", !look.canHideBadge && "text-slate-600")}>

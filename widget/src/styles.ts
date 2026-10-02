@@ -143,7 +143,7 @@ export const WIDGET_CSS = `
 .more:disabled { cursor: progress; }
 .more-error { color: var(--page-text); font-size: 14px; line-height: 20px; text-align: center; }
 
-.carousel { display: grid; grid-template-columns: 48px minmax(0, 1fr) 48px; align-items: center; gap: 16px 0; }
+.carousel { display: grid; grid-template-columns: 48px minmax(0, 1fr) 48px; align-items: center; gap: 16px 8px; }
 .wide .carousel { gap: 24px; }
 .track {
   grid-row: 1;
@@ -181,7 +181,8 @@ export const WIDGET_CSS = `
 .prev { grid-row: 2; grid-column: 1; }
 .next { grid-row: 2; grid-column: 3; justify-self: end; }
 .wide .prev, .wide .next { grid-row: 1; }
-.dots { display: flex; justify-content: center; }
+.dots { display: flex; justify-content: center; align-items: center; min-height: 44px; }
+.count { color: var(--page-muted); font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
 .dot { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
 .dot::before { content: ""; width: 10px; height: 10px; border: 2px solid var(--page-muted); border-radius: 999px; }
 .dot[aria-current="true"]::before { border-color: var(--page-accent); background: var(--page-accent); }
@@ -220,7 +221,7 @@ export const WIDGET_CSS = `
 a.badge:hover .badge-text { text-decoration: underline; text-underline-offset: 3px; }
 .faces { display: inline-flex; }
 .faces .avatar { width: 32px; height: 32px; border: 2px solid var(--card-bg); font-size: 12px; }
-.faces .avatar + .avatar { margin-left: -10px; }
+.faces .avatar + .avatar { margin-left: -8px; }
 
 .loading { display: flex; flex-direction: column; gap: 16px; height: 560px; overflow: hidden; }
 .wide .loading { height: 600px; }

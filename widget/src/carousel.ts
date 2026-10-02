@@ -21,6 +21,14 @@ const describeView = (first: number, visible: number, total: number) =>
 const describeDot = (first: number, visible: number, total: number) =>
   visible === 1 ? `Afficher l'avis ${first}` : `Afficher les avis ${first} à ${lastShown(first, visible, total)}`;
 
+/** « 2 sur 10 », in place of the points when they no longer fit. */
+const describeCount = (first: number, visible: number, total: number) =>
+  visible === 1 ? `${first} sur ${total}` : `${first} à ${lastShown(first, visible, total)} sur ${total}`;
+
+/** The charter gives each point a 44 × 44 zone, and the arrows 48 with 8 between them and the points. */
+const DOT_ZONE = 44;
+const ARROW_ZONE = 48 + 8;
+
 /** Maquette 2: three cards from 1024 px, one below. Swiped by finger, moved one card at a time by the arrows. */
 export const renderCarousel = (payload: WidgetPayload, context: LayoutContext): HTMLElement => {
   const total = payload.testimonials.length;
@@ -48,12 +56,24 @@ export const renderCarousel = (payload: WidgetPayload, context: LayoutContext): 
   const positionCount = () => Math.max(1, total - visibleCount() + 1);
   const step = () => (slides[1] ? slides[1].offsetLeft - slides[0].offsetLeft : (slides[0]?.offsetWidth ?? 0));
 
+  /** Wide, the points share their row with « Propulsé par »; narrow, they sit between the arrows. */
+  const dotsFit = (count: number) => {
+    const room = context.isWide() ? track.clientWidth / 2 : carousel.clientWidth - 2 * ARROW_ZONE;
+    return room <= 0 || count * DOT_ZONE <= room;
+  };
+
   const show = () => {
     const count = positionCount();
     carousel.classList.toggle("is-still", count <= 1);
     previous.disabled = position <= 0;
     next.disabled = position >= count - 1;
-    if (dots.childElementCount !== count) {
+    if (!dotsFit(count)) {
+      const counter = dots.querySelector(".count") ?? h("p", { class: "count", "aria-hidden": "true" });
+      counter.textContent = describeCount(position + 1, visibleCount(), total);
+      if (dots.firstChild !== counter || dots.childElementCount !== 1) dots.replaceChildren(counter);
+      return;
+    }
+    if (dots.querySelector(".count") || dots.childElementCount !== count) {
       dots.replaceChildren(
         ...Array.from({ length: count }, (_, index) => {
           const dot = h("button", {

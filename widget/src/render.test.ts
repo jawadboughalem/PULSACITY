@@ -173,6 +173,19 @@ describe("the carousel", () => {
     expect(root.querySelectorAll(".dot")[1].getAttribute("aria-label")).toBe("Afficher les avis 2 à 4");
   });
 
+  it("counts the positions in words when their points no longer fit between the arrows", () => {
+    vi.spyOn(Element.prototype, "clientWidth", "get").mockReturnValue(345);
+    const ten = Array.from({ length: 10 }, (_, index) => ({ ...carousel.testimonials[index % 4], name: `Client ${index}` }));
+    const { root } = render({ ...carousel, testimonials: ten }, { width: 345 });
+    const track = root.querySelector<HTMLElement>(".track");
+    if (track) track.scrollTo = vi.fn();
+
+    expect(root.querySelectorAll(".dot")).toHaveLength(0);
+    expect(root.querySelector(".dots .count")?.textContent).toBe("1 sur 10");
+    root.querySelector<HTMLButtonElement>("button.next")?.click();
+    expect(root.querySelector(".dots .count")?.textContent).toBe("2 sur 10");
+  });
+
   it("hides the arrows when every testimonial already shows", () => {
     const { root } = render({ ...carousel, testimonials: carousel.testimonials.slice(0, 2) }, { width: 1200 });
 

@@ -64,12 +64,10 @@ export const buildSwatches = (pageAccent: string | null, chosen: string | null):
 type AccentSwatchesProps = {
   swatches: Swatch[];
   value: string | null;
-  warning: string | null;
   onChange: (accentColor: string | null) => void;
-  onUseInk: () => void;
 };
 
-export const AccentSwatches = ({ swatches, value, warning, onChange, onUseInk }: AccentSwatchesProps) => {
+export const AccentSwatches = ({ swatches, value, onChange }: AccentSwatchesProps) => {
   const chosen = swatches.find((swatch) => swatch.value === value) ?? swatches[0];
   return (
     <fieldset className="flex min-w-[0] flex-col gap-3">
@@ -107,26 +105,39 @@ export const AccentSwatches = ({ swatches, value, warning, onChange, onUseInk }:
         </div>
         <p className="min-w-[0] text-small text-slate-600">{chosen.name}</p>
       </div>
-      {warning ? (
-        <div role="status" className="flex flex-col items-start gap-1">
-          <p className="flex items-start gap-2 text-small text-attention">
-            <Icon name="alert" size={20} />
-            <span>{warning}</span>
-          </p>
-          {value !== INK ? (
-            <button
-              type="button"
-              onClick={onUseInk}
-              className={cn("min-h-[44px] px-1 text-small font-semibold text-carmine hover:text-carmine-dark hover:underline", FOCUS_RING)}
-            >
-              Utiliser Encre
-            </button>
-          ) : null}
-        </div>
-      ) : null}
     </fieldset>
   );
 };
+
+export type AccentWarning = { text: string; offersInk: boolean };
+
+type AccentWarningNoteProps = { warning: AccentWarning | null; onUseInk: () => void };
+
+/**
+ * Below the theme, so that it never moves the control being used. The charter proposes Encre on light cards only:
+ * on dark cards it would show even less.
+ */
+export const AccentWarningNote = ({ warning, onUseInk }: AccentWarningNoteProps) => (
+  <div role="status" className={cn("flex flex-col items-start gap-1", !warning && "hidden")}>
+    {warning ? (
+      <>
+        <p className="flex items-start gap-2 text-small text-attention">
+          <Icon name="alert" size={20} />
+          <span>{warning.text}</span>
+        </p>
+        {warning.offersInk ? (
+          <button
+            type="button"
+            onClick={onUseInk}
+            className={cn("min-h-[44px] px-1 text-small font-semibold text-carmine hover:text-carmine-dark hover:underline", FOCUS_RING)}
+          >
+            Utiliser Encre
+          </button>
+        ) : null}
+      </>
+    ) : null}
+  </div>
+);
 
 const THEME_OPTIONS: Array<{ value: WidgetTheme; label: string }> = [
   { value: "light", label: "Clair" },
