@@ -31,11 +31,12 @@ Mis à jour le 1er octobre 2026, avec la PR #20 : le lot 5 (widget) est construi
 ## Recette du lot 5 sur l'aperçu (2 octobre)
 
 - Prompts 1 à 3 : 17 points sur 18 sur ordinateur, 7 sur 7 à 360 px. Le point manqué venait du test : le champ « Rechercher » coupe à 80 caractères, et le code copié, lu ailleurs, était correct.
-- Trois remarques, corrigées dans la PR #20 : l'avertissement de couleur en thème sombre proposait Encre et poussait le sélecteur de thème ; les initiales du badge se coupaient ; à 360 px, dix points du carrousel touchaient les flèches. Contre-recette : prompt 3 bis.
+- Trois remarques, corrigées dans la PR #20 : l'avertissement de couleur en thème sombre proposait Encre et poussait le sélecteur de thème ; les initiales du badge se coupaient ; à 360 px, dix points du carrousel touchaient les flèches. Contre-recette (prompt 3 bis) : 4 points sur 4.
+- Remarque de la contre-recette, corrigée aussi : pendant le défilement lancé par une flèche, le compteur du carrousel revenait à l'avis de départ avant d'afficher le suivant.
 
 ## À faire
 
-1. Recette du lot 5 : prompt 3 bis de `docs-internes/recette/lot-5-widget.md` sur l'aperçu de la PR #20, puis, après la fusion, prompts 4 à 6 sur une vraie page Systeme.io de test.
+1. Recette du lot 5 : fusion de la PR #20, puis prompts 4 à 6 de `docs-internes/recette/lot-5-widget.md` sur une vraie page Systeme.io de test.
 2. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 3. Sentry, avant le lancement.
 4. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
