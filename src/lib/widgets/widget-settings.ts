@@ -85,6 +85,11 @@ export const widgetEditSchema = z.object({
 
 export type WidgetEdit = z.output<typeof widgetEditSchema>;
 
+/** One save of the editor: only what the creator just changed, so that another editor left open overwrites nothing. */
+export const widgetChangeSchema = widgetEditSchema.partial();
+
+export type WidgetChange = z.output<typeof widgetChangeSchema>;
+
 export type EditableWidget = WidgetEdit & { id: string };
 
 /** The settings column of an edit: what the public JSON reads. */
