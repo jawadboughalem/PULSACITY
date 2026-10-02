@@ -3,7 +3,7 @@
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 import { nameColor } from "@/lib/colors/name-color";
-import type { WidgetTheme, WidgetType } from "../../../widget/src/payload";
+import type { WidgetCardStyle, WidgetTheme, WidgetType } from "../../../widget/src/payload";
 import { WIDGET_TYPE_OPTIONS } from "./describe-widget";
 
 const FOCUS_RING = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
@@ -139,22 +139,27 @@ export const AccentWarningNote = ({ warning, onUseInk }: AccentWarningNoteProps)
   </div>
 );
 
-const THEME_OPTIONS: Array<{ value: WidgetTheme; label: string }> = [
-  { value: "light", label: "Clair" },
-  { value: "dark", label: "Sombre" },
-  { value: "auto", label: "Auto" },
-];
-
-type ThemeSelectorProps = { value: WidgetTheme; onChange: (theme: WidgetTheme) => void };
+type SegmentedChoiceProps<Value extends string> = {
+  id: string;
+  label: string;
+  options: Array<{ value: Value; label: string }>;
+  value: Value;
+  hint: string;
+  onChange: (value: Value) => void;
+};
 
 /** The charter's segmented selector: Ink for the chosen option, aria-pressed on each. */
-export const ThemeSelector = ({ value, onChange }: ThemeSelectorProps) => (
+const SegmentedChoice = <Value extends string>({ id, label, options, value, hint, onChange }: SegmentedChoiceProps<Value>) => (
   <div className="flex flex-col gap-2">
-    <p id="widget-theme-label" className="text-small font-semibold">
-      Thème
+    <p id={id} className="text-small font-semibold">
+      {label}
     </p>
-    <div role="group" aria-labelledby="widget-theme-label" className="grid h-[48px] grid-cols-3 rounded-sm border border-ink-900">
-      {THEME_OPTIONS.map((option) => {
+    <div
+      role="group"
+      aria-labelledby={id}
+      className="grid h-[48px] grid-flow-col auto-cols-fr rounded-sm border border-ink-900"
+    >
+      {options.map((option) => {
         const isChosen = option.value === value;
         return (
           <button
@@ -173,6 +178,46 @@ export const ThemeSelector = ({ value, onChange }: ThemeSelectorProps) => (
         );
       })}
     </div>
-    <p className="text-small text-slate-600">Auto suit le fond de votre page.</p>
+    <p className="text-small text-slate-600">{hint}</p>
   </div>
+);
+
+const THEME_OPTIONS: Array<{ value: WidgetTheme; label: string }> = [
+  { value: "light", label: "Clair" },
+  { value: "dark", label: "Sombre" },
+  { value: "auto", label: "Auto" },
+];
+
+export const ThemeSelector = ({ value, onChange }: { value: WidgetTheme; onChange: (theme: WidgetTheme) => void }) => (
+  <SegmentedChoice
+    id="widget-theme-label"
+    label="Thème"
+    options={THEME_OPTIONS}
+    value={value}
+    hint="Auto suit le fond de votre page."
+    onChange={onChange}
+  />
+);
+
+const CARD_STYLE_OPTIONS: Array<{ value: WidgetCardStyle; label: string }> = [
+  { value: "sharp", label: "Droits" },
+  { value: "soft", label: "Arrondis" },
+];
+
+/** Maquette 6, « Coins des cartes »: 2 px or 16 px, like the buttons of the creator's page. */
+export const CardStyleSelector = ({
+  value,
+  onChange,
+}: {
+  value: WidgetCardStyle;
+  onChange: (cardStyle: WidgetCardStyle) => void;
+}) => (
+  <SegmentedChoice
+    id="widget-card-style-label"
+    label="Coins des cartes"
+    options={CARD_STYLE_OPTIONS}
+    value={value}
+    hint="Choisissez comme les boutons de votre page."
+    onChange={onChange}
+  />
 );

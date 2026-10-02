@@ -106,6 +106,33 @@ describe("mountWidgets", () => {
     expect(host?.shadowRoot?.querySelector(".loading")).toBeNull();
   });
 
+  it("holds the place of the type named in the pasted code, even in view, until the testimonials arrive", async () => {
+    const widgetId = newWidgetId();
+    let answer: (response: Response) => void = () => undefined;
+    vi.stubGlobal("fetch", () => new Promise<Response>((resolve) => (answer = resolve)));
+    document.body.innerHTML = `<div data-pulsacity-widget="${widgetId}" data-pulsacity-type="badge"></div>`;
+    const host = document.querySelector(MOUNT_SELECTOR);
+
+    mountWidgets({ origin: ORIGIN });
+
+    expect(shownRoot(host)?.querySelector(".badge-loading .sk-badge .sk-faces")?.childElementCount).toBe(3);
+    answer(new Response(JSON.stringify(SAMPLE_BADGE_PAYLOAD)));
+    await vi.waitFor(() => expect(shownRoot(host)?.querySelector(".badge")).not.toBeNull());
+    expect(host?.shadowRoot?.querySelector(".loading")).toBeNull();
+  });
+
+  it("ignores a type it does not know, and shows the type the testimonials come with", async () => {
+    const widgetId = newWidgetId();
+    serve({ [widgetId]: { ...SAMPLE_PAYLOAD, type: "carousel", next: null } });
+    document.body.innerHTML = `<div data-pulsacity-widget="${widgetId}" data-pulsacity-type="slider"></div>`;
+    const host = document.querySelector(MOUNT_SELECTOR);
+
+    mountWidgets({ origin: ORIGIN });
+
+    expect(shownRoot(host)).toBeNull();
+    await vi.waitFor(() => expect(shownRoot(host)?.querySelector(".carousel")).not.toBeNull());
+  });
+
   it("shows nothing in view until the testimonials arrive: a badge must never take the place of a wall", async () => {
     const widgetId = newWidgetId();
     let answer: (response: Response) => void = () => undefined;

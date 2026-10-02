@@ -64,7 +64,7 @@ describe("sendWidgetCodeByEmail", () => {
 
     expect(await sendWidgetCodeByEmail(badge)).toEqual({ ok: true, data: { email: "julie@exemple.fr" } });
     expect(sentSnippet()).toBe(
-      `<div data-pulsacity-widget="${badge}"></div><script async src="https://pulsacity.com/w.js"></script>`,
+      `<div data-pulsacity-widget="${badge}" data-pulsacity-type="wall"></div><script async src="https://pulsacity.com/w.js"></script>`,
     );
   });
 

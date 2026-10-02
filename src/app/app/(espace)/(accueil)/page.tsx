@@ -26,7 +26,7 @@ import { getFirstName } from "@/lib/testimonials/format-customer-name";
 import { listLatestTestimonials } from "@/lib/testimonials/list-space-testimonials";
 import { STATUS_SEARCH_VALUES } from "@/lib/testimonials/testimonial-filters";
 import { buildWidgetSnippet } from "@/lib/widgets/build-widget-snippet";
-import { findDefaultWidgetId } from "@/lib/widgets/find-default-widget";
+import { findDefaultWidget } from "@/lib/widgets/find-default-widget";
 
 export const metadata: Metadata = {
   title: "Accueil · PULSACITY",
@@ -61,11 +61,11 @@ const SpaceHomePage = async () => {
   }
 
   const database = getDb();
-  const [figures, steps, latest, widgetId, cookieStore] = await Promise.all([
+  const [figures, steps, latest, defaultWidget, cookieStore] = await Promise.all([
     countDashboardFigures(database, space.id),
     readSetupSteps(database, space.id),
     listLatestTestimonials(database, space.id),
-    findDefaultWidgetId(database, space.id),
+    findDefaultWidget(database, space.id),
     cookies(),
   ]);
   const plan = getPlan(space.plan);
@@ -112,7 +112,7 @@ const SpaceHomePage = async () => {
                 <SetupStepsPanel
                   steps={steps}
                   collectionUrl={collectionUrl}
-                  widgetSnippet={widgetId ? buildWidgetSnippet(getAppUrl(), widgetId) : null}
+                  widgetSnippet={defaultWidget ? buildWidgetSnippet(getAppUrl(), defaultWidget) : null}
                   approvedCount={figures.approved}
                 />
               </div>

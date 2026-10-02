@@ -349,4 +349,27 @@ describe("the loading state", () => {
     expect(root.querySelector("[role=status]")?.textContent).toBe("Chargement des avis…");
     expect(root.querySelectorAll(".sk-card")).toHaveLength(4);
   });
+
+  it("holds the place of a carousel with its cards, its arrows and its points, as in maquette 2", () => {
+    const wide = createHost({ width: 1200 });
+    const narrow = createHost({ width: 360 });
+
+    const wideRoot = renderLoading(wide.attachShadow({ mode: "open" }), "carousel", { host: wide, linkColor: null }).root;
+    const narrowRoot = renderLoading(narrow.attachShadow({ mode: "open" }), "carousel", { host: narrow, linkColor: null }).root;
+
+    expect(wideRoot.querySelector("[role=status]")?.textContent).toBe("Chargement des avis…");
+    expect(wideRoot.querySelectorAll(".sk-slide")).toHaveLength(3);
+    expect(narrowRoot.querySelectorAll(".sk-slide")).toHaveLength(1);
+    expect(wideRoot.querySelectorAll(".sk-arrow")).toHaveLength(2);
+    expect(wideRoot.querySelectorAll(".sk-dot")).toHaveLength(3);
+  });
+
+  it("holds the place of a badge with a pill of three faces, its status only read aloud", () => {
+    const host = createHost();
+
+    const { root } = renderLoading(host.attachShadow({ mode: "open" }), "badge", { host, linkColor: null });
+
+    expect(root.querySelectorAll(".sk-badge .sk-face")).toHaveLength(3);
+    expect(root.querySelector("[role=status]")?.className).toBe("sr-only");
+  });
 });

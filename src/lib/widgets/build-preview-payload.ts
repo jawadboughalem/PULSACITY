@@ -1,10 +1,9 @@
-import type { WidgetCardStyle, WidgetPayload } from "../../../widget/src/payload";
+import type { WidgetPayload } from "../../../widget/src/payload";
 import { buildWidgetPayload, countTestimonialsForAnswer } from "./build-widget-payload";
 import type { ShownSummary, WidgetPreviewData } from "./load-widget-preview";
-import type { WidgetEdit } from "./widget-settings";
+import { type WidgetEdit, toWidgetSettings } from "./widget-settings";
 
 export type PreviewLook = {
-  cardStyle: WidgetCardStyle;
   spaceAccentColor: string | null;
   poweredByUrl: string;
   canHideBadge: boolean;
@@ -19,13 +18,14 @@ export const buildPreviewPayload = (
   look: PreviewLook,
   offset = 0,
 ): WidgetPayload => {
-  const { type, productId, ...settings } = edit;
+  const { type, productId } = edit;
+  const settings = toWidgetSettings(edit);
   const shown = productId ? data.testimonials.filter((testimonial) => testimonial.productId === productId) : data.testimonials;
   const summary = productId ? (data.summaries.byOffer[productId] ?? NO_TESTIMONIAL) : data.summaries.all;
   const start = type === "wall" ? offset : 0;
   const payload = buildWidgetPayload({
     type,
-    settings: { ...settings, cardStyle: look.cardStyle },
+    settings,
     spaceAccentColor: look.spaceAccentColor,
     poweredBy: settings.hidePoweredBy && look.canHideBadge ? null : look.poweredByUrl,
     total: summary.total,

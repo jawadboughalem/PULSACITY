@@ -3,10 +3,11 @@ import { canCreateWidget, canHideBadge } from "@/config/plans";
 import type { Database } from "@/db/database";
 import { type WidgetSettings, products, spaces, widgets } from "@/db/schema";
 import type { WidgetType } from "../../../widget/src/payload";
-import type { WidgetEdit } from "./widget-settings";
+import { type WidgetEdit, toWidgetSettings } from "./widget-settings";
 
 export type SpaceWidget = {
   id: string;
+  name: string | null;
   type: WidgetType;
   productId: string | null;
   productName: string | null;
@@ -17,6 +18,7 @@ export const listSpaceWidgets = (database: Database, spaceId: string): Promise<S
   database
     .select({
       id: widgets.id,
+      name: widgets.name,
       type: widgets.type,
       productId: widgets.productId,
       productName: products.name,
@@ -29,6 +31,7 @@ export const listSpaceWidgets = (database: Database, spaceId: string): Promise<S
 
 export type OwnedWidget = {
   id: string;
+  name: string | null;
   type: WidgetType;
   productId: string | null;
   settings: WidgetSettings;
@@ -44,6 +47,7 @@ export const findOwnedWidget = async (
   const [widget] = await database
     .select({
       id: widgets.id,
+      name: widgets.name,
       type: widgets.type,
       productId: widgets.productId,
       settings: widgets.settings,
@@ -88,7 +92,7 @@ export const createWidget = (database: Database, userId: string): Promise<Create
 
 export type UpdateWidgetResult = { status: "updated" } | { status: "widget-not-found" } | { status: "offer-not-found" };
 
-/** Settings the editor does not show, like the radius of the cards, are kept as they are. */
+/** Settings the editor does not show are kept as they are. */
 export const updateWidget = async (
   database: Database,
   userId: string,
@@ -107,12 +111,13 @@ export const updateWidget = async (
   }
   const [space] = await database.select({ plan: spaces.plan }).from(spaces).where(eq(spaces.id, widget.spaceId));
 
-  const { type, productId, ...settings } = edit;
+  const settings = toWidgetSettings(edit);
   await database
     .update(widgets)
     .set({
-      type,
-      productId,
+      name: edit.name,
+      type: edit.type,
+      productId: edit.productId,
       settings: { ...widget.settings, ...settings, hidePoweredBy: settings.hidePoweredBy && canHideBadge(space) },
     })
     .where(and(eq(widgets.id, widget.id), eq(widgets.spaceId, widget.spaceId)));

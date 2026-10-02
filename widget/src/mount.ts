@@ -1,7 +1,7 @@
 import { loadWidgetPayload } from "./load";
-import { MOUNT_SELECTOR_ATTRIBUTE } from "./mount-attribute";
+import { MOUNT_SELECTOR_ATTRIBUTE, TYPE_HINT_ATTRIBUTE } from "./mount-attribute";
 import { readLinkColor } from "./page";
-import type { WidgetPayload } from "./payload";
+import { WIDGET_TYPES, type WidgetPayload, type WidgetType } from "./payload";
 import { type RenderedWidget, clearWidget, renderLoading, renderWidget } from "./render";
 import { createReviewsDirectory } from "./reviews";
 
@@ -20,11 +20,18 @@ const hasSomethingToShow = (payload: WidgetPayload) =>
   payload.total > 0 && (payload.type === "badge" ? payload.avatars.length > 0 : payload.testimonials.length > 0);
 
 /**
- * The type of a widget only comes with its testimonials. Below the visible part of the page, the wall's loading
- * state holds the place, out of sight. In view, it could be a badge: a wall's place, then a badge's, would make the
- * page jump under the visitor's eyes, so nothing shows until the testimonials arrive.
+ * The code copied since October 2026 names the widget's type, so its loading state holds the right place anywhere.
+ * An older code does not: below the visible part of the page, the wall's loading state holds the place, out of
+ * sight. In view, it could be a badge: a wall's place, then a badge's, would make the page jump under the visitor's
+ * eyes, so nothing shows until the testimonials arrive.
  */
 const isBelowTheFold = (host: HTMLElement) => host.getBoundingClientRect().top >= window.innerHeight;
+
+const readTypeHint = (host: HTMLElement): WidgetType | null =>
+  WIDGET_TYPES.find((type) => type === host.getAttribute(TYPE_HINT_ATTRIBUTE)?.trim()) ?? null;
+
+const loadingTypeFor = (host: HTMLElement): WidgetType | null =>
+  readTypeHint(host) ?? (isBelowTheFold(host) ? "wall" : null);
 
 /** A widget with nothing validated to show stays invisible: an empty box never reaches a sales page. */
 const mountWidget = (host: HTMLElement, widgetId: string, { origin }: MountEnvironment) => {
@@ -32,7 +39,8 @@ const mountWidget = (host: HTMLElement, widgetId: string, { origin }: MountEnvir
   const linkColor = readLinkColor(host);
   const shadow = host.attachShadow({ mode: "open" });
   const options = { host, linkColor };
-  let rendered: RenderedWidget | null = isBelowTheFold(host) ? renderLoading(shadow, "wall", options) : null;
+  const loadingType = loadingTypeFor(host);
+  let rendered: RenderedWidget | null = loadingType ? renderLoading(shadow, loadingType, options) : null;
 
   void loadWidgetPayload(origin, widgetId).then((payload) => {
     rendered?.destroy();

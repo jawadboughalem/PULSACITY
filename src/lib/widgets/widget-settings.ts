@@ -58,8 +58,19 @@ const storedSettingsSchema = z.object({
 export const resolveWidgetSettings = (stored: WidgetSettings | null | undefined): ResolvedWidgetSettings =>
   storedSettingsSchema.parse(stored ?? {});
 
+/** The creator's name for a widget, for their list only. */
+export const MAX_WIDGET_NAME_LENGTH = 80;
+
+const widgetNameSchema = z
+  .string()
+  .trim()
+  .max(MAX_WIDGET_NAME_LENGTH)
+  .nullable()
+  .transform((name) => (name ? name : null));
+
 /** Everything the editor of maquette 6 changes, saved as a whole on each change. */
 export const widgetEditSchema = z.object({
+  name: widgetNameSchema,
   type: z.enum(WIDGET_TYPES),
   productId: z.uuid().nullable(),
   theme: z.enum(WIDGET_THEMES),
@@ -69,23 +80,37 @@ export const widgetEditSchema = z.object({
   showRating: z.boolean(),
   showDate: z.boolean(),
   hidePoweredBy: z.boolean(),
+  cardStyle: z.enum(WIDGET_CARD_STYLES),
 });
 
-export type WidgetEdit = z.infer<typeof widgetEditSchema>;
+export type WidgetEdit = z.output<typeof widgetEditSchema>;
 
 export type EditableWidget = WidgetEdit & { id: string };
 
+/** The settings column of an edit: what the public JSON reads. */
+export const toWidgetSettings = (edit: WidgetEdit): ResolvedWidgetSettings => ({
+  theme: edit.theme,
+  accentColor: edit.accentColor,
+  maxItems: edit.maxItems,
+  showPhoto: edit.showPhoto,
+  showRating: edit.showRating,
+  showDate: edit.showDate,
+  hidePoweredBy: edit.hidePoweredBy,
+  cardStyle: edit.cardStyle,
+});
+
 export const toEditableWidget = (widget: {
   id: string;
+  name: string | null;
   type: WidgetType;
   productId: string | null;
   settings: WidgetSettings;
 }): EditableWidget => {
-  const { theme, accentColor, maxItems, showPhoto, showRating, showDate, hidePoweredBy } = resolveWidgetSettings(
-    widget.settings,
-  );
+  const { theme, accentColor, maxItems, showPhoto, showRating, showDate, hidePoweredBy, cardStyle } =
+    resolveWidgetSettings(widget.settings);
   return {
     id: widget.id,
+    name: widget.name,
     type: widget.type,
     productId: widget.productId,
     theme,
@@ -95,5 +120,6 @@ export const toEditableWidget = (widget: {
     showRating,
     showDate,
     hidePoweredBy,
+    cardStyle,
   };
 };
