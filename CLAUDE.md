@@ -89,6 +89,8 @@ compose.yaml                  # Postgres local
 | essentiel | 9 €/mois, 90 €/an | illimité | illimité | illimité | obligatoire |
 | pro | 19 €/mois, 190 €/an | illimité | illimité | illimité | retirable |
 
+Prix TVA comprise : le montant affiché est celui que le créateur paie (`docs-internes/decision_tarifs.md`).
+
 Dépasser une limite ne supprime jamais de données : on bloque l'ajout et on propose de passer au plan supérieur. La limite de témoignages compte les témoignages validés : au-delà, les nouveaux arrivent et restent en attente.
 
 ## Design system (application et site)

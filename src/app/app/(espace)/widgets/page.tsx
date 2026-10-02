@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Widgets · PULSACITY",
 };
 
-const formatMonthlyPrice = (cents: number) => `${new Intl.NumberFormat("fr-FR").format(cents / 100)} € HT par mois`;
+const formatMonthlyPrice = (cents: number) => `${new Intl.NumberFormat("fr-FR").format(cents / 100)} € par mois`;
 
 const WidgetsPage = async () => {
   const { space } = await getCurrentSpace();

@@ -9,6 +9,7 @@ export type Limit = number | typeof UNLIMITED;
 export type Plan = {
   id: PlanId;
   name: string;
+  /** What the creator pays, VAT included (docs-internes/decision_tarifs.md). */
   priceCents: { monthly: number; yearly: number };
   limits: {
     testimonials: Limit;
