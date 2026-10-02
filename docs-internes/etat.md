@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 1er octobre 2026, avec la PR #20 : le lot 5 (widget) est construit, sa recette reste à faire (`docs-internes/recette/lot-5-widget.md`). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 2 octobre 2026, avec la PR #21 : le lot 5 (widget) est en ligne et vérifié sur une vraie page Systeme.io ; la PR #21 reproduit les maquettes livrées par Design le 2 octobre (`docs-internes/recette/lot-5-widget-suite.md`). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -8,7 +8,7 @@ Mis à jour le 1er octobre 2026, avec la PR #20 : le lot 5 (widget) est construi
 - Inscription, création de l'espace, onboarding des formations, page publique de collecte `/t/[espace]` et `/t/[espace]/[offre]` (PR #12).
 - Espace du créateur, maquette 4 : accueil, témoignages (liste, filtres, fiche, « Valider », « Masquer », « Mettre en avant », texte affiché, suppression définitive). Identité v2 : logo, favicon, micro-animations (PR #15).
 - Ajout manuel (m15), import CSV (m16) et page Offres (m17), avec les corrections de la recette du lot 4, recettés sur l'aperçu (PR #19).
-- Widget, maquettes 2 et 6 : `w.js` (mur, carrousel, badge), JSON public `/api/widget/[id]` en cache à la périphérie, pages Widgets et éditeur avec aperçu en direct, guide « Coller dans Systeme.io » (PR #20).
+- Widget, maquettes 2 et 6 : `w.js` (mur, carrousel, badge), JSON public `/api/widget/[id]` en cache à la périphérie, pages Widgets et éditeur avec aperçu en direct, guide « Coller dans Systeme.io » (PR #20). Vérifié le 2 octobre sur une vraie page Systeme.io.
 - Trois environnements : local, recette sur chaque aperçu Vercel, migrations de production lancées à chaque fusion et attendues par Vercel avant la mise en ligne (PR #16).
 
 ## Pas encore construit
@@ -34,9 +34,21 @@ Mis à jour le 1er octobre 2026, avec la PR #20 : le lot 5 (widget) est construi
 - Trois remarques, corrigées dans la PR #20 : l'avertissement de couleur en thème sombre proposait Encre et poussait le sélecteur de thème ; les initiales du badge se coupaient ; à 360 px, dix points du carrousel touchaient les flèches. Contre-recette (prompt 3 bis) : 4 points sur 4.
 - Remarque de la contre-recette, corrigée aussi : pendant le défilement lancé par une flèche, le compteur du carrousel revenait à l'avis de départ avant d'afficher le suivant.
 
+## Vérification du lot 5 en production (2 octobre)
+
+- Prompts 4 à 6 de `lot-5-widget.md`, sur une page de test Systeme.io : le mur, le carrousel et le badge s'affichent, et un changement de type arrive sur la page en une minute. « Sur une page depuis le 2 oct. 2026 » et l'étape « Coller le widget » de l'accueil se sont cochés.
+- Le compte de test n'avait qu'un avis : le défilement du carrousel, ses points et « Voir les autres avis » restent à voir sur la vraie page (prompt 4 de `lot-5-widget-suite.md`).
+- Styles agressifs collés dans un autre élément « Code HTML » : la page Systeme.io est abîmée, le widget reste intact. Systeme.io n'isole pas les éléments, le test est donc probant.
+- PageSpeed Insights, page avec et sans widget : performances 100 et 96 sur mobile, 95 et 91 sur ordinateur, CLS 0 partout. Aucun effet mesurable du widget ; le temps de blocage vient du code de Systeme.io.
+- À savoir, sans rien à corriger chez nous :
+  - sur téléphone, le badge flottant « Réalisé avec systeme.io » de l'offre gratuite de Systeme.io couvre le bas de la page, donc « Propulsé par » quand le widget est le dernier élément. Une vraie page de vente a du contenu après ;
+  - Systeme.io centre le contenu de la page : « Propulsé par » passe alors sous le badge, comme m2 le prévoit pour une page centrée ;
+  - sans couleur d'accent dans l'espace, les étoiles prennent la couleur des liens de la page (bleu sur une page vierge).
+- Les maquettes du 2 octobre (m18, éditeur mobile, chargements, nom, coins des cartes) sont construites dans la PR #21.
+
 ## À faire
 
-1. Recette du lot 5 : fusion de la PR #20, puis prompts 4 à 6 de `docs-internes/recette/lot-5-widget.md` sur une vraie page Systeme.io de test.
+1. Recette de la PR #21 : prompts 1 à 3 de `docs-internes/recette/lot-5-widget-suite.md` sur l'aperçu, puis, après la fusion, le prompt 4 sur la page Systeme.io de test.
 2. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 3. Sentry, avant le lancement.
 4. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
@@ -75,11 +87,25 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Initiales du badge superposées de −8 px, la valeur basse de la charte (−8 à −10), pour qu'elles se lisent en entier.
 - Carrousel : chaque point garde sa zone de 44 × 44 (la charte). Quand ils ne tiennent plus entre les flèches, « 2 sur 10 » les remplace.
 
+## Décisions du 2 octobre (suite du lot 5, maquettes de Design)
+
+- Le choix d'une offre dans un widget reste ouvert à tous les plans (m18 le réservait au plan Essentiel). Raisons :
+  - le plan Gratuit doit montrer la promesse sur une vraie page de vente : un widget qui mélange les avis de plusieurs offres convainc moins, et un créateur déçu ne passe pas au payant, il part ;
+  - le passage au payant a déjà ses déclencheurs, qui grandissent avec l'usage : 15 témoignages validés (les suivants attendent, visibles dans l'espace), 20 demandes par mois, un seul widget (deux offres, deux pages, donc deux widgets) ;
+  - chaque widget gratuit affiché porte « Propulsé par PULSACITY » et son lien de parrainage : plus il convainc, plus il amène de créateurs ;
+  - une règle de moins, c'est une page Tarifs plus claire, et pas de cas à gérer quand un créateur repasse au plan Gratuit.
+  L'encadré du plan Gratuit (m18) dit donc « vous créez autant de widgets que vous voulez : un pour chaque page de vente », sans la mention de l'offre.
+- Le code à coller nomme le type du widget (`data-pulsacity-type`), toujours sur une ligne. `w.js` montre le squelette de ce type pendant le chargement, même dans le premier écran, comme les nouvelles maquettes m2. Changer le type ensuite ne demande pas de recoller le code : seul le squelette garde l'ancien type le temps du chargement. Un code collé avant le 2 octobre garde l'ancien comportement.
+- Nom du widget : nouvelle colonne facultative `widgets.name` (migration 0005), 80 caractères au plus, jamais montrée aux visiteurs. Vide, le nom reste « Mur · Toutes les offres ».
+- Coins des cartes : « Droits » (2 px, par défaut) ou « Arrondis » (16 px), dans `settings.cardStyle`.
+- Éditeur sur téléphone : onglets « Réglages » et « Aperçu », puis « Installer le widget », l'e-mail d'abord. L'aperçu dessine la page à 360 px au moins, réduite au cadre : plus étroit, les deux colonnes du mur coupaient les noms. Le guide a sa propre page (`/app/widgets/[id]/guide`).
+- L'e-mail du code contient maintenant le guide en quatre étapes, du même texte que l'éditeur, comme l'annonce m6 mobile (« Il part à …, avec le guide »).
+
 ## Questions ouvertes
 
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
-- « Aide et contact » pointe vers `/aide`, qui n'existe pas : il manque l'adresse de support.
-- Nom d'un widget : m6 affiche « Avis de la page Programme 30 jours », mais le modèle de données n'a pas de nom. Il est dérivé du type et de l'offre (« Mur · Toutes les offres »). Un champ demanderait une colonne : à décider avec Design (prompt 7 de la recette du lot 5).
-- Sans maquette : la liste des widgets, l'éditeur en mobile, l'état « Code copié », le chargement du carrousel et du badge. Construits dans le style de m6 et m17, à faire dessiner (prompt 7).
-- Arrondi des cartes du widget : `settings.cardStyle` (anguleux par défaut, comme m2) existe, sans réglage dans l'éditeur, que m6 ne prévoit pas.
+- Adresse de support : « Aide et contact » pointe vers `/aide`, qui n'existe pas, et la page du guide sur mobile (« Bloquée à une étape ? Écrivez-nous ») l'attend aussi : sa ligne n'est pas affichée en attendant.
+- m6 mobile, « Aperçu » : la maquette dit que les avis passent en une colonne sur mobile, alors que m2 et la charte en montrent deux. Le widget garde deux colonnes, la phrase n'est pas reprise. À aligner par Design.
+- m2 mobile, chargement du carrousel : la maquette groupe les deux flèches au centre, alors que le carrousel chargé les met de part et d'autre des points. Le squelette suit le carrousel chargé, pour que rien ne bouge à l'arrivée des avis.
+- « 9 € HT par mois » (m18) : le prix du plan Essentiel est-il bien hors taxes ? À confirmer avant la page Tarifs.
