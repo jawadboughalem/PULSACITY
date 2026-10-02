@@ -33,6 +33,7 @@ const variable = (root: HTMLElement, name: string) => root.style.getPropertyValu
 afterEach(() => {
   document.body.innerHTML = "";
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 describe("the wall", () => {
@@ -116,6 +117,39 @@ describe("the wall", () => {
   it("takes the desktop sizes from 1024 px wide", () => {
     expect(render(SAMPLE_PAYLOAD, { width: 1200 }).root.classList.contains("wide")).toBe(true);
     expect(render(SAMPLE_PAYLOAD, { width: 342 }).root.classList.contains("wide")).toBe(false);
+  });
+
+  it("takes one column under 340 px wide, and two from 340 px, as Design set on October 2", () => {
+    const columns = (width: number) => render(SAMPLE_PAYLOAD, { width }).root.classList.contains("one-column");
+
+    expect(columns(320)).toBe(true);
+    expect(columns(339)).toBe(true);
+    expect(columns(340)).toBe(false);
+    expect(columns(1200)).toBe(false);
+    expect(columns(0)).toBe(false);
+  });
+
+  it("follows a change of width: a phone turned sideways gets its two columns back", () => {
+    let width = 320;
+    const observers: Array<() => void> = [];
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(callback: () => void) {
+          observers.push(callback);
+        }
+        observe() {}
+        disconnect() {}
+      },
+    );
+    const host = createHost();
+    Object.defineProperty(host, "offsetWidth", { configurable: true, get: () => width });
+    const { root } = renderWidget(host.attachShadow({ mode: "open" }), SAMPLE_PAYLOAD, { host, linkColor: null });
+
+    expect(root.classList.contains("one-column")).toBe(true);
+    width = 640;
+    for (const observer of observers) observer();
+    expect(root.classList.contains("one-column")).toBe(false);
   });
 
   it("writes a testimonial as text, never as markup", () => {
@@ -350,6 +384,14 @@ describe("the loading state", () => {
     expect(root.querySelectorAll(".sk-card")).toHaveLength(4);
   });
 
+  it("holds the place of a one-column wall on a narrow page, like the wall that follows", () => {
+    const host = createHost({ width: 320 });
+
+    const { root } = renderLoading(host.attachShadow({ mode: "open" }), "wall", { host, linkColor: null });
+
+    expect(root.classList.contains("one-column")).toBe(true);
+  });
+
   it("holds the place of a carousel with its cards, its arrows and its points, as in maquette 2", () => {
     const wide = createHost({ width: 1200 });
     const narrow = createHost({ width: 360 });
@@ -362,6 +404,8 @@ describe("the loading state", () => {
     expect(narrowRoot.querySelectorAll(".sk-slide")).toHaveLength(1);
     expect(wideRoot.querySelectorAll(".sk-arrow")).toHaveLength(2);
     expect(wideRoot.querySelectorAll(".sk-dot")).toHaveLength(3);
+    expect(narrowRoot.querySelectorAll(".sk-arrow")).toHaveLength(2);
+    expect(narrowRoot.querySelectorAll(".sk-dot")).toHaveLength(4);
   });
 
   it("holds the place of a badge with a pill of three faces, its status only read aloud", () => {

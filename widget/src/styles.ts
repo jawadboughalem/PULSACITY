@@ -118,6 +118,7 @@ export const WIDGET_CSS = `
   margin-bottom: calc(var(--gap) * -1);
 }
 .wide .grid { --gap: 24px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.one-column .grid { grid-template-columns: minmax(0, 1fr); }
 .wall .avatar { width: 32px; height: 32px; font-size: 12px; }
 .wall .name, .wall .quote { font-size: 14px; line-height: 20px; }
 .wall .meta, .wall .date { font-size: 12px; line-height: 16px; }
@@ -234,6 +235,7 @@ a.badge:hover .badge-text { text-decoration: underline; text-underline-offset: 3
 .wide .summary-bar { width: 220px; height: 20px; margin-left: auto; }
 .sk-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
 .wide .sk-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.one-column .sk-grid { grid-template-columns: minmax(0, 1fr); }
 .sk-column { display: flex; flex-direction: column; gap: 12px; }
 .wide .sk-column { gap: 24px; }
 .sk-card { display: flex; flex-direction: column; gap: 16px; padding: 16px; border: 1px solid var(--card-line); border-radius: 2px; background: var(--card-bg); }
