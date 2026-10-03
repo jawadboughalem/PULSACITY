@@ -5,6 +5,7 @@ import {
   canAddTestimonial,
   canCreateWidget,
   canHideBadge,
+  canRequestManually,
   canSendRequest,
   countTestimonialsLeft,
 } from "./plans";
@@ -20,21 +21,21 @@ describe("PLANS", () => {
         id: "free",
         name: "Gratuit",
         priceCents: { monthly: 0, yearly: 0 },
-        limits: { testimonials: 15, monthlyRequests: 20, widgets: 1 },
+        limits: { testimonials: 15, monthlyRequests: 20, widgets: 1, manualRequestsPerDay: 20 },
         badgeRemovable: false,
       },
       essentiel: {
         id: "essentiel",
         name: "Essentiel",
         priceCents: { monthly: 999, yearly: 9900 },
-        limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED },
+        limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED, manualRequestsPerDay: 20 },
         badgeRemovable: false,
       },
       pro: {
         id: "pro",
         name: "Pro",
         priceCents: { monthly: 1999, yearly: 19900 },
-        limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED },
+        limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED, manualRequestsPerDay: 20 },
         badgeRemovable: true,
       },
     });
@@ -99,5 +100,14 @@ describe("canHideBadge", () => {
     expect(canHideBadge(free)).toBe(false);
     expect(canHideBadge(essentiel)).toBe(false);
     expect(canHideBadge(pro)).toBe(true);
+  });
+});
+
+describe("canRequestManually", () => {
+  it("allows 20 requests typed in by hand a day, on every plan", () => {
+    for (const space of [free, essentiel, pro]) {
+      expect(canRequestManually(space, 19)).toBe(true);
+      expect(canRequestManually(space, 20)).toBe(false);
+    }
   });
 });

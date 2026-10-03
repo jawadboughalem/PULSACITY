@@ -189,8 +189,8 @@ await sql.begin(async (tx) => {
         ${firstName}, ${lastName})
       returning id`;
     const [purchase] = await tx`
-      insert into purchases (space_id, customer_id, product_id, source, purchased_at)
-      values (${space.id}, ${customer.id}, ${productIds[product]}, 'manual', ${daysAgo(saleAge)})
+      insert into purchases (space_id, customer_id, product_id, source, purchased_at, created_at)
+      values (${space.id}, ${customer.id}, ${productIds[product]}, 'manual', ${daysAgo(saleAge)}, ${daysAgo(saleAge)})
       returning id`;
     const isSent = requestAge !== null;
     const sentAt = isSent ? sentThisMonth(requestAge) : null;

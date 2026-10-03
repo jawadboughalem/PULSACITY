@@ -77,7 +77,7 @@ compose.yaml                  # Postgres local
 - `product_refs` : id, productId, connectionId, externalRef — relie une offre à son identifiant dans chaque connecteur
 - `external_products` : id, connectionId, externalRef, name, priceCents, currency, firstSeenAt, eventType (vente ou inscription, la première fois) — les produits vus par un connecteur ; « à associer » tant qu'aucun product_ref ne les relie à une offre
 - `customers` : id, spaceId, email, firstName, lastName, unsubscribedAt, createdAt (unique spaceId + email)
-- `purchases` : id, spaceId, customerId, productId, connectionId (nullable), source (connector|manual|csv), eventType, externalRef, purchasedAt (unique connectionId + externalRef : une vente reçue deux fois est enregistrée une fois)
+- `purchases` : id, spaceId, customerId, productId, connectionId (nullable), source (connector|manual|csv), eventType, externalRef, purchasedAt, createdAt (unique connectionId + externalRef : une vente reçue deux fois est enregistrée une fois ; `manual` : « Demander un avis »)
 - `review_requests` : id, purchaseId, token (unique), scheduledAt, sentAt, reminderScheduledAt, reminderSentAt, completedAt, cancelledAt, failedAt, status (scheduled|sent|reminded|completed|cancelled|failed), failedAttempts
 - `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body (original, jamais modifié), displayBody (texte affiché, null = original), displayEditedAt, status (pending|approved|hidden), source (form|manual|csv), consentAt, consentText, featured (bool), createdAt
 - `widgets` : id, spaceId, name (nullable, pour le créateur seul), type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur d'accent, nombre max, afficher photo/note/date, masquer « Propulsé par » (Pro), style des cartes), firstLoadedAt (premier affichage sur une page), createdAt
@@ -94,6 +94,8 @@ compose.yaml                  # Postgres local
 | pro | 19,99 €/mois, 199 €/an | illimité | illimité | illimité | retirable |
 
 Prix TVA comprise : le montant affiché est celui que le créateur paie (`docs-internes/decision_tarifs.md`).
+
+Sur tous les plans : 20 demandes saisies à la main par jour (« Demander un avis », `manualRequestsPerDay`), contre les envois en masse. Elles comptent aussi dans les demandes du mois.
 
 Dépasser une limite ne supprime jamais de données : on bloque l'ajout et on propose de passer au plan supérieur. La limite de témoignages compte les témoignages validés : au-delà, les nouveaux arrivent et restent en attente.
 

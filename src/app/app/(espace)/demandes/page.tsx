@@ -11,12 +11,15 @@ import {
   readRequestStatusFilter,
 } from "@/components/requests/describe-request";
 import { RequestActions } from "@/components/requests/RequestActions";
+import { RequestReviewDialog } from "@/components/requests/RequestReviewDialog";
 import { RequestStatusFilter } from "@/components/requests/RequestStatusFilter";
 import { buildSpaceAccount } from "@/components/space/build-space-account";
 import { SpaceMobileHeader } from "@/components/space/SpaceMobileHeader";
 import { SpacePage } from "@/components/space/SpacePage";
 import {
+  ASK_FOR_REVIEW_PARAMETER,
   BILLING_HREF,
+  READY_REQUEST_PARAMETER,
   REQUESTS_SECTION_HREF,
   SYSTEME_CONNECTOR_HREF,
   TESTIMONIALS_SECTION_HREF,
@@ -29,14 +32,19 @@ import { canSendRequest, getPlan } from "@/config/plans";
 import { getDb } from "@/db";
 import { buildCollectionUrl } from "@/lib/app-url";
 import { cn } from "@/lib/cn";
+import { endSentence } from "@/lib/french/typography";
 import { findConnection } from "@/lib/connectors/connections";
-import { startOfNextParisMonth } from "@/lib/dates/paris-date";
+import { formatDayMonth } from "@/lib/dates/format-french-date";
+import { startOfNextParisMonth, toParisIsoDay } from "@/lib/dates/paris-date";
 import {
   REQUESTS_PAGE_SIZE,
   type ReviewRequestStatus,
   countSpaceRequests,
   listSpaceRequests,
+  loadReadyRequest,
 } from "@/lib/requests/list-space-requests";
+import { REMINDER_DELAY_DAYS } from "@/lib/requests/send-review-emails";
+import { listAssociableProducts } from "@/lib/spaces/list-space-products";
 import { getCurrentSpace } from "@/lib/spaces/get-current-space";
 
 export const metadata: Metadata = {
@@ -45,6 +53,10 @@ export const metadata: Metadata = {
 
 /** The address parameter of « Afficher les … suivantes »: how many rows the list shows. */
 const SHOWN_PARAMETER = "nombre";
+
+const readParameter = (value: string | string[] | undefined): string | null => (Array.isArray(value) ? value[0] : value) ?? null;
+
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 const readShownCount = (value: string | string[] | undefined): number => {
   const shown = Number(Array.isArray(value) ? value[0] : value);
@@ -83,10 +95,12 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
   const shownCount = readShownCount(search[SHOWN_PARAMETER]);
   const database = getDb();
   const now = new Date();
-  const [counts, list, connection] = await Promise.all([
+  const [counts, list, connection, offers, readyRequest] = await Promise.all([
     countSpaceRequests(database, space.id, now),
     listSpaceRequests(database, space.id, { status, limit: shownCount }),
     findConnection(database, space.id, "systeme"),
+    listAssociableProducts(database, space.id),
+    loadReadyRequest(database, space.id, readParameter(search[READY_REQUEST_PARAMETER])),
   ]);
   const plan = getPlan(space.plan);
   const monthlyRequests = plan.limits.monthlyRequests;
@@ -112,13 +126,53 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
     <>
       <SpaceMobileHeader account={buildSpaceAccount(signedInUser, space)} />
       <SpacePage>
-        <header className="flex flex-col gap-2">
-          <h1 className="font-serif text-h1 font-medium">Demandes</h1>
-          <p className="max-w-text text-body text-slate-600">
-            Une demande d&apos;avis part après chaque vente, au délai réglé dans Offres. Vous pouvez l&apos;envoyer plus tôt
-            ou l&apos;annuler.
-          </p>
-        </header>
+        {/* m20: the confirmation sits above the title on a phone, under it on a desktop. */}
+        <div className="flex flex-col-reverse gap-5 desktop:flex-col">
+          <header className="flex flex-col gap-5 desktop:flex-row desktop:items-start desktop:justify-between">
+            <div className="flex flex-col gap-2">
+              <h1 className="font-serif text-h1 font-medium">Demandes</h1>
+              <p className="max-w-text text-body text-slate-600">
+                Une demande d&apos;avis part après chaque vente, au délai réglé dans Offres. Vous pouvez l&apos;envoyer plus
+                tôt ou l&apos;annuler.
+              </p>
+            </div>
+            <RequestReviewDialog
+              spaceName={space.name}
+              offers={offers.map(({ id, name, slug }) => ({ id, name, slug }))}
+              collectionUrl={buildCollectionUrl(space.slug)}
+              today={toParisIsoDay(now)}
+              monthlyLimit={
+                monthlyRequests !== null && heldUntil
+                  ? { count: monthlyRequests, month: ofMonth(now), nextMonth: MONTH.format(heldUntil) }
+                  : null
+              }
+              dailyLimit={plan.limits.manualRequestsPerDay}
+              isOpenAtFirst={readParameter(search[ASK_FOR_REVIEW_PARAMETER]) !== null}
+            />
+          </header>
+          {readyRequest?.status === "scheduled" ? (
+            <section role="status" className="flex items-start gap-4 bg-success-surface p-4 desktop:p-5">
+              <Icon name="valid" size={24} className="shrink-0 text-success" />
+              <div className="flex min-w-[0] flex-1 flex-col gap-1">
+                <p className="text-body font-semibold text-success">
+                  {endSentence(`Demande prête pour ${readyRequest.customerName}`)}
+                </p>
+                <p className="text-small">
+                  {heldUntil && readyRequest.scheduledAt < heldUntil
+                    ? `Elle partira le 1er ${MONTH.format(heldUntil)}, au premier envoi du mois, à ${readyRequest.email}. Sans réponse, une relance partira quatre jours plus tard.`
+                    : `Elle part au prochain envoi, dans les minutes qui suivent, à ${readyRequest.email}. ${endSentence(`Sans réponse, une relance partira le ${formatDayMonth(new Date(Math.max(now.getTime(), readyRequest.scheduledAt.getTime()) + REMINDER_DELAY_DAYS * DAY_MS))}`)}`}
+                </p>
+              </div>
+              <Link
+                href={REQUESTS_SECTION_HREF}
+                aria-label="Fermer le message"
+                className="-m-2 flex size-[44px] shrink-0 items-center justify-center focus-visible:outline-2 focus-visible:outline-ink-900"
+              >
+                <Icon name="close" size={20} />
+              </Link>
+            </section>
+          ) : null}
+        </div>
 
         {counts.all === 0 ? (
           <section className="flex flex-col gap-4 bg-paper-100 p-5 desktop:p-7">
