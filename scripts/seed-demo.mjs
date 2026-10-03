@@ -68,17 +68,21 @@ const TESTIMONIALS = [
 ];
 
 const SALES = [
-  // first name, last name, product, days since the sale, days since the request, answered, reminder in days
-  ["Alice", "Moreau", "programme", 20, 6, true, null],
-  ["Paul", "Girard", "suivi", 18, 4, true, null],
-  ["Léa", "Roux", "programme", 16, 2, true, null],
+  // first name, last name, product, days since the sale, days since the request, answered, reminder in days, other state
+  // An answered sale is the customer who left the testimonial of the same name: « Voir l'avis » leads to it.
+  ["Sophie", "Durand", "programme", 20, 6, true, null],
+  ["Nadia", "Bernard", "suivi", 18, 5, true, null],
+  ["Camille", "Robert", "programme", 16, 2, true, null],
   ["Noé", "Fabre", "atelier", 15, 1, false, 3],
   ["Rose", "Blanc", "programme", 17, 3, false, 1],
   ["Adam", "Henry", "suivi", 19, 5, false, null],
   ["Zoé", "Morel", "programme", 21, 7, false, null],
   ["Victor", "Leroy", "atelier", 22, 8, false, null],
+  ["Marc", "Dubois", "suivi", 26, 9, false, null, "reminded"],
   ["Julia", "Perrin", "programme", 3, null, false, null],
   ["Oscar", "Garnier", "suivi", 1, null, false, null],
+  ["Margot", "Lambert", "programme", 10, null, false, null, "cancelled"],
+  ["Bruno", "Petit", "atelier", 20, null, false, null, "failed"],
 ];
 
 // Sales received from Systeme.io, in the format captured on September 27, 2026 (docs-internes/connectors/systeme.md).
@@ -178,22 +182,33 @@ await sql.begin(async (tx) => {
         ${authorName === "Camille R."}, ${daysAgo(age)})`;
   }
 
-  for (const [firstName, lastName, product, saleAge, requestAge, isAnswered, reminderIn] of SALES) {
+  for (const [firstName, lastName, product, saleAge, requestAge, isAnswered, reminderIn, state = null] of SALES) {
     const [customer] = await tx`
       insert into customers (space_id, email, first_name, last_name)
-      values (${space.id}, ${`${firstName}.${lastName}@exemple.fr`.toLowerCase()}, ${firstName}, ${lastName})
+      values (${space.id}, ${`${firstName}.${lastName}@exemple.fr`.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase()},
+        ${firstName}, ${lastName})
       returning id`;
     const [purchase] = await tx`
       insert into purchases (space_id, customer_id, product_id, source, purchased_at)
       values (${space.id}, ${customer.id}, ${productIds[product]}, 'manual', ${daysAgo(saleAge)})
       returning id`;
     const isSent = requestAge !== null;
-    const status = isAnswered ? "completed" : isSent ? "sent" : "scheduled";
+    const sentAt = isSent ? sentThisMonth(requestAge) : null;
+    const status = state ?? (isAnswered ? "completed" : isSent ? "sent" : "scheduled");
+    // A reminded request got its reminder four days after the request, or now if that day is still to come.
+    const remindedAt = state === "reminded" ? new Date(Math.min(now, sentAt.getTime() + 4 * DAY_MS)) : null;
     await tx`
-      insert into review_requests (purchase_id, token, scheduled_at, sent_at, reminder_scheduled_at, completed_at, status)
-      values (${purchase.id}, ${randomUUID()}, ${isSent ? sentThisMonth(requestAge) : daysAgo(saleAge - 14)},
-        ${isSent ? sentThisMonth(requestAge) : null}, ${reminderIn === null ? null : daysAgo(-reminderIn)},
-        ${isAnswered ? sentThisMonth(requestAge - 1) : null}, ${status})`;
+      insert into review_requests (purchase_id, token, scheduled_at, sent_at, reminder_scheduled_at, reminder_sent_at,
+        completed_at, cancelled_at, failed_at, failed_attempts, status)
+      values (${purchase.id}, ${randomUUID()}, ${sentAt ?? daysAgo(saleAge - 14)}, ${sentAt},
+        ${remindedAt ?? (reminderIn === null ? null : daysAgo(-reminderIn))}, ${remindedAt},
+        ${isAnswered ? sentThisMonth(requestAge - 1) : null}, ${state === "cancelled" ? daysAgo(2) : null},
+        ${state === "failed" ? daysAgo(1) : null}, ${state === "failed" ? 3 : 0}, ${status})`;
+    if (isAnswered) {
+      await tx`
+        update testimonials set customer_id = ${customer.id}
+        where space_id = ${space.id} and author_name = ${`${firstName} ${lastName[0]}.`}`;
+    }
   }
 
   const signingSecret = randomBytes(16).toString("hex");

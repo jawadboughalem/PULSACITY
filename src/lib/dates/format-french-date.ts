@@ -11,11 +11,14 @@ const DAY_MONTH_YEAR = new Intl.DateTimeFormat("fr-FR", {
 
 const HOUR_MINUTE = new Intl.DateTimeFormat("fr-FR", { timeZone: PARIS, hour: "2-digit", minute: "2-digit" });
 
-/** « 27 sept. » */
-export const formatDayMonth = (date: Date): string => DAY_MONTH.format(date);
+/** French writes the first day of a month « 1er ». */
+const withFirstDay = (formatted: string): string => formatted.replace(/^1 /, "1er ");
+
+/** « 27 sept. », « 1er oct. » */
+export const formatDayMonth = (date: Date): string => withFirstDay(DAY_MONTH.format(date));
 
 /** « 26 sept. 2026 » */
-export const formatDayMonthYear = (date: Date): string => DAY_MONTH_YEAR.format(date);
+export const formatDayMonthYear = (date: Date): string => withFirstDay(DAY_MONTH_YEAR.format(date));
 
 /** « 26 sept. 2026 à 21:47 » */
 export const formatDateTime = (date: Date): string => `${DAY_MONTH_YEAR.format(date)} à ${HOUR_MINUTE.format(date)}`;

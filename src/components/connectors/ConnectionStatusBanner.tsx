@@ -16,6 +16,8 @@ type ConnectionStatusBannerProps = {
   problemSince: string | null;
   signingSecret: string | null;
   stepTwoId: string;
+  /** Sales signed with another key, waiting for « Rejouer » once the connection works again. */
+  setAsideCount: number;
 };
 
 export const CHECK_HINT = "Toujours rien reçu. Vérifiez les étapes 1 et 2, puis faites un achat test.";
@@ -28,9 +30,33 @@ export const ConnectionStatusBanner = ({
   problemSince,
   signingSecret,
   stepTwoId,
+  setAsideCount,
 }: ConnectionStatusBannerProps) => {
   const { check, isChecking, hasChecked } = useConnectionCheck(status === "pending");
   const { isCopied, handleCopy } = useCopyLink(signingSecret ?? "");
+
+  if (status === "active" && setAsideCount > 0) {
+    const isOne = setAsideCount === 1;
+    return (
+      <div role="status" className="flex items-start gap-4 bg-attention-surface p-4 desktop:p-5">
+        <Icon name="alert" size={24} className="shrink-0 text-attention" />
+        <div className="flex flex-col gap-1">
+          <p className="text-body font-semibold text-attention">
+            {isOne ? "1 vente gardée de côté" : `${setAsideCount} ventes gardées de côté`}
+          </p>
+          <p className="text-small">
+            {isOne ? "Elle est arrivée avec une autre clé secrète. Rien n'est perdu" : "Elles sont arrivées avec une autre clé secrète. Rien n'est perdu"}
+            <span className="desktop:hidden">.</span>
+            <span className="hidden desktop:inline">
+              {isOne
+                ? " : corrigez la clé, puis rejouez-la depuis les événements."
+                : " : corrigez la clé, puis rejouez-les depuis les événements."}
+            </span>
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (status === "active") {
     return (

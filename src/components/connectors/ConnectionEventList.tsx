@@ -14,9 +14,17 @@ const TONE_CLASSES = {
   error: "bg-error-surface text-error",
 } as const satisfies Record<EventTone, string>;
 
+/** m5: what went wrong in red, a sale put aside to replay in amber, the rest quiet. */
+const DETAIL_CLASSES = {
+  error: "text-error",
+  "set-aside": "font-medium text-attention",
+  quiet: "text-slate-600",
+} as const;
+
 type RowProps = {
   icon: IconName;
   tone: EventTone;
+  detailTone: keyof typeof DETAIL_CLASSES;
   label: string;
   subject: string;
   detail: string;
@@ -24,7 +32,7 @@ type RowProps = {
   action?: ReactNode;
 };
 
-const EventRow = ({ icon, tone, label, subject, detail, time, action }: RowProps) => (
+const EventRow = ({ icon, tone, detailTone, label, subject, detail, time, action }: RowProps) => (
   <li className="flex items-start gap-4 border-b border-hairline-200 py-4 desktop:items-center">
     <span className={cn("flex size-[40px] shrink-0 items-center justify-center rounded-full", TONE_CLASSES[tone])}>
       <Icon name={icon} size={20} />
@@ -35,7 +43,7 @@ const EventRow = ({ icon, tone, label, subject, detail, time, action }: RowProps
           <strong className="font-semibold">{label}</strong>
           {subject ? ` · ${subject}` : ""}
         </p>
-        <p className={cn("text-small", tone === "error" ? "text-error" : "text-slate-600")}>{detail}</p>
+        <p className={cn("text-small", DETAIL_CLASSES[detailTone])}>{detail}</p>
         <p className="text-small text-slate-600 desktop:hidden">{time}</p>
       </div>
       {action}
@@ -56,12 +64,15 @@ type ConnectionEventListProps = {
 export const ConnectionEventList = ({ events, connectorName, firstEventAt, now }: ConnectionEventListProps) => (
   <ul className="flex flex-col border-t border-ink-900">
     {events.map((event) => {
-      const described = describeConnectionEvent(event);
+      const described = describeConnectionEvent(event, connectorName);
       return (
         <EventRow
           key={event.id}
           icon={described.icon}
           tone={described.tone}
+          detailTone={
+            described.tone === "error" ? "error" : described.tone === "attention" && described.canReplay ? "set-aside" : "quiet"
+          }
           label={described.label}
           subject={described.subject}
           detail={described.detail}
@@ -78,6 +89,7 @@ export const ConnectionEventList = ({ events, connectorName, firstEventAt, now }
       <EventRow
         icon="connection"
         tone="neutral"
+        detailTone="quiet"
         label="Connexion établie"
         subject={connectorName}
         detail="Première information reçue de votre compte"

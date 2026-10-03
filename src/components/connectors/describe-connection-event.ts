@@ -36,9 +36,14 @@ const describeRequest = (request: NonNullable<ConnectionEvent["request"]>): Stat
   };
 };
 
-const describeState = (event: ConnectionEvent): State => {
+const describeState = (event: ConnectionEvent, connectorName: string): State => {
   if (event.error === "invalid-signature") {
-    return { detail: "Clé secrète différente : gardée de côté", tone: "error", icon: "alert", canReplay: true };
+    return {
+      detail: `Clé secrète différente : gardée de côté. Corrigez la clé dans ${connectorName}, puis rejouez la vente.`,
+      tone: "attention",
+      icon: "alert",
+      canReplay: true,
+    };
   }
   if (event.error === "invalid-payload") {
     return { detail: "Contenu illisible : gardé de côté", tone: "error", icon: "alert", canReplay: true };
@@ -67,8 +72,8 @@ const describeState = (event: ConnectionEvent): State => {
 };
 
 /** Maquette 5, « Derniers événements reçus »: a sentence for each event, never its JSON. */
-export const describeConnectionEvent = (event: ConnectionEvent): DescribedEvent => {
-  const { canReplay = false, ...state } = describeState(event);
+export const describeConnectionEvent = (event: ConnectionEvent, connectorName: string): DescribedEvent => {
+  const { canReplay = false, ...state } = describeState(event, connectorName);
   return {
     label: LABELS[event.kind],
     subject: [event.productName, event.customerName].filter(Boolean).join(" · "),

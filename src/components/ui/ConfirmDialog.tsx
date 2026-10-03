@@ -4,13 +4,19 @@ import { useEffect, useId, useRef } from "react";
 import { cn } from "@/lib/cn";
 import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "./button-styles";
 
+/** m5: on a desktop, « Annuler » can be a red link beside the main button; a full button on a phone. */
+const DISCREET_CANCEL_CLASSES =
+  "desktop:h-auto desktop:min-h-[48px] desktop:border-transparent desktop:bg-transparent desktop:px-3 desktop:text-carmine desktop:hover:bg-transparent desktop:hover:text-carmine-dark desktop:hover:underline";
+
 type ConfirmDialogProps = {
   isOpen: boolean;
   title: string;
-  message: string;
+  /** One paragraph, or several. */
+  message: string | string[];
   confirmLabel: string;
   /** « Annuler » unless the confirmation itself cancels something. */
   cancelLabel?: string;
+  isCancelDiscreet?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 };
@@ -21,6 +27,7 @@ export const ConfirmDialog = ({
   message,
   confirmLabel,
   cancelLabel = "Annuler",
+  isCancelDiscreet = false,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) => {
@@ -51,12 +58,18 @@ export const ConfirmDialog = ({
           <h2 id={titleId} className="text-body font-semibold">
             {title}
           </h2>
-          <p id={messageId} className="text-small text-slate-600">
-            {message}
-          </p>
+          <div id={messageId} className="flex flex-col gap-2 text-small text-slate-600">
+            {(Array.isArray(message) ? message : [message]).map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
         </div>
         <div className="flex flex-col-reverse gap-3 desktop:flex-row desktop:justify-end">
-          <button type="button" onClick={onCancel} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
+          <button
+            type="button"
+            onClick={onCancel}
+            className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto", isCancelDiscreet && DISCREET_CANCEL_CLASSES)}
+          >
             {cancelLabel}
           </button>
           <button type="button" onClick={onConfirm} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>

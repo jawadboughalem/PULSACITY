@@ -14,6 +14,7 @@ import {
 } from "@/db/schema";
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
+import { listConnectionEvents, loadConnectionOverview } from "./load-connection-overview";
 import { associateExternalProduct, joinConnectorWaitlist, replayOwnedEvent } from "./manage-connection";
 import { processWebhookEvent } from "./process-webhook-event";
 
@@ -133,6 +134,24 @@ describe("replayOwnedEvent", () => {
 
     expect(await database.select().from(purchases)).toHaveLength(1);
     expect(await database.select().from(reviewRequests)).toHaveLength(1);
+  });
+});
+
+describe("loadConnectionOverview", () => {
+  it("counts the sales put aside until « Rejouer », and names the offer their product is associated with", async () => {
+    await database.insert(productRefs).values({ productId: programmeId, connectionId, externalRef: "price-plan:3456303" });
+    const eventId = await receiveSale({ error: "invalid-signature" });
+    await receiveSale();
+    const [connection] = await database.select().from(connections).where(eq(connections.id, connectionId));
+
+    expect(await loadConnectionOverview(database, connection)).toMatchObject({ setAsideCount: 1, eventCount: 2 });
+    const setAside = await listConnectionEvents(database, connection, { limit: 5, isSetAsideOnly: true });
+    expect(setAside).toEqual([
+      expect.objectContaining({ id: eventId, error: "invalid-signature", productName: "Programme 30 jours" }),
+    ]);
+
+    await replayOwnedEvent(database, userId, eventId);
+    expect(await loadConnectionOverview(database, connection)).toMatchObject({ setAsideCount: 0 });
   });
 });
 

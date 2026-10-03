@@ -2,16 +2,18 @@
 
 import Form from "next/form";
 import { useRef } from "react";
-import { FilterSelect } from "@/components/testimonials/FilterSelect";
-import { REQUEST_STATUS_FILTERS, REQUEST_STATUS_PARAMETER } from "./describe-request";
+import { Icon } from "@/components/ui/Icon";
+import { REQUEST_STATUS_PARAMETER } from "./describe-request";
 
 type RequestStatusFilterProps = {
   action: string;
   value: string;
+  /** « Toutes (55) », « Planifiées (12) »… */
+  options: { value: string; label: string }[];
 };
 
-/** The status of the list, applied as soon as it is chosen. */
-export const RequestStatusFilter = ({ action, value }: RequestStatusFilterProps) => {
+/** m19 on a phone: the status under its label, applied as soon as it is chosen. The chips take over on a desktop. */
+export const RequestStatusFilter = ({ action, value, options }: RequestStatusFilterProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <Form
@@ -25,15 +27,27 @@ export const RequestStatusFilter = ({ action, value }: RequestStatusFilterProps)
           select.disabled = false;
         });
       }}
-      className="flex"
+      className="flex flex-col gap-2 desktop:hidden"
     >
-      <FilterSelect
-        name={REQUEST_STATUS_PARAMETER}
-        label="Statut"
-        value={value}
-        onChange={() => formRef.current?.requestSubmit()}
-        options={[{ value: "", label: "Toutes" }, ...REQUEST_STATUS_FILTERS.map(({ value: option, label }) => ({ value: option, label }))]}
-      />
+      <label htmlFor="request-status" className="text-small font-semibold">
+        Statut
+      </label>
+      <span className="relative flex">
+        <select
+          id="request-status"
+          name={REQUEST_STATUS_PARAMETER}
+          defaultValue={value}
+          onChange={() => formRef.current?.requestSubmit()}
+          className="h-[48px] w-full appearance-none rounded-sm border border-gray-400 bg-white pr-7 pl-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:pl-[15px] focus:outline-none"
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <Icon name="chevronDown" size={20} className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2" />
+      </span>
     </Form>
   );
 };

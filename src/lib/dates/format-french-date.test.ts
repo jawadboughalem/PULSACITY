@@ -8,6 +8,6 @@ describe("French dates", () => {
     expect(formatDayMonth(date)).toBe("26 sept.");
     expect(formatDayMonthYear(date)).toBe("26 sept. 2026");
     expect(formatDateTime(date)).toBe("26 sept. 2026 à 21:47");
-    expect(formatDayMonth(new Date("2026-06-30T22:30:00Z"))).toBe("1 juil.");
+    expect(formatDayMonth(new Date("2026-06-30T22:30:00Z"))).toBe("1er juil.");
   });
 });

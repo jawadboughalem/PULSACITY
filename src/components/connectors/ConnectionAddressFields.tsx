@@ -4,11 +4,12 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { renewAddress } from "@/app/app/(espace)/connecteurs/connector-actions";
 import { useCopyLink } from "@/components/space/useCopyLink";
-import { DISCREET_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
+import { quoteInFrench } from "@/lib/french/typography";
 
 const FIELD_CLASSES =
   "h-[48px] w-full min-w-[0] rounded-sm border border-gray-400 bg-paper-100 px-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none";
@@ -117,19 +118,26 @@ export const ConnectionAddressFields = ({
           />
         ) : null}
       </div>
-      <button
-        type="button"
-        disabled={isRenewing}
-        onClick={() => setIsConfirming(true)}
-        className={cn(DISCREET_BUTTON_CLASSES, "self-start")}
-      >
-        Changer d&apos;adresse et de clé
-      </button>
+      <p className="text-small text-slate-600">
+        Adresse partagée par erreur ?{" "}
+        <button
+          type="button"
+          disabled={isRenewing}
+          onClick={() => setIsConfirming(true)}
+          className="font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:cursor-not-allowed"
+        >
+          Changer d&apos;adresse et de clé
+        </button>
+      </p>
       <ConfirmDialog
         isOpen={isConfirming}
         title="Changer d'adresse et de clé ?"
-        message={`L'adresse et la clé actuelles cesseront de fonctionner tout de suite. Vous devrez coller les nouvelles dans ${connectorName}.`}
-        confirmLabel="Changer d'adresse"
+        message={[
+          "Une nouvelle adresse et une nouvelle clé secrète remplacent les anciennes, qui cessent de fonctionner tout de suite.",
+          `Juste après, collez-les dans ${connectorName}, dans le webhook ${quoteInFrench("PULSACITY")}. Une vente envoyée entre-temps à l'ancienne adresse ne nous parviendra pas.`,
+        ]}
+        confirmLabel="Changer l'adresse et la clé"
+        isCancelDiscreet
         onConfirm={handleRenew}
         onCancel={() => setIsConfirming(false)}
       />
