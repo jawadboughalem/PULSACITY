@@ -72,10 +72,10 @@ describe("systemeConnector.normalize", () => {
 
   it("lowercases the address and keeps the first name only when there is one", () => {
     const sale = JSON.parse(SALE_BODY) as { customer: { email: string; fields: Record<string, unknown> } };
-    sale.customer.email = "  Camille.Roux@Example.com ";
+    sale.customer.email = "  Hélène.Roux@Example.com ";
     sale.customer.fields = { first_name: "  ", surname: "Roux" };
     expect(systemeConnector.normalize(sale, SALE_HEADERS)).toMatchObject({
-      email: "camille.roux@example.com",
+      email: "hélène.roux@example.com",
       firstName: null,
       lastName: "Roux",
     });

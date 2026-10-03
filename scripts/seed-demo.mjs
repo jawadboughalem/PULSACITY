@@ -5,7 +5,7 @@
 //   pnpm db:seed vous@exemple.fr         your address, to sign in with your magic link
 //   pnpm db:seed vous@exemple.fr --plan=essentiel
 //   pnpm db:seed vous@exemple.fr --recette   allowed on a database that is not on this machine
-import { randomUUID } from "node:crypto";
+import { createHmac, randomBytes, randomUUID } from "node:crypto";
 import { existsSync } from "node:fs";
 import postgres from "postgres";
 
@@ -14,6 +14,7 @@ if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "[::1]", "db"]);
 const PLANS = new Set(["free", "essentiel", "pro"]);
 const DAY_MS = 24 * 60 * 60 * 1000;
+const MINUTE_MS = 60 * 1000;
 
 const args = process.argv.slice(2);
 const email = (args.find((arg) => !arg.startsWith("--")) ?? "demo@pulsacity.local").toLowerCase();
@@ -80,6 +81,66 @@ const SALES = [
   ["Oscar", "Garnier", "suivi", 1, null, false, null],
 ];
 
+// Sales received from Systeme.io, in the format captured on September 27, 2026 (docs-internes/connectors/systeme.md).
+const SYSTEME_PRODUCTS = [
+  { ref: "price-plan:3456401", planId: 3456401, name: "Programme 30 jours - Mieux manger sans régime", amount: 29700, product: "programme", firstSale: 36 },
+  { ref: "price-plan:3456402", planId: 3456402, name: "Suivi individuel 3 mois", amount: 59000, product: null, firstSale: null },
+];
+
+const SYSTEME_EVENTS = [
+  // minutes ago (null: yesterday evening), buyer, price plan, outcome
+  { minutesAgo: 12 * 24 * 60, firstName: "Hélène", lastName: "Thomas", plan: 0, outcome: "request-scheduled" },
+  { minutesAgo: null, firstName: "Karim", lastName: "Benali", plan: 1, outcome: "awaiting-product" },
+  { minutesAgo: 3, firstName: "Léa", lastName: "Marchand", plan: 0, outcome: "request-scheduled" },
+];
+
+/** Yesterday at 18:42 in Paris, like maquette 5. */
+const yesterdayEvening = () => {
+  const date = new Date(now - DAY_MS);
+  date.setUTCHours(16, 42, 0, 0);
+  return date;
+};
+
+const buildSaleNew = ({ orderId, email, firstName, plan, createdAt }) => ({
+  customer: {
+    id: 12799000 + orderId,
+    clientIp: "203.0.113.10",
+    contactId: 445573000 + orderId,
+    email,
+    fields: { first_name: firstName, country: "FR", postcode: "69001" },
+    paymentProcessor: "stripe",
+    sourceUrl: "https://julie-nutrition.systeme.io/programme",
+  },
+  coupon: null,
+  funnelStep: { id: 25610405, name: "Bon de commande", type: "offer-form", funnel: { id: 7648170, name: "Tunnel Julie Nutrition" } },
+  checkoutPage: null,
+  order: {
+    id: 12768300 + orderId,
+    createdAt: createdAt.toISOString().replace(/\.\d{3}Z$/, "+00:00"),
+    discountAmount: null,
+    discountType: null,
+    shippingFee: null,
+    totalPrice: plan.amount,
+    vat: 0.0,
+  },
+  orderItem: {
+    createdAt: createdAt.toISOString().replace(/\.\d{3}Z$/, "+00:00"),
+    id: 15460100 + orderId,
+    resources: [{ course: null, courseBundle: null, enrollmentAccessType: null, enrollmentDrippingAccessCourse: null, physicalProduct: null, tag: null }],
+  },
+  pricePlan: { id: plan.planId, name: plan.name, type: "one_shot", amount: plan.amount, currency: "eur", innerName: plan.name, recurringOptions: null, statementDescriptor: "" },
+});
+
+const buildSystemeHeaders = (event, body, secret, receivedAt) => ({
+  "content-type": "application/json",
+  "user-agent": "SystemeIO-Webhook",
+  "x-webhook-event": event,
+  "x-webhook-schema-version": "2",
+  "x-webhook-message-id": randomUUID(),
+  "x-webhook-event-timestamp": receivedAt.toISOString().replace(/\.\d{3}Z$/, "+00:00"),
+  "x-webhook-signature": createHmac("sha256", secret).update(body).digest("hex"),
+});
+
 await sql.begin(async (tx) => {
   const [existingUser] = await tx`select id from "user" where email = ${email}`;
   const userId = existingUser?.id ?? randomUUID();
@@ -133,6 +194,58 @@ await sql.begin(async (tx) => {
       values (${purchase.id}, ${randomUUID()}, ${isSent ? sentThisMonth(requestAge) : daysAgo(saleAge - 14)},
         ${isSent ? sentThisMonth(requestAge) : null}, ${reminderIn === null ? null : daysAgo(-reminderIn)},
         ${isAnswered ? sentThisMonth(requestAge - 1) : null}, ${status})`;
+  }
+
+  const signingSecret = randomBytes(16).toString("hex");
+  const [connection] = await tx`
+    insert into connections (space_id, connector, webhook_token, status, last_event_at, config, created_at)
+    values (${space.id}, 'systeme', ${randomBytes(32).toString("base64url")}, 'active', ${new Date(now - 3 * MINUTE_MS)},
+      ${sql.json({ signingSecret })}, ${daysAgo(13)})
+    returning id`;
+  for (const product of SYSTEME_PRODUCTS) {
+    await tx`
+      insert into external_products (connection_id, external_ref, name, price_cents, currency, first_seen_at)
+      values (${connection.id}, ${product.ref}, ${product.name}, ${product.amount}, 'EUR',
+        ${product.firstSale === null ? yesterdayEvening() : daysAgo(product.firstSale)})`;
+    if (product.product) {
+      await tx`
+        insert into product_refs (product_id, connection_id, external_ref)
+        values (${productIds[product.product]}, ${connection.id}, ${product.ref})`;
+    }
+  }
+
+  let orderId = 0;
+  for (const event of SYSTEME_EVENTS) {
+    orderId += 1;
+    const receivedAt = event.minutesAgo === null ? yesterdayEvening() : new Date(now - event.minutesAgo * MINUTE_MS);
+    const plan = SYSTEME_PRODUCTS[event.plan ?? 0];
+    const buyerEmail = `${event.firstName}.${event.lastName}@exemple.fr`.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+    const payload = buildSaleNew({ orderId, email: buyerEmail, firstName: event.firstName, plan, createdAt: receivedAt });
+    const body = JSON.stringify(payload);
+    let purchaseId = null;
+    if (event.outcome === "request-scheduled") {
+      const [customer] = await tx`
+        insert into customers (space_id, email, first_name, last_name)
+        values (${space.id}, ${buyerEmail}, ${event.firstName}, ${event.lastName})
+        returning id`;
+      const [purchase] = await tx`
+        insert into purchases (space_id, customer_id, product_id, connection_id, source, event_type, external_ref, purchased_at)
+        values (${space.id}, ${customer.id}, ${productIds[plan.product]}, ${connection.id}, 'connector', 'sale',
+          ${`order-item:${payload.orderItem.id}`}, ${receivedAt})
+        returning id`;
+      purchaseId = purchase.id;
+      const scheduledAt = new Date(receivedAt.getTime() + 14 * DAY_MS);
+      const isSent = scheduledAt.getTime() <= now;
+      await tx`
+        insert into review_requests (purchase_id, token, scheduled_at, sent_at, reminder_scheduled_at, status)
+        values (${purchase.id}, ${randomUUID()}, ${scheduledAt}, ${isSent ? scheduledAt : null},
+          ${isSent ? new Date(scheduledAt.getTime() + 4 * DAY_MS) : null}, ${isSent ? "sent" : "scheduled"})`;
+    }
+    await tx`
+      insert into webhook_events (connection_id, raw_payload, raw_body, headers, event_type, received_at, processed_at, outcome, purchase_id)
+      values (${connection.id}, ${sql.json(payload)}, ${body},
+        ${sql.json(buildSystemeHeaders("SALE_NEW", body, signingSecret, receivedAt))},
+        'SALE_NEW', ${receivedAt}, ${receivedAt}, ${event.outcome}, ${purchaseId})`;
   }
 
   console.log(`Espace « Julie Nutrition » prêt pour ${email} (plan ${plan}), adresse /t/${slug}.`);

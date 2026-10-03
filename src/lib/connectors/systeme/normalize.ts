@@ -40,7 +40,10 @@ const readText = (value: unknown): string | null => (typeof value === "string" &
 
 const readEmail = (value: string): string => {
   const email = value.trim().toLowerCase();
-  if (!z.email().safeParse(email).success) throw new InvalidPayloadError("The e-mail address is not valid.");
+  // Systeme.io accepts accented addresses: so does PULSACITY.
+  if (!z.email({ pattern: z.regexes.unicodeEmail }).safeParse(email).success) {
+    throw new InvalidPayloadError("The e-mail address is not valid.");
+  }
   return email;
 };
 
