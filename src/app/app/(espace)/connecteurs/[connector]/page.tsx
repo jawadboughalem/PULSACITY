@@ -21,7 +21,7 @@ import {
   loadConnectionOverview,
 } from "@/lib/connectors/load-connection-overview";
 import { getConnectorBySlug } from "@/lib/connectors/registry";
-import { formatSince } from "@/lib/dates/format-relative-time";
+import { formatMoment, formatSince } from "@/lib/dates/format-relative-time";
 import { getCurrentSpace } from "@/lib/spaces/get-current-space";
 import { listAssociableProducts } from "@/lib/spaces/list-space-products";
 
@@ -100,7 +100,7 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
           status={overview.status}
           connectorName={connector.name}
           lastEventSince={overview.lastEventAt ? formatSince(overview.lastEventAt, now) : null}
-          problemSince={overview.problemSince ? formatSince(overview.problemSince, now) : null}
+          problemSince={overview.problemSince ? formatMoment(overview.problemSince, now) : null}
           signingSecret={signingSecret}
           stepTwoId={STEP_TWO_ID}
         />
