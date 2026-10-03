@@ -12,6 +12,9 @@ export const REQUEST_BADGES = {
   failed: { tone: "error", label: "Échec", icon: "alert" },
 } as const satisfies Record<ReviewRequestStatus, { tone: BadgeTone; label: string; icon: IconName }>;
 
+/** The address parameter of the status filter: read by the page on the server, set by the filter in the browser. */
+export const REQUEST_STATUS_PARAMETER = "statut";
+
 /** The filter of the list, its values in the address. */
 export const REQUEST_STATUS_FILTERS = [
   { status: "scheduled", value: "planifiees", label: "Planifiées" },

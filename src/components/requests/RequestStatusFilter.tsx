@@ -3,9 +3,7 @@
 import Form from "next/form";
 import { useRef } from "react";
 import { FilterSelect } from "@/components/testimonials/FilterSelect";
-import { REQUEST_STATUS_FILTERS } from "./describe-request";
-
-export const REQUEST_STATUS_PARAMETER = "statut";
+import { REQUEST_STATUS_FILTERS, REQUEST_STATUS_PARAMETER } from "./describe-request";
 
 type RequestStatusFilterProps = {
   action: string;

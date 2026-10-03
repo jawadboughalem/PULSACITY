@@ -37,8 +37,18 @@ export type RequestCounts = Record<ReviewRequestStatus, number> & {
   remindersSent: number;
 };
 
-/** The latest first: what is planned soonest, then what was sent last. */
-const ORDER = sql`coalesce(${reviewRequests.reminderSentAt}, ${reviewRequests.sentAt}, ${reviewRequests.scheduledAt}) desc`;
+const isWaiting = sql`${reviewRequests.status} in ('scheduled', 'failed')`;
+
+/**
+ * What leaves next on top: the requests still to send, the soonest first. Then the others, the latest activity first
+ * (answer, reminder or sending).
+ */
+const ORDER = [
+  sql`case when ${isWaiting} then 0 else 1 end`,
+  sql`case when ${isWaiting} then ${reviewRequests.scheduledAt} end asc`,
+  sql`greatest(${reviewRequests.completedAt}, ${reviewRequests.reminderSentAt}, ${reviewRequests.sentAt}, ${reviewRequests.scheduledAt}) desc`,
+  desc(reviewRequests.id),
+];
 
 export const listSpaceRequests = async (
   database: Database,
@@ -67,7 +77,7 @@ export const listSpaceRequests = async (
       .innerJoin(customers, eq(customers.id, purchases.customerId))
       .innerJoin(products, eq(products.id, purchases.productId))
       .where(where)
-      .orderBy(ORDER, desc(reviewRequests.id))
+      .orderBy(...ORDER)
       .limit(REQUESTS_PAGE_SIZE)
       .offset((page - 1) * REQUESTS_PAGE_SIZE),
     database

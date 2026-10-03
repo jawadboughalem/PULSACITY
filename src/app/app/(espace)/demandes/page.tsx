@@ -5,11 +5,12 @@ import { formatResponseRate, pluralize } from "@/components/dashboard/format-fig
 import {
   REQUEST_BADGES,
   REQUEST_STATUS_FILTERS,
+  REQUEST_STATUS_PARAMETER,
   describeRequest,
   readRequestStatusFilter,
 } from "@/components/requests/describe-request";
 import { RequestActions } from "@/components/requests/RequestActions";
-import { REQUEST_STATUS_PARAMETER, RequestStatusFilter } from "@/components/requests/RequestStatusFilter";
+import { RequestStatusFilter } from "@/components/requests/RequestStatusFilter";
 import { MobilePageHeader } from "@/components/space/MobilePageHeader";
 import { SpacePage } from "@/components/space/SpacePage";
 import { BILLING_HREF, REQUESTS_SECTION_HREF, SYSTEME_CONNECTOR_HREF } from "@/components/space/space-sections";
@@ -111,7 +112,11 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
                 {counts.scheduled > 1 ? "planifiées" : "planifiée"}
               </Figure>
               <Figure value={String(counts.sent)} className="border-l pl-4 desktop:px-5">
-                {`${counts.sent > 1 ? "envoyées" : "envoyée"}, dont ${pluralize(counts.remindersSent, "relancée", "relancées")}`}
+                {counts.remindersSent > 0
+                  ? `${counts.sent > 1 ? "envoyées" : "envoyée"}, dont ${pluralize(counts.remindersSent, "relancée", "relancées")}`
+                  : counts.sent > 1
+                    ? "envoyées"
+                    : "envoyée"}
               </Figure>
               <Figure value={String(counts.completed)} className="pr-4 desktop:border-l desktop:px-5">
                 {counts.completed > 1 ? "complétées par un avis" : "complétée par un avis"}
