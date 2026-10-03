@@ -15,7 +15,8 @@ type FigureProps = {
   className?: string;
 };
 
-const Figure = ({ value, aside, children, className }: FigureProps) => (
+/** A key figure of the space: the number in large type, what it counts below. */
+export const Figure = ({ value, aside, children, className }: FigureProps) => (
   <div className={cn("flex flex-col gap-3 border-hairline-200 py-5", className)}>
     <p className="flex flex-wrap items-center gap-3">
       <span className="font-serif text-display font-medium">{value}</span>

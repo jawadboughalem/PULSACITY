@@ -9,7 +9,11 @@ type TestimonialPaginationProps = {
   total: number;
   previousHref: string | null;
   nextHref: string | null;
+  /** What is counted: témoignages unless said otherwise. */
+  noun?: { singular: string; plural: string };
 };
+
+const TESTIMONIAL_NOUN = { singular: "témoignage", plural: "témoignages" };
 
 const DISABLED_BUTTON_CLASSES =
   "inline-flex h-[48px] items-center justify-center rounded-sm border border-hairline-200 bg-paper-100 px-5 text-body font-semibold text-slate-600";
@@ -21,12 +25,13 @@ export const TestimonialPagination = ({
   total,
   previousHref,
   nextHref,
+  noun = TESTIMONIAL_NOUN,
 }: TestimonialPaginationProps) => {
   const first = (page - 1) * pageSize + 1;
-  const summary = `${first} à ${first + shownCount - 1} sur ${total} ${total > 1 ? "témoignages" : "témoignage"}`;
+  const summary = `${first} à ${first + shownCount - 1} sur ${total} ${total > 1 ? noun.plural : noun.singular}`;
 
   return (
-    <nav aria-label="Pages de témoignages" className="flex flex-wrap items-center justify-between gap-4">
+    <nav aria-label={`Pages de ${noun.plural}`} className="flex flex-wrap items-center justify-between gap-4">
       <p className="text-small text-slate-600">
         <span className="desktop:hidden">{nextHref ? `${summary}. ` : summary}</span>
         <span className="hidden desktop:inline">{summary}</span>
