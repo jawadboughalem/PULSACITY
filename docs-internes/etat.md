@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme.io, demandes d'avis, désinscription) et sa suite (PR #24 : m19, m5, m1) sont en ligne ; la vérification en production attend le prompt 5 de `docs-internes/recette/lot-6-maquettes.md`. La PR #25 construit « Demander un avis » (m20) et attend sa recette (`docs-internes/recette/lot-6-demander-un-avis.md`). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 3 octobre 2026. Le lot 6 est en ligne en entier : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Reste sa vérification en production : le prompt 5 de `docs-internes/recette/lot-6-maquettes.md`, dont le fondateur donne le compte rendu à la session suivante. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -12,6 +12,7 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 - Suite du widget, maquettes du 2 octobre : liste m18, éditeur sur téléphone, nom du widget, coins des cartes, code qui nomme le type, chargements du carrousel et du badge (PR #21). Vérifié le 2 octobre sur la page Systeme.io, avec 15 avis.
 - Lot 6, connecteurs et demandes : moteur de connecteurs, connecteur Systeme.io, pages Connecteurs et Demandes, offres à associer, e-mails de demande et de relance, désinscription (PR #23, fusionnée le 3 octobre, migration 0006 appliquée en production).
 - Suite du lot 6, maquettes du 3 octobre : Demandes (m19), Connecteurs (m5 : téléphone, clé différente, changer d'adresse, inscriptions sans vente), désinscription (m1). PR #24, fusionnée le 3 octobre, migration 0007 appliquée en production.
+- « Demander un avis » (m20) : demande d'avis à un client saisi à la main, depuis Demandes et l'accueil (PR #25, fusionnée le 3 octobre, migration 0008 appliquée en production).
 - Trois environnements : local, recette sur chaque aperçu Vercel, migrations de production lancées à chaque fusion et attendues par Vercel avant la mise en ligne (PR #16).
 
 ## Lot 6 (PR #23), en ligne depuis le 3 octobre
@@ -63,7 +64,7 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 - Prompt 3 (Systeme.io) : 10 points sur 10. Remarques : le prix de « Suivi individuel 3 mois » est passé à 297 € (le script de test envoyait 297 € pour tous les plans : le prix suit la dernière vente, voulu) ; le bandeau était vert avant la vente à mauvaise clé (le prompt disait « comme avant », à tort).
 - Prompt 4 (360 px) : 8 points sur 8, sans débordement. Le menu déroulant natif ne réagit toujours pas aux clics dans le cadre de Claude in Chrome : essai au doigt sur téléphone à faire.
 
-## Construit dans la PR #25 (« Demander un avis », m20), en recette
+## PR #25 (« Demander un avis », m20), en ligne depuis le 3 octobre
 
 - Le bouton « Demander un avis » de Demandes ouvre le formulaire de m20 : une fenêtre sur ordinateur, tout l'écran sur téléphone (barre avec la croix, qui reste en haut quand on défile). Le bouton de l'accueil ouvre Demandes avec le formulaire déjà ouvert (`?demander=1`).
 - Formulaire : prénom et nom facultatifs, adresse, offre, date d'achat (aujourd'hui par défaut, jamais dans le futur), case « Cette personne a acheté cette offre auprès de moi. ». Sous les noms, le début de l'e-mail (« Bonjour Élodie, ») ; sous la date, sa phrase « vous avez acheté … auprès de … le … », avec l'offre et la date choisies.
@@ -71,6 +72,13 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 - Confirmation : Demandes avec « Demande prête pour … », l'adresse et le jour de la relance (`?demande=<id>`), la nouvelle ligne en tête.
 - Refus de m20 : déjà une demande pour cette offre (ce qu'elle est devenue, « Copier mon lien de collecte » de l'offre, « Voir sa demande ») ; personne désinscrite ; adresse incomplète, avec l'adresse tapée complétée en exemple ; plafond du jour (bouton grisé, saisie gardée) ; plan Gratuit plein (encadré gris, « partira le 1er novembre ») ; aucune offre (« Ajoutez d'abord une offre », « Aller à Offres »).
 - Plafond du jour dans `plans.ts` (`manualRequestsPerDay`, 20 sur tous les plans), compté sur `purchases.created_at` (migration 0008, colonne avec une valeur par défaut).
+
+## Recette de la PR #25 sur l'aperçu (3 octobre)
+
+- Prompt 1 : « Recette demo space #6 » vert, depuis la branche (commit 65cb2b4), plan free.
+- Prompt 2 (formulaire, demande, e-mail réel, refus « déjà une demande » et « désinscrite ») : 13 points sur 13.
+- Prompt 3 (360 px) : 4 points sur 4, sans débordement. Dans le cadre de Claude in Chrome, les champs font 297 px au lieu de 312 à cause de la barre de défilement classique ; sur un téléphone, elle se superpose au contenu.
+- Le menu déroulant natif (offres, filtre « Statut ») ne réagit toujours pas aux clics dans ce cadre : choisi par la console, à essayer au doigt sur un téléphone.
 
 ## Pas encore construit
 
@@ -136,16 +144,15 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 
 ## À faire
 
-1. Lot 6 : vérifier l'envoi lancé à la main le 3 octobre à 14:00 (prompt 7, point 12), puis que « Send review requests » tourne seul ; remettre le délai de l'offre de test à 14 jours ; essai au doigt du filtre « Statut » de Demandes sur le téléphone du fondateur.
-2. PR #24 fusionnée : reste le prompt 5 de `docs-internes/recette/lot-6-maquettes.md` en production (demande de la vraie vente, envoi automatique, délai à 14 jours, paiement à la livraison désactivé).
+1. Lot 6, vérification en production : prompt 5 de `docs-internes/recette/lot-6-maquettes.md` (le workflow « Send review requests » tourne seul aux minutes 7, 22, 37 et 52 ; la demande de la vraie vente du 3 octobre est partie et l'e-mail est arrivé ; délai de l'offre de test remis à 14 jours ; paiement à la livraison du tunnel de test désactivé). Le fondateur en donne le compte rendu à la session suivante, qui le note ici. Si le workflow ne tourne pas seul, voir le point sur le plan Vercel.
+2. Essai au doigt, sur le téléphone du fondateur, des menus déroulants natifs : filtre « Statut » de Demandes, offre de « Demander un avis ».
 3. Captures réelles des réglages Systeme.io, par un prompt Claude in Chrome sur le compte du fondateur.
-4. PR #25, « Demander un avis » (m20) : recette sur l'aperçu, prompts de `docs-internes/recette/lot-6-demander-un-avis.md`.
-5. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
-6. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
-7. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
-8. Sentry, avant le lancement.
-9. Plan Vercel : sur Hobby, Vercel Cron ne tourne qu'une fois par jour ; le workflow GitHub fait les 15 minutes. Si GitHub laisse des trous de plus d'une heure pendant quelques jours, passer à Pro (20 $ par mois) permettra de remettre la tâche toutes les 15 minutes dans `vercel.json` et de retirer le workflow. Décision du fondateur.
-10. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
+4. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
+5. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
+6. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
+7. Sentry, avant le lancement.
+8. Plan Vercel : sur Hobby, Vercel Cron ne tourne qu'une fois par jour ; le workflow GitHub fait les 15 minutes. Si GitHub laisse des trous de plus d'une heure pendant quelques jours, passer à Pro (20 $ par mois) permettra de remettre la tâche toutes les 15 minutes dans `vercel.json` et de retirer le workflow. Décision du fondateur.
+9. Prochain lot : le site marketing, les guides et les pages légales (PROMPT 6 du fondateur, déjà prêt).
 
 Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
