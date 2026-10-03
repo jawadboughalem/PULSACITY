@@ -20,6 +20,14 @@ Mis à jour le 3 octobre 2026, avec la PR #23 : le lot 6 (moteur de connecteurs,
 - Envois : tâche `/api/cron/requests` (verrou sur `sentAt`, limite du plan, relance unique à J+4, trois essais puis « Échec »), e-mails de demande et de relance de m3, désinscription en un clic par lien signé et par le bouton du client de messagerie (`List-Unsubscribe`).
 - Migration 0006 : tables `external_products` et `connector_waitlist`, colonnes facultatives, contraintes uniques sur `connections (space_id, connector)` et `purchases (connection_id, external_ref)`.
 
+## Recette de la PR #23 sur l'aperçu (3 octobre)
+
+- `CRON_SECRET` ajouté dans Vercel (Production) et dans les secrets GitHub (prompts 1 et 2). Espace de recette rempli depuis la branche de la PR (prompt 3).
+- Prompt 4 (écrans Connecteurs) : 16 points sur 16.
+- Prompt 5 (vente simulée au format capturé, e-mail, rejeu, clé différente, désinscription) : 18 points sur 19. Le point manqué : la demande qui partait au prochain envoi était sixième de la liste Demandes. Corrigé : les demandes à envoyer d'abord, la plus proche en haut.
+- Prompt 6 (360 px) : mise en page conforme, mais le filtre « Statut » de Demandes ne filtrait pas (nom du paramètre importé d'un composant client dans la page serveur). Corrigé et vérifié dans le conteneur ; contre-recette : prompt 6 bis.
+- Le logo de l'e-mail « Nouveau témoignage » ne s'affiche pas depuis un aperçu (image protégée par Vercel Authentication) : rien à corriger, la production le sert à tous.
+
 ## Pas encore construit
 
 - « Vente annulée » de Systeme.io : son payload n'a jamais été capturé (un remboursement de paiement à la livraison n'émet rien). Les événements reçus sont gardés sans être lus ; une demande d'une vente remboursée part donc quand même, sauf si le créateur l'annule dans Demandes. À capturer avec une vente Stripe en mode test, puis à traiter.
@@ -84,7 +92,7 @@ Mis à jour le 3 octobre 2026, avec la PR #23 : le lot 6 (moteur de connecteurs,
 
 ## À faire
 
-1. Lot 6 : prompts 1 à 6 de `docs-internes/recette/lot-6-connecteurs.md` avant la fusion de la PR #23 (secret `CRON_SECRET` dans Vercel et GitHub, espace de recette, recette sur l'aperçu), puis le prompt 7 après la fusion (vraie vente Systeme.io en production) et le prompt 8 pour Design.
+1. Lot 6 : prompts 1 à 6 faits le 3 octobre. Restent la contre-recette (prompt 6 bis de `docs-internes/recette/lot-6-connecteurs.md`) avant la fusion de la PR #23, puis le prompt 7 après la fusion (vraie vente Systeme.io en production) et le prompt 8 pour Design.
 2. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
 3. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
 4. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).

@@ -218,6 +218,24 @@ Tu vérifies trois pages de PULSACITY en largeur téléphone, 360 × 800, sur l'
 Compte rendu à me donner : les points 1 à 6 avec « OK » ou ta description, et une capture d'écran de chaque page.
 ```
 
+## 6 bis. Contre-recette sur l'aperçu : l'ordre et le filtre de Demandes
+
+Après la correction du 3 octobre (voir le compte rendu en bas de page). Connecté à l'aperçu, fenêtre en grand ; rien à remplir de nouveau.
+
+```
+Tu vérifies deux corrections de la page Demandes de PULSACITY, sur l'aperçu où je suis connecté. Tu ne modifies rien. Pour chaque point, note « OK » ou décris ce que tu vois.
+
+1. Recharge la page (Ctrl+Maj+R) pour être sûr d'avoir la dernière version. Ouvre « Demandes ».
+2. Les premières lignes sont les demandes « Planifiée », celle qui part le plus tôt en haut : les dates « Partira le … » vont croissant. Viennent ensuite les autres demandes, la plus récente activité d'abord : « Camille · Atelier cuisine », « Avis reçu le 3 oct. », est la première d'entre elles.
+3. Sous les chiffres, la case « envoyées » ne dit plus « dont 0 relancée ».
+4. Dans « Statut », choisis « Complétées ». L'adresse finit par ?statut=completees, la liste ne garde que des lignes « Complétée », et le bas de page dit « 1 à … sur … demandes » avec ce nombre. Le menu montre « Complétées ».
+5. Recharge la page : le filtre et la liste restent les mêmes.
+6. Choisis « Planifiées » : seules les lignes « Planifiée » restent, la plus proche en haut. Choisis « Toutes » : toute la liste revient.
+7. En 360 × 800 (le même cadre qu'au prompt 6) : choisis « Complétées ». Le bouton du filtre affiche « Complétées » au lieu de « Statut », et la liste est filtrée. Remets « Toutes ».
+
+Compte rendu à me donner : les points 1 à 7 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK.
+```
+
 ---
 
 Après les prompts 4 à 6 : envoyez les comptes rendus à Claude Code. S'il n'y a rien à corriger, la PR #23 est fusionnée ; « Database migration » applique la migration 0006 en production, puis Vercel met la production en ligne. Vérifiez dans GitHub, onglet Actions, que le workflow « Send review requests » apparaît et passe au vert toutes les 15 minutes.
@@ -270,3 +288,19 @@ Pour PULSACITY, le lot des connecteurs est construit (maquettes 3 et 5). Merci d
 7. m3 : la ligne « Julie Martin · Julie Nutrition, Lyon » et l'adresse postale du pied supposent le prénom du créateur, sa ville et son adresse, que PULSACITY ne demande pas. L'e-mail signe pour l'instant du nom de l'espace. Faut-il les demander, et où ?
 Exporte les PNG, avec des noms qui suivent INDEX.md.
 ```
+
+---
+
+## Compte rendu de la recette sur l'aperçu (3 octobre)
+
+- Prompts 1 et 2 : `CRON_SECRET` ajouté dans Vercel (Production seulement, valeur masquée, pas de redéploiement) et dans les secrets GitHub, à côté de `DATABASE_URL` et `RECETTE_DATABASE_URL`.
+- Prompt 3 : « Recette demo space #4 » depuis la branche `claude/zen-cori-x7joes`, plan free, vert en 40 s.
+- Prompt 4 : 16 points sur 16 (fenêtre de 1 536 px). La flèche du dessin 1 touche le coin du bouton « Créer » : voulu, le texte reste lisible.
+- Prompt 5 : 18 points sur 19. Point 6 : la demande de Camille, qui partait au prochain envoi, était sixième, sous cinq demandes planifiées : la liste triait tout par date décroissante. Corrigé : les demandes à envoyer d'abord, la plus proche en haut, puis les autres par activité la plus récente. Le reste : vente simulée, association, « Envoyer maintenant », e-mail, formulaire pré-rempli, avis lié au client (« Connecteur Systeme.io »), rejeu sans doublon, clé différente puis « Rejouer », désinscription et adresse inconnue (404) sont conformes.
+- Prompt 6 : mise en page à 360 px conforme, aucun débordement. Le filtre « Statut » ne filtrait pas (ni en mobile, ni sur ordinateur) : la page lisait le nom du paramètre depuis un composant client, où elle recevait une référence au lieu du texte « statut ». Corrigé, et vérifié dans le conteneur à 1440 et 360 px. Contre-recette : prompt 6 bis.
+- Remarques sans correction :
+  - le libellé d'un événement prend le nom de l'offre une fois le produit associé (« Nouvelle vente · Atelier cuisine · Camille ») : voulu, c'est le nom que le créateur connaît ;
+  - « Atelier cuisine » affiche « 1 € » sur la page Offres : c'est le prix du produit de test associé pendant la recette ;
+  - le logo de l'e-mail « Nouveau témoignage » ne s'affichait pas : sur un aperçu, l'image est servie par l'adresse de l'aperçu, protégée par Vercel Authentication, que la messagerie ne peut pas lire. En production, pulsacity.com la sert à tous ;
+  - la photo met environ une seconde à apparaître : adresse r2.dev, déjà prévue avant le lancement.
+
