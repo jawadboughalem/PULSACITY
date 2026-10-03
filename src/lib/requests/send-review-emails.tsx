@@ -137,7 +137,7 @@ export const sendFirstRequest = async (
   if (isStopped(request)) {
     await database
       .update(reviewRequests)
-      .set({ status: "cancelled" })
+      .set({ status: "cancelled", cancelledAt: now })
       .where(and(eq(reviewRequests.id, request.id), waiting));
     return "cancelled";
   }
@@ -161,7 +161,7 @@ export const sendFirstRequest = async (
         sentAt: null,
         reminderScheduledAt: null,
         failedAttempts,
-        status: failedAttempts >= MAX_FAILED_ATTEMPTS ? "failed" : "scheduled",
+        ...(failedAttempts >= MAX_FAILED_ATTEMPTS ? { status: "failed", failedAt: now } : { status: "scheduled" }),
       })
       .where(eq(reviewRequests.id, request.id));
     return "failed";

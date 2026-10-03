@@ -35,7 +35,7 @@ const Problem = ({ title, detail }: { title: string; detail: string }) => (
   </div>
 );
 
-/** After « Ne plus recevoir ces e-mails »: the link has already unsubscribed, this page says so. */
+/** After « Ne plus recevoir ces e-mails »: the link has already unsubscribed, this page says so (m1, « Désinscription confirmée »). */
 const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) => {
   const parameters = await searchParams;
   if (readParameter(parameters[UNSUBSCRIBE_STATE_PARAMETER]) === "failed") {
@@ -63,21 +63,21 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
       <main className={MAIN_CLASSES}>
         <CollectHeader spaceName={customer.spaceName} logoUrl={customer.logoUrl} />
         <div className="mt-7 flex flex-col gap-4">
-          <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-success bg-white text-success">
+          <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink-900 bg-white">
             <Icon name="valid" size={32} />
           </span>
           <h1 className="font-serif text-h2 font-medium">Désinscription confirmée</h1>
           <p className="text-body">{`Vous ne recevrez plus de demande d'avis de ${customer.spaceName}.`}</p>
-          <p className="text-body">Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.</p>
+          <p className="text-body text-slate-600">Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.</p>
         </div>
         <a
           href={`mailto:${customer.replyToEmail}`}
-          className="flex min-h-[44px] items-center gap-2 self-start text-body font-semibold text-carmine hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+          className="mb-1 flex h-[56px] w-full items-center justify-center gap-2 rounded-lg border-2 border-ink-900 bg-carmine text-body font-semibold text-white shadow-relief hover:bg-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 active:translate-y-1 active:shadow-none"
         >
           <Icon name="email" size={20} />
           {`Écrire à ${customer.spaceName}`}
         </a>
-        <PoweredByPulsacity homeUrl={getAppUrl()} referralCode={customer.referralCode} className="mt-auto" />
+        <PoweredByPulsacity homeUrl={getAppUrl()} referralCode={customer.referralCode} />
       </main>
     </div>
   );

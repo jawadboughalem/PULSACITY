@@ -18,6 +18,7 @@ export const upsertExternalProduct = async (
       priceCents: purchase.productPrice?.amountCents ?? null,
       currency: purchase.productPrice?.currency ?? null,
       firstSeenAt: purchase.occurredAt,
+      eventType: purchase.eventType,
     })
     .onConflictDoUpdate({
       target: [externalProducts.connectionId, externalProducts.externalRef],
@@ -26,6 +27,7 @@ export const upsertExternalProduct = async (
         priceCents: sql`coalesce(excluded.price_cents, ${externalProducts.priceCents})`,
         currency: sql`coalesce(excluded.currency, ${externalProducts.currency})`,
         firstSeenAt: sql`least(excluded.first_seen_at, ${externalProducts.firstSeenAt})`,
+        eventType: sql`coalesce(${externalProducts.eventType}, excluded.event_type)`,
       },
     });
 };

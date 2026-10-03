@@ -31,7 +31,7 @@ export const unsubscribeCustomer = (
 
     await transaction
       .update(reviewRequests)
-      .set({ status: "cancelled" })
+      .set({ status: "cancelled", cancelledAt: now })
       .where(
         and(
           inArray(reviewRequests.status, ["scheduled", "failed"]),

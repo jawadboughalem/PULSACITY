@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { CheckConnectionButton } from "@/components/connectors/CheckConnectionButton";
 import { ConnectionAddressFields } from "@/components/connectors/ConnectionAddressFields";
 import { ConnectionEventList } from "@/components/connectors/ConnectionEventList";
-import { ConnectionGuide } from "@/components/connectors/ConnectionGuide";
+import { ConnectionGuide, ConnectionOptionalStep } from "@/components/connectors/ConnectionGuide";
 import { ConnectionStatusBanner } from "@/components/connectors/ConnectionStatusBanner";
 import { ConnectorLogo } from "@/components/connectors/ConnectorLogo";
 import { ExternalProductsTable } from "@/components/connectors/ExternalProductsTable";
@@ -39,7 +39,7 @@ type StepProps = {
   number: number;
   id?: string;
   title: string;
-  description: string;
+  description: ReactNode;
   children: ReactNode;
 };
 
@@ -73,11 +73,17 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
   const database = getDb();
   const connection = await findOrCreateConnection(database, space.id, connector);
   const now = new Date();
-  const [overview, events, offers] = await Promise.all([
+  const [overview, latestEvents, setAsideEvents, offers] = await Promise.all([
     loadConnectionOverview(database, connection),
     listConnectionEvents(database, connection, { limit: OVERVIEW_EVENT_COUNT }),
+    listConnectionEvents(database, connection, { limit: OVERVIEW_EVENT_COUNT, isSetAsideOnly: true }),
     listAssociableProducts(database, space.id),
   ]);
+  // m5: the sales put aside stay on top of the latest events, until « Rejouer ».
+  const events = [
+    ...setAsideEvents,
+    ...latestEvents.filter((event) => !setAsideEvents.some((setAside) => setAside.id === event.id)),
+  ].slice(0, Math.max(OVERVIEW_EVENT_COUNT, setAsideEvents.length));
   const signingSecret = connection.config.signingSecret ?? null;
   const showsFirstEvent = overview.eventCount <= OVERVIEW_EVENT_COUNT;
 
@@ -86,11 +92,11 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
       <BackBar href={CONNECTORS_SECTION_HREF} label="Connecteurs" />
       <SpacePage className="desktop:max-w-[1128px]">
         <Breadcrumb parentHref={CONNECTORS_SECTION_HREF} parentLabel="Connecteurs" current={connector.name} />
-        <div className="flex items-start gap-4 desktop:items-center desktop:gap-5">
+        <div className="flex flex-col items-start gap-4 desktop:flex-row desktop:items-center desktop:gap-5">
           <ConnectorLogo name={connector.name} />
           <div className="flex flex-col gap-2">
             <h1 className="font-serif text-h1 font-medium">{`Connecter ${connector.name}`}</h1>
-            <p className="max-w-text text-body text-slate-600">
+            <p className="max-w-text text-body">
               {`Chaque vente sur ${connector.name} déclenche une demande d'avis, au bon moment, sans rien faire de plus.`}
             </p>
           </div>
@@ -103,10 +109,11 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
           problemSince={overview.problemSince ? formatMoment(overview.problemSince, now) : null}
           signingSecret={signingSecret}
           stepTwoId={STEP_TWO_ID}
+          setAsideCount={overview.setAsideCount}
         />
 
         <section aria-labelledby="connection-steps" className="flex flex-col">
-          <h2 id="connection-steps" className="border-b border-ink-900 pb-4 font-serif text-h2 font-medium">
+          <h2 id="connection-steps" className="border-b border-ink-900 pb-4 font-serif text-quote font-medium desktop:text-h2">
             La connexion en 3 étapes
           </h2>
           <ol className="flex flex-col">
@@ -127,7 +134,12 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
               number={2}
               id={STEP_TWO_ID}
               title={`La coller dans ${connector.name}`}
-              description={`Ouvrez ${connector.name} dans un autre onglet et suivez ces trois écrans.`}
+              description={
+                <>
+                  <span className="desktop:hidden">Plus simple depuis un ordinateur.</span>
+                  <span className="hidden desktop:inline">{`Ouvrez ${connector.name} dans un autre onglet et suivez ces trois écrans.`}</span>
+                </>
+              }
             >
               <ConnectionGuide connectorId={connector.id} connectorName={connector.name} />
             </Step>
@@ -139,11 +151,12 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
               <CheckConnectionButton isWaiting={overview.status === "pending"} />
             </Step>
           </ol>
+          <ConnectionOptionalStep connectorId={connector.id} />
         </section>
 
         <section id="offres-a-associer" aria-labelledby="external-products" className="flex scroll-mt-5 flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <h2 id="external-products" className="font-serif text-h2 font-medium">
+            <h2 id="external-products" className="font-serif text-quote font-medium desktop:text-h2">
               Offres à associer
             </h2>
             <p className="max-w-text text-body text-slate-600">
@@ -171,11 +184,11 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
 
         <section aria-labelledby="latest-events" className="flex flex-col gap-4">
           <div className="flex items-baseline justify-between gap-4">
-            <h2 id="latest-events" className="font-serif text-h2 font-medium">
+            <h2 id="latest-events" className="font-serif text-quote font-medium desktop:text-h2">
               Derniers événements reçus
             </h2>
             {overview.eventCount > OVERVIEW_EVENT_COUNT ? (
-              <Link href={connectorHistoryHref(connector.slug)} className={`${LINK_CLASSES} shrink-0`}>
+              <Link href={connectorHistoryHref(connector.slug)} className={`${LINK_CLASSES} hidden shrink-0 desktop:inline`}>
                 Voir tout l&apos;historique
               </Link>
             ) : null}
@@ -192,6 +205,11 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
               {`Rien reçu pour l'instant. Chaque vente de ${connector.name} s'affichera ici.`}
             </p>
           )}
+          {overview.eventCount > OVERVIEW_EVENT_COUNT ? (
+            <Link href={connectorHistoryHref(connector.slug)} className={`${LINK_CLASSES} self-start desktop:hidden`}>
+              Voir tout l&apos;historique
+            </Link>
+          ) : null}
         </section>
       </SpacePage>
     </>

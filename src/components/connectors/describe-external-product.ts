@@ -5,9 +5,12 @@ import { formatPrice } from "@/lib/french/format-price";
 
 const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
 
-/** « 297 € · première vente le 28 août 2026 », « 590 € · première vente hier à 18:42 ». */
+/**
+ * « 297 € · première vente le 28 août 2026 », « 590 € · première vente hier à 18:42 ». A formation joined without a
+ * sale: « première inscription le … ».
+ */
 export const describeExternalProduct = (
-  product: Pick<ExternalProductRow, "priceCents" | "currency" | "firstSeenAt">,
+  product: Pick<ExternalProductRow, "priceCents" | "currency" | "firstSeenAt" | "eventType">,
   now: Date,
 ): string => {
   const firstSale =
@@ -16,5 +19,6 @@ export const describeExternalProduct = (
       : `le ${formatDayMonthYear(product.firstSeenAt)}`;
   const price =
     product.priceCents !== null && product.currency ? formatPrice(product.priceCents, product.currency) : null;
-  return [price, `première vente ${firstSale}`].filter(Boolean).join(" · ");
+  const first = product.eventType === "enrollment" ? "première inscription" : "première vente";
+  return [price, `${first} ${firstSale}`].filter(Boolean).join(" · ");
 };

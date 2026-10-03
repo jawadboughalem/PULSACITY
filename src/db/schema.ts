@@ -225,6 +225,8 @@ export const externalProducts = pgTable(
     priceCents: integer("price_cents"),
     currency: text("currency"),
     firstSeenAt: timestamptz("first_seen_at").notNull(),
+    /** What brought it the first time: a sale, or an enrollment without one (« première inscription »). */
+    eventType: text("event_type").$type<"sale" | "enrollment">(),
   },
   (table) => [
     unique("external_products_connection_id_external_ref_unique").on(table.connectionId, table.externalRef),
@@ -316,6 +318,10 @@ export const reviewRequests = pgTable(
     status: reviewRequestStatusEnum("status").notNull().default("scheduled"),
     /** Sends that failed in a row: past the limit, the request stops retrying and shows « Échec ». */
     failedAttempts: integer("failed_attempts").notNull().default(0),
+    /** When it was cancelled (by the creator, an unsubscription, or requests turned off): « Annulée le … ». */
+    cancelledAt: timestamptz("cancelled_at"),
+    /** When the last try failed and the request stopped retrying: « Non envoyée le … ». */
+    failedAt: timestamptz("failed_at"),
   },
   (table) => [
     index("review_requests_status_scheduled_at_idx").on(table.status, table.scheduledAt),

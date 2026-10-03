@@ -6,6 +6,7 @@ import { customers, products, purchases, reviewRequests, spaces } from "@/db/sch
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import type { CustomerEmail } from "@/lib/email/send-email";
+import { correctOwnedRequestEmail } from "./manage-requests";
 import { MAX_FAILED_ATTEMPTS, sendDueReviewEmails, sendFirstRequest, loadRequestToSend } from "./send-review-emails";
 import { unsubscribeCustomer } from "./unsubscribe-customer";
 import { readUnsubscribeToken } from "./unsubscribe-token";
@@ -16,6 +17,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const NOW = new Date("2026-10-15T09:00:00Z");
 
 let database: Database;
+let userId: string;
 let spaceId: string;
 let productId: string;
 let sent: CustomerEmail[];
@@ -70,7 +72,7 @@ beforeEach(async () => {
   vi.stubEnv("BETTER_AUTH_SECRET", "un-secret-de-test-assez-long-pour-signer");
   await emptyTestDatabase(database);
   sent = [];
-  const userId = await insertTestUser(database, "julie@exemple.fr");
+  userId = await insertTestUser(database, "julie@exemple.fr");
   spaceId = await insertTestSpace(database, userId, "julie-nutrition");
   await database
     .update(spaces)
@@ -192,8 +194,8 @@ describe("sendDueReviewEmails", () => {
 
     expect(await run()).toMatchObject({ sent: 0, cancelled: 2 });
     expect(sent).toEqual([]);
-    expect((await readRequest(unsubscribed.id)).status).toBe("cancelled");
-    expect((await readRequest(turnedOff.id)).status).toBe("cancelled");
+    expect(await readRequest(unsubscribed.id)).toMatchObject({ status: "cancelled", cancelledAt: NOW });
+    expect(await readRequest(turnedOff.id)).toMatchObject({ status: "cancelled", cancelledAt: NOW });
   });
 
   it("gives a failed send back, then stops after three failures", async () => {
@@ -207,7 +209,11 @@ describe("sendDueReviewEmails", () => {
       expect(await readRequest(request.id)).toMatchObject({ status: "scheduled", sentAt: null, failedAttempts: attempt });
     }
     await run(NOW, { send: failing });
-    expect(await readRequest(request.id)).toMatchObject({ status: "failed", failedAttempts: MAX_FAILED_ATTEMPTS });
+    expect(await readRequest(request.id)).toMatchObject({
+      status: "failed",
+      failedAttempts: MAX_FAILED_ATTEMPTS,
+      failedAt: NOW,
+    });
     expect(await run()).toMatchObject({ sent: 0 });
 
     const loaded = await loadRequestToSend(database, request.id);
@@ -237,7 +243,7 @@ describe("unsubscribeCustomer", () => {
 
     expect(await unsubscribeCustomer(database, planned.customerId, NOW)).toMatchObject({ spaceName: "Julie Nutrition" });
 
-    expect(await readRequest(planned.id)).toMatchObject({ status: "cancelled" });
+    expect(await readRequest(planned.id)).toMatchObject({ status: "cancelled", cancelledAt: NOW });
     expect(await readRequest(sentRequest.id)).toMatchObject({ status: "sent", reminderScheduledAt: null });
     await run(new Date(NOW.getTime() + 10 * DAY_MS));
     expect(sent).toEqual([]);
@@ -249,5 +255,41 @@ describe("unsubscribeCustomer", () => {
     await unsubscribeCustomer(database, request.customerId, new Date(NOW.getTime() + DAY_MS));
     const [customer] = await database.select().from(customers).where(eq(customers.id, request.customerId));
     expect(customer.unsubscribedAt).toEqual(NOW);
+  });
+});
+
+describe("correctOwnedRequestEmail", () => {
+  it("gives a failed request the right address, and sends it at the next run", async () => {
+    const request = await insertRequest({ status: "failed", failedAttempts: MAX_FAILED_ATTEMPTS, failedAt: NOW });
+
+    expect(await correctOwnedRequestEmail(database, userId, request.id, "camille@exemple.fr", NOW)).toEqual({
+      status: "rescheduled",
+    });
+    expect(await readRequest(request.id)).toMatchObject({
+      status: "scheduled",
+      scheduledAt: NOW,
+      failedAttempts: 0,
+      failedAt: null,
+    });
+    await run(new Date(NOW.getTime() + 60_000));
+    expect(sent.map((email) => email.to)).toEqual(["camille@exemple.fr"]);
+  });
+
+  it("refuses an address another customer has, a request that did not fail, and another creator's request", async () => {
+    const request = await insertRequest({ status: "failed", failedAttempts: MAX_FAILED_ATTEMPTS });
+    await insertRequest({}, { email: "deja-client@exemple.fr" });
+    const planned = await insertRequest();
+    const strangerId = await insertTestUser(database, "autre@exemple.fr");
+
+    expect(await correctOwnedRequestEmail(database, userId, request.id, "deja-client@exemple.fr")).toEqual({
+      status: "email-taken",
+    });
+    expect(await correctOwnedRequestEmail(database, userId, planned.id, "camille@exemple.fr")).toEqual({
+      status: "not-failed",
+    });
+    expect(await correctOwnedRequestEmail(database, strangerId, request.id, "camille@exemple.fr")).toEqual({
+      status: "not-found",
+    });
+    expect(await readRequest(request.id)).toMatchObject({ status: "failed" });
   });
 });

@@ -49,6 +49,10 @@ export const startOfParisMonth = (now: Date): Date => {
   return new Date(midnightUtc - readParisOffsetMs(new Date(midnightUtc)));
 };
 
+/** Midnight in Paris on the first day of the next month: when the requests held by a plan's limit leave. */
+export const startOfNextParisMonth = (now: Date): Date =>
+  startOfParisMonth(new Date(startOfParisMonth(now).getTime() + 32 * 24 * 60 * 60 * 1000));
+
 export const compareCalendarDates = (left: CalendarDate, right: CalendarDate): number =>
   left.year - right.year || left.month - right.month || left.day - right.day;
 

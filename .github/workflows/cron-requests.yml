@@ -1,10 +1,11 @@
 name: Send review requests
 
 # Every 15 minutes, the requests and reminders that are due leave (/api/cron/requests). The Hobby plan of Vercel runs
-# its own cron once a day only: it stays as a safety net (vercel.json), this workflow keeps the 15 minutes.
+# its own cron once a day only: it stays as a safety net (vercel.json), this workflow keeps the 15 minutes. Off the
+# quarter hours, which GitHub delays or drops the most when it is busy.
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 
 permissions:

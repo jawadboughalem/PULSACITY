@@ -1,6 +1,6 @@
-import { and, eq, inArray, isNull } from "drizzle-orm";
+import { and, eq, inArray, isNull, ne } from "drizzle-orm";
 import type { Database } from "@/db/database";
-import { purchases, reviewRequests, spaces } from "@/db/schema";
+import { customers, purchases, reviewRequests, spaces } from "@/db/schema";
 import {
   type SendOptions,
   type SendResult,
@@ -11,7 +11,12 @@ import {
 
 const findOwnedRequest = async (database: Database, userId: string, requestId: string) => {
   const [request] = await database
-    .select({ id: reviewRequests.id, status: reviewRequests.status, spaceId: purchases.spaceId })
+    .select({
+      id: reviewRequests.id,
+      status: reviewRequests.status,
+      spaceId: purchases.spaceId,
+      customerId: purchases.customerId,
+    })
     .from(reviewRequests)
     .innerJoin(purchases, eq(purchases.id, reviewRequests.purchaseId))
     .innerJoin(spaces, eq(spaces.id, purchases.spaceId))
@@ -33,7 +38,7 @@ export const cancelOwnedRequest = async (
 
   const [cancelled] = await database
     .update(reviewRequests)
-    .set({ status: "cancelled" })
+    .set({ status: "cancelled", cancelledAt: new Date() })
     .where(and(eq(reviewRequests.id, request.id), inArray(reviewRequests.status, ["scheduled", "failed"]), isNull(reviewRequests.sentAt)))
     .returning({ id: reviewRequests.id });
   if (cancelled) return { status: "cancelled" };
@@ -64,4 +69,40 @@ export const sendOwnedRequestNow = async (
   const now = options.now ?? new Date();
   const sentThisMonth = await countRequestsSentThisMonth(database, owned.spaceId, now);
   return { status: await sendFirstRequest(database, request, sentThisMonth, { ...options, now }) };
+};
+
+export type CorrectEmailResult = { status: "rescheduled" | "email-taken" | "not-failed" | "not-found" };
+
+/**
+ * « Corriger l'adresse »: a request that could not leave takes the customer's right address and leaves at the next
+ * run. The address is the customer's: their other requests use it too. Another customer of the space with that address
+ * is refused, never merged.
+ */
+export const correctOwnedRequestEmail = async (
+  database: Database,
+  userId: string,
+  requestId: string,
+  email: string,
+  now = new Date(),
+): Promise<CorrectEmailResult> => {
+  const request = await findOwnedRequest(database, userId, requestId);
+  if (!request) return { status: "not-found" };
+  if (request.status !== "failed") return { status: "not-failed" };
+
+  return database.transaction(async (transaction) => {
+    const [taken] = await transaction
+      .select({ id: customers.id })
+      .from(customers)
+      .where(and(eq(customers.spaceId, request.spaceId), eq(customers.email, email), ne(customers.id, request.customerId)))
+      .limit(1);
+    if (taken) return { status: "email-taken" };
+
+    await transaction.update(customers).set({ email }).where(eq(customers.id, request.customerId));
+    const [rescheduled] = await transaction
+      .update(reviewRequests)
+      .set({ status: "scheduled", scheduledAt: now, failedAttempts: 0, failedAt: null })
+      .where(and(eq(reviewRequests.id, request.id), eq(reviewRequests.status, "failed")))
+      .returning({ id: reviewRequests.id });
+    return { status: rescheduled ? "rescheduled" : "not-failed" };
+  });
 };

@@ -32,6 +32,7 @@ export type ExternalProductRow = {
   priceCents: number | null;
   currency: string | null;
   firstSeenAt: Date;
+  eventType: PurchaseEventType | null;
   productId: string | null;
 };
 
@@ -42,6 +43,8 @@ export type ConnectionOverview = {
   problemSince: Date | null;
   externalProducts: ExternalProductRow[];
   awaitingProductCount: number;
+  /** Sales signed with another key, kept until « Rejouer »: « 1 vente gardée de côté ». */
+  setAsideCount: number;
   eventCount: number;
   firstEventAt: Date | null;
 };
@@ -54,6 +57,7 @@ export const listExternalProducts = async (database: Database, connectionId: str
       priceCents: externalProducts.priceCents,
       currency: externalProducts.currency,
       firstSeenAt: externalProducts.firstSeenAt,
+      eventType: externalProducts.eventType,
       productId: productRefs.productId,
     })
     .from(externalProducts)
@@ -94,7 +98,11 @@ export const loadConnectionOverview = async (
   const [rows, [events], problemSince] = await Promise.all([
     listExternalProducts(database, connection.id),
     database
-      .select({ total: count(), first: min(webhookEvents.receivedAt) })
+      .select({
+        total: count(),
+        first: min(webhookEvents.receivedAt),
+        setAside: sql<number>`count(*) filter (where ${webhookEvents.error} = 'invalid-signature')`.mapWith(Number),
+      })
       .from(webhookEvents)
       .where(eq(webhookEvents.connectionId, connection.id)),
     connection.status === "error" ? readProblemSince(database, connection.id) : Promise.resolve(null),
@@ -105,16 +113,17 @@ export const loadConnectionOverview = async (
     problemSince,
     externalProducts: rows,
     awaitingProductCount: rows.filter((row) => row.productId === null).length,
+    setAsideCount: events?.setAside ?? 0,
     eventCount: events?.total ?? 0,
     firstEventAt: events?.first ?? null,
   };
 };
 
-/** The latest events first, readable: what was sold, to whom, and what came of it. */
+/** The latest events first, readable: what was sold, to whom, and what came of it. Or only the sales put aside. */
 export const listConnectionEvents = async (
   database: Database,
   connection: Pick<SpaceConnection, "id" | "connector">,
-  { limit, offset = 0 }: { limit: number; offset?: number },
+  { limit, offset = 0, isSetAsideOnly = false }: { limit: number; offset?: number; isSetAsideOnly?: boolean },
 ): Promise<ConnectionEvent[]> => {
   const rows = await database
     .select({
@@ -133,10 +142,26 @@ export const listConnectionEvents = async (
     .leftJoin(purchases, eq(purchases.id, webhookEvents.purchaseId))
     .leftJoin(products, eq(products.id, purchases.productId))
     .leftJoin(reviewRequests, eq(reviewRequests.purchaseId, purchases.id))
-    .where(eq(webhookEvents.connectionId, connection.id))
+    .where(
+      and(
+        eq(webhookEvents.connectionId, connection.id),
+        isSetAsideOnly ? eq(webhookEvents.error, "invalid-signature") : undefined,
+      ),
+    )
     .orderBy(desc(webhookEvents.receivedAt), desc(webhookEvents.id))
     .limit(limit)
     .offset(offset);
+
+  // An event without a purchase (put aside, or awaiting its product) still names the offer its product is associated with.
+  const associatedOffers = new Map(
+    (
+      await database
+        .select({ externalRef: productRefs.externalRef, name: products.name })
+        .from(productRefs)
+        .innerJoin(products, eq(products.id, productRefs.productId))
+        .where(eq(productRefs.connectionId, connection.id))
+    ).map((ref) => [ref.externalRef, ref.name]),
+  );
 
   return rows.map((row) => {
     const normalized = normalizeStoredEvent({ connector: connection.connector, rawPayload: row.rawPayload, headers: row.headers });
@@ -145,7 +170,7 @@ export const listConnectionEvents = async (
       id: row.id,
       receivedAt: row.receivedAt,
       kind: purchase?.eventType ?? "other",
-      productName: row.offerName ?? purchase?.productName ?? null,
+      productName: row.offerName ?? (purchase && associatedOffers.get(purchase.productRef)) ?? purchase?.productName ?? null,
       customerName: purchase ? formatCustomerName(purchase) || purchase.email : null,
       outcome: row.outcome,
       error: row.error,

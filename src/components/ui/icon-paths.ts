@@ -8,6 +8,8 @@ export const ICON_PATHS = {
   valid: [drawCircle(12, 12, 9), "M8 12.5l2.8 2.8L16 10"],
   clock: [drawCircle(12, 12, 9), "M12 7v5l3 2"],
   cancelled: [drawCircle(12, 12, 9), "M9 9l6 6", "M15 9l-6 6"],
+  close: ["M7 7l10 10", "M17 7L7 17"],
+  replay: ["M20 12a8 8 0 1 1-2.34-5.66L20 8.6", "M20 4v4.6h-4.6"],
   photo: ["M4 8h3l2-3h6l2 3h3v11H4z", drawCircle(12, 13, 3.5)],
   email: ["M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z", "M3.5 6l8.5 7 8.5-7"],
   copy: [
