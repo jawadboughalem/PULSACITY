@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 2 octobre 2026, avec la PR #22 : le lot 5 (widget) et sa suite (PR #21) sont en ligne et vérifiés sur une vraie page Systeme.io ; la PR #22 apporte les réponses de Design du 2 octobre, l'enregistrement de l'éditeur réglage par réglage et la décision des prix TVA comprise (`docs-internes/decision_tarifs.md`, recette dans `docs-internes/recette/lot-5-widget-fin.md`). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 3 octobre 2026, avec la PR #22 : le lot 5 (widget) et sa suite (PR #21) sont en ligne et vérifiés sur une vraie page Systeme.io ; la PR #22 apporte les réponses de Design du 2 octobre, l'enregistrement de l'éditeur réglage par réglage et la décision des prix TVA comprise (`docs-internes/decision_tarifs.md`, recette dans `docs-internes/recette/lot-5-widget-fin.md`). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -70,9 +70,14 @@ Mis à jour le 2 octobre 2026, avec la PR #22 : le lot 5 (widget) et sa suite (P
 - Guide mobile : la ligne « Bloquée à une étape ? Écrivez-nous » reste dans la maquette, en attente de l'adresse de support.
 - Design signale que le comparatif de m8 (Tarifs) montre encore « Tri par offre » comme absent du plan Gratuit : à corriger avec la décision des prix (prompt pour Design dans `lot-5-widget-fin.md`).
 
+## Recette de la PR #22 (3 octobre)
+
+- Prompt 1 de `lot-5-widget-fin.md`, sur l'aperçu : 8 points sur 8. Deux éditeurs ouverts : l'un choisit « Arrondis », l'autre, resté sur « Droits », passe en carrousel ; après rechargement, les deux montrent « Carrousel » et « Arrondis ». L'encadré du plan Gratuit dit « à 9,99 € par mois ». L'extension Claude in Chrome était instable : les deux éditeurs ont été ouverts côte à côte dans un même onglet, pilotés par le code de la page.
+- Prompt 3, Claude Design : m8 et m18 mis à jour (8 PNG). Prix 9,99 € et 19,99 € par mois, 99 € et 199 € par an, « par mois » ou « par an » sans « HT », l'ancien « soit … € par mois » de l'annuel retiré ; sous-titre « Sans engagement, TVA comprise. » ; réponse TVA ; « Tri par offre » inclus dans les trois plans. Centimes et « € » plus petits (inscrit dans la charte).
+
 ## À faire
 
-1. Recette de la PR #22 : prompts de `docs-internes/recette/lot-5-widget-fin.md` (aperçu, puis page Systeme.io après la fusion, puis Design pour m8).
+1. Après la fusion de la PR #22 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur. Leurs comptes rendus peuvent arriver dans la session du lot suivant.
 2. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
 3. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 4. Sentry, avant le lancement.
@@ -133,6 +138,5 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
 - Adresse de support : « Aide et contact » pointe vers `/aide`, qui n'existe pas, et la page du guide sur mobile (« Bloquée à une étape ? Écrivez-nous ») l'attend aussi : sa ligne n'est pas affichée en attendant.
-- Page Tarifs (m8) : à redessiner par Design avant son lot, pour les prix TVA comprise (9,99 €, 19,99 €, 99 €, 199 €) et « Tri par offre » dans tous les plans.
 - Effet de 9,99 € sur le passage au payant : à vérifier avec les premiers chiffres de Stripe.
 - La page de vente dessinée dans l'aperçu de l'éditeur reste générique (nom de l'espace, nom de l'offre, « Ce qu'en disent mes clients ») : m6 y montre la page de Julie Nutrition (menu, prix, « Tous les avis »). Écart gardé depuis le lot 5.

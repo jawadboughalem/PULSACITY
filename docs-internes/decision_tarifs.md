@@ -87,7 +87,7 @@ Les coûts variables d'un espace (e-mails de demande, photos) restent de l'ordre
 ### Textes
 
 - Dans l'application : « 9,99 € par mois », sans mention de taxe. L'encadré du plan Gratuit (m18) dit « Avec le plan Essentiel, à 9,99 € par mois, vous créez autant de widgets que vous voulez : un pour chaque page de vente. »
-- Page Tarifs (m8), à faire redessiner par Design :
+- Page Tarifs (m8), redessinée par Design le 3 octobre 2026 :
   - prix : 9,99 € et 19,99 € par mois, 99 € et 199 € par an ;
   - sous chaque prix, « par mois » (ou « par an »), sans « HT » ;
   - sous le titre, « TVA comprise » au lieu de « prix hors taxes » ;

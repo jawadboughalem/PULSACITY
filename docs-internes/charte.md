@@ -6,7 +6,7 @@
 | Carmin foncé | #861C30 | Survol et appui de tout élément Carmin. |
 | Carmin clair | #F08A9A | Étoiles, liens et étoile du logo sur fond sombre (Encre ou thème sombre du widget) uniquement. |
 | Encre 900 | #16213E | Texte principal, titres, bouton principal, focus, cases cochées, fond sombre (pied de page). |
-| Encre 800 | #2B3656 | Survol du bouton principal. |
+| Encre 800 | #2B3656 | Survol du bouton principal ; centimes et « € » des prix (m8). |
 | Ardoise 600 | #5A5F6E | Texte secondaire (métier, dates, aides, mentions), texte des boutons désactivés, badge « Masqué ». |
 | Gris 400 | #7E8390 | Bordures de champs et de cases à cocher, étoile vide. Jamais pour du texte. |
 | Filet 200 | #D8D9DD | Séparateurs, bordures de cartes, bordure du bouton désactivé. Jamais pour du texte sur fond clair. |
@@ -39,7 +39,7 @@ Règles : interlettrage 0 partout, sauf le grand titre (−0,01 em). Aucun itali
 ## Échelle de tailles
 | Nom | Taille px | Interligne | Usage |
 | --- | --- | --- | --- |
-| display | 48 | 52 | Grand titre desktop (Newsreader 500, −0,01 em), chiffres clés du tableau de bord, prix. Mobile : 36/42. |
+| display | 48 | 52 | Grand titre desktop (Newsreader 500, −0,01 em), chiffres clés du tableau de bord, prix. Mobile : 36/42. Dans un prix, les centimes et « € » passent en 28 px (20 px sur mobile), Encre 800, sur la même ligne de base que l'euro entier (m8, 3 octobre 2026). |
 | h1 | 36 | 42 | Titre de page desktop, grand titre mobile. Mobile : 28/34. |
 | h2 | 28 | 34 | Titre de section, titre de page mobile, titre de la page de collecte. |
 | quote | 20 | 28 | Citations de témoignages, titres de carte et d'étape (Newsreader 400 ou 500). |
