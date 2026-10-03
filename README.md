@@ -28,8 +28,9 @@ LEGAL_VALIDATED=false
 ```
 
 Sans `RESEND_API_KEY`, aucun e-mail ne part : leur texte s'affiche dans le terminal de `pnpm dev`.
-Les demandes d'avis planifiées partent avec la tâche `/api/cron/requests`, que Vercel Cron appelle toutes les
-15 minutes en production. En local, ajoutez `CRON_SECRET=<une valeur au choix>` à `.env.local` et lancez-la à la
+Les demandes d'avis planifiées partent avec la tâche `/api/cron/requests`. En production, le workflow GitHub
+« Send review requests » l'appelle toutes les 15 minutes, et Vercel Cron une fois par jour (le plan Hobby ne permet
+pas plus). En local, ajoutez `CRON_SECRET=<une valeur au choix>` à `.env.local` et lancez-la à la
 main : `curl -H "Authorization: Bearer <la même valeur>" http://localhost:3000/api/cron/requests`. Le bouton
 « Envoyer maintenant » de la page Demandes fait partir une demande sans attendre.
 Pour vous connecter, demandez un lien sur `/connexion` avec l'adresse passée à `pnpm db:seed`, puis
@@ -95,5 +96,6 @@ La liste complète est dans `.env.example`. Celles qui demandent une précision 
   la branche à leur place, pour que les liens de connexion et de collecte restent sur l'aperçu.
 - `SENTRY_DSN` : facultatif. Vide, Sentry reste éteint. Il est aussi transmis au navigateur au build.
 - `LEGAL_VALIDATED` : `false` tant que les textes légaux ne sont pas relus.
-- `CRON_SECRET` : au moins 32 caractères aléatoires. Vercel Cron l'envoie à `/api/cron/requests` ; sans lui, la
-  tâche refuse tout appel.
+- `CRON_SECRET` : au moins 32 caractères aléatoires, la même valeur dans Vercel (Production) et dans le secret
+  GitHub `CRON_SECRET`. Vercel Cron et le workflow l'envoient à `/api/cron/requests` ; sans lui, la tâche refuse tout
+  appel.

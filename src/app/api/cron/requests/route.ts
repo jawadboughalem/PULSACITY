@@ -4,14 +4,17 @@ import { getDb } from "@/db";
 import { processMissedEvents } from "@/lib/connectors/process-webhook-event";
 import { sendDueReviewEmails } from "@/lib/requests/send-review-emails";
 
-/** Vercel Cron calls every 15 minutes; a run stops sending in time to answer. */
+/**
+ * The workflow « Send review requests » calls every 15 minutes, Vercel Cron once a day (the most the Hobby plan allows).
+ * A run stops sending in time to answer.
+ */
 export const maxDuration = 60;
 
 const SENDING_TIME_MS = 45_000;
 
 const NO_CACHE = { "Cache-Control": "no-store" };
 
-/** Vercel Cron sends « Authorization: Bearer <CRON_SECRET> ». Without the variable, nobody may run it. */
+/** Both send « Authorization: Bearer <CRON_SECRET> ». Without the variable, nobody may run it. */
 const isAuthorized = (request: Request): boolean => {
   const secret = process.env.CRON_SECRET;
   if (!secret) return false;

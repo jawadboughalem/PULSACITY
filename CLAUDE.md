@@ -40,7 +40,7 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 - Resend + React Email
 - Stripe Billing (abonnements PULSACITY uniquement) + Checkout + portail client
 - Cloudflare R2 pour les photos (V1 : vidéos)
-- Vercel (région fra1, Francfort : les fonctions suivent la région de la base), Vercel Cron pour l'envoi des demandes planifiées
+- Vercel (région fra1, Francfort : les fonctions suivent la région de la base). Envoi des demandes planifiées : workflow GitHub « Send review requests » toutes les 15 min, Vercel Cron une fois par jour en filet (le plan Hobby n'en permet pas plus)
 - Zod, Vitest, Sentry
 
 ## Structure
