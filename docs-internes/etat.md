@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 3 octobre 2026, avec la PR #23 : le lot 6 (moteur de connecteurs, Systeme.io, demandes d'avis, désinscription) est construit et attend sa recette (`docs-internes/recette/lot-6-connecteurs.md`). Le lot 5 (widget, PR #20 à #22) est en ligne et vérifié sur une vraie page Systeme.io. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme.io, demandes d'avis, désinscription) est en ligne ; sa vérification en production attend le premier envoi automatique. La PR suivante aligne Demandes, Connecteurs et la désinscription sur les maquettes du 3 octobre (m19, m5, m1). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -10,9 +10,10 @@ Mis à jour le 3 octobre 2026, avec la PR #23 : le lot 6 (moteur de connecteurs,
 - Ajout manuel (m15), import CSV (m16) et page Offres (m17), avec les corrections de la recette du lot 4, recettés sur l'aperçu (PR #19).
 - Widget, maquettes 2 et 6 : `w.js` (mur, carrousel, badge), JSON public `/api/widget/[id]` en cache à la périphérie, pages Widgets et éditeur avec aperçu en direct, guide « Coller dans Systeme.io » (PR #20). Vérifié le 2 octobre sur une vraie page Systeme.io.
 - Suite du widget, maquettes du 2 octobre : liste m18, éditeur sur téléphone, nom du widget, coins des cartes, code qui nomme le type, chargements du carrousel et du badge (PR #21). Vérifié le 2 octobre sur la page Systeme.io, avec 15 avis.
+- Lot 6, connecteurs et demandes : moteur de connecteurs, connecteur Systeme.io, pages Connecteurs et Demandes, offres à associer, e-mails de demande et de relance, désinscription (PR #23, fusionnée le 3 octobre, migration 0006 appliquée en production).
 - Trois environnements : local, recette sur chaque aperçu Vercel, migrations de production lancées à chaque fusion et attendues par Vercel avant la mise en ligne (PR #16).
 
-## Construit dans la PR #23 (lot 6), en recette
+## Lot 6 (PR #23), en ligne depuis le 3 octobre
 
 - Moteur de connecteurs : `/api/connectors/[connector]/[token]` résout le connecteur par le registre (`src/lib/connectors/registry.ts`) et la connexion par son jeton, 404 silencieux sinon. Le corps brut et les en-têtes vont dans `webhook_events`, la réponse 200 part tout de suite, le traitement suit (`after()`), et la tâche d'envoi rattrape un événement resté non traité. Le cœur (`src/lib/purchases/record-purchase.ts`) ne connaît que `NormalizedPurchase`. Ajouter un connecteur : son dossier et une ligne dans le registre (prouvé le 3 octobre avec un faux connecteur « test », puis retiré ; un test Vitest garde la preuve).
 - Connecteur Systeme.io : « Nouvelle vente » (signée, HMAC-SHA256 du corps brut) et « Inscrit à la formation » (règle d'automatisation, non signée, authentifiée par le jeton de l'adresse). Tests sur les fixtures réelles.
@@ -28,6 +29,21 @@ Mis à jour le 3 octobre 2026, avec la PR #23 : le lot 6 (moteur de connecteurs,
 - Prompt 6 (360 px) : mise en page conforme, mais le filtre « Statut » de Demandes ne filtrait pas (nom du paramètre importé d'un composant client dans la page serveur). Corrigé et vérifié dans le conteneur ; contre-recette : prompt 6 bis.
 - Prompt 6 bis (contre-recette) : 7 points sur 7. L'ordre et le filtre de Demandes sont conformes, à 1 536 px et à 360 px. Le menu natif du filtre ne réagit pas aux clics de Claude in Chrome dans un cadre de 360 px : à essayer au doigt sur un vrai téléphone.
 - Le logo de l'e-mail « Nouveau témoignage » ne s'affiche pas depuis un aperçu (image protégée par Vercel Authentication) : rien à corriger, la production le sert à tous.
+
+## Vérification du lot 6 en production (3 octobre)
+
+- Prompt 7, sur l'espace de production « Recette Nutrition » : webhook « PULSACITY » créé dans Systeme.io, adresse et clé collées par le fondateur, « Nouvelle vente » et « Vente annulée » cochées. Vraie commande à 13:30 (produit physique à 1 €, paiement à la livraison, tunnel créé pour le test) : l'événement arrive en moins d'une minute, le voyant passe au vert, le produit s'associe à l'offre (délai 0 jour) et la demande est « Planifiée · Part au prochain envoi ».
+- Point 12 manqué : 25 minutes après, la demande n'était pas partie. Le workflow « Send review requests » n'avait encore jamais tourné tout seul depuis la fusion : GitHub tarde parfois à démarrer un nouveau planning, surtout aux quarts d'heure pleins, les plus chargés. Claude Code l'a lancé à la main à 14:00 (heure de Paris) ; le résultat est à vérifier par le fondateur (Actions, Demandes, boîte de test). Le planning passe aux minutes 7, 22, 37 et 52.
+- Restent : remettre le délai de l'offre de test à 14 jours une fois l'e-mail reçu ; désactiver le paiement à la livraison et le tunnel de test dans Systeme.io.
+
+## Maquettes de Design du 3 octobre (prompt 8)
+
+- 19 PNG dans `docs-internes/maquettes/`, index mis à jour : m19 Demandes (liste, filtre « Planifiées », plan Gratuit à 20 demandes, vide, planche des statuts), m5 (téléphone, clé différente, changer d'adresse et de clé, étape facultative des inscriptions), m1 (désinscription confirmée).
+- Badges de Demandes, sans nouvelle couleur : Planifiée sur Papier ; Envoyée et Relancée en blanc cerclé d'Encre ; Annulée en pointillé Gris 400, texte Ardoise ; Complétée et Échec en Succès et Erreur.
+- Étape facultative : Design supposait qu'une inscription arrive comme une vente à 0 €. Les formats capturés disent autre chose : c'est un événement à part (« Inscrit à la formation »), sans prix, associé à une offre comme un produit.
+- Captures des réglages Systeme.io : Design recommande les vraies, recadrées sur la zone utile, le champ encadré en Encre, refaites quand Systeme.io change. Elles demandent le compte Systeme.io du fondateur : prompt Claude in Chrome à prévoir ; les dessins restent en attendant.
+- Logos : un logo officiel seulement avec l'accord écrit de Systeme.io et de Calendly (aucun kit officiel trouvé ; le badge partenaire de Stripe est réservé à ses partenaires). En attendant, le nom en texte, comme aujourd'hui (l'initiale dans une case).
+- Signature des e-mails : pas d'adresse postale du créateur. Le pied d'e-mail portera celle de PULSACITY, qui envoie le message, avec le nom de l'espace et le lien de désinscription (à faire valider). Prénom et ville : deux champs facultatifs, « Signature » et « Ville », dans Réglages, rubrique E-mails, hors de l'onboarding ; sans prénom, l'e-mail signe du nom de l'espace.
 
 ## Pas encore construit
 
@@ -93,13 +109,15 @@ Mis à jour le 3 octobre 2026, avec la PR #23 : le lot 6 (moteur de connecteurs,
 
 ## À faire
 
-1. Lot 6 : recette sur l'aperçu faite le 3 octobre (prompts 1 à 6 bis). Restent, après la fusion de la PR #23 : le prompt 7 de `docs-internes/recette/lot-6-connecteurs.md` (vraie vente Systeme.io en production, envoi automatique par le workflow « Send review requests »), le prompt 8 pour Design, et un essai au doigt du filtre « Statut » de Demandes sur le téléphone du fondateur.
-2. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
-3. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
-4. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
-5. Sentry, avant le lancement.
-6. Plan Vercel : sur Hobby, Vercel Cron ne tourne qu'une fois par jour ; le workflow GitHub fait les 15 minutes. Passer à Pro permettrait de remettre la tâche toutes les 15 minutes dans `vercel.json` et de retirer le workflow. Décision du fondateur, sans urgence.
-7. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
+1. Lot 6 : vérifier l'envoi lancé à la main le 3 octobre à 14:00 (prompt 7, point 12), puis que « Send review requests » tourne seul ; remettre le délai de l'offre de test à 14 jours ; essai au doigt du filtre « Statut » de Demandes sur le téléphone du fondateur.
+2. PR suivante : Demandes (m19), Connecteurs (m5) et désinscription (m1) selon les maquettes du 3 octobre.
+3. Captures réelles des réglages Systeme.io, par un prompt Claude in Chrome sur le compte du fondateur.
+4. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
+5. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
+6. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
+7. Sentry, avant le lancement.
+8. Plan Vercel : sur Hobby, Vercel Cron ne tourne qu'une fois par jour ; le workflow GitHub fait les 15 minutes. Si GitHub laisse des trous de plus d'une heure pendant quelques jours, passer à Pro (20 $ par mois) permettra de remettre la tâche toutes les 15 minutes dans `vercel.json` et de retirer le workflow. Décision du fondateur.
+9. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
 
 Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;

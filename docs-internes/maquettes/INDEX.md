@@ -292,3 +292,37 @@ La planche « Micro-animations · démo » est interactive (mode Play) et n'a pa
 | m18-widgets-desktop-03-vide.png | Widgets · État vide · 1440 |
 
 Corrigés dans ce lot : m6-editeur-desktop-01 à 06 (champ « Nom du widget », réglage « Coins des cartes ») ; m6-editeur-desktop-06 (montre bien « Code copié ») ; m8-tarifs-desktop-02 (montre bien l’annuel) ; m4-espace-desktop-04 (sans pastille d’attente).
+
+
+# Demandes, connecteurs, désinscription — 3 oct. 2026
+
+## m19 — Demandes (page « Demandes »)
+| Fichier | Planche · état |
+| --- | --- |
+| m19-demandes-mobile-01-liste.png | Demandes · Liste · 360 |
+| m19-demandes-desktop-01-liste.png | Demandes · Liste · 1440 |
+| m19-demandes-mobile-02-filtre-planifiees.png | Demandes · Filtre « Planifiées » · 360 |
+| m19-demandes-desktop-02-filtre-planifiees.png | Demandes · Filtre « Planifiées » · 1440 |
+| m19-demandes-mobile-03-quota-gratuit.png | Demandes · Plan Gratuit, 20 demandes envoyées · 360 |
+| m19-demandes-desktop-03-quota-gratuit.png | Demandes · Plan Gratuit, 20 demandes envoyées · 1440 |
+| m19-demandes-mobile-04-vide.png | Demandes · État vide · 360 |
+| m19-demandes-desktop-04-vide.png | Demandes · État vide · 1440 |
+| m19-demandes-composant-statuts.png | Composant · statuts des demandes |
+
+## m5 — Connecteurs (ajouts)
+| Fichier | Planche · état |
+| --- | --- |
+| m5-connecteurs-mobile-01-liste.png | Connecteurs · page générale · 360 |
+| m5-connecteurs-mobile-02-systemeio-connecte.png | Connecteurs › Systeme.io · 360 |
+| m5-connecteurs-mobile-03-cle-differente.png | Systeme.io · vente gardée de côté (clé différente) · 360 |
+| m5-connecteurs-mobile-04-changer-adresse.png | Systeme.io · changer d’adresse et de clé · 360 |
+| m5-connecteurs-desktop-06-cle-differente.png | Systeme.io · vente gardée de côté (clé différente) |
+| m5-connecteurs-desktop-07-changer-adresse.png | Systeme.io · changer d’adresse et de clé |
+
+## m1 — Page de collecte (ajout)
+| Fichier | Planche · état |
+| --- | --- |
+| m1-collecte-mobile-06-desinscription.png | Collecte · Désinscription confirmée · 360 |
+| m1-collecte-desktop-06-desinscription.png | Collecte · Désinscription confirmée · 1440 |
+
+Modifié dans ce lot : m5-connecteurs-desktop-02-systemeio-connecte (lien « Changer d’adresse et de clé » sous l’étape 1, étape facultative « inscriptions sans vente »).
