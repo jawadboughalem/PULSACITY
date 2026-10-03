@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/nextjs";
-import { and, asc, count, eq, gte, inArray, isNotNull, isNull, lte } from "drizzle-orm";
+import { and, asc, count, eq, gt, gte, inArray, isNotNull, isNull, lte, notInArray, or } from "drizzle-orm";
 import { canSendRequest } from "@/config/plans";
 import type { Database } from "@/db/database";
 import { customers, products, purchases, reviewRequests, spaces } from "@/db/schema";
@@ -20,6 +20,9 @@ export const MAX_FAILED_ATTEMPTS = 3;
 
 const BATCH_SIZE = 40;
 
+/** Due requests are read this many at a time, until a batch has been handled. */
+const PAGE_SIZE = 100;
+
 /** The e-mail provider takes two messages a second. */
 const DEFAULT_MIN_INTERVAL_MS = 550;
 
@@ -37,13 +40,15 @@ export type SendSummary = {
   sent: number;
   reminded: number;
   cancelled: number;
-  waitingForPlan: number;
+  /** Spaces whose requests wait for next month: their plan's monthly requests are all sent. */
+  spacesAtPlanLimit: number;
   failed: number;
 };
 
 const requestColumns = {
   id: reviewRequests.id,
   token: reviewRequests.token,
+  scheduledAt: reviewRequests.scheduledAt,
   failedAttempts: reviewRequests.failedAttempts,
   purchasedAt: purchases.purchasedAt,
   eventType: purchases.eventType,
@@ -219,7 +224,7 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export const sendDueReviewEmails = async (database: Database, options: SendOptions = {}): Promise<SendSummary> => {
   const now = options.now ?? new Date();
   const minIntervalMs = options.minIntervalMs ?? DEFAULT_MIN_INTERVAL_MS;
-  const summary: SendSummary = { sent: 0, reminded: 0, cancelled: 0, waitingForPlan: 0, failed: 0 };
+  const summary: SendSummary = { sent: 0, reminded: 0, cancelled: 0, spacesAtPlanLimit: 0, failed: 0 };
   const sentThisMonth = new Map<string, number>();
   let lastSendAt = 0;
 
@@ -232,21 +237,46 @@ export const sendDueReviewEmails = async (database: Database, options: SendOptio
   const tally = (result: SendResult, sentKey: "sent" | "reminded") => {
     if (result === "sent") summary[sentKey] += 1;
     if (result === "cancelled") summary.cancelled += 1;
-    if (result === "plan-limit") summary.waitingForPlan += 1;
+    if (result === "plan-limit") summary.spacesAtPlanLimit += 1;
     if (result === "failed") summary.failed += 1;
   };
 
-  const dueRequests = await selectRequests(database)
-    .where(and(eq(reviewRequests.status, "scheduled"), lte(reviewRequests.scheduledAt, now)))
-    .orderBy(asc(reviewRequests.scheduledAt))
-    .limit(BATCH_SIZE);
-  for (const request of dueRequests) {
-    if (isOutOfTime()) return summary;
-    const counted = sentThisMonth.get(request.spaceId) ?? (await countRequestsSentThisMonth(database, request.spaceId, now));
-    if (!isStopped(request) && canSendRequest(request, counted)) await pace();
-    const result = await sendFirstRequest(database, request, counted, { ...options, now });
-    sentThisMonth.set(request.spaceId, counted + (result === "sent" ? 1 : 0));
-    tally(result, "sent");
+  // A space past its plan's monthly requests is left out of the next pages: its requests wait for next month
+  // without holding up those of other spaces. The cursor keeps a failed send from being tried twice in one run.
+  const limitedSpaces = new Set<string>();
+  let cursor: { scheduledAt: Date; id: string } | null = null;
+  let handled = 0;
+  while (handled < BATCH_SIZE) {
+    const page = await selectRequests(database)
+      .where(
+        and(
+          eq(reviewRequests.status, "scheduled"),
+          lte(reviewRequests.scheduledAt, now),
+          cursor
+            ? or(
+                gt(reviewRequests.scheduledAt, cursor.scheduledAt),
+                and(eq(reviewRequests.scheduledAt, cursor.scheduledAt), gt(reviewRequests.id, cursor.id)),
+              )
+            : undefined,
+          limitedSpaces.size > 0 ? notInArray(purchases.spaceId, [...limitedSpaces]) : undefined,
+        ),
+      )
+      .orderBy(asc(reviewRequests.scheduledAt), asc(reviewRequests.id))
+      .limit(PAGE_SIZE);
+    if (page.length === 0) break;
+    for (const request of page) {
+      if (isOutOfTime()) return summary;
+      if (handled >= BATCH_SIZE) break;
+      cursor = { scheduledAt: request.scheduledAt, id: request.id };
+      if (limitedSpaces.has(request.spaceId)) continue;
+      const counted = sentThisMonth.get(request.spaceId) ?? (await countRequestsSentThisMonth(database, request.spaceId, now));
+      if (!isStopped(request) && canSendRequest(request, counted)) await pace();
+      const result = await sendFirstRequest(database, request, counted, { ...options, now });
+      sentThisMonth.set(request.spaceId, counted + (result === "sent" ? 1 : 0));
+      tally(result, "sent");
+      if (result === "plan-limit") limitedSpaces.add(request.spaceId);
+      else handled += 1;
+    }
   }
 
   const dueReminders = await selectRequests(database)

@@ -148,9 +148,35 @@ describe("sendDueReviewEmails", () => {
   it("stops at the plan's monthly requests, and sends the rest next month", async () => {
     for (let index = 0; index < 22; index += 1) await insertRequest();
 
-    expect(await run()).toMatchObject({ sent: 20, waitingForPlan: 2 });
-    expect(await run(new Date(NOW.getTime() + 60 * 1000))).toMatchObject({ sent: 0, waitingForPlan: 2 });
+    expect(await run()).toMatchObject({ sent: 20, spacesAtPlanLimit: 1 });
+    expect(await run(new Date(NOW.getTime() + 60 * 1000))).toMatchObject({ sent: 0, spacesAtPlanLimit: 1 });
     expect(await run(new Date("2026-11-01T08:00:00Z"))).toMatchObject({ sent: 2 });
+  });
+
+  it("does not let a space past its limit hold up the requests of another space", async () => {
+    for (let index = 0; index < 45; index += 1) {
+      await insertRequest({ scheduledAt: new Date(NOW.getTime() - 2 * DAY_MS) });
+    }
+    const marcId = await insertTestUser(database, "marc@exemple.fr");
+    const marcSpaceId = await insertTestSpace(database, marcId, "marc-coaching");
+    const [marcProduct] = await database
+      .insert(products)
+      .values({ spaceId: marcSpaceId, name: "Coaching", slug: "coaching" })
+      .returning({ id: products.id });
+    const [marcCustomer] = await database
+      .insert(customers)
+      .values({ spaceId: marcSpaceId, email: "client-de-marc@exemple.fr" })
+      .returning({ id: customers.id });
+    const [marcPurchase] = await database
+      .insert(purchases)
+      .values({ spaceId: marcSpaceId, customerId: marcCustomer.id, productId: marcProduct.id, source: "manual", purchasedAt: NOW })
+      .returning({ id: purchases.id });
+    await database
+      .insert(reviewRequests)
+      .values({ purchaseId: marcPurchase.id, token: "jeton-de-marc", scheduledAt: new Date(NOW.getTime() - DAY_MS) });
+
+    expect(await run()).toMatchObject({ sent: 21 });
+    expect(sent.filter((email) => email.to === "client-de-marc@exemple.fr")).toHaveLength(1);
   });
 
   it("does not count the plan's limit on Essentiel", async () => {

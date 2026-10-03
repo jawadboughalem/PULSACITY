@@ -18,7 +18,7 @@ const call = (authorization?: string) =>
 
 beforeEach(() => {
   processMissedEvents.mockReset().mockResolvedValue(0);
-  sendDueReviewEmails.mockReset().mockResolvedValue({ sent: 2, reminded: 1, cancelled: 0, waitingForPlan: 0, failed: 0 });
+  sendDueReviewEmails.mockReset().mockResolvedValue({ sent: 2, reminded: 1, cancelled: 0, spacesAtPlanLimit: 0, failed: 0 });
 });
 
 afterEach(() => {
@@ -26,7 +26,7 @@ afterEach(() => {
 });
 
 describe("GET /api/cron/requests", () => {
-  it("runs only for Vercel Cron, which sends the secret", async () => {
+  it("runs only for the schedulers, which send the secret", async () => {
     vi.stubEnv("CRON_SECRET", "secret-du-cron");
 
     expect((await call()).status).toBe(401);
@@ -35,7 +35,7 @@ describe("GET /api/cron/requests", () => {
 
     const response = await call("Bearer secret-du-cron");
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ missedEvents: 0, sent: 2, reminded: 1, cancelled: 0, waitingForPlan: 0, failed: 0 });
+    expect(await response.json()).toEqual({ missedEvents: 0, sent: 2, reminded: 1, cancelled: 0, spacesAtPlanLimit: 0, failed: 0 });
     expect(processMissedEvents).toHaveBeenCalledOnce();
   });
 
