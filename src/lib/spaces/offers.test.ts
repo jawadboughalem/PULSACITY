@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { Database } from "@/db/database";
-import { connections, customers, productRefs, products, purchases } from "@/db/schema";
+import { connections, customers, externalProducts, productRefs, products, purchases } from "@/db/schema";
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import { insertTestTestimonial } from "@/db/testimonial-fixtures";
@@ -39,6 +39,17 @@ describe("listSpaceOffers", () => {
       { productId, connectionId: connection.id, externalRef: "offer-price-2" },
       { productId, connectionId: connection.id, externalRef: "course-1" },
     ]);
+    await database.insert(externalProducts).values([
+      { connectionId: connection.id, externalRef: "course-1", name: "Formation 30 jours", firstSeenAt: new Date("2026-08-01") },
+      {
+        connectionId: connection.id,
+        externalRef: "offer-price-2",
+        name: "Programme 30 jours - Paiement unique",
+        priceCents: 29700,
+        currency: "EUR",
+        firstSeenAt: new Date("2026-08-28"),
+      },
+    ]);
     await insertTestTestimonial(database, { spaceId, productId });
     await insertTestTestimonial(database, { spaceId, productId });
     await database.insert(products).values({ spaceId, name: "Suivi individuel", slug: "suivi-individuel" });
@@ -60,11 +71,18 @@ describe("listSpaceOffers", () => {
         testimonialCount: 2,
         hasSales: true,
         connectorRefs: [
-          { connector: "systeme", externalRef: "course-1" },
-          { connector: "systeme", externalRef: "offer-price-2" },
+          { connector: "systeme", externalRef: "course-1", productName: "Formation 30 jours" },
+          { connector: "systeme", externalRef: "offer-price-2", productName: "Programme 30 jours - Paiement unique" },
         ],
+        price: { amountCents: 29700, currency: "EUR" },
       },
-      expect.objectContaining({ name: "Suivi individuel", testimonialCount: 0, hasSales: false, connectorRefs: [] }),
+      expect.objectContaining({
+        name: "Suivi individuel",
+        testimonialCount: 0,
+        hasSales: false,
+        connectorRefs: [],
+        price: null,
+      }),
     ]);
   });
 });

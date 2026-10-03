@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import {
   type OfferActionResult,
@@ -14,8 +15,8 @@ import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
 import { Switch } from "@/components/ui/Switch";
 import { cn } from "@/lib/cn";
-import { CONNECTOR_NAMES } from "@/lib/connectors/connector-names";
 import { formatDayMonth } from "@/lib/dates/format-french-date";
+import { formatPrice } from "@/lib/french/format-price";
 import { quoteInFrench } from "@/lib/french/typography";
 import { MAX_PRODUCT_NAME_LENGTH, MAX_REQUEST_DELAY_DAYS, MIN_REQUEST_DELAY_DAYS } from "@/lib/spaces/product-rules";
 import type { SpaceOffer } from "@/lib/spaces/list-space-offers";
@@ -35,23 +36,26 @@ const LABEL_CLASSES = "text-small font-semibold";
 const isValidDelay = (days: number) =>
   Number.isInteger(days) && days >= MIN_REQUEST_DELAY_DAYS && days <= MAX_REQUEST_DELAY_DAYS;
 
+/** A connector this space has set up: where its products are associated with offers. */
+export type OfferConnector = {
+  id: string;
+  name: string;
+  associationHref: string;
+};
+
 type OfferRowProps = {
   offer: SpaceOffer;
+  connectors: OfferConnector[];
   collectionUrl: string;
   collectionAddress: string;
   /** Today in Paris, « 2026-10-01 », so the server and the browser agree on the date of the request. */
   today: string;
 };
 
-const groupRefs = (refs: SpaceOffer["connectorRefs"]) =>
-  Object.entries(
-    refs.reduce<Record<string, string[]>>((groups, ref) => {
-      const name = CONNECTOR_NAMES[ref.connector];
-      return { ...groups, [name]: [...(groups[name] ?? []), ref.externalRef] };
-    }, {}),
-  );
+const LINK_CLASSES =
+  "font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
 
-export const OfferRow = ({ offer, collectionUrl, collectionAddress, today }: OfferRowProps) => {
+export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, today }: OfferRowProps) => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [name, setName] = useState(offer.name);
   const [delay, setDelay] = useState(String(offer.requestDelayDays));
@@ -151,7 +155,11 @@ export const OfferRow = ({ offer, collectionUrl, collectionAddress, today }: Off
           <div className="flex min-w-[0] flex-col gap-1">
             <h2 className="font-serif text-quote font-medium">{offer.name}</h2>
             <p className="text-small text-slate-600">
-              {offer.testimonialCount > 1 ? `${offer.testimonialCount} témoignages` : `${offer.testimonialCount} témoignage`}
+              {offer.price
+                ? formatPrice(offer.price.amountCents, offer.price.currency)
+                : offer.testimonialCount > 1
+                  ? `${offer.testimonialCount} témoignages`
+                  : `${offer.testimonialCount} témoignage`}
             </p>
           </div>
           <div className="flex gap-5">
@@ -286,17 +294,38 @@ export const OfferRow = ({ offer, collectionUrl, collectionAddress, today }: Off
           <div className="flex flex-col gap-3">
             <span className={LABEL_CLASSES}>Identifiants par connecteur</span>
             <ul className="flex flex-col border-t border-hairline-200">
-              {offer.connectorRefs.length > 0 ? (
-                groupRefs(offer.connectorRefs).map(([connector, refs]) => (
-                  <li key={connector} className="flex items-start gap-3 border-b border-hairline-200 py-4 text-small">
+              {offer.connectorRefs.map((ref) => {
+                const connector = connectors.find((candidate) => candidate.id === ref.connector);
+                return (
+                  <li key={`${ref.connector}-${ref.externalRef}`} className="flex items-start gap-3 border-b border-hairline-200 py-4 text-small">
                     <Icon name="connection" size={20} />
+                    <span className="flex min-w-[0] flex-1 flex-col gap-1">
+                      <span className="text-body font-semibold">{connector?.name ?? ref.connector}</span>
+                      <span>{ref.productName ? `Produit ${quoteInFrench(ref.productName)}` : ref.externalRef}</span>
+                    </span>
+                    {connector ? (
+                      <Link href={connector.associationHref} className={cn(LINK_CLASSES, "shrink-0")}>
+                        Modifier
+                      </Link>
+                    ) : null}
+                  </li>
+                );
+              })}
+              {connectors
+                .filter((connector) => !offer.connectorRefs.some((ref) => ref.connector === connector.id))
+                .map((connector) => (
+                  <li key={connector.id} className="flex items-start gap-3 border-b border-hairline-200 py-4 text-small">
+                    <Icon name="clock" size={20} className="text-attention" />
                     <span className="flex flex-col gap-1">
-                      <span className="text-body font-semibold">{connector}</span>
-                      <span>{refs.join(", ")}</span>
+                      <span className="text-body font-semibold">{`${connector.name} · aucun produit associé`}</span>
+                      <span>Les ventes de ce produit sont gardées de côté : aucune demande n&apos;est envoyée.</span>
+                      <Link href={connector.associationHref} className={cn(LINK_CLASSES, "self-start")}>
+                        {`Associer un produit ${connector.name}`}
+                      </Link>
                     </span>
                   </li>
-                ))
-              ) : (
+                ))}
+              {connectors.length === 0 && offer.connectorRefs.length === 0 ? (
                 <li className="flex items-start gap-3 border-b border-hairline-200 py-4 text-small">
                   <Icon name="connection" size={20} className="text-slate-600" />
                   <span className="flex flex-col gap-1">
@@ -306,7 +335,7 @@ export const OfferRow = ({ offer, collectionUrl, collectionAddress, today }: Off
                     </span>
                   </span>
                 </li>
-              )}
+              ) : null}
             </ul>
           </div>
         </div>

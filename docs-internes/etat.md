@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 3 octobre 2026, avec la PR #22 : le lot 5 (widget) et sa suite (PR #21) sont en ligne et vérifiés sur une vraie page Systeme.io ; la PR #22 apporte les réponses de Design du 2 octobre, l'enregistrement de l'éditeur réglage par réglage et la décision des prix TVA comprise (`docs-internes/decision_tarifs.md`, recette dans `docs-internes/recette/lot-5-widget-fin.md`). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 3 octobre 2026, avec la PR #23 : le lot 6 (moteur de connecteurs, Systeme.io, demandes d'avis, désinscription) est construit et attend sa recette (`docs-internes/recette/lot-6-connecteurs.md`). Le lot 5 (widget, PR #20 à #22) est en ligne et vérifié sur une vraie page Systeme.io. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -12,11 +12,27 @@ Mis à jour le 3 octobre 2026, avec la PR #22 : le lot 5 (widget) et sa suite (P
 - Suite du widget, maquettes du 2 octobre : liste m18, éditeur sur téléphone, nom du widget, coins des cartes, code qui nomme le type, chargements du carrousel et du badge (PR #21). Vérifié le 2 octobre sur la page Systeme.io, avec 15 avis.
 - Trois environnements : local, recette sur chaque aperçu Vercel, migrations de production lancées à chaque fusion et attendues par Vercel avant la mise en ligne (PR #16).
 
+## Construit dans la PR #23 (lot 6), en recette
+
+- Moteur de connecteurs : `/api/connectors/[connector]/[token]` résout le connecteur par le registre (`src/lib/connectors/registry.ts`) et la connexion par son jeton, 404 silencieux sinon. Le corps brut et les en-têtes vont dans `webhook_events`, la réponse 200 part tout de suite, le traitement suit (`after()`), et la tâche d'envoi rattrape un événement resté non traité. Le cœur (`src/lib/purchases/record-purchase.ts`) ne connaît que `NormalizedPurchase`. Ajouter un connecteur : son dossier et une ligne dans le registre (prouvé le 3 octobre avec un faux connecteur « test », puis retiré ; un test Vitest garde la preuve).
+- Connecteur Systeme.io : « Nouvelle vente » (signée, HMAC-SHA256 du corps brut) et « Inscrit à la formation » (règle d'automatisation, non signée, authentifiée par le jeton de l'adresse). Tests sur les fixtures réelles.
+- Écrans : Connecteurs (m5), Connecteurs > Systeme.io (m5 : voyant, 3 étapes, offres à associer, derniers événements, historique), Offres (prix et produit Systeme.io, m17), Demandes (sans maquette), page de confirmation de désinscription.
+- Envois : tâche `/api/cron/requests` (verrou sur `sentAt`, limite du plan, relance unique à J+4, trois essais puis « Échec »), e-mails de demande et de relance de m3, désinscription en un clic par lien signé et par le bouton du client de messagerie (`List-Unsubscribe`).
+- Migration 0006 : tables `external_products` et `connector_waitlist`, colonnes facultatives, contraintes uniques sur `connections (space_id, connector)` et `purchases (connection_id, external_ref)`.
+
+## Recette de la PR #23 sur l'aperçu (3 octobre)
+
+- `CRON_SECRET` ajouté dans Vercel (Production) et dans les secrets GitHub (prompts 1 et 2). Espace de recette rempli depuis la branche de la PR (prompt 3).
+- Prompt 4 (écrans Connecteurs) : 16 points sur 16.
+- Prompt 5 (vente simulée au format capturé, e-mail, rejeu, clé différente, désinscription) : 18 points sur 19. Le point manqué : la demande qui partait au prochain envoi était sixième de la liste Demandes. Corrigé : les demandes à envoyer d'abord, la plus proche en haut.
+- Prompt 6 (360 px) : mise en page conforme, mais le filtre « Statut » de Demandes ne filtrait pas (nom du paramètre importé d'un composant client dans la page serveur). Corrigé et vérifié dans le conteneur ; contre-recette : prompt 6 bis.
+- Prompt 6 bis (contre-recette) : 7 points sur 7. L'ordre et le filtre de Demandes sont conformes, à 1 536 px et à 360 px. Le menu natif du filtre ne réagit pas aux clics de Claude in Chrome dans un cadre de 360 px : à essayer au doigt sur un vrai téléphone.
+- Le logo de l'e-mail « Nouveau témoignage » ne s'affiche pas depuis un aperçu (image protégée par Vercel Authentication) : rien à corriger, la production le sert à tous.
+
 ## Pas encore construit
 
-- Connecteur Systeme.io : les payloads réels sont capturés (`docs-internes/connectors/systeme.md`, fixtures dans `src/lib/connectors/systeme/__fixtures__`). Restent `normalize`, la réception des webhooks (`/api/connectors/...`) et l'écran Connecteurs (maquette 5).
-- Demandes d'avis : planification, Vercel Cron, e-mails de demande et de relance (maquette 3), désinscription.
-- Pages Connecteurs, Demandes, Réglages et Facturation de l'espace.
+- « Vente annulée » de Systeme.io : son payload n'a jamais été capturé (un remboursement de paiement à la livraison n'émet rien). Les événements reçus sont gardés sans être lus ; une demande d'une vente remboursée part donc quand même, sauf si le créateur l'annule dans Demandes. À capturer avec une vente Stripe en mode test, puis à traiter.
+- Pages Réglages et Facturation de l'espace.
 - Stripe (abonnements, Checkout, portail) et page Tarifs.
 - Site : accueil (maquette 7), intégrations, guides, pages légales.
 
@@ -77,17 +93,19 @@ Mis à jour le 3 octobre 2026, avec la PR #22 : le lot 5 (widget) et sa suite (P
 
 ## À faire
 
-1. Après la fusion de la PR #22 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur. Leurs comptes rendus peuvent arriver dans la session du lot suivant.
-2. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
-3. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
-4. Sentry, avant le lancement.
-5. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
+1. Lot 6 : recette sur l'aperçu faite le 3 octobre (prompts 1 à 6 bis). Restent, après la fusion de la PR #23 : le prompt 7 de `docs-internes/recette/lot-6-connecteurs.md` (vraie vente Systeme.io en production, envoi automatique par le workflow « Send review requests »), le prompt 8 pour Design, et un essai au doigt du filtre « Statut » de Demandes sur le téléphone du fondateur.
+2. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
+3. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
+4. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
+5. Sentry, avant le lancement.
+6. Plan Vercel : sur Hobby, Vercel Cron ne tourne qu'une fois par jour ; le workflow GitHub fait les 15 minutes. Passer à Pro permettrait de remettre la tâche toutes les 15 minutes dans `vercel.json` et de retirer le workflow. Décision du fondateur, sans urgence.
+7. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
 
 Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
 - les compteurs du haut de la liste se mettent à jour environ une seconde après « Valider » ou « Masquer » ;
 - un premier clic sur « Importez un fichier CSV » n'a rien fait une fois, le second a ouvert la page ;
-- les liens Connecteurs, Demandes et Réglages mènent à des pages pas encore construites.
+- le lien Réglages mène à une page pas encore construite (Connecteurs et Demandes existent depuis le lot 6).
 
 ## Décisions du 1er octobre (maquettes m15 à m17)
 
@@ -133,10 +151,30 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Prix TVA comprise, ce que le créateur paie : 9,99 € et 19,99 € par mois, 99 € et 199 € par an (montants fixés par le fondateur, pour garder 8,33 € HT par abonné Essentiel). Arguments, chiffres et conséquences (textes, Stripe) dans `docs-internes/decision_tarifs.md`. L'application écrit « 9,99 € par mois », sans « HT ».
 - L'éditeur enregistre réglage par réglage : chaque enregistrement ne porte que ce qui vient de changer, et ils partent l'un après l'autre. Un réglage qui n'a pas pu s'enregistrer repart avec le suivant, ou avec « Réessayer ».
 
+## Décisions du 3 octobre (lot 6, connecteurs et demandes)
+
+- Un produit Systeme.io inconnu arrive dans « Offres à associer » (table `external_products`). Ses ventes sont gardées de côté, sans client ni achat ni demande, jusqu'à ce que le créateur l'associe à une offre ou crée l'offre à partir de lui. Elles sont alors traitées, et leur demande part à date de vente + délai de l'offre (tout de suite si cette date est passée).
+- Référence d'une vente Systeme.io : son plan de prix (`price-plan:<id>`), seul identifiant observé dans la capture ; nom et prix du produit : ceux du plan. Une formation vendue avec deux plans de prix arrive donc en deux produits, à associer à la même offre. Une inscription porte la référence de la formation (`course:<id>`). La ressource « course » d'une vente n'a jamais été observée : elle n'est pas lue.
+- Une vente est enregistrée une fois par connexion et par identifiant (`order-item:<id>`, ou contact et formation pour une inscription) : la même vente reçue deux fois, ou rejouée, ne crée rien de plus.
+- Une seule demande par client et par offre, pour toujours, même annulée : avec sa relance, jamais plus de deux e-mails. Deux ventes simultanées du même client attendent l'une l'autre (verrou de transaction).
+- Une vente signée avec une autre clé est gardée de côté, et la connexion passe en « Problème » jusqu'à la prochaine vente bien signée. « Rejouer » la traite si le créateur le décide : l'adresse, secrète, l'authentifie déjà (les inscriptions, que Systeme.io ne signe jamais, ne reposent que sur elle).
+- L'adresse de connexion est créée à la première visite de la page Systeme.io. « Changer d'adresse et de clé » (lien discret sous l'étape 1, sans maquette) en crée de nouvelles ; les anciennes répondent 404 aussitôt.
+- Étape 2 de m5 : trois dessins des réglages Systeme.io à la place des captures, comme pour le guide du widget. Les légendes reprennent les vrais libellés de Systeme.io capturés le 27 septembre (« URL », « Secret ») plutôt que ceux de la maquette (« URL du webhook », « Clé secrète »). Logos : la première lettre dans un carré, en attendant les vrais (question à Design).
+- La ligne « Bloquée à une étape ? Écrivez-nous » de m5 n'est pas affichée : elle attend l'adresse de support, comme le guide du widget.
+- E-mails de m3 : l'objet suit la consigne du lot, « Camille, votre avis sur Programme 30 jours ? », sans article (le nom de l'offre est libre). Le texte reprend la maquette sans ses phrases propres à Julie (« sans vous priver »). La signature est le nom de l'espace : le prénom, la ville et l'adresse postale du créateur ne sont pas demandés (question à Design). Une inscription dit « vous avez rejoint … » au lieu de « vous avez acheté … ».
+- Désinscription : le lien de l'e-mail désinscrit en un clic, puis montre « Désinscription confirmée ». Les demandes planifiées sont annulées et la relance tombe ; une demande déjà reçue garde son lien, pour pouvoir encore donner son avis. Le client n'est désinscrit que des e-mails de cet espace.
+- Limite du plan Gratuit (20 demandes par mois, `plans.ts`) : au-delà, les demandes restent planifiées et partent au début du mois suivant. Les relances ne comptent pas.
+- Délai d'une demande : de 0 à 180 jours (0 : la demande part au prochain passage de la tâche d'envoi).
+- Envoi toutes les 15 minutes : le plan Hobby de Vercel refuse une tâche Cron plus fréquente qu'une fois par jour (déploiement refusé le 3 octobre). Le workflow GitHub « Send review requests » appelle donc `/api/cron/requests` toutes les 15 minutes avec `CRON_SECRET` ; Vercel Cron passe une fois par jour (6h45 UTC, 8h45 à Paris en été) en filet de sécurité.
+- Page Demandes : pas de maquette ; construite avec les chiffres de m4, les lignes de m5 et les badges de la charte, en attendant celle de Design (prompt 8). Badges Envoyée, Relancée et Annulée en gris (Ardoise sur Papier), faute de couleur dans la charte.
+- « Me prévenir » et « Dites-nous quel outil » s'enregistrent dans `connector_waitlist`, sans adresse de support à laquelle écrire.
+
 ## Questions ouvertes
 
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
 - Adresse de support : « Aide et contact » pointe vers `/aide`, qui n'existe pas, et la page du guide sur mobile (« Bloquée à une étape ? Écrivez-nous ») l'attend aussi : sa ligne n'est pas affichée en attendant.
 - Effet de 9,99 € sur le passage au payant : à vérifier avec les premiers chiffres de Stripe.
+- E-mails aux clients : la loi sur la prospection demande l'adresse postale de l'expéditeur ; m3 la prévoit pour le créateur, PULSACITY ne la demande pas encore.
+- Avant le lancement : afficher le JSON brut d'un événement inconnu à Claude Code (requête SQL dans Supabase, par prompt) pour capturer « Vente annulée » le jour où un créateur en reçoit une.
 - La page de vente dessinée dans l'aperçu de l'éditeur reste générique (nom de l'espace, nom de l'offre, « Ce qu'en disent mes clients ») : m6 y montre la page de Julie Nutrition (menu, prix, « Tous les avis »). Écart gardé depuis le lot 5.

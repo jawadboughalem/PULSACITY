@@ -7,7 +7,7 @@ import { PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { cn } from "@/lib/cn";
 import type { SpaceOffer } from "@/lib/spaces/list-space-offers";
 import { AddOfferForm } from "./AddOfferForm";
-import { OfferRow } from "./OfferRow";
+import { type OfferConnector, OfferRow } from "./OfferRow";
 
 export type BoardOffer = {
   offer: SpaceOffer;
@@ -17,11 +17,12 @@ export type BoardOffer = {
 
 type OffersBoardProps = {
   offers: BoardOffer[];
+  connectors: OfferConnector[];
   today: string;
 };
 
 /** The offers page of maquette 17: the list, the « Nouvelle offre » panel, and the first-day state. */
-export const OffersBoard = ({ offers, today }: OffersBoardProps) => {
+export const OffersBoard = ({ offers, connectors, today }: OffersBoardProps) => {
   const [isAdding, setIsAdding] = useState(false);
   const isEmpty = offers.length === 0;
   const addButton = (
@@ -77,6 +78,7 @@ export const OffersBoard = ({ offers, today }: OffersBoardProps) => {
             <OfferRow
               key={offer.id}
               offer={offer}
+              connectors={connectors}
               collectionUrl={collectionUrl}
               collectionAddress={collectionAddress}
               today={today}

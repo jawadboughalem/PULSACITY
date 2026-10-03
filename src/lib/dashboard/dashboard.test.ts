@@ -202,10 +202,7 @@ describe("readSetupSteps", () => {
   });
 
   it("sees Systeme.io connected and the widget shown on a page", async () => {
-    await database.insert(connections).values([
-      { spaceId, connector: "systeme", webhookToken: randomUUID(), status: "error" },
-      { spaceId, connector: "systeme", webhookToken: randomUUID(), status: "active" },
-    ]);
+    await database.insert(connections).values({ spaceId, connector: "systeme", webhookToken: randomUUID(), status: "active" });
     await database.insert(widgets).values({ spaceId, type: "wall", firstLoadedAt: NOW });
 
     expect(await readSetupSteps(database, spaceId)).toEqual({
@@ -213,6 +210,12 @@ describe("readSetupSteps", () => {
       systeme: "active",
       isWidgetPasted: true,
     });
+  });
+
+  it("sees a Systeme.io connection with a problem", async () => {
+    await database.insert(connections).values({ spaceId, connector: "systeme", webhookToken: randomUUID(), status: "error" });
+
+    expect(await readSetupSteps(database, spaceId)).toMatchObject({ systeme: "error" });
   });
 
   it("waits for the first sale of a Systeme.io connection", async () => {

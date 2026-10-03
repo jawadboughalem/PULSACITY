@@ -1,0 +1,33 @@
+name: Send review requests
+
+# Every 15 minutes, the requests and reminders that are due leave (/api/cron/requests). The Hobby plan of Vercel runs
+# its own cron once a day only: it stays as a safety net (vercel.json), this workflow keeps the 15 minutes.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cron-requests
+  cancel-in-progress: false
+
+jobs:
+  send:
+    name: Send the due requests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Call the requests cron on production
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::warning::The repository secret CRON_SECRET is missing: no request was sent. See docs-internes/recette/lot-6-connecteurs.md."
+            exit 0
+          fi
+          curl --fail-with-body --silent --show-error --max-time 90 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            https://pulsacity.com/api/cron/requests

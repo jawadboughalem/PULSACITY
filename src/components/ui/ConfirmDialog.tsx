@@ -9,11 +9,21 @@ type ConfirmDialogProps = {
   title: string;
   message: string;
   confirmLabel: string;
+  /** « Annuler » unless the confirmation itself cancels something. */
+  cancelLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
 };
 
-export const ConfirmDialog = ({ isOpen, title, message, confirmLabel, onConfirm, onCancel }: ConfirmDialogProps) => {
+export const ConfirmDialog = ({
+  isOpen,
+  title,
+  message,
+  confirmLabel,
+  cancelLabel = "Annuler",
+  onConfirm,
+  onCancel,
+}: ConfirmDialogProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const messageId = useId();
@@ -47,7 +57,7 @@ export const ConfirmDialog = ({ isOpen, title, message, confirmLabel, onConfirm,
         </div>
         <div className="flex flex-col-reverse gap-3 desktop:flex-row desktop:justify-end">
           <button type="button" onClick={onCancel} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
-            Annuler
+            {cancelLabel}
           </button>
           <button type="button" onClick={onConfirm} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
             {confirmLabel}

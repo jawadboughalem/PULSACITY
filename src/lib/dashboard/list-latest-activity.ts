@@ -1,7 +1,6 @@
 import { and, desc, eq, isNotNull, sql } from "drizzle-orm";
 import type { Database } from "@/db/database";
 import { connections, customers, products, purchases, reviewRequests, testimonials } from "@/db/schema";
-import type { ConnectorId } from "@/lib/connectors/types";
 import { formatCustomerName } from "@/lib/testimonials/format-customer-name";
 import type { TestimonialStatus } from "@/lib/testimonials/testimonial-filters";
 
@@ -18,7 +17,7 @@ export type ActivityItem =
       productName: string | null;
     }
   | { kind: "request-sent" | "reminder-sent"; at: Date; customerName: string; productName: string }
-  | { kind: "sale"; at: Date; customerName: string; productName: string; connector: ConnectorId | null };
+  | { kind: "sale"; at: Date; customerName: string; productName: string; connector: string | null };
 
 const readCustomerName = (customer: { firstName: string | null; lastName: string | null; email: string }) =>
   formatCustomerName(customer) || customer.email;

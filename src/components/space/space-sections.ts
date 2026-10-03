@@ -44,7 +44,11 @@ export const widgetEditorHref = (widgetId: string) => `${WIDGETS.href}/${widgetI
 /** « Coller dans Systeme.io » on its own page, for a phone. */
 export const widgetGuideHref = (widgetId: string) => `${widgetEditorHref(widgetId)}/guide`;
 
-export const SYSTEME_CONNECTOR_HREF = `${CONNECTORS.href}/systeme`;
+export const connectorHref = (slug: string) => `${CONNECTORS.href}/${slug}`;
+
+export const connectorHistoryHref = (slug: string) => `${connectorHref(slug)}/historique`;
+
+export const SYSTEME_CONNECTOR_HREF = connectorHref("systeme-io");
 
 export const CONNECTORS_SECTION_HREF = CONNECTORS.href;
 

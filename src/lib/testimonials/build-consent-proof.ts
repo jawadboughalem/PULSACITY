@@ -1,4 +1,4 @@
-import { CONNECTOR_NAMES } from "@/lib/connectors/connector-names";
+import { readConnectorName } from "@/lib/connectors/registry";
 import { formatDateTime } from "@/lib/dates/format-french-date";
 import type { TestimonialDetail } from "./load-testimonial-detail";
 
@@ -24,7 +24,7 @@ export const buildConsentProof = (spaceName: string, testimonial: TestimonialDet
     `Auteur : ${testimonial.authorName}${testimonial.authorTitle ? `, ${testimonial.authorTitle}` : ""}`,
     `Reçu le : ${formatDateTime(testimonial.createdAt)} (heure de Paris)`,
     `Source : ${SOURCE_NAMES[testimonial.source]}${
-      testimonial.request?.connector ? `, après une vente ${CONNECTOR_NAMES[testimonial.request.connector]}` : ""
+      testimonial.request?.connector ? `, après une vente ${readConnectorName(testimonial.request.connector)}` : ""
     }`,
     "",
     testimonial.consentAt
