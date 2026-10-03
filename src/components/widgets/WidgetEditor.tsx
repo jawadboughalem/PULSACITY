@@ -151,9 +151,8 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
   const { saveState, schedule, retry } = useWidgetAutosave(widgetId);
 
   const change = (patch: Partial<WidgetEdit>, delayMs = 0) => {
-    const next = { ...edit, ...patch };
-    setEdit(next);
-    schedule(next, delayMs);
+    setEdit({ ...edit, ...patch });
+    schedule(patch, delayMs);
   };
 
   const toggleDisplay = (key: (typeof DISPLAY_OPTIONS)[number]["key"], isShown: boolean) => {

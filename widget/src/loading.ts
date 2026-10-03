@@ -63,7 +63,10 @@ const carouselSkeletonCard = () =>
     h("div", { class: "sk-author sk-bottom" }, bar("sk-avatar"), h("div", { class: "sk-lines" }, bar("sk-name"), bar("sk-title"))),
   );
 
-/** The arrows and the points sit where the carousel will put them, so that nothing moves when it arrives. */
+/**
+ * The arrows and the points sit where the carousel will put them, so that nothing moves when it arrives: three points
+ * on a wide page, four on a phone, as in maquette 2.
+ */
 const carouselSkeleton = (isWide: boolean) =>
   h(
     "div",
@@ -71,7 +74,7 @@ const carouselSkeleton = (isWide: boolean) =>
     h("div", { class: "sk-track" }, h("div", { class: "sk-row" }, ...repeat(isWide ? 3 : 1, carouselSkeletonCard))),
     h("span", { class: "sk-arrow prev" }),
     h("span", { class: "sk-arrow next" }),
-    h("div", { class: "sk-dots" }, ...repeat(3, () => h("span", { class: "sk-dot" }))),
+    h("div", { class: "sk-dots" }, ...repeat(isWide ? 3 : 4, () => h("span", { class: "sk-dot" }))),
   );
 
 /** Maquette 2, « Badge · chargement »: the pill keeps its place next to the buy button. */

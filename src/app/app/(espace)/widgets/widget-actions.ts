@@ -7,7 +7,7 @@ import { WIDGETS_SECTION_HREF } from "@/components/space/space-sections";
 import { getDb } from "@/db";
 import { requireSignedInUser } from "@/lib/auth/require-signed-in-user";
 import { createWidget, updateWidget } from "@/lib/widgets/space-widgets";
-import { widgetEditSchema } from "@/lib/widgets/widget-settings";
+import { widgetChangeSchema } from "@/lib/widgets/widget-settings";
 
 export type SaveWidgetResult =
   | { ok: true; data: null }
@@ -15,15 +15,15 @@ export type SaveWidgetResult =
 
 export type CreateWidgetResult = { ok: false; error: "plan-limit" | "space-not-found" };
 
-/** The editor saves everything on each change: the last call always holds the creator's latest choice. */
-export const saveWidget = async (widgetId: string, edit: unknown): Promise<SaveWidgetResult> => {
+/** The editor saves what the creator just changed, and only that: another editor left open on the widget loses nothing. */
+export const saveWidget = async (widgetId: string, change: unknown): Promise<SaveWidgetResult> => {
   const signedInUser = await requireSignedInUser();
   const parsedId = z.uuid().safeParse(widgetId);
   if (!parsedId.success) return { ok: false, error: "widget-not-found" };
-  const parsedEdit = widgetEditSchema.safeParse(edit);
-  if (!parsedEdit.success) return { ok: false, error: "invalid-settings" };
+  const parsedChange = widgetChangeSchema.safeParse(change);
+  if (!parsedChange.success) return { ok: false, error: "invalid-settings" };
 
-  const result = await updateWidget(getDb(), signedInUser.id, parsedId.data, parsedEdit.data);
+  const result = await updateWidget(getDb(), signedInUser.id, parsedId.data, parsedChange.data);
   if (result.status !== "updated") return { ok: false, error: result.status };
 
   revalidatePath(WIDGETS_SECTION_HREF);

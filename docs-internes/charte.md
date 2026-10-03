@@ -6,7 +6,7 @@
 | Carmin foncé | #861C30 | Survol et appui de tout élément Carmin. |
 | Carmin clair | #F08A9A | Étoiles, liens et étoile du logo sur fond sombre (Encre ou thème sombre du widget) uniquement. |
 | Encre 900 | #16213E | Texte principal, titres, bouton principal, focus, cases cochées, fond sombre (pied de page). |
-| Encre 800 | #2B3656 | Survol du bouton principal. |
+| Encre 800 | #2B3656 | Survol du bouton principal ; centimes et « € » des prix (m8). |
 | Ardoise 600 | #5A5F6E | Texte secondaire (métier, dates, aides, mentions), texte des boutons désactivés, badge « Masqué ». |
 | Gris 400 | #7E8390 | Bordures de champs et de cases à cocher, étoile vide. Jamais pour du texte. |
 | Filet 200 | #D8D9DD | Séparateurs, bordures de cartes, bordure du bouton désactivé. Jamais pour du texte sur fond clair. |
@@ -39,7 +39,7 @@ Règles : interlettrage 0 partout, sauf le grand titre (−0,01 em). Aucun itali
 ## Échelle de tailles
 | Nom | Taille px | Interligne | Usage |
 | --- | --- | --- | --- |
-| display | 48 | 52 | Grand titre desktop (Newsreader 500, −0,01 em), chiffres clés du tableau de bord, prix. Mobile : 36/42. |
+| display | 48 | 52 | Grand titre desktop (Newsreader 500, −0,01 em), chiffres clés du tableau de bord, prix. Mobile : 36/42. Dans un prix, les centimes et « € » passent en 28 px (20 px sur mobile), Encre 800, sur la même ligne de base que l'euro entier (m8, 3 octobre 2026). |
 | h1 | 36 | 42 | Titre de page desktop, grand titre mobile. Mobile : 28/34. |
 | h2 | 28 | 34 | Titre de section, titre de page mobile, titre de la page de collecte. |
 | quote | 20 | 28 | Citations de témoignages, titres de carte et d'étape (Newsreader 400 ou 500). |
@@ -122,7 +122,7 @@ Aucune autre valeur de marge, de padding ou d'écart. Seules exceptions : les ch
 - **Neutres, thème sombre** : carte #22262D, bordure #2F343D, texte #EDEEF0, secondaire #A4A8B1, avatar #2F343D, étoile vide #7E8390.
 - **Thème auto** : choisi selon la luminance du fond de l'élément parent (luminance < 0,5 → sombre). Réglages possibles : Clair, Sombre, Auto (défaut).
 - **Rayon des cartes** : réglable, radius-s (défaut) ou radius-l.
-- **Mise en page** : mur en colonnes type maçonnerie, 3 colonnes au-delà de 1024 px de large, 2 en dessous, écart 24 (12 sur mobile). Carrousel : 3 cartes visibles au-delà de 1024 px, 1 en dessous, flèches 48 cerclées et points dans des zones de 44 × 44.
+- **Mise en page** : mur en colonnes type maçonnerie, 3 colonnes au-delà de 1024 px de large, 2 en dessous, 1 sous 340 px (règle de Design du 2 octobre 2026). Ces largeurs sont celles du widget lui-même, pas de l'écran : sur un téléphone de 390 px avec 24 px de marge, le widget fait 342 px et garde deux colonnes ; sur un téléphone de 360 px avec 20 px de marge, il fait 320 px et passe à une colonne. Écart 24 (12 sur mobile). Carrousel : 3 cartes visibles au-delà de 1024 px, 1 en dessous, flèches 48 cerclées et points dans des zones de 44 × 44.
 - **Badge compact** : pilule radius-full, bordure 1px, padding 4 16 4 4, 3 avatars de 32 superposés, étoiles 14, « 4,8/5 · 47 avis » en 16 600. À placer près du bouton d'achat. Lien vers le mur, aria-label « Note moyenne 4,8 sur 5, 47 avis ».
 - **Mention « Propulsé par PULSACITY »** : sous chaque widget, « Propulsé par » en 12/16 couleur secondaire, suivi du logotype Newsreader 600 14 px en couleur du texte (#EDEEF0 sur sombre). Toujours visible sur les plans Gratuit et Essentiel ; retirable uniquement sur le plan Pro.
 - **Chargement** : espace réservé de hauteur fixe (600 px desktop, 560 px mobile), blocs gris aux proportions des cartes (Papier en clair, #2F343D en sombre), texte « Chargement des avis… » en role="status", aria-busy="true". Pulsation d'opacité 1 → 0,6 en 1,2 s, désactivée si prefers-reduced-motion.

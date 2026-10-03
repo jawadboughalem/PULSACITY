@@ -3,7 +3,7 @@ import { canCreateWidget, canHideBadge } from "@/config/plans";
 import type { Database } from "@/db/database";
 import { type WidgetSettings, products, spaces, widgets } from "@/db/schema";
 import type { WidgetType } from "../../../widget/src/payload";
-import { type WidgetEdit, toWidgetSettings } from "./widget-settings";
+import { type WidgetChange, toEditableWidget, toWidgetSettings } from "./widget-settings";
 
 export type SpaceWidget = {
   id: string;
@@ -92,23 +92,24 @@ export const createWidget = (database: Database, userId: string): Promise<Create
 
 export type UpdateWidgetResult = { status: "updated" } | { status: "widget-not-found" } | { status: "offer-not-found" };
 
-/** Settings the editor does not show are kept as they are. */
+/** The change lands on the widget as it is now: what it leaves out, and settings the editor does not show, are kept. */
 export const updateWidget = async (
   database: Database,
   userId: string,
   widgetId: string,
-  edit: WidgetEdit,
+  change: WidgetChange,
 ): Promise<UpdateWidgetResult> => {
   const widget = await findOwnedWidget(database, userId, widgetId);
   if (!widget) return { status: "widget-not-found" };
-  if (edit.productId) {
+  if (change.productId) {
     const [offer] = await database
       .select({ id: products.id })
       .from(products)
-      .where(and(eq(products.id, edit.productId), eq(products.spaceId, widget.spaceId)))
+      .where(and(eq(products.id, change.productId), eq(products.spaceId, widget.spaceId)))
       .limit(1);
     if (!offer) return { status: "offer-not-found" };
   }
+  const edit = { ...toEditableWidget(widget), ...change };
   const [space] = await database.select({ plan: spaces.plan }).from(spaces).where(eq(spaces.id, widget.spaceId));
 
   const settings = toWidgetSettings(edit);

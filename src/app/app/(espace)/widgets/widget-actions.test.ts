@@ -89,6 +89,18 @@ describe("saveWidget", () => {
     });
   });
 
+  it("saves only what changed: an editor left open on older settings overwrites nothing else", async () => {
+    const widgetId = await insertWidget(julieSpaceId);
+    await saveWidget(widgetId, EDIT);
+
+    expect(await saveWidget(widgetId, { type: "carousel" })).toEqual({ ok: true, data: null });
+    expect(await readWidget(widgetId)).toMatchObject({
+      name: "Badge de la page d'accueil",
+      type: "carousel",
+      settings: { theme: "light", accentColor: "#4F6F52", maxItems: 12, cardStyle: "soft" },
+    });
+  });
+
   it("refuses settings out of bounds, and leaves the widget as it was", async () => {
     const widgetId = await insertWidget(julieSpaceId);
 
@@ -100,6 +112,8 @@ describe("saveWidget", () => {
       { ...EDIT, productId: "pas-une-offre" },
       { ...EDIT, name: "x".repeat(81) },
       { ...EDIT, cardStyle: "ovale" },
+      { cardStyle: "ovale" },
+      { maxItems: 0 },
       null,
     ]) {
       expect(await saveWidget(widgetId, edit)).toEqual({ ok: false, error: "invalid-settings" });

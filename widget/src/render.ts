@@ -1,6 +1,6 @@
 import { renderBadge } from "./badge";
 import { renderCarousel } from "./carousel";
-import { type LayoutContext, WIDE_FROM } from "./context";
+import { type LayoutContext, applyWidthClasses } from "./context";
 import { h } from "./dom";
 import { renderLoadingState } from "./loading";
 import { loadLogotype } from "./logotype";
@@ -65,7 +65,7 @@ const renderInto = (
   for (const [name, value] of Object.entries(buildColorVariables(look.theme, look.accentColor, options.linkColor, page))) {
     root.style.setProperty(name, value);
   }
-  root.classList.toggle("wide", host.offsetWidth >= WIDE_FROM);
+  applyWidthClasses(root, host.offsetWidth);
 
   const layoutCallbacks: Array<() => void> = [];
   const destroyCallbacks: Array<() => void> = [];
@@ -94,7 +94,7 @@ const renderInto = (
     const observer = new ResizeObserver(() => {
       if (host.offsetWidth === width) return;
       width = host.offsetWidth;
-      root.classList.toggle("wide", width >= WIDE_FROM);
+      applyWidthClasses(root, width);
       layout();
     });
     observer.observe(host);
