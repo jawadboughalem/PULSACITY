@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme.io, demandes d'avis, désinscription) est en ligne ; sa vérification en production attend le premier envoi automatique. La PR suivante aligne Demandes, Connecteurs et la désinscription sur les maquettes du 3 octobre (m19, m5, m1). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme.io, demandes d'avis, désinscription) est en ligne ; sa vérification en production attend le premier envoi automatique. La PR #24 aligne Demandes, Connecteurs et la désinscription sur les maquettes du 3 octobre (m19, m5, m1) et attend sa recette (`docs-internes/recette/lot-6-maquettes.md`). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -44,6 +44,16 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 - Captures des réglages Systeme.io : Design recommande les vraies, recadrées sur la zone utile, le champ encadré en Encre, refaites quand Systeme.io change. Elles demandent le compte Systeme.io du fondateur : prompt Claude in Chrome à prévoir ; les dessins restent en attendant.
 - Logos : un logo officiel seulement avec l'accord écrit de Systeme.io et de Calendly (aucun kit officiel trouvé ; le badge partenaire de Stripe est réservé à ses partenaires). En attendant, le nom en texte, comme aujourd'hui (l'initiale dans une case).
 - Signature des e-mails : pas d'adresse postale du créateur. Le pied d'e-mail portera celle de PULSACITY, qui envoie le message, avec le nom de l'espace et le lien de désinscription (à faire valider). Prénom et ville : deux champs facultatifs, « Signature » et « Ville », dans Réglages, rubrique E-mails, hors de l'onboarding ; sans prénom, l'e-mail signe du nom de l'espace.
+
+## Construit dans la PR #24 (maquettes du 3 octobre), en recette
+
+- Demandes (m19) : sous-titre de la maquette ; chiffres du mois comme l'accueil (envoyées ce mois et relancées parmi elles, complétées, taux de réponse) ; pastilles « Statut » avec leur nombre sur ordinateur, liste déroulante avec les nombres sur téléphone ; une ligne par demande avec ses initiales, son badge et ses actions en liens ; badges de la planche des statuts ; « Afficher les … suivantes » et « Et … autres demandes planifiées. » au lieu des pages ; état vide avec « Connecter Systeme.io » (tant que la connexion n'est pas active) et « Copier mon lien ».
+- Plan Gratuit plein : encadré « Les 20 demandes d'octobre sont parties. », lignes « Prévue le 6 oct. · partira le 1er nov. », plus de « Envoyer maintenant ».
+- Actions par statut : « Envoyer maintenant » et « Annuler » (planifiée), « Annuler la relance » (envoyée, relance prévue), « Voir l'avis » (complétée, vers la fiche du témoignage), « Corriger l'adresse » (échec).
+- Connecteurs (m5) : « Adresse partagée par erreur ? Changer d'adresse et de clé » et sa fenêtre ; bandeau ambre « 1 vente gardée de côté » quand la connexion remarche mais qu'une vente signée avec une autre clé attend « Rejouer » ; cette vente reste en tête des derniers événements, en ambre, avec « Rejouer » et son icône ; étape facultative « les inscriptions sans vente » ; mise en page téléphone (logo au-dessus du titre, titres de section plus petits, « Plus simple depuis un ordinateur. », « Voir tout l'historique » sous la liste).
+- Désinscription (m1) : rond Encre, second texte en Ardoise, bouton carmin « Écrire à … » sur toute la largeur, « Propulsé par » juste dessous.
+- Migration 0007 : colonnes facultatives `review_requests.cancelled_at`, `review_requests.failed_at`, `external_products.event_type`.
+- Dates : « 1er » pour le premier jour d'un mois (« Partira le 1er oct. »), partout où l'application écrit une date courte.
 
 ## Pas encore construit
 
@@ -110,7 +120,7 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 ## À faire
 
 1. Lot 6 : vérifier l'envoi lancé à la main le 3 octobre à 14:00 (prompt 7, point 12), puis que « Send review requests » tourne seul ; remettre le délai de l'offre de test à 14 jours ; essai au doigt du filtre « Statut » de Demandes sur le téléphone du fondateur.
-2. PR suivante : Demandes (m19), Connecteurs (m5) et désinscription (m1) selon les maquettes du 3 octobre.
+2. PR #24 (m19, m5, m1) : recette sur l'aperçu, prompts de `docs-internes/recette/lot-6-maquettes.md`.
 3. Captures réelles des réglages Systeme.io, par un prompt Claude in Chrome sur le compte du fondateur.
 4. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
 5. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
@@ -187,7 +197,23 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Page Demandes : pas de maquette ; construite avec les chiffres de m4, les lignes de m5 et les badges de la charte, en attendant celle de Design (prompt 8). Badges Envoyée, Relancée et Annulée en gris (Ardoise sur Papier), faute de couleur dans la charte.
 - « Me prévenir » et « Dites-nous quel outil » s'enregistrent dans `connector_waitlist`, sans adresse de support à laquelle écrire.
 
+## Décisions du 3 octobre (PR #24, maquettes m19, m5 et m1)
+
+- Chiffres de Demandes : ceux du mois, comme l'accueil et m19 (« 38 envoyées ce mois, dont 9 relancées, 8 avis reçus, soit 21 % »). Les complétées comptent les demandes envoyées ce mois qui ont reçu un avis : le taux de réponse en découle. La limite du plan se lit sur le même chiffre.
+- Échec : la ligne dit « Non envoyée le 2 oct., après trois essais. Vérifiez l'adresse e-mail. » m19 écrit « l'adresse e-mail n'existe pas » : PULSACITY ne reçoit pas encore les retours de Resend (adresse inexistante, refusée), il ne sait donc que l'échec des trois essais.
+- « Corriger l'adresse » (pas de maquette pour sa fenêtre, construite comme les autres fenêtres de confirmation) : l'adresse corrigée devient celle du client, pour ses autres demandes aussi, et la demande repart au prochain envoi. Une adresse déjà prise par un autre client de l'espace est refusée, jamais fusionnée. Une demande en échec n'a plus « Envoyer maintenant » ni « Annuler » : seulement « Corriger l'adresse », comme m19.
+- Annulée : « Annulée le 25 sept. », et « : le client s'est désinscrit. » quand c'est le cas. « Vente annulée sur Systeme.io » (m19) attend le payload de « Vente annulée ». Les demandes annulées avant cette PR n'ont pas de date : « Annulée ».
+- « Voir l'avis » mène au dernier témoignage du client pour cette offre, comme la fiche relie un témoignage à sa demande.
+- Une demande en échec reste en haut de la liste, avec les planifiées : elle attend une action du créateur.
+- Fenêtre « Changer d'adresse et de clé ? » : m5 écrit « D'ici là, vos ventes sont gardées de côté, pas perdues. » C'est vrai d'une vente envoyée à la nouvelle adresse avec l'ancienne clé, pas d'une vente envoyée à l'ancienne adresse, qui répond 404 aussitôt. La fenêtre dit donc : « Une vente envoyée entre-temps à l'ancienne adresse ne nous parviendra pas. »
+- Bandeau ambre « vente gardée de côté » : quand la connexion est active (la dernière vente était bien signée) et qu'au moins une vente signée avec une autre clé n'a pas été rejouée. Tant que la dernière vente est mal signée, le bandeau rouge « Problème de connexion » reste. Sur téléphone, le texte s'arrête à « Rien n'est perdu. », comme m5.
+- Une vente gardée de côté nomme l'offre de son produit quand il est associé (« Programme 30 jours », comme m5), plutôt que le nom du produit Systeme.io.
+- Étape facultative : les inscriptions sans vente arrivent comme un événement à part, sans prix (l'hypothèse de Design, « une vente à 0 € », est corrigée dans le texte). Le produit d'une inscription dit « première inscription le … » dans « Offres à associer ».
+- Bouton « Demander un avis » de m19 (en haut de Demandes) : pas construit, la maquette ne dit pas ce qu'il ouvre (question au fondateur).
+
 ## Questions ouvertes
+
+- « Demander un avis » en haut de Demandes (m19) : envoyer une demande à un client saisi à la main (adresse, offre), ou copier le lien de collecte ? La première demande sa maquette, une limite contre les envois abusifs et l'accord du fondateur ; l'accueil mène déjà à Demandes avec ce bouton.
 
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
