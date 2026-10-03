@@ -43,6 +43,13 @@
       "when": 1790937753932,
       "tag": "0005_widget_name",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791017392980,
+      "tag": "0006_connectors_and_requests",
+      "breakpoints": true
     }
   ]
 }

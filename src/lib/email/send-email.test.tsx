@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MissingEnvironmentVariableError } from "@/lib/environment/missing-environment-variable-error";
 import { EmailNotSentError } from "./email-not-sent-error";
-import { sendAccountEmail } from "./send-email";
+import { sendAccountEmail, sendCustomerEmail } from "./send-email";
 
 const send = vi.fn();
 
@@ -65,5 +65,37 @@ describe("sendAccountEmail", () => {
     vi.stubEnv("NODE_ENV", "production");
 
     await expect(sendAccountEmail(EMAIL)).rejects.toThrow(MissingEnvironmentVariableError);
+  });
+});
+
+describe("sendCustomerEmail", () => {
+  const CUSTOMER_EMAIL = {
+    to: "camille@exemple.fr",
+    subject: "Camille, votre avis sur Programme 30 jours ?",
+    body: <p>Bonjour Camille</p>,
+    spaceName: "Julie Nutrition",
+    replyTo: "julie@exemple.fr",
+    unsubscribeUrl: "https://pulsacity.com/api/unsubscribe?token=abc",
+    idempotencyKey: "review-request/1",
+  };
+
+  it("sends in the creator's name, from PULSACITY's address, answers to the creator, with a one-click way out", async () => {
+    vi.stubEnv("RESEND_API_KEY", "re_test");
+    vi.stubEnv("EMAIL_FROM_DOMAIN", "envois.pulsacity.com");
+
+    await sendCustomerEmail(CUSTOMER_EMAIL);
+
+    expect(send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        from: '"Julie Nutrition via PULSACITY" <avis@envois.pulsacity.com>',
+        to: "camille@exemple.fr",
+        replyTo: "julie@exemple.fr",
+        headers: {
+          "List-Unsubscribe": "<https://pulsacity.com/api/unsubscribe?token=abc>",
+          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        },
+      }),
+      { idempotencyKey: "review-request/1" },
+    );
   });
 });

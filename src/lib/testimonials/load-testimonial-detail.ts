@@ -1,11 +1,10 @@
 import { and, desc, eq } from "drizzle-orm";
 import type { Database } from "@/db/database";
 import { connections, products, purchases, reviewRequests, testimonials } from "@/db/schema";
-import type { ConnectorId } from "@/lib/connectors/types";
 import type { TestimonialStatus } from "./testimonial-filters";
 
 export type TestimonialRequestOrigin = {
-  connector: ConnectorId | null;
+  connector: string | null;
   purchasedAt: Date;
   requestSentAt: Date | null;
   answeredAt: Date | null;

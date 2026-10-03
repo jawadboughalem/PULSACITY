@@ -1,10 +1,9 @@
 import { asc, count, eq, inArray } from "drizzle-orm";
 import type { Database } from "@/db/database";
 import { connections, productRefs, products, purchases, testimonials } from "@/db/schema";
-import type { ConnectorId } from "@/lib/connectors/types";
 
 export type OfferConnectorRef = {
-  connector: ConnectorId;
+  connector: string;
   externalRef: string;
 };
 

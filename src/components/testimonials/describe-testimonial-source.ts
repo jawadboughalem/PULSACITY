@@ -1,5 +1,5 @@
 import type { IconName } from "@/components/ui/icon-paths";
-import { CONNECTOR_NAMES } from "@/lib/connectors/connector-names";
+import { readConnectorName } from "@/lib/connectors/registry";
 import { formatDayMonth, formatDayMonthYear } from "@/lib/dates/format-french-date";
 import type { TestimonialDetail } from "@/lib/testimonials/load-testimonial-detail";
 
@@ -46,7 +46,7 @@ export const describeTestimonialSource = (testimonial: TestimonialDetail): Testi
     request.requestSentAt && request.answeredAt ? describeDelay(request.requestSentAt, request.answeredAt) : null;
   return {
     icon: request.connector ? "connection" : "mail",
-    label: request.connector ? `Connecteur ${CONNECTOR_NAMES[request.connector]}` : "Demande envoyée depuis PULSACITY",
+    label: request.connector ? `Connecteur ${readConnectorName(request.connector)}` : "Demande envoyée depuis PULSACITY",
     details: [purchase, [sent, answered].filter(Boolean).join(", ")].filter(Boolean).join(" · "),
     shortDetails: [purchase, request.requestSentAt ? `demande du ${formatDayMonth(request.requestSentAt)}` : null]
       .filter(Boolean)

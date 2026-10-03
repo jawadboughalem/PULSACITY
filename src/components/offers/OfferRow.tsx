@@ -14,7 +14,7 @@ import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
 import { Switch } from "@/components/ui/Switch";
 import { cn } from "@/lib/cn";
-import { CONNECTOR_NAMES } from "@/lib/connectors/connector-names";
+import { readConnectorName } from "@/lib/connectors/registry";
 import { formatDayMonth } from "@/lib/dates/format-french-date";
 import { quoteInFrench } from "@/lib/french/typography";
 import { MAX_PRODUCT_NAME_LENGTH, MAX_REQUEST_DELAY_DAYS, MIN_REQUEST_DELAY_DAYS } from "@/lib/spaces/product-rules";
@@ -46,7 +46,7 @@ type OfferRowProps = {
 const groupRefs = (refs: SpaceOffer["connectorRefs"]) =>
   Object.entries(
     refs.reduce<Record<string, string[]>>((groups, ref) => {
-      const name = CONNECTOR_NAMES[ref.connector];
+      const name = readConnectorName(ref.connector);
       return { ...groups, [name]: [...(groups[name] ?? []), ref.externalRef] };
     }, {}),
   );

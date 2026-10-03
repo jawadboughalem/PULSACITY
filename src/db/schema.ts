@@ -15,7 +15,8 @@ import {
 } from "drizzle-orm/pg-core";
 import { WIDGET_TYPES, type WidgetCardStyle, type WidgetTheme } from "../../widget/src/payload";
 import { PLAN_IDS } from "../config/plans";
-import type { ConnectionConfig, ConnectorId, WebhookHeaders } from "../lib/connectors/types";
+import type { ConnectionConfig, WebhookHeaders } from "../lib/connectors/types";
+import type { WebhookEventError, WebhookEventOutcome } from "../lib/connectors/webhook-event-states";
 
 function timestamptz(name: string) {
   return timestamp(name, { withTimezone: true });
@@ -161,14 +162,17 @@ export const connections = pgTable(
     spaceId: uuid("space_id")
       .notNull()
       .references(() => spaces.id, { onDelete: "cascade" }),
-    connector: text("connector").$type<ConnectorId>().notNull(),
+    connector: text("connector").notNull(),
     webhookToken: text("webhook_token").notNull().unique(),
     status: connectionStatusEnum("status").notNull().default("pending"),
     lastEventAt: timestamptz("last_event_at"),
     config: jsonb("config").$type<ConnectionConfig>().notNull().default({}),
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
-  (table) => [index("connections_space_id_idx").on(table.spaceId)],
+  (table) => [
+    index("connections_space_id_idx").on(table.spaceId),
+    unique("connections_space_id_connector_unique").on(table.spaceId, table.connector),
+  ],
 ).enableRLS();
 
 export const products = pgTable(
@@ -205,6 +209,44 @@ export const productRefs = pgTable(
       table.externalRef,
     ),
     index("product_refs_product_id_idx").on(table.productId),
+  ],
+).enableRLS();
+
+/** A product as the connector names it, seen with a sale: « à associer » until a product_ref links it to an offer. */
+export const externalProducts = pgTable(
+  "external_products",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    connectionId: uuid("connection_id")
+      .notNull()
+      .references(() => connections.id, { onDelete: "cascade" }),
+    externalRef: text("external_ref").notNull(),
+    name: text("name").notNull(),
+    priceCents: integer("price_cents"),
+    currency: text("currency"),
+    firstSeenAt: timestamptz("first_seen_at").notNull(),
+  },
+  (table) => [
+    unique("external_products_connection_id_external_ref_unique").on(table.connectionId, table.externalRef),
+  ],
+).enableRLS();
+
+/** « Me prévenir » on a connector to come, or the tool named after « Dites-nous quel outil ». */
+export const connectorWaitlist = pgTable(
+  "connector_waitlist",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    spaceId: uuid("space_id")
+      .notNull()
+      .references(() => spaces.id, { onDelete: "cascade" }),
+    connector: text("connector").notNull(),
+    toolName: text("tool_name"),
+    createdAt: timestamptz("created_at").notNull().defaultNow(),
+  },
+  (table) => [
+    unique("connector_waitlist_space_id_connector_tool_name_unique")
+      .on(table.spaceId, table.connector, table.toolName)
+      .nullsNotDistinct(),
   ],
 ).enableRLS();
 
@@ -253,6 +295,7 @@ export const purchases = pgTable(
     index("purchases_customer_id_product_id_idx").on(table.customerId, table.productId),
     index("purchases_product_id_idx").on(table.productId),
     index("purchases_connection_id_idx").on(table.connectionId),
+    unique("purchases_connection_id_external_ref_unique").on(table.connectionId, table.externalRef),
   ],
 ).enableRLS();
 
@@ -271,6 +314,8 @@ export const reviewRequests = pgTable(
     reminderSentAt: timestamptz("reminder_sent_at"),
     completedAt: timestamptz("completed_at"),
     status: reviewRequestStatusEnum("status").notNull().default("scheduled"),
+    /** Sends that failed in a row: past the limit, the request stops retrying and shows « Échec ». */
+    failedAttempts: integer("failed_attempts").notNull().default(0),
   },
   (table) => [
     index("review_requests_status_scheduled_at_idx").on(table.status, table.scheduledAt),
@@ -353,11 +398,15 @@ export const webhookEvents = pgTable(
       .notNull()
       .references(() => connections.id, { onDelete: "cascade" }),
     rawPayload: jsonb("raw_payload").notNull(),
+    /** The bytes received, exactly: a signature is computed on them, and JSON does not keep them. */
+    rawBody: text("raw_body"),
     headers: jsonb("headers").$type<WebhookHeaders>().notNull(),
     eventType: text("event_type"),
     receivedAt: timestamptz("received_at").notNull().defaultNow(),
     processedAt: timestamptz("processed_at"),
-    error: text("error"),
+    outcome: text("outcome").$type<WebhookEventOutcome>(),
+    purchaseId: uuid("purchase_id").references(() => purchases.id, { onDelete: "set null" }),
+    error: text("error").$type<WebhookEventError>(),
   },
   (table) => [
     index("webhook_events_connection_id_received_at_idx").on(
