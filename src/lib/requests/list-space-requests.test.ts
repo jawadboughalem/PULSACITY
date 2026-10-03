@@ -77,6 +77,20 @@ describe("listSpaceRequests", () => {
     expect(names(requests)).toEqual(["Rose", "Camille", "Inès", "Paul", "Léa", "Noé"]);
   });
 
+  it("orders the requests already handled by what happened last, a cancellation included", async () => {
+    await insertRequest("Margot", { status: "cancelled", scheduledAt: daysFromNow(4), cancelledAt: daysFromNow(-2) });
+    await insertRequest("Marc", {
+      status: "reminded",
+      scheduledAt: daysFromNow(-5),
+      sentAt: daysFromNow(-5),
+      reminderSentAt: daysFromNow(-0.5),
+    });
+    await insertRequest("Ancienne", { status: "cancelled", scheduledAt: daysFromNow(10) });
+
+    const { requests } = await listSpaceRequests(database, spaceId, { status: null, limit: 50 });
+    expect(names(requests).slice(4)).toEqual(["Marc", "Léa", "Margot", "Noé", "Ancienne"]);
+  });
+
   it("shows as many requests as asked, and links the answer to its opinion", async () => {
     const { requests, total } = await listSpaceRequests(database, spaceId, { status: null, limit: 5 });
     expect(total).toBe(6);

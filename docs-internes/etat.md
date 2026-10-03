@@ -55,6 +55,13 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 - Migration 0007 : colonnes facultatives `review_requests.cancelled_at`, `review_requests.failed_at`, `external_products.event_type`.
 - Dates : « 1er » pour le premier jour d'un mois (« Partira le 1er oct. »), partout où l'application écrit une date courte.
 
+## Recette de la PR #24 sur l'aperçu (3 octobre)
+
+- Prompt 1 : « Recette demo space #5 » vert, depuis la branche (commit c66a469), plan free.
+- Prompt 2 (Demandes, e-mail réel, désinscription) : 17 points sur 17. Trois remarques : l'ordre des demandes déjà traitées (une annulée remontait avec son jour prévu, corrigé) ; Sophie D. « Avis reçu le 1er oct. » mais sa fiche « reçu le 30 sept. » (dates de l'espace de démonstration, corrigées) ; badge « Annulée » en tirets (conforme à la planche de m19).
+- Prompt 3 (Systeme.io) : 10 points sur 10. Remarques : le prix de « Suivi individuel 3 mois » est passé à 297 € (le script de test envoyait 297 € pour tous les plans : le prix suit la dernière vente, voulu) ; le bandeau était vert avant la vente à mauvaise clé (le prompt disait « comme avant », à tort).
+- Prompt 4 (360 px) : 8 points sur 8, sans débordement. Le menu déroulant natif ne réagit toujours pas aux clics dans le cadre de Claude in Chrome : essai au doigt sur téléphone à faire.
+
 ## Pas encore construit
 
 - « Vente annulée » de Systeme.io : son payload n'a jamais été capturé (un remboursement de paiement à la livraison n'émet rien). Les événements reçus sont gardés sans être lus ; une demande d'une vente remboursée part donc quand même, sauf si le créateur l'annule dans Demandes. À capturer avec une vente Stripe en mode test, puis à traiter.
@@ -120,14 +127,15 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 ## À faire
 
 1. Lot 6 : vérifier l'envoi lancé à la main le 3 octobre à 14:00 (prompt 7, point 12), puis que « Send review requests » tourne seul ; remettre le délai de l'offre de test à 14 jours ; essai au doigt du filtre « Statut » de Demandes sur le téléphone du fondateur.
-2. PR #24 (m19, m5, m1) : recette sur l'aperçu, prompts de `docs-internes/recette/lot-6-maquettes.md`.
+2. PR #24 (m19, m5, m1) : recette faite, corrections poussées ; restent la fusion, puis le prompt 5 de `docs-internes/recette/lot-6-maquettes.md` en production.
 3. Captures réelles des réglages Systeme.io, par un prompt Claude in Chrome sur le compte du fondateur.
-4. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
-5. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
-6. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
-7. Sentry, avant le lancement.
-8. Plan Vercel : sur Hobby, Vercel Cron ne tourne qu'une fois par jour ; le workflow GitHub fait les 15 minutes. Si GitHub laisse des trous de plus d'une heure pendant quelques jours, passer à Pro (20 $ par mois) permettra de remettre la tâche toutes les 15 minutes dans `vercel.json` et de retirer le workflow. Décision du fondateur.
-9. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
+4. « Demander un avis » : maquette m20 par Claude Design, puis le lot qui la construit (décision plus bas).
+5. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
+6. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
+7. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
+8. Sentry, avant le lancement.
+9. Plan Vercel : sur Hobby, Vercel Cron ne tourne qu'une fois par jour ; le workflow GitHub fait les 15 minutes. Si GitHub laisse des trous de plus d'une heure pendant quelques jours, passer à Pro (20 $ par mois) permettra de remettre la tâche toutes les 15 minutes dans `vercel.json` et de retirer le workflow. Décision du fondateur.
+10. Prochain lot : au choix du fondateur, parmi « Pas encore construit » ci-dessus.
 
 Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
@@ -209,11 +217,25 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Bandeau ambre « vente gardée de côté » : quand la connexion est active (la dernière vente était bien signée) et qu'au moins une vente signée avec une autre clé n'a pas été rejouée. Tant que la dernière vente est mal signée, le bandeau rouge « Problème de connexion » reste. Sur téléphone, le texte s'arrête à « Rien n'est perdu. », comme m5.
 - Une vente gardée de côté nomme l'offre de son produit quand il est associé (« Programme 30 jours », comme m5), plutôt que le nom du produit Systeme.io.
 - Étape facultative : les inscriptions sans vente arrivent comme un événement à part, sans prix (l'hypothèse de Design, « une vente à 0 € », est corrigée dans le texte). Le produit d'une inscription dit « première inscription le … » dans « Offres à associer ».
-- Bouton « Demander un avis » de m19 (en haut de Demandes) : pas construit, la maquette ne dit pas ce qu'il ouvre (question au fondateur).
+- Bouton « Demander un avis » de m19 (en haut de Demandes) : pas construit dans la PR #24, la maquette ne dit pas ce qu'il ouvre. Décision plus bas.
+- Ordre de Demandes, après la recette : les demandes déjà traitées suivent leur dernier événement, annulation et échec compris. Une demande annulée avant l'enregistrement de sa date passe en dernier, au lieu de remonter avec son jour prévu.
+- Espace de démonstration : un témoignage relié à une demande a la date de réponse de cette demande (« Avis reçu le … » et la fiche disent le même jour).
+- Badge « Annulée » : contour en tirets, comme la planche des statuts de m19 (le texte de Design dit « pointillé »).
+- Prix d'un produit Systeme.io : celui de la dernière vente reçue, car un plan de prix garde son montant. La date reste celle de la première vente. Les 297 € de « Suivi individuel 3 mois » vus en recette viennent du script de test, qui envoyait 297 € pour tous les plans.
+
+## Décision du 3 octobre : « Demander un avis » (tranchée par Claude Code, à la demande du fondateur)
+
+- Le bouton envoie une demande d'avis à un client que le créateur saisit lui-même : prénom et nom (facultatifs), adresse, offre, date d'achat. Plutôt que de copier le lien de collecte, que l'accueil, l'état vide de Demandes et Offres donnent déjà.
+- Pourquoi :
+  - la promesse de PULSACITY, ce sont des demandes qui partent au bon moment, au nom du créateur, avec une relance ; un lien copié n'en a ni la relance ni le suivi ;
+  - beaucoup de créateurs encaissent aussi hors de Systeme.io (virement, Learnybox, séances), ou ont des clients d'avant PULSACITY : ils peuvent s'en servir dès le premier jour, sans attendre leur connecteur ;
+  - chaque demande compte dans les 20 du mois du plan Gratuit : le bouton fait grandir l'usage, et donc le passage au payant.
+- Comment, sans rien de nouveau dans le cœur : le même chemin qu'une vente reçue (client, achat `source = manual`, demande planifiée au prochain envoi), le même e-mail (m3), la désinscription, une seule demande par client et par offre.
+- Garde-fous : une case obligatoire « Cette personne a acheté cette offre auprès de moi. » (le pied de l'e-mail l'affirme, et c'est la base légale de l'envoi) ; les adresses désinscrites refusées ; un plafond quotidien d'envois à la main contre les envois en masse, défini dans `plans.ts`.
+- À construire après la maquette m20 de Design (prompt dans `docs-internes/recette/lot-6-maquettes.md`). Un envoi groupé (liste d'adresses, fichier comme m16) pourra suivre.
 
 ## Questions ouvertes
 
-- « Demander un avis » en haut de Demandes (m19) : envoyer une demande à un client saisi à la main (adresse, offre), ou copier le lien de collecte ? La première demande sa maquette, une limite contre les envois abusifs et l'accord du fondateur ; l'accueil mène déjà à Demandes avec ce bouton.
 
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.

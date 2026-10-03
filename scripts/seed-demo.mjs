@@ -205,8 +205,10 @@ await sql.begin(async (tx) => {
         ${isAnswered ? sentThisMonth(requestAge - 1) : null}, ${state === "cancelled" ? daysAgo(2) : null},
         ${state === "failed" ? daysAgo(1) : null}, ${state === "failed" ? 3 : 0}, ${status})`;
     if (isAnswered) {
+      // The testimonial is the answer to this request: it was received the day the request was completed.
+      const answeredAt = sentThisMonth(requestAge - 1);
       await tx`
-        update testimonials set customer_id = ${customer.id}
+        update testimonials set customer_id = ${customer.id}, created_at = ${answeredAt}, consent_at = ${answeredAt}
         where space_id = ${space.id} and author_name = ${`${firstName} ${lastName[0]}.`}`;
     }
   }

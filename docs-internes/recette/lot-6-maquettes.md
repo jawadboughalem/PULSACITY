@@ -169,3 +169,25 @@ Ne touche à rien d'autre, ni dans PULSACITY, ni dans Systeme.io, ni dans GitHub
 
 Compte rendu à me donner : les points 1 à 4, avec les heures exactes du point 1.
 ```
+
+---
+
+## Pour Claude Design (hors Chrome) : m20, « Demander un avis »
+
+Décision du 3 octobre dans `docs-internes/etat.md`. Rien n'est construit avant cette maquette.
+
+```
+Pour PULSACITY, une nouvelle maquette : m20, « Demander un avis », desktop 1440 et mobile 360, dans la charte et le style de m19 (Demandes) et m15 (ajout manuel).
+
+Le bouton « Demander un avis » (en haut de Demandes dans m19, et sur l'accueil m4) envoie une demande d'avis à un client que le créateur saisit lui-même : quelqu'un qui a payé hors d'un outil connecté (virement, Learnybox, séance), ou un client d'avant PULSACITY. La demande part par le même chemin qu'une vente reçue de Systeme.io : le même e-mail (m3), au nom de l'espace, avec le lien de désinscription, et une seule relance quatre jours plus tard s'il n'y a pas de réponse. Elle compte dans les demandes du mois du plan (20 en Gratuit).
+
+À dessiner :
+1. Le formulaire (fenêtre sur desktop ; fenêtre ou plein écran sur mobile, à vous de choisir) : Prénom (facultatif), Nom (facultatif), Adresse e-mail, Offre (liste des offres de l'espace), Date d'achat (aujourd'hui par défaut : l'e-mail dit « vous avez acheté … auprès de … le … »), une case obligatoire « Cette personne a acheté cette offre auprès de moi. », et le bouton « Envoyer la demande ». Sous le bouton, une phrase qui dit quand elle part : au prochain envoi, dans les minutes qui suivent.
+2. La confirmation : le message affiché, et la nouvelle ligne en haut de Demandes, « Planifiée · Part au prochain envoi ».
+3. Les refus, chacun avec ce qui s'est passé et quoi faire : cette personne a déjà une demande pour cette offre (une seule par client et par offre, pour ne jamais envoyer plus de deux e-mails) ; elle s'est désinscrite des e-mails de cet espace ; l'adresse n'est pas valide ; le plafond du jour des demandes saisies à la main est atteint (protection contre les envois en masse).
+4. Plan Gratuit, 20 demandes déjà parties ce mois : la demande est gardée et partira le 1er du mois suivant, avec « Voir le plan Essentiel ».
+5. L'espace n'a encore aucune offre : une phrase et le renvoi vers Offres.
+6. À trancher : plusieurs clients d'un coup (coller une liste d'adresses, ou un fichier comme m16). Dites-nous si vous le dessinez maintenant ou plus tard.
+
+Exporte les PNG, avec des noms qui suivent INDEX.md.
+```

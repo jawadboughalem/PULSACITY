@@ -49,14 +49,18 @@ export type RequestCounts = Record<ReviewRequestStatus, number> & {
 
 const isWaiting = sql`${reviewRequests.status} in ('scheduled', 'failed')`;
 
+/** The latest thing that happened to a request: its answer, reminder, sending, cancellation or last failed try. */
+const lastActivity = sql`greatest(${reviewRequests.completedAt}, ${reviewRequests.reminderSentAt}, ${reviewRequests.sentAt}, ${reviewRequests.cancelledAt}, ${reviewRequests.failedAt})`;
+
 /**
- * What leaves next on top: the requests still to send, the soonest first. Then the others, the latest activity first
- * (answer, reminder or sending).
+ * What leaves next on top: the requests still to send, the soonest first. Then the others, the latest activity first.
+ * A request cancelled before its date was recorded has none: it comes last, never above what really happened.
  */
 const ORDER = [
   sql`case when ${isWaiting} then 0 else 1 end`,
   sql`case when ${isWaiting} then ${reviewRequests.scheduledAt} end asc`,
-  sql`greatest(${reviewRequests.completedAt}, ${reviewRequests.reminderSentAt}, ${reviewRequests.sentAt}, ${reviewRequests.scheduledAt}) desc`,
+  sql`${lastActivity} desc nulls last`,
+  desc(reviewRequests.scheduledAt),
   desc(reviewRequests.id),
 ];
 
