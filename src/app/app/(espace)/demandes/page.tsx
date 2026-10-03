@@ -20,7 +20,6 @@ import { ToneBadge } from "@/components/ui/ToneBadge";
 import { canSendRequest, getPlan } from "@/config/plans";
 import { getDb } from "@/db";
 import { cn } from "@/lib/cn";
-import { formatDayMonthYear } from "@/lib/dates/format-french-date";
 import { startOfParisMonth } from "@/lib/dates/paris-date";
 import { REQUESTS_PAGE_SIZE, countSpaceRequests, listSpaceRequests } from "@/lib/requests/list-space-requests";
 import { countRequestsSentThisMonth } from "@/lib/requests/send-review-emails";
@@ -35,8 +34,11 @@ const readPage = (value: string | string[] | undefined): number => {
   return Number.isInteger(page) && page > 1 ? page : 1;
 };
 
-/** The first day of next month in Paris, for « les suivantes partiront le 1er novembre ». */
-const startOfNextMonth = (now: Date): Date => startOfParisMonth(new Date(startOfParisMonth(now).getTime() + 32 * 24 * 60 * 60 * 1000));
+const MONTH = new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", month: "long" });
+
+/** « 1er novembre »: the first day of next month in Paris, when the requests held by the plan leave. */
+const formatNextMonthStart = (now: Date): string =>
+  `1er ${MONTH.format(new Date(startOfParisMonth(now).getTime() + 32 * 24 * 60 * 60 * 1000))}`;
 
 /** The requests of the space: planned, sent, reminded, answered, with the response rate. */
 const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
@@ -82,7 +84,7 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
                 {`Vous avez envoyé ${plan.limits.monthlyRequests} demandes ce mois, le maximum du plan ${plan.name}.`}
               </h2>
               <p className="text-small">
-                {`Rien n'est perdu : les suivantes partiront le ${formatDayMonthYear(startOfNextMonth(now))}. Avec le plan Essentiel, elles partent sans attendre.`}
+                {`Rien n'est perdu : les suivantes partiront le ${formatNextMonthStart(now)}. Avec le plan Essentiel, elles partent sans attendre.`}
               </p>
               <Link href={BILLING_HREF} className={cn(SECONDARY_BUTTON_CLASSES, "mt-3 self-start")}>
                 Voir le plan Essentiel

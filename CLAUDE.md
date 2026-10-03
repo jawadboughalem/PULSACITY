@@ -21,7 +21,7 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 
 ## Règles absolues
 
-1. Chaque connecteur implémente le même contrat `Connector` (`src/lib/connectors/types.ts`) : `verify(request, config)`, `normalize(payload, headers) → NormalizedPurchase | null` (email, prénom, nom, référence et nom de l'offre, date). Le cœur du produit ne connaît que `NormalizedPurchase`, jamais un format propre à une plateforme. Aucun connecteur n'est codé avant que ses payloads réels aient été capturés dans `docs-internes/connectors/<nom>.md` et transformés en fixtures de test.
+1. Chaque connecteur implémente le même contrat `Connector` (`src/lib/connectors/types.ts`) : `verify(request, config)`, `normalize(payload, headers) → NormalizedPurchase | null` (type d'événement, identifiant de la vente, e-mail, prénom, nom, référence, nom et prix du produit, date). Le cœur du produit ne connaît que `NormalizedPurchase`, jamais un format propre à une plateforme. Aucun connecteur n'est codé avant que ses payloads réels aient été capturés dans `docs-internes/connectors/<nom>.md` et transformés en fixtures de test.
 2. Le widget est un produit à part entière : un seul script, < 30 Ko gzip, zéro dépendance, aucun impact sur la mise en page de la page hôte, polices et couleurs héritées de la page hôte par défaut.
 3. Le badge « Propulsé par PULSACITY » est visible sur les plans Gratuit et Essentiel. Il n'est retirable que sur le plan Pro. Il pointe vers pulsacity.com avec un paramètre de parrainage de l'espace.
 4. Les e-mails envoyés aux clients du créateur : nom d'expéditeur = nom de l'espace du créateur, adresse technique PULSACITY, réponse vers l'e-mail du créateur, lien de désinscription dans chaque e-mail, jamais plus de 2 envois par client et par formation.
@@ -54,11 +54,13 @@ src/app/api/connectors/[connector]/[token]/  # réception des webhooks de tous l
 src/app/api/widget/[widgetId]/# JSON public des témoignages d'un widget (cache CDN)
 src/app/api/cron/requests/    # envoi des demandes planifiées
 src/app/api/stripe/webhook/   # abonnements PULSACITY
-src/app/api/unsubscribe/      # désinscription
+src/app/api/unsubscribe/      # désinscription en un clic (lien signé, et bouton du client de messagerie)
+src/app/desinscription/       # page de confirmation de la désinscription
 widget/                       # source du widget embarquable, build → public/w.js
 src/config/plans.ts           # plans et limites
 src/db/schema.ts
-src/lib/connectors/           # types.ts (contrat), registry.ts, systeme/, (V1) stripe/, calendly/
+src/lib/connectors/           # types.ts (contrat), registry.ts, moteur (réception, traitement), systeme/, (V1) stripe/, calendly/
+src/lib/purchases/            # record-purchase.ts : de NormalizedPurchase au client, à l'achat et à la demande
 src/lib/requests/             # planification et envoi des demandes
 src/emails/                   # templates React Email
 docs-internes/                # décisions, payloads, recette ; etat.md : où en est le projet
@@ -70,15 +72,17 @@ compose.yaml                  # Postgres local
 
 - Tables Better Auth : `user`, `session`, `account`, `verification`
 - `spaces` : id, userId, name, slug (unique), logoUrl, accentColor, replyToEmail, plan (free|essentiel|pro), stripeCustomerId, stripeSubscriptionId, referralCode, collectionLinkSharedAt, firstDayCelebratedAt, firstApprovalCelebratedAt (moments de marque déjà joués), createdAt
-- `connections` : id, spaceId, connector (systeme|stripe|calendly|…), webhookToken (unique, secret, régénérable), status (pending|active|error), lastEventAt, config (jsonb), createdAt
+- `connections` : id, spaceId, connector (systeme|stripe|calendly|…), webhookToken (unique, secret, régénérable), status (pending|active|error), lastEventAt, config (jsonb : signingSecret), createdAt (unique spaceId + connector)
 - `products` (les « offres » : formation, accompagnement, séance…) : id, spaceId, name, slug, requestDelayDays (défaut 14), requestsEnabled (bool), createdAt
 - `product_refs` : id, productId, connectionId, externalRef — relie une offre à son identifiant dans chaque connecteur
+- `external_products` : id, connectionId, externalRef, name, priceCents, currency, firstSeenAt — les produits vus par un connecteur ; « à associer » tant qu'aucun product_ref ne les relie à une offre
 - `customers` : id, spaceId, email, firstName, lastName, unsubscribedAt, createdAt (unique spaceId + email)
-- `purchases` : id, spaceId, customerId, productId, connectionId (nullable), source (connector|manual|csv), eventType, externalRef, purchasedAt
-- `review_requests` : id, purchaseId, token (unique), scheduledAt, sentAt, reminderScheduledAt, reminderSentAt, completedAt, status (scheduled|sent|reminded|completed|cancelled|failed)
+- `purchases` : id, spaceId, customerId, productId, connectionId (nullable), source (connector|manual|csv), eventType, externalRef, purchasedAt (unique connectionId + externalRef : une vente reçue deux fois est enregistrée une fois)
+- `review_requests` : id, purchaseId, token (unique), scheduledAt, sentAt, reminderScheduledAt, reminderSentAt, completedAt, status (scheduled|sent|reminded|completed|cancelled|failed), failedAttempts
 - `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body (original, jamais modifié), displayBody (texte affiché, null = original), displayEditedAt, status (pending|approved|hidden), source (form|manual|csv), consentAt, consentText, featured (bool), createdAt
 - `widgets` : id, spaceId, name (nullable, pour le créateur seul), type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur d'accent, nombre max, afficher photo/note/date, masquer « Propulsé par » (Pro), style des cartes), firstLoadedAt (premier affichage sur une page), createdAt
-- `webhook_events` : id, connectionId, rawPayload (jsonb), headers (jsonb), eventType, receivedAt, processedAt, error — journal complet, rejouable
+- `webhook_events` : id, connectionId, rawPayload (jsonb), rawBody (octets reçus, pour la signature), headers (jsonb), eventType, receivedAt, processedAt, outcome, purchaseId, error — journal complet, rejouable
+- `connector_waitlist` : id, spaceId, connector, toolName, createdAt — « Me prévenir » et « Dites-nous quel outil »
 - `stripe_events` : id, type, processedAt
 
 ## Plans (`src/config/plans.ts`)
