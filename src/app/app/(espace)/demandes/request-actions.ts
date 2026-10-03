@@ -4,7 +4,10 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getDb } from "@/db";
 import { requireSignedInUser } from "@/lib/auth/require-signed-in-user";
+import { toParisIsoDay } from "@/lib/dates/paris-date";
 import { cancelOwnedRequest, correctOwnedRequestEmail, sendOwnedRequestNow } from "@/lib/requests/manage-requests";
+import { type ExistingRequest, requestReviewManually } from "@/lib/requests/request-review-manually";
+import { findOwnedSpace } from "@/lib/spaces/find-owned-space";
 import { SPACE_HOME_PATH } from "@/lib/spaces/space-paths";
 
 export type CancelRequestActionResult =
@@ -19,7 +22,28 @@ export type CorrectRequestEmailResult =
   | { ok: true; data: null }
   | { ok: false; error: "invalid-email" | "email-taken" | "not-failed" | "not-found" };
 
+export type RequestReviewResult =
+  | { ok: true; data: { requestId: string } }
+  | { ok: false; error: "invalid-email" | "invalid-date" | "not-attested" | "offer-not-found" | "daily-limit" }
+  | { ok: false; error: "request-exists"; customerName: string; existing: ExistingRequest }
+  | { ok: false; error: "unsubscribed"; customerName: string; unsubscribedAt: Date };
+
+export type RequestReviewInput = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  productId: string;
+  purchasedOn: string;
+  isAttested: boolean;
+};
+
 const EMAIL = z.email({ pattern: z.regexes.unicodeEmail });
+
+const OPTIONAL_NAME = z
+  .string()
+  .trim()
+  .max(80)
+  .transform((name) => name || null);
 
 const refresh = () => revalidatePath(SPACE_HOME_PATH, "layout");
 
@@ -59,4 +83,36 @@ export const correctRequestEmail = async (requestId: string, email: string): Pro
   if (status !== "rescheduled") return { ok: false, error: status };
   refresh();
   return { ok: true, data: null };
+};
+
+/** m20, « Demander un avis »: a customer typed in by the creator, who has bought the offer from them. */
+export const requestReview = async (input: RequestReviewInput): Promise<RequestReviewResult> => {
+  const signedInUser = await requireSignedInUser();
+  if (input.isAttested !== true) return { ok: false, error: "not-attested" };
+  const email = EMAIL.safeParse(input.email.trim().toLowerCase());
+  if (!email.success) return { ok: false, error: "invalid-email" };
+  const purchasedOn = z.iso.date().safeParse(input.purchasedOn);
+  if (!purchasedOn.success || purchasedOn.data > toParisIsoDay(new Date())) return { ok: false, error: "invalid-date" };
+  const names = z.object({ firstName: OPTIONAL_NAME, lastName: OPTIONAL_NAME, productId: z.uuid() }).safeParse(input);
+  if (!names.success) return { ok: false, error: "offer-not-found" };
+
+  const database = getDb();
+  const space = await findOwnedSpace(database, signedInUser.id);
+  if (!space) return { ok: false, error: "offer-not-found" };
+  const result = await requestReviewManually(database, space.id, {
+    ...names.data,
+    email: email.data,
+    purchasedOn: purchasedOn.data,
+  });
+  switch (result.status) {
+    case "scheduled":
+      refresh();
+      return { ok: true, data: { requestId: result.requestId } };
+    case "request-exists":
+      return { ok: false, error: result.status, customerName: result.customerName, existing: result.existing };
+    case "unsubscribed":
+      return { ok: false, error: result.status, customerName: result.customerName, unsubscribedAt: result.unsubscribedAt };
+    default:
+      return { ok: false, error: result.status };
+  }
 };

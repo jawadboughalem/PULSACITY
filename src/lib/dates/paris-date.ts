@@ -49,6 +49,13 @@ export const startOfParisMonth = (now: Date): Date => {
   return new Date(midnightUtc - readParisOffsetMs(new Date(midnightUtc)));
 };
 
+/** Midnight in Paris at the start of the day that contains `now`. */
+export const startOfParisDay = (now: Date): Date => {
+  const { year, month, day } = readParisParts(now);
+  const midnightUtc = Date.UTC(year, month - 1, day);
+  return new Date(midnightUtc - readParisOffsetMs(new Date(midnightUtc)));
+};
+
 /** Midnight in Paris on the first day of the next month: when the requests held by a plan's limit leave. */
 export const startOfNextParisMonth = (now: Date): Date =>
   startOfParisMonth(new Date(startOfParisMonth(now).getTime() + 32 * 24 * 60 * 60 * 1000));

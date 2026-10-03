@@ -291,6 +291,8 @@ export const purchases = pgTable(
     eventType: text("event_type"),
     externalRef: text("external_ref"),
     purchasedAt: timestamptz("purchased_at").notNull(),
+    /** When PULSACITY recorded it: counts the requests typed in by hand today (`manualRequestsPerDay`). */
+    createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
   (table) => [
     index("purchases_space_id_idx").on(table.spaceId),

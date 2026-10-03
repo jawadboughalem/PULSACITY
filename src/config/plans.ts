@@ -15,6 +15,8 @@ export type Plan = {
     testimonials: Limit;
     monthlyRequests: Limit;
     widgets: Limit;
+    /** Requests typed in by hand (« Demander un avis ») in a day in Paris: a guard against mass sending, on every plan. */
+    manualRequestsPerDay: Limit;
   };
   badgeRemovable: boolean;
 };
@@ -24,21 +26,21 @@ export const PLANS = {
     id: "free",
     name: "Gratuit",
     priceCents: { monthly: 0, yearly: 0 },
-    limits: { testimonials: 15, monthlyRequests: 20, widgets: 1 },
+    limits: { testimonials: 15, monthlyRequests: 20, widgets: 1, manualRequestsPerDay: 20 },
     badgeRemovable: false,
   },
   essentiel: {
     id: "essentiel",
     name: "Essentiel",
     priceCents: { monthly: 999, yearly: 9900 },
-    limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED },
+    limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED, manualRequestsPerDay: 20 },
     badgeRemovable: false,
   },
   pro: {
     id: "pro",
     name: "Pro",
     priceCents: { monthly: 1999, yearly: 19900 },
-    limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED },
+    limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED, manualRequestsPerDay: 20 },
     badgeRemovable: true,
   },
 } as const satisfies Record<PlanId, Plan>;
@@ -65,6 +67,11 @@ export function countTestimonialsLeft(space: SpacePlan, count: number): Limit {
 
 export function canSendRequest(space: SpacePlan, monthCount: number): boolean {
   return isBelow(getPlan(space.plan).limits.monthlyRequests, monthCount);
+}
+
+/** `todayCount` is the number of requests typed in by hand today, in Paris. */
+export function canRequestManually(space: SpacePlan, todayCount: number): boolean {
+  return isBelow(getPlan(space.plan).limits.manualRequestsPerDay, todayCount);
 }
 
 export function canCreateWidget(space: SpacePlan, count: number): boolean {

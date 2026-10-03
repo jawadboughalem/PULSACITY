@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme.io, demandes d'avis, désinscription) est en ligne ; sa vérification en production attend le premier envoi automatique. La PR #24 aligne Demandes, Connecteurs et la désinscription sur les maquettes du 3 octobre (m19, m5, m1) et attend sa recette (`docs-internes/recette/lot-6-maquettes.md`). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme.io, demandes d'avis, désinscription) et sa suite (PR #24 : m19, m5, m1) sont en ligne ; la vérification en production attend le prompt 5 de `docs-internes/recette/lot-6-maquettes.md`. La PR #25 construit « Demander un avis » (m20) et attend sa recette (`docs-internes/recette/lot-6-demander-un-avis.md`). À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -11,6 +11,7 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 - Widget, maquettes 2 et 6 : `w.js` (mur, carrousel, badge), JSON public `/api/widget/[id]` en cache à la périphérie, pages Widgets et éditeur avec aperçu en direct, guide « Coller dans Systeme.io » (PR #20). Vérifié le 2 octobre sur une vraie page Systeme.io.
 - Suite du widget, maquettes du 2 octobre : liste m18, éditeur sur téléphone, nom du widget, coins des cartes, code qui nomme le type, chargements du carrousel et du badge (PR #21). Vérifié le 2 octobre sur la page Systeme.io, avec 15 avis.
 - Lot 6, connecteurs et demandes : moteur de connecteurs, connecteur Systeme.io, pages Connecteurs et Demandes, offres à associer, e-mails de demande et de relance, désinscription (PR #23, fusionnée le 3 octobre, migration 0006 appliquée en production).
+- Suite du lot 6, maquettes du 3 octobre : Demandes (m19), Connecteurs (m5 : téléphone, clé différente, changer d'adresse, inscriptions sans vente), désinscription (m1). PR #24, fusionnée le 3 octobre, migration 0007 appliquée en production.
 - Trois environnements : local, recette sur chaque aperçu Vercel, migrations de production lancées à chaque fusion et attendues par Vercel avant la mise en ligne (PR #16).
 
 ## Lot 6 (PR #23), en ligne depuis le 3 octobre
@@ -45,7 +46,7 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 - Logos : un logo officiel seulement avec l'accord écrit de Systeme.io et de Calendly (aucun kit officiel trouvé ; le badge partenaire de Stripe est réservé à ses partenaires). En attendant, le nom en texte, comme aujourd'hui (l'initiale dans une case).
 - Signature des e-mails : pas d'adresse postale du créateur. Le pied d'e-mail portera celle de PULSACITY, qui envoie le message, avec le nom de l'espace et le lien de désinscription (à faire valider). Prénom et ville : deux champs facultatifs, « Signature » et « Ville », dans Réglages, rubrique E-mails, hors de l'onboarding ; sans prénom, l'e-mail signe du nom de l'espace.
 
-## Construit dans la PR #24 (maquettes du 3 octobre), en recette
+## PR #24 (maquettes du 3 octobre), en ligne depuis le 3 octobre
 
 - Demandes (m19) : sous-titre de la maquette ; chiffres du mois comme l'accueil (envoyées ce mois et relancées parmi elles, complétées, taux de réponse) ; pastilles « Statut » avec leur nombre sur ordinateur, liste déroulante avec les nombres sur téléphone ; une ligne par demande avec ses initiales, son badge et ses actions en liens ; badges de la planche des statuts ; « Afficher les … suivantes » et « Et … autres demandes planifiées. » au lieu des pages ; état vide avec « Connecter Systeme.io » (tant que la connexion n'est pas active) et « Copier mon lien ».
 - Plan Gratuit plein : encadré « Les 20 demandes d'octobre sont parties. », lignes « Prévue le 6 oct. · partira le 1er nov. », plus de « Envoyer maintenant ».
@@ -61,6 +62,15 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 - Prompt 2 (Demandes, e-mail réel, désinscription) : 17 points sur 17. Trois remarques : l'ordre des demandes déjà traitées (une annulée remontait avec son jour prévu, corrigé) ; Sophie D. « Avis reçu le 1er oct. » mais sa fiche « reçu le 30 sept. » (dates de l'espace de démonstration, corrigées) ; badge « Annulée » en tirets (conforme à la planche de m19).
 - Prompt 3 (Systeme.io) : 10 points sur 10. Remarques : le prix de « Suivi individuel 3 mois » est passé à 297 € (le script de test envoyait 297 € pour tous les plans : le prix suit la dernière vente, voulu) ; le bandeau était vert avant la vente à mauvaise clé (le prompt disait « comme avant », à tort).
 - Prompt 4 (360 px) : 8 points sur 8, sans débordement. Le menu déroulant natif ne réagit toujours pas aux clics dans le cadre de Claude in Chrome : essai au doigt sur téléphone à faire.
+
+## Construit dans la PR #25 (« Demander un avis », m20), en recette
+
+- Le bouton « Demander un avis » de Demandes ouvre le formulaire de m20 : une fenêtre sur ordinateur, tout l'écran sur téléphone (barre avec la croix, qui reste en haut quand on défile). Le bouton de l'accueil ouvre Demandes avec le formulaire déjà ouvert (`?demander=1`).
+- Formulaire : prénom et nom facultatifs, adresse, offre, date d'achat (aujourd'hui par défaut, jamais dans le futur), case « Cette personne a acheté cette offre auprès de moi. ». Sous les noms, le début de l'e-mail (« Bonjour Élodie, ») ; sous la date, sa phrase « vous avez acheté … auprès de … le … », avec l'offre et la date choisies.
+- Même chemin qu'une vente : le client (ses noms connus gardés), un achat `source = manual`, une demande au prochain envoi, le même e-mail, la relance, la désinscription. Une demande saisie à la main part même si les demandes automatiques de l'offre sont désactivées : elle a été voulue.
+- Confirmation : Demandes avec « Demande prête pour … », l'adresse et le jour de la relance (`?demande=<id>`), la nouvelle ligne en tête.
+- Refus de m20 : déjà une demande pour cette offre (ce qu'elle est devenue, « Copier mon lien de collecte » de l'offre, « Voir sa demande ») ; personne désinscrite ; adresse incomplète, avec l'adresse tapée complétée en exemple ; plafond du jour (bouton grisé, saisie gardée) ; plan Gratuit plein (encadré gris, « partira le 1er novembre ») ; aucune offre (« Ajoutez d'abord une offre », « Aller à Offres »).
+- Plafond du jour dans `plans.ts` (`manualRequestsPerDay`, 20 sur tous les plans), compté sur `purchases.created_at` (migration 0008, colonne avec une valeur par défaut).
 
 ## Pas encore construit
 
@@ -127,9 +137,9 @@ Mis à jour le 3 octobre 2026. Le lot 6 (PR #23 : moteur de connecteurs, Systeme
 ## À faire
 
 1. Lot 6 : vérifier l'envoi lancé à la main le 3 octobre à 14:00 (prompt 7, point 12), puis que « Send review requests » tourne seul ; remettre le délai de l'offre de test à 14 jours ; essai au doigt du filtre « Statut » de Demandes sur le téléphone du fondateur.
-2. PR #24 (m19, m5, m1) : recette faite, corrections poussées ; restent la fusion, puis le prompt 5 de `docs-internes/recette/lot-6-maquettes.md` en production.
+2. PR #24 fusionnée : reste le prompt 5 de `docs-internes/recette/lot-6-maquettes.md` en production (demande de la vraie vente, envoi automatique, délai à 14 jours, paiement à la livraison désactivé).
 3. Captures réelles des réglages Systeme.io, par un prompt Claude in Chrome sur le compte du fondateur.
-4. « Demander un avis » : maquette m20 par Claude Design, puis le lot qui la construit (décision plus bas).
+4. PR #25, « Demander un avis » (m20) : recette sur l'aperçu, prompts de `docs-internes/recette/lot-6-demander-un-avis.md`.
 5. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
 6. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
 7. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
@@ -232,7 +242,16 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
   - chaque demande compte dans les 20 du mois du plan Gratuit : le bouton fait grandir l'usage, et donc le passage au payant.
 - Comment, sans rien de nouveau dans le cœur : le même chemin qu'une vente reçue (client, achat `source = manual`, demande planifiée au prochain envoi), le même e-mail (m3), la désinscription, une seule demande par client et par offre.
 - Garde-fous : une case obligatoire « Cette personne a acheté cette offre auprès de moi. » (le pied de l'e-mail l'affirme, et c'est la base légale de l'envoi) ; les adresses désinscrites refusées ; un plafond quotidien d'envois à la main contre les envois en masse, défini dans `plans.ts`.
-- À construire après la maquette m20 de Design (prompt dans `docs-internes/recette/lot-6-maquettes.md`). Un envoi groupé (liste d'adresses, fichier comme m16) pourra suivre.
+- Maquette m20 livrée par Design le 3 octobre, construite dans la PR #25. Un envoi groupé (liste d'adresses, fichier comme m16) pourra suivre.
+
+## Décisions du 3 octobre (PR #25, « Demander un avis », m20)
+
+- Plafond proposé par Design, validé : 20 demandes saisies à la main par jour, sur tous les plans, dans `plans.ts`. Elles comptent aussi dans les 20 demandes du mois du plan Gratuit.
+- La phrase « L'e-mail dira » reprend la date comme l'e-mail l'écrit vraiment (« le 3 oct. 2026 »), pas « le 5 octobre 2026 » de m20.
+- Les refus parlent de « cette personne » plutôt que de « elle » : le client peut être un homme ou une femme.
+- « Envoyer maintenant » reste sur une demande qui part au prochain envoi, y compris celle qu'on vient de saisir (m20 n'y montre que « Annuler ») : tant que l'envoi toutes les 15 minutes par GitHub n'a pas fait ses preuves, c'est le moyen de la faire partir tout de suite, et le seul sur un aperçu, où rien ne part tout seul.
+- Plusieurs clients d'un coup : plus tard, comme le recommande Design (le plafond et la case n'ont plus de sens pour cinquante adresses ; regarder d'abord si les créateurs enchaînent les saisies). « Envoyer et en saisir une autre » n'est pas dessiné, donc pas construit.
+- Un client déjà connu garde ses noms ; ceux tapés ne complètent que ce qui manque.
 
 ## Questions ouvertes
 

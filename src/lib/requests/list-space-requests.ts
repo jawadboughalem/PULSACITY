@@ -146,3 +146,32 @@ export const countSpaceRequests = async (database: Database, spaceId: string, no
     answeredThisMonth: month?.answered ?? 0,
   };
 };
+
+export type ReadyRequest = { status: ReviewRequestStatus; scheduledAt: Date; customerName: string; email: string };
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** The request « Demande prête pour … » announces, if it is one of the space's. */
+export const loadReadyRequest = async (
+  database: Database,
+  spaceId: string,
+  requestId: string | null,
+): Promise<ReadyRequest | null> => {
+  if (!requestId || !UUID.test(requestId)) return null;
+  const [row] = await database
+    .select({
+      status: reviewRequests.status,
+      scheduledAt: reviewRequests.scheduledAt,
+      firstName: customers.firstName,
+      lastName: customers.lastName,
+      email: customers.email,
+    })
+    .from(reviewRequests)
+    .innerJoin(purchases, eq(purchases.id, reviewRequests.purchaseId))
+    .innerJoin(customers, eq(customers.id, purchases.customerId))
+    .where(and(eq(reviewRequests.id, requestId), eq(purchases.spaceId, spaceId)))
+    .limit(1);
+  if (!row) return null;
+  const { firstName, lastName, ...request } = row;
+  return { ...request, customerName: formatCustomerName({ firstName, lastName }) || row.email };
+};

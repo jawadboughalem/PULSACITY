@@ -8,7 +8,7 @@ import { PlanLimitNotice } from "@/components/dashboard/PlanLimitNotice";
 import { PLAN_LIMIT_NOTICE_COOKIE } from "@/components/dashboard/plan-limit-notice-cookie";
 import { RequestsSummary } from "@/components/dashboard/RequestsSummary";
 import { SetupStepsPanel, countDoneSteps } from "@/components/dashboard/SetupStepsPanel";
-import { REQUESTS_SECTION_HREF, TESTIMONIALS_SECTION_HREF } from "@/components/space/space-sections";
+import { ASK_FOR_REVIEW_HREF, REQUESTS_SECTION_HREF, TESTIMONIALS_SECTION_HREF } from "@/components/space/space-sections";
 import { SpaceMobileHeader } from "@/components/space/SpaceMobileHeader";
 import { SpacePage } from "@/components/space/SpacePage";
 import { FirstApprovalCelebration } from "@/components/testimonials/FirstApprovalCelebration";
@@ -77,7 +77,7 @@ const SpaceHomePage = async () => {
   const showsRequests = figures.requestsSentThisMonth > 0 || figures.remindersScheduled > 0;
   const hasAside = showsSteps || showsRequests;
   const askForReviewLink = (
-    <Link href={REQUESTS_SECTION_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:hidden")}>
+    <Link href={ASK_FOR_REVIEW_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:hidden")}>
       {ASK_FOR_REVIEW}
     </Link>
   );
@@ -93,7 +93,7 @@ const SpaceHomePage = async () => {
               <h1 className="font-serif text-h1 font-medium">{firstName ? `Bonjour ${firstName}` : "Bonjour"}</h1>
               <p className="text-body text-slate-600">Voici où en sont vos témoignages ce mois-ci.</p>
             </div>
-            <Link href={REQUESTS_SECTION_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "hidden shrink-0 desktop:inline-flex")}>
+            <Link href={ASK_FOR_REVIEW_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "hidden shrink-0 desktop:inline-flex")}>
               {ASK_FOR_REVIEW}
             </Link>
           </header>

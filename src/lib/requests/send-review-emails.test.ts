@@ -198,6 +198,15 @@ describe("sendDueReviewEmails", () => {
     expect(await readRequest(turnedOff.id)).toMatchObject({ status: "cancelled", cancelledAt: NOW });
   });
 
+  it("sends a request typed in by hand even when the offer's automatic requests are turned off", async () => {
+    const manual = await insertRequest();
+    await database.update(purchases).set({ source: "manual" }).where(eq(purchases.id, manual.purchaseId));
+    await database.update(products).set({ requestsEnabled: false });
+
+    expect(await run()).toMatchObject({ sent: 1, cancelled: 0 });
+    expect(await readRequest(manual.id)).toMatchObject({ status: "sent" });
+  });
+
   it("gives a failed send back, then stops after three failures", async () => {
     const request = await insertRequest();
     const failing = async () => {

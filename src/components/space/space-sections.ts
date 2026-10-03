@@ -37,6 +37,14 @@ export const OFFERS_SECTION_HREF = OFFERS.href;
 
 export const REQUESTS_SECTION_HREF = REQUESTS.href;
 
+/** Demandes with the « Demander un avis » form open (m20), from the home's button. */
+export const ASK_FOR_REVIEW_PARAMETER = "demander";
+
+export const ASK_FOR_REVIEW_HREF = `${REQUESTS.href}?${ASK_FOR_REVIEW_PARAMETER}=1`;
+
+/** Demandes after a request typed in by hand: the id of the request « Demande prête pour … » announces. */
+export const READY_REQUEST_PARAMETER = "demande";
+
 export const WIDGETS_SECTION_HREF = WIDGETS.href;
 
 export const widgetEditorHref = (widgetId: string) => `${WIDGETS.href}/${widgetId}`;

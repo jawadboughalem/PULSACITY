@@ -326,3 +326,26 @@ Corrigés dans ce lot : m6-editeur-desktop-01 à 06 (champ « Nom du widget », 
 | m1-collecte-desktop-06-desinscription.png | Collecte · Désinscription confirmée · 1440 |
 
 Modifié dans ce lot : m5-connecteurs-desktop-02-systemeio-connecte (lien « Changer d’adresse et de clé » sous l’étape 1, étape facultative « inscriptions sans vente »).
+
+
+# Demander un avis — 3 oct. 2026
+
+## m20 — Demander un avis (page « Demandes »)
+| Fichier | Planche · état |
+| --- | --- |
+| m20-demander-avis-mobile-01-formulaire.png | Demander un avis · Formulaire · 360 |
+| m20-demander-avis-desktop-01-formulaire.png | Demander un avis · Formulaire · 1440 |
+| m20-demander-avis-mobile-02-confirmation.png | Demander un avis · Confirmation et nouvelle ligne · 360 |
+| m20-demander-avis-desktop-02-confirmation.png | Demander un avis · Confirmation et nouvelle ligne · 1440 |
+| m20-demander-avis-mobile-03-refus-deja-demandee.png | Demander un avis · Refus : déjà une demande pour cette offre · 360 |
+| m20-demander-avis-desktop-03-refus-deja-demandee.png | Demander un avis · Refus : déjà une demande pour cette offre · 1440 |
+| m20-demander-avis-mobile-04-refus-desinscrite.png | Demander un avis · Refus : personne désinscrite · 360 |
+| m20-demander-avis-desktop-04-refus-desinscrite.png | Demander un avis · Refus : personne désinscrite · 1440 |
+| m20-demander-avis-mobile-05-refus-adresse-invalide.png | Demander un avis · Refus : adresse non valide · 360 |
+| m20-demander-avis-desktop-05-refus-adresse-invalide.png | Demander un avis · Refus : adresse non valide · 1440 |
+| m20-demander-avis-mobile-06-refus-plafond-du-jour.png | Demander un avis · Refus : plafond du jour atteint · 360 |
+| m20-demander-avis-desktop-06-refus-plafond-du-jour.png | Demander un avis · Refus : plafond du jour atteint · 1440 |
+| m20-demander-avis-mobile-07-plan-gratuit-20-demandes.png | Demander un avis · Plan Gratuit : 20 demandes parties · 360 |
+| m20-demander-avis-desktop-07-plan-gratuit-20-demandes.png | Demander un avis · Plan Gratuit : 20 demandes parties · 1440 |
+| m20-demander-avis-mobile-08-sans-offre.png | Demander un avis · Aucune offre dans l’espace · 360 |
+| m20-demander-avis-desktop-08-sans-offre.png | Demander un avis · Aucune offre dans l’espace · 1440 |

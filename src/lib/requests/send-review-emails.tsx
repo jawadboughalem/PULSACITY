@@ -52,6 +52,7 @@ const requestColumns = {
   failedAttempts: reviewRequests.failedAttempts,
   purchasedAt: purchases.purchasedAt,
   eventType: purchases.eventType,
+  source: purchases.source,
   customerId: customers.id,
   email: customers.email,
   firstName: customers.firstName,
@@ -121,7 +122,12 @@ const buildEmail = (request: RequestToSend, kind: ReviewEmailKind): CustomerEmai
   };
 };
 
-const isStopped = (request: RequestToSend) => request.unsubscribedAt !== null || !request.requestsEnabled;
+/**
+ * An unsubscribed customer gets nothing. An offer whose requests were turned off stops those that follow its sales; a
+ * request the creator typed in by hand (« Demander un avis ») was asked for on purpose, and leaves.
+ */
+const isStopped = (request: RequestToSend) =>
+  request.unsubscribedAt !== null || (!request.requestsEnabled && request.source !== "manual");
 
 /**
  * The first e-mail. Locked on sentAt: whoever takes the request sends it, and nobody else. A send that fails gives the
