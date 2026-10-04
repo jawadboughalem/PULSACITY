@@ -5,7 +5,8 @@ Dans l'ordre. Chaque bloc est un prompt à coller tel quel, à l'endroit indiqu�
 - Prompt 1 (Claude in Chrome) : la migration 0009 sur la base de recette. Déjà vérifié par Claude Code le 4 octobre : « Recette database migration » n° 22, verte, sur le commit 592cb40. À relancer seulement si une nouvelle migration s'ajoute.
 - Prompts 2 et 3 (Claude in Chrome) : recette sur l'aperçu de la PR #27, avant la fusion.
 - Prompt 4 (Claude Design) : les maquettes qui manquent.
-- Prompt 5 (Claude in Chrome) : vérification sur pulsacity.com, après la fusion.
+- Prompts 6 et 7 (Claude in Chrome) : contre-recette du deuxième passage (maquettes m21 à m24 et corrections de la première recette), sur l'aperçu, avant la fusion.
+- Prompt 5 (Claude in Chrome) : vérification sur pulsacity.com, après la fusion, en dernier.
 
 Adresse de l'aperçu : https://pulsacity-git-claude-youthful-p-d48c42-jawadboughalems-projects.vercel.app. Aucun compte n'est nécessaire : toutes les pages du lot sont publiques. Il faut seulement être connecté à Vercel dans le navigateur (protection des aperçus).
 
@@ -14,6 +15,14 @@ Déjà vérifié par Claude Code dans son conteneur, sur le build de production 
 - Lighthouse mobile : `/` 95, `/integrations/systeme-io` 95, `/tarifs` 96 en performance ; 100 en accessibilité ; CLS 0 ;
 - aucun lien mort ni ancre manquante sur les 16 pages ;
 - « Me prévenir » : adresse incomplète refusée, adresse complète enregistrée une seule fois.
+
+Deuxième passage (4 octobre), vérifié de la même façon :
+- intégrations, guides, pages légales et menu à côté de m21, m22, m23 et m24, à 1440 px et 360 px ; accueil et tarifs à côté des m7 et m8 corrigées ;
+- Lighthouse mobile : `/` 94, `/integrations/systeme-io` 95, `/tarifs` 96, `/integrations` 95, un guide 95 en performance ; 100 en accessibilité ; CLS 0 ;
+- aucun lien mort ni ancre manquante sur les 16 pages, aucune erreur dans la console ;
+- à 360 px, le badge tient dans le cadre de Julie (297 px pour 302) et le carrousel a ses points (294 px pour 288 nécessaires) ;
+- « Me prévenir » : les trois états de m21 ; « Dites-nous quel outil » : nom refusé s'il fait une lettre, enregistré sinon ;
+- migration 0010 (table `tool_suggestions`) : appliquée en local ; sur la base de recette, Claude Code vérifie « Recette database migration » après l'envoi.
 
 À savoir :
 - Les textes légaux sont des brouillons : bandeau « Brouillon en cours de relecture », exclus des moteurs de recherche et du plan du site tant que `LEGAL_VALIDATED` n'est pas `true`. Les informations à fournir sont surlignées « [À COMPLÉTER : …] » (liste en fin de fichier).
@@ -126,6 +135,65 @@ Et trois corrections de m7, pour qu'elle suive m8 et la charte :
 - le comparatif de m8 sur ordinateur est vide dans l'export (seuls les noms des plans apparaissent) : il est construit avec les lignes de m8 sur téléphone. Peux-tu réexporter m8-tarifs-desktop-01 et 02 avec les lignes ?
 
 Exporte chaque écran en PNG 2x, nommés m21-integrations-…, m22-guides-…, m23-legal-…, m24-menu-…, et les corrections sous leurs noms actuels.
+```
+
+---
+
+## 6. Contre-recette sur ordinateur, sur l'aperçu
+
+Avant ce prompt : fenêtre en grand, connecté à Vercel. Remplacez ADRESSE_TEST par une adresse de test qui arrive dans votre boîte (par exemple un alias avec « +recette7b »).
+
+```
+Tu fais la contre-recette du site public de PULSACITY sur l'aperçu https://pulsacity-git-claude-youthful-p-d48c42-jawadboughalems-projects.vercel.app, fenêtre en grand. Tu ne crées aucun compte. Tu remplis seulement les deux formulaires des points 9 et 11. Pour chaque point, note « OK » ou décris ce que tu vois.
+
+A. En-tête et accueil (/)
+1. En haut : « Intégrations », « Tarifs », « Guides », « Se connecter », puis le bouton cerclé « Créer mon espace gratuit ». Clique sur « Guides » : « Guides » est souligné. Reviens à l'accueil.
+2. La démo en quatre temps : les quatre cadres gris ont la même hauteur, et dans le 4ᵉ, la carte de Nadia B. se lit en entier, son nom compris.
+3. « Chez vous, avec vos couleurs » : dans le cadre de Julie Nutrition, juste sous la barre « Page de vente de Julie Nutrition · exemple », le badge « 4,8/5 · 47 avis » avec trois initiales et « Propulsé par Pulsacity ». Plus de bande blanche vide.
+4. « Tarifs » : « Recommandé » à côté d'Essentiel est bleu foncé, comme sur /tarifs. Le lien « Voir le détail des tarifs » est rouge.
+
+B. Tarifs (/tarifs)
+5. « Recommandé » au-dessus d'Essentiel, bleu foncé. Dans « Comparer en détail », sous les titres de groupe (« Témoignages », « Widgets », « Connecteurs », « Bientôt »), il n'y a plus de trait foncé ; les valeurs (« 15 », « Illimités », « Affichée »…) sont en texte normal, pas en gras. La ligne « Témoignages vidéo » dit « — », « — » et « Bientôt » en gris.
+
+C. Intégrations
+6. /integrations : le titre « Intégrations » et une phrase à gauche ; à droite, trois lignes Systeme.io, Stripe, Calendly, chacune avec une phrase, son badge et une flèche « › ». Dessous, sur fond gris, « Votre outil n'est pas encore là ? » et trois colonnes avec une petite icône (enveloppe, lien, grille).
+7. /integrations/systeme-io : le fil « Intégrations › Systeme.io ». La section « Installer la connexion Systeme.io, pas à pas » a son titre à gauche et les étapes à droite. L'étape 2 montre un cadre « Votre espace · Connecteurs › Systeme.io » avec « Adresse de connexion », « Clé secrète » et deux boutons « Copier ». L'étape 4 montre un cadre avec le bandeau vert « Connecté — dernière vente reçue il y a 3 min ». L'étape 6 montre quatre dessins, deux par ligne.
+8. Toujours sur cette page : dans « Facultatif : les inscriptions sans vente », la carte « Action » dit « Collez l'adresse de l'étape 2. ». Dans « Vos questions », ouvre « Que se passe-t-il si une vente est annulée ? » : la réponse parle de « Vente annulée » cochée à l'étape 3 et dit que vous annulez la demande depuis la page Demandes. Lis-la à côté de l'étape 3 : dis-moi si tu vois encore une contradiction.
+9. Retourne sur /integrations. Clique sur « Dites-nous quel outil » : un champ « L'outil où vous vendez » s'ouvre. Clique sur « Envoyer » sans rien écrire : le message rouge « Indiquez le nom de l'outil, en 2 caractères au moins. ». Écris « Recette lot 7 » et clique sur « Envoyer » : « Merci, c'est noté. » en vert.
+10. /integrations/stripe : un cadre gris « Être prévenu à la sortie de Stripe », le champ « Adresse e-mail » (exemple « vous@example.com ») et « Me prévenir » à sa droite, puis « Un seul e-mail, le jour de la sortie. Votre adresse ne sert qu'à cela. ». Plus bas, « Ce que fera la connexion » (trois coches) et, sur fond gris, « En attendant, sans connecteur » (trois lignes et le bouton « Créer mon espace gratuit »). Pas de grand appel final avant le pied de page.
+11. Dans le cadre gris, écris « julie@example » et clique sur « Me prévenir » : le champ devient rouge avec « Il manque la fin de l'adresse, par exemple julie@example.com. », et la phrase « Un seul e-mail… » disparaît. Remplace par ADRESSE_TEST et clique sur « Me prévenir » : dans le même cadre, un bandeau vert « Nous vous préviendrons par e-mail. » et « À l'adresse …, le jour de la sortie de Stripe. Un seul e-mail. ».
+
+D. Guides et pages légales
+12. /guides : « Démarrer » (deux guides) puis « Aller plus loin » (un guide), chaque guide avec une phrase courte, « Mis à jour le 4 octobre 2026 · … minutes de lecture » et une flèche « › ».
+13. Ouvre « Comment ajouter des témoignages sur une page Systeme.io » : le fil « Guides › … », un grand titre, la date, une phrase d'introduction en Newsreader ; à droite, « Dans ce guide » et la liste des intertitres, le premier marqué d'un trait foncé. Fais défiler : le trait suit l'intertitre lu, et la liste reste visible. Clique sur « Les erreurs à éviter » : la page y saute. En bas, « Autres guides », puis directement le pied de page.
+14. /confidentialite : grand titre, « Version du 4 octobre 2026 », un bandeau beige « Brouillon en cours de relecture » avec une horloge, et à droite « Sur cette page ». Les passages « [À COMPLÉTER : …] » sont surlignés en beige, en gras brun. Une rubrique « « Dites-nous quel outil », sans espace » existe. Dans le pied de page, « Cookies » mène à la rubrique « Cookies ».
+
+Ne touche à aucun autre réglage, ne crée aucun compte.
+
+Compte rendu à me donner : les points 1 à 14 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK. Jamais l'adresse e-mail de test.
+```
+
+---
+
+## 7. Contre-recette à 360 px, sur l'aperçu
+
+Avant ce prompt : connecté à Vercel, dans le même cadre de 360 × 800 que la première fois.
+
+```
+Tu fais la contre-recette du site public de PULSACITY à 360 px de large, sur l'aperçu https://pulsacity-git-claude-youthful-p-d48c42-jawadboughalems-projects.vercel.app. Tu ne remplis aucun formulaire. Pour chaque point, note « OK » ou décris ce que tu vois.
+
+1. Accueil : touche le bouton à trois traits. Le menu s'ouvre avec « Intégrations », « Tarifs », « Guides », « Se connecter » en grands caractères, séparés par des filets, puis le bouton « Créer mon espace gratuit ». Sous le menu, la page est assombrie par un voile bleu foncé. Touche ce voile : le menu se ferme.
+2. Démo, 4ᵉ temps « Sur la page · le mur » : les quatre cartes se lisent en entier, la carte de Nadia B. avec son nom.
+3. « Chez vous, avec vos couleurs » : le badge « 4,8/5 · 47 avis » tient entièrement dans le cadre, sans toucher le bord de l'écran. Sous le carrousel, entre les deux flèches, quatre points (et non « 1 sur 4 »). Touche la flèche de droite : le deuxième point devient plein.
+4. « Tarifs » de l'accueil : « Recommandé » à côté d'Essentiel est bleu foncé.
+5. /integrations : chaque ligne montre le nom, son badge à côté, la phrase dessous et une flèche « › » à droite.
+6. /integrations/systeme-io : à l'étape 2, le cadre « Votre espace · Connecteurs › Systeme.io » montre le champ de l'adresse, le bouton « Copier » sur toute la largeur, le champ de la clé et un second « Copier ». Les dessins des étapes 3 et 6 sont l'un sous l'autre, sur toute la largeur. La carte « Action » dit « Collez l'adresse de l'étape 2. ».
+7. Sur /integrations/systeme-io, dans « Vos questions », aucun « ? » ne commence une ligne. Même chose dans les questions de l'accueil et de /tarifs.
+8. /guides/ajouter-des-temoignages-sur-une-page-systeme-io : sous la phrase d'introduction, un bloc « Dans ce guide » avec une flèche. Touche-le : la liste des intertitres s'ouvre. Touche « En résumé » : la page y saute.
+9. /confidentialite : le bandeau beige, puis un bloc « Sur cette page » replié.
+10. Sur toutes ces pages, rien ne déborde sur le côté.
+
+Compte rendu à me donner : les points 1 à 10 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK.
 ```
 
 ---
