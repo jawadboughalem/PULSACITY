@@ -349,3 +349,46 @@ Modifié dans ce lot : m5-connecteurs-desktop-02-systemeio-connecte (lien « Cha
 | m20-demander-avis-desktop-07-plan-gratuit-20-demandes.png | Demander un avis · Plan Gratuit : 20 demandes parties · 1440 |
 | m20-demander-avis-mobile-08-sans-offre.png | Demander un avis · Aucune offre dans l’espace · 360 |
 | m20-demander-avis-desktop-08-sans-offre.png | Demander un avis · Aucune offre dans l’espace · 1440 |
+
+# Site public — 4 oct. 2026 (page « Site public »)
+
+En-tête et pied de page : logo horizontal de l’identité v2. Menu : Intégrations, Tarifs, Guides, Se connecter.
+
+## m21 — Intégrations
+| Fichier | Planche · état |
+| --- | --- |
+| m21-integrations-desktop-01-liste.png | /integrations · Liste · 1440 |
+| m21-integrations-mobile-01-liste.png | /integrations · Liste · 360 |
+| m21-integrations-desktop-02-systemeio.png | /integrations/systeme-io · 1440 |
+| m21-integrations-mobile-02-systemeio.png | /integrations/systeme-io · 360 |
+| m21-integrations-desktop-03-stripe.png | /integrations/stripe · Bientôt · 1440 |
+| m21-integrations-mobile-03-stripe.png | /integrations/stripe · Bientôt · 360 |
+| m21-integrations-desktop-04-stripe-inscrit.png | /integrations/stripe · « Nous vous préviendrons » · 1440 |
+| m21-integrations-mobile-04-stripe-inscrit.png | /integrations/stripe · « Nous vous préviendrons » · 360 |
+| m21-integrations-desktop-05-stripe-erreur.png | /integrations/stripe · Adresse incomplète · 1440 |
+| m21-integrations-mobile-05-stripe-erreur.png | /integrations/stripe · Adresse incomplète · 360 |
+| m21-integrations-desktop-06-calendly.png | /integrations/calendly · Bientôt · 1440 |
+| m21-integrations-mobile-06-calendly.png | /integrations/calendly · Bientôt · 360 |
+
+## m22 — Guides
+| Fichier | Planche · état |
+| --- | --- |
+| m22-guides-desktop-01-liste.png | /guides · Liste · 1440 |
+| m22-guides-mobile-01-liste.png | /guides · Liste · 360 |
+| m22-guides-desktop-02-guide.png | /guides/coller-le-widget-dans-systeme-io · 1440 |
+| m22-guides-mobile-02-guide.png | /guides/coller-le-widget-dans-systeme-io · 360 |
+
+## m23 — Pages légales
+| Fichier | Planche · état |
+| --- | --- |
+| m23-legal-desktop-01-brouillon.png | /confidentialite · Brouillon · 1440 |
+| m23-legal-mobile-01-brouillon.png | /confidentialite · Brouillon · 360 |
+
+## m24 — Menu du site sur téléphone
+| Fichier | Planche · état |
+| --- | --- |
+| m24-menu-mobile-01-ouvert.png | Menu du site ouvert · 360 |
+
+Modifiés dans ce lot, mêmes noms :
+- m7-accueil-desktop-01-page.png, m7-accueil-mobile-01-page.png : tarifs 9,99 € et 19,99 € par mois sans « HT », cartes alignées sur m8 (« Tri par offre » inclus dans les trois plans), lien « Voir le détail des tarifs » en Carmin ; en-tête desktop avec le nouveau menu.
+- m8-tarifs-desktop-01-mensuel.png, m8-tarifs-desktop-02-annuel.png : comparatif détaillé avec toutes ses lignes ; en-tête avec le nouveau menu ; planche raccourcie à 2988 px.
