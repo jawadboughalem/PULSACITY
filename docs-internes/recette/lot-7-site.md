@@ -2,7 +2,7 @@
 
 Dans l'ordre. Chaque bloc est un prompt à coller tel quel, à l'endroit indiqué.
 
-- Prompt 1 (Claude in Chrome) : la migration 0009 sur la base de recette.
+- Prompt 1 (Claude in Chrome) : la migration 0009 sur la base de recette. Déjà vérifié par Claude Code le 4 octobre : « Recette database migration » n° 22, verte, sur le commit 592cb40. À relancer seulement si une nouvelle migration s'ajoute.
 - Prompts 2 et 3 (Claude in Chrome) : recette sur l'aperçu de la PR #27, avant la fusion.
 - Prompt 4 (Claude Design) : les maquettes qui manquent.
 - Prompt 5 (Claude in Chrome) : vérification sur pulsacity.com, après la fusion.
