@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 3 octobre 2026. Le lot 6 est en ligne en entier : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Reste sa vérification en production : le prompt 5 de `docs-internes/recette/lot-6-maquettes.md`, dont le fondateur donne le compte rendu à la session suivante. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Prochain lot : le site marketing, les guides et les pages légales. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -37,6 +37,12 @@ Mis à jour le 3 octobre 2026. Le lot 6 est en ligne en entier : moteur de conne
 - Prompt 7, sur l'espace de production « Recette Nutrition » : webhook « PULSACITY » créé dans Systeme.io, adresse et clé collées par le fondateur, « Nouvelle vente » et « Vente annulée » cochées. Vraie commande à 13:30 (produit physique à 1 €, paiement à la livraison, tunnel créé pour le test) : l'événement arrive en moins d'une minute, le voyant passe au vert, le produit s'associe à l'offre (délai 0 jour) et la demande est « Planifiée · Part au prochain envoi ».
 - Point 12 manqué : 25 minutes après, la demande n'était pas partie. Le workflow « Send review requests » n'avait encore jamais tourné tout seul depuis la fusion : GitHub tarde parfois à démarrer un nouveau planning, surtout aux quarts d'heure pleins, les plus chargés. Claude Code l'a lancé à la main à 14:00 (heure de Paris) ; le résultat est à vérifier par le fondateur (Actions, Demandes, boîte de test). Le planning passe aux minutes 7, 22, 37 et 52.
 - Restent : remettre le délai de l'offre de test à 14 jours une fois l'e-mail reçu ; désactiver le paiement à la livraison et le tunnel de test dans Systeme.io.
+
+## Vérification du lot 6 en production, suite (4 octobre, prompt 5 de `lot-6-maquettes.md`)
+
+- La demande de la vraie vente du 3 octobre est partie (« Envoyée le 3 oct. · relance prévue le 7 oct. ») et l'e-mail est arrivé. Elle est partie par l'exécution lancée à la main le 3 octobre à 13:59 (résumé `"sent":1`).
+- « Send review requests » tourne seul depuis la fusion, mais GitHub ne le lance que toutes les 3 à 6 heures, à des minutes irrégulières (3 oct. 16:56, 20:40, 23:50 ; 4 oct. 02:14, 08:03, heure de Paris), au lieu des 15 minutes demandées. Toutes vertes, rien d'autre à envoyer (`"sent":0`). Le résumé de la tâche ne contient pas `"ok":true` : c'est le texte du prompt qui l'attendait à tort.
+- Délai de « Produit physique test PULSACITY » remis à 14 jours. Paiement à la livraison décoché sur le « Tunnel test PULSACITY » : le bon de commande n'affiche plus de mode de paiement. Il reste branché au niveau du compte Systeme.io (Passerelles de paiement), sans effet tant qu'aucun tunnel ne l'active. Tunnel, produit et webhook « PULSACITY » gardés pour les tests.
 
 ## Maquettes de Design du 3 octobre (prompt 8)
 
@@ -144,15 +150,14 @@ Mis à jour le 3 octobre 2026. Le lot 6 est en ligne en entier : moteur de conne
 
 ## À faire
 
-1. Lot 6, vérification en production : prompt 5 de `docs-internes/recette/lot-6-maquettes.md` (le workflow « Send review requests » tourne seul aux minutes 7, 22, 37 et 52 ; la demande de la vraie vente du 3 octobre est partie et l'e-mail est arrivé ; délai de l'offre de test remis à 14 jours ; paiement à la livraison du tunnel de test désactivé). Le fondateur en donne le compte rendu à la session suivante, qui le note ici. Si le workflow ne tourne pas seul, voir le point sur le plan Vercel.
+1. Envoi planifié, avant le lancement public : GitHub ne lance « Send review requests » que toutes les 3 à 6 heures. Pour une demande à J+14, quelques heures ne se voient pas ; pour « Demander un avis » et un délai de 0 jour, « dans les minutes qui suivent » est faux (en attendant : « Envoyer maintenant »). Recommandation : passer Vercel en Pro avant le lancement (20 $ par mois ; l'offre Hobby est réservée à un usage personnel non commercial), puis une petite PR : tâche toutes les 15 minutes dans `vercel.json`, workflow GitHub retiré. Décision et action du fondateur (prompt à écrire le jour venu).
 2. Essai au doigt, sur le téléphone du fondateur, des menus déroulants natifs : filtre « Statut » de Demandes, offre de « Demander un avis ».
 3. Captures réelles des réglages Systeme.io, par un prompt Claude in Chrome sur le compte du fondateur.
 4. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
 5. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
 6. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 7. Sentry, avant le lancement.
-8. Plan Vercel : sur Hobby, Vercel Cron ne tourne qu'une fois par jour ; le workflow GitHub fait les 15 minutes. Si GitHub laisse des trous de plus d'une heure pendant quelques jours, passer à Pro (20 $ par mois) permettra de remettre la tâche toutes les 15 minutes dans `vercel.json` et de retirer le workflow. Décision du fondateur.
-9. Prochain lot : le site marketing, les guides et les pages légales (PROMPT 6 du fondateur, déjà prêt).
+8. Prochain lot : le site marketing, les guides et les pages légales (PROMPT 6 du fondateur, déjà prêt).
 
 Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
