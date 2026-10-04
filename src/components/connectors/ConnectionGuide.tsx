@@ -84,7 +84,12 @@ export const ConnectionGuide = ({ connectorId, connectorName }: ConnectionGuideP
 
 type RuleBox = { caption: string; name: string; hint: string };
 
-type OptionalGuide = { title: string; description: string; rule: [RuleBox, RuleBox]; parts: GuidePart[] };
+type OptionalGuide = {
+  title: string;
+  description: string;
+  rule: [RuleBox, Omit<RuleBox, "hint"> & { hint: (addressStep: number) => string }];
+  parts: GuidePart[];
+};
 
 /**
  * The step after the three, marked « + » in maquette 5: what the connection receives besides sales. For Systeme.io, a
@@ -92,21 +97,21 @@ type OptionalGuide = { title: string; description: string; rule: [RuleBox, RuleB
  */
 const OPTIONAL_GUIDES: Record<string, OptionalGuide> = {
   systeme: {
-    title: "Facultatif : les inscriptions sans vente",
+    title: "Facultatif : les inscriptions sans vente",
     description:
-      "Vous offrez une formation ? Systeme.io n'y voit pas de vente. Une règle d'automatisation nous prévient quand même de chaque inscription, à la même adresse.",
+      "Vous offrez une formation ? Systeme.io n'y voit pas de vente. Une règle d'automatisation nous prévient quand même de chaque inscription, à la même adresse.",
     rule: [
       { caption: "Déclencheur", name: "Inscrit à la formation", hint: "Choisissez la formation offerte." },
-      { caption: "Action", name: "Appeler un webhook", hint: "Collez l'adresse de l'étape 1." },
+      { caption: "Action", name: "Appeler un webhook", hint: (addressStep) => `Collez l'adresse de l'étape ${addressStep}.` },
     ],
     parts: [
-      "Dans Systeme.io : ",
+      "Dans Systeme.io : ",
       { strong: "Automatisations" },
       ", puis ",
       { strong: "Règles" },
       " et ",
       { strong: "Créer" },
-      ". Chaque inscription arrive ici avec le nom de la formation : associez-la à une offre, et la demande d'avis part au délai choisi.",
+      ". Chaque inscription arrive ici avec le nom de la formation : associez-la à une offre, et la demande d'avis part au délai choisi.",
     ],
   },
 };
@@ -119,8 +124,14 @@ const RuleCard = ({ caption, name, hint }: RuleBox) => (
   </div>
 );
 
+type ConnectionRuleProps = {
+  connectorId: string;
+  /** The step where the address is copied: the first in the space (m5), the second on the public page (m21). */
+  addressStep: number;
+};
+
 /** The automation rule of the optional step: its trigger, then its action. Also on the public page of the connector. */
-export const ConnectionRule = ({ connectorId }: { connectorId: string }) => {
+export const ConnectionRule = ({ connectorId, addressStep }: ConnectionRuleProps) => {
   const guide = OPTIONAL_GUIDES[connectorId];
   if (!guide) return null;
   const [trigger, action] = guide.rule;
@@ -129,7 +140,7 @@ export const ConnectionRule = ({ connectorId }: { connectorId: string }) => {
       <RuleCard {...trigger} />
       <Icon name="chevronDown" size={20} className="shrink-0 self-center desktop:hidden" />
       <Icon name="chevronRight" size={20} className="hidden shrink-0 desktop:block" />
-      <RuleCard {...action} />
+      <RuleCard {...action} hint={action.hint(addressStep)} />
     </div>
   );
 };
@@ -152,7 +163,7 @@ export const ConnectionOptionalStep = ({ connectorId }: { connectorId: string })
           </h3>
           <p className="max-w-text text-body text-slate-600">{guide.description}</p>
         </div>
-        <ConnectionRule connectorId={connectorId} />
+        <ConnectionRule connectorId={connectorId} addressStep={1} />
         <p className="max-w-text text-small">{guide.parts.map(renderPart)}</p>
       </div>
     </section>

@@ -13,7 +13,7 @@ export const generateMetadata = () =>
   });
 
 const SalesTermsPage = () => (
-  <LegalPage title="Conditions générales de vente" updatedOn="4 octobre 2026">
+  <LegalPage name="cgv" title="Conditions générales de vente" updatedOn="4 octobre 2026">
     <LegalText />
   </LegalPage>
 );

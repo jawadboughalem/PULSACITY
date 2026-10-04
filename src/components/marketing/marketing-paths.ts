@@ -1,8 +1,6 @@
 /** Every address the public site links to, so that a renamed page leaves no dead link behind. */
 export const MARKETING_PATHS = {
   home: "/",
-  howItWorks: "/#fonctionnement",
-  questions: "/#questions",
   pricing: "/tarifs",
   integrations: "/integrations",
   guides: "/guides",

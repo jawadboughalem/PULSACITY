@@ -88,8 +88,12 @@ export const describePricePeriod = (id: PlanId, period: BillingPeriod): string =
   return period === "monthly" ? "par mois" : "par an";
 };
 
-/** One value of the comparison: included, not included, or a word in bold. */
-export type ComparisonValue = { kind: "included" } | { kind: "excluded"; label: string } | { kind: "text"; label: string };
+/** One value of the comparison: included, not included, to come, or a word. */
+export type ComparisonValue =
+  | { kind: "included" }
+  | { kind: "excluded"; label: string }
+  | { kind: "soon"; label: string }
+  | { kind: "text"; label: string };
 
 export type ComparisonRow = { label: string; values: Record<PlanId, ComparisonValue> };
 
@@ -160,7 +164,7 @@ export const PLAN_COMPARISON: ComparisonGroup[] = [
       {
         label: "Témoignages vidéo",
         values: everyPlan((plan) =>
-          plan.badgeRemovable ? { kind: "text", label: "Bientôt" } : { kind: "excluded", label: "Non inclus" },
+          plan.badgeRemovable ? { kind: "soon", label: "Bientôt" } : { kind: "excluded", label: "Non inclus" },
         ),
       },
     ],

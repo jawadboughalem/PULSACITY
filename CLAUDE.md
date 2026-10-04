@@ -86,6 +86,7 @@ assets/og-fonts/              # polices WOFF des images de partage (next/og)
 - `webhook_events` : id, connectionId, rawPayload (jsonb), rawBody (octets reçus, pour la signature), headers (jsonb), eventType, receivedAt, processedAt, outcome, purchaseId, error — journal complet, rejouable
 - `connector_waitlist` : id, spaceId, connector, toolName, createdAt — « Me prévenir » et « Dites-nous quel outil »
 - `connector_waitlist_emails` : id, connector, email, createdAt (unique connector + email) — « Me prévenir » des pages publiques /integrations/[connector], pour un visiteur sans espace ; supprimée après l'annonce
+- `tool_suggestions` : id, toolName, createdAt — « Dites-nous quel outil » de /integrations, pour un visiteur sans espace : le nom de l'outil seulement, sans adresse
 - `stripe_events` : id, type, processedAt
 
 ## Plans (`src/config/plans.ts`)

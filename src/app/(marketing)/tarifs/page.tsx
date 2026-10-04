@@ -51,7 +51,7 @@ const PricingPage = () => (
               announcements={{ monthly: "Prix mensuels affichés.", yearly: "Prix annuels affichés." }}
               className="w-full desktop:w-auto"
             />
-            <p className="text-small text-slate-600">{`Annuel : ${YEARLY_FREE_MONTHS} mois offerts`}</p>
+            <p className="text-small text-slate-600">{`Annuel : ${YEARLY_FREE_MONTHS} mois offerts`}</p>
           </div>
         </div>
         <div className="mt-6 desktop:mt-7">

@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { readNodeText, slugifyHeading } from "@/lib/content/text-headings";
 
 const LINK_CLASSES =
   "font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
@@ -17,19 +18,28 @@ const ProseLink = ({ href = "", children }: ComponentPropsWithoutRef<"a">) =>
     </a>
   );
 
-type AnchoredHeadingProps = { id: string; children: ReactNode };
+const TITLE_CLASSES = "mt-6 scroll-mt-5 font-serif text-quote font-medium desktop:text-h2";
 
-/** A title that other pages link to, such as « #cookies »: written <AnchoredHeading id="cookies"> in the text. */
-const AnchoredHeading = ({ id, children }: AnchoredHeadingProps) => (
-  <h2 id={id} className="mt-5 scroll-mt-5 font-serif text-h2 font-medium">
+/** A title of the text, anchored for the table of contents (m22, m23): « #qui-traite-vos-donnees ». */
+const ProseTitle = ({ children }: { children?: ReactNode }) => (
+  <h2 id={slugifyHeading(readNodeText(children))} className={TITLE_CLASSES}>
     {children}
   </h2>
 );
 
-/** What the company still has to provide, visible at once in a draft: <ToComplete>SIREN</ToComplete>. */
+type AnchoredHeadingProps = { id: string; children: ReactNode };
+
+/** A title that other pages link to, such as « #cookies »: written <AnchoredHeading id="cookies"> in the text. */
+const AnchoredHeading = ({ id, children }: AnchoredHeadingProps) => (
+  <h2 id={id} className={TITLE_CLASSES}>
+    {children}
+  </h2>
+);
+
+/** What the company still has to provide, highlighted in Attention while a draft (m23): <ToComplete>SIREN</ToComplete>. */
 const ToComplete = ({ children }: { children: ReactNode }) => (
-  <mark className="bg-attention-surface px-1 text-attention">
-    [À COMPLÉTER : {children}]
+  <mark className="box-decoration-clone bg-attention-surface px-1 font-semibold text-attention">
+    [À COMPLÉTER : {children}]
   </mark>
 );
 
@@ -38,7 +48,7 @@ const ToComplete = ({ children }: { children: ReactNode }) => (
  * spaces the blocks (ProseColumn); a title takes more room above it.
  */
 const components = {
-  h2: ({ children }) => <h2 className="mt-5 font-serif text-h2 font-medium">{children}</h2>,
+  h2: ProseTitle,
   h3: ({ children }) => <h3 className="mt-3 font-serif text-quote font-medium">{children}</h3>,
   p: ({ children }) => <p className="max-w-text text-body">{children}</p>,
   ul: ({ children }) => <ul className="flex max-w-text list-disc flex-col gap-2 pl-5 text-body">{children}</ul>,

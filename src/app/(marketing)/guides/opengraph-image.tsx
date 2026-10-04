@@ -6,6 +6,6 @@ export const size = SOCIAL_IMAGE_SIZE;
 
 export const contentType = SOCIAL_IMAGE_TYPE;
 
-const SocialImage = () => renderSocialImage("Guides : récolter et afficher les témoignages de vos clients");
+const SocialImage = () => renderSocialImage("Guides : récolter et afficher les témoignages de vos clients");
 
 export default SocialImage;

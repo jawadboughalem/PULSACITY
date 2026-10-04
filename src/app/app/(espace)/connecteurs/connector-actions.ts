@@ -7,6 +7,7 @@ import { getDb } from "@/db";
 import { requireSignedInUser } from "@/lib/auth/require-signed-in-user";
 import { renewConnectionAddress } from "@/lib/connectors/connections";
 import { associateExternalProduct, joinConnectorWaitlist, replayOwnedEvent } from "@/lib/connectors/manage-connection";
+import { toolNameSchema } from "@/lib/connectors/public-tool-suggestion";
 import { getConnectorBySlug } from "@/lib/connectors/registry";
 import { OTHER_TOOL, UPCOMING_CONNECTOR_IDS } from "@/lib/connectors/upcoming-connectors";
 import { findOwnedSpace } from "@/lib/spaces/find-owned-space";
@@ -16,8 +17,6 @@ import { SPACE_HOME_PATH } from "@/lib/spaces/space-paths";
 export type ConnectorActionResult<ActionError extends string = "not-found"> =
   | { ok: true; data: null }
   | { ok: false; error: ActionError };
-
-const MAX_TOOL_NAME_LENGTH = 80;
 
 const associationSchema = z.union([
   z.object({ productId: z.uuid() }),
@@ -80,7 +79,7 @@ export const askToBeNotified = async (connector: string): Promise<ConnectorActio
 
 export const suggestTool = async (toolName: string): Promise<ConnectorActionResult<"not-found" | "invalid-name">> => {
   const signedInUser = await requireSignedInUser();
-  const parsed = z.string().trim().min(2).max(MAX_TOOL_NAME_LENGTH).safeParse(toolName);
+  const parsed = toolNameSchema.safeParse(toolName);
   if (!parsed.success) return { ok: false, error: "invalid-name" };
   const database = getDb();
   const space = await findOwnedSpace(database, signedInUser.id);

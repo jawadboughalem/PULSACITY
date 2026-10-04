@@ -72,4 +72,21 @@ describe("MarketingNav", () => {
     expect(menu?.hidden).toBe(true);
     expect(document.activeElement).toBe(menuButton);
   });
+
+  it("lists the pages of m24, and closes the phone menu from its veil", () => {
+    act(() => root.render(<MarketingNav />));
+    const menuButton = container.querySelector("button[aria-controls]") as HTMLButtonElement;
+    const menu = document.getElementById(menuButton.getAttribute("aria-controls") ?? "");
+    expect([...(menu?.querySelectorAll("li a") ?? [])].map((link) => link.textContent)).toEqual([
+      "Intégrations",
+      "Tarifs",
+      "Guides",
+      "Se connecter",
+    ]);
+
+    act(() => menuButton.click());
+    const veil = container.querySelector('button[aria-hidden="true"]') as HTMLButtonElement;
+    act(() => veil.click());
+    expect(menu?.hidden).toBe(true);
+  });
 });

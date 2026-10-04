@@ -17,3 +17,15 @@ export const CheckList = ({ items, className }: CheckListProps) => (
     ))}
   </ul>
 );
+
+/** m21, « Ce que fera la connexion »: one tick a row, between hairlines, under a rule of Encre. */
+export const RuledCheckList = ({ items }: { items: string[] }) => (
+  <ul className="border-t border-ink-900">
+    {items.map((item) => (
+      <li key={item} className="flex items-start gap-3 border-b border-hairline-200 py-4 text-body">
+        <Icon name="check" size={20} className="mt-[2px] shrink-0" />
+        {item}
+      </li>
+    ))}
+  </ul>
+);

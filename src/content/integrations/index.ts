@@ -9,4 +9,4 @@ export const INTEGRATIONS: Integration[] = [SYSTEME_IO, STRIPE, CALENDLY];
 export const findIntegration = (slug: string): Integration | null =>
   INTEGRATIONS.find((integration) => integration.slug === slug) ?? null;
 
-export type { AvailableIntegration, InstallStep, Integration, RichText, UpcomingIntegration } from "./types";
+export type { AvailableIntegration, InstallStep, Integration, MeanwhileItem, RichText, UpcomingIntegration } from "./types";

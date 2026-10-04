@@ -11,7 +11,7 @@ export const PASTE_GUIDE_STEPS: PasteGuidePart[][] = [
   ["Cliquez sur l'élément, puis sur ", { strong: "Modifier le code" }, "."],
   ["Collez le code copié dans la fenêtre de l'élément, puis validez."],
   [
-    "Enregistrez la page, puis ouvrez son aperçu : le code ne s'exécute pas dans l'éditeur. Vos avis s'affichent, les nouveaux s'ajouteront seuls.",
+    "Enregistrez la page, puis ouvrez son aperçu : le code ne s'exécute pas dans l'éditeur. Vos avis s'affichent, les nouveaux s'ajouteront seuls.",
   ],
 ];
 

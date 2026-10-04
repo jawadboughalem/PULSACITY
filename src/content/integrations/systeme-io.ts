@@ -1,16 +1,14 @@
-import { DEFAULT_REQUEST_DELAY_DAYS, REMINDER_DELAY_DAYS } from "@/lib/requests/request-timing";
-import { MAX_REQUEST_DELAY_DAYS, MIN_REQUEST_DELAY_DAYS } from "@/lib/spaces/product-rules";
 import type { AvailableIntegration } from "./types";
 
 /**
- * The main page of the launch: « Témoignages automatiques pour Systeme.io ». The steps repeat those of the space
+ * The main page of the launch, maquette 21: « Témoignages automatiques pour Systeme.io ». The steps follow the space
  * (Connecteurs › Systeme.io, Widgets), with the labels of Systeme.io captured on 27 September 2026.
  */
 export const SYSTEME_IO: AvailableIntegration = {
   status: "available",
   slug: "systeme-io",
   name: "Systeme.io",
-  summary: "Formations, coachings et tunnels de vente : une demande d'avis après chaque vente.",
+  summary: "Formations, coachings et tunnels de vente. Chaque vente déclenche une demande d'avis.",
   seo: {
     title: "Témoignages automatiques pour Systeme.io",
     description:
@@ -18,110 +16,99 @@ export const SYSTEME_IO: AvailableIntegration = {
   },
   heading: "Témoignages automatiques pour Systeme.io",
   intro:
-    "Chaque vente sur Systeme.io déclenche une demande d'avis, envoyée à votre nom au moment choisi. Vous validez, et le témoignage s'affiche sur votre page Systeme.io. Deux minutes d'installation, rien à coder.",
+    "Après chaque vente sur Systeme.io, votre client reçoit une demande d'avis à votre nom. Vous validez, et son témoignage s'affiche sur votre page de vente.",
   benefits: [
     {
-      title: "Une demande après chaque vente",
-      text: `Systeme.io nous prévient de chaque vente. La demande part ${DEFAULT_REQUEST_DELAY_DAYS} jours plus tard, ou au délai choisi pour l'offre. Sans réponse, une seule relance, ${REMINDER_DELAY_DAYS} jours après.`,
+      title: "Rien à installer",
+      text: "Une adresse et une clé à coller dans vos paramètres Systeme.io. Deux minutes, depuis votre ordinateur.",
     },
     {
-      title: "À votre nom, dans leur boîte de réception",
-      text: "L'e-mail porte le nom de votre espace, et les réponses arrivent chez vous. Chaque client peut se désinscrire en un clic.",
+      title: "Au bon moment, pour chaque offre",
+      text: "Vous choisissez quand part la demande : 30 jours après l'achat d'un programme d'un mois, par exemple. Une seule relance, jamais plus.",
     },
     {
-      title: "Sur vos pages Systeme.io",
-      text: "Collé une fois dans un élément Code HTML, le widget affiche chaque nouvel avis validé. Il reprend la police et la couleur de votre page.",
+      title: "Rien ne s'affiche sans vous",
+      text: "Vous relisez chaque avis avant de le valider. Validé, il rejoint le widget de votre page de vente.",
     },
   ],
+  installIntro: "Six étapes, plus simples depuis un ordinateur. Gardez Systeme.io ouvert dans un autre onglet.",
   installSteps: [
     {
-      title: "Créez votre espace PULSACITY",
-      text: [
-        "Indiquez votre adresse e-mail : un lien vous permet d'entrer, sans mot de passe. Donnez à votre espace le nom que vos clients connaissent, puis ajoutez vos offres : formation, accompagnement, séance.",
-      ],
+      title: "Créer votre espace",
+      text: ["C'est gratuit. Une adresse e-mail suffit : vous recevez un lien pour entrer, sans mot de passe."],
     },
     {
-      title: "Copiez votre adresse de connexion et sa clé",
+      title: "Copier votre adresse et votre clé",
       text: [
-        "Dans votre espace, ouvrez ",
-        { strong: "Connecteurs" },
-        ", puis ",
-        { strong: "Systeme.io" },
-        ". Copiez l'adresse de connexion, puis la clé secrète. Elles vous sont propres : ne les partagez pas.",
+        "Dans votre espace, ouvrez Connecteurs, puis Systeme.io. L'adresse de connexion et la clé secrète vous sont propres : ne les partagez pas.",
       ],
+      illustration: "connection-address",
     },
     {
-      title: "Collez-les dans Systeme.io",
-      text: ["Ouvrez Systeme.io dans un autre onglet, de préférence sur un ordinateur, et suivez ces trois écrans."],
+      title: "Les coller dans Systeme.io",
+      text: ["Ouvrez Systeme.io dans un autre onglet et suivez ces trois écrans."],
       illustration: "systeme-webhook-screens",
     },
     {
-      title: "Faites une vente test, ou attendez la prochaine",
+      title: "Faire une vente test",
       text: [
-        "Le voyant de la page Systeme.io de votre espace passe au vert dès la première vente reçue. Pour tester sans payer, achetez votre offre avec un code promo à 100 %.",
+        "Achetez votre offre avec un code promo à 100 %. Dès que la vente arrive, le voyant de la page Systeme.io passe au vert.",
+      ],
+      illustration: "connection-success",
+    },
+    {
+      title: "Associer vos produits à vos offres",
+      text: [
+        "Chaque produit Systeme.io apparaît avec sa première vente. Indiquez à quelle offre il correspond, et quand demander l'avis : 30 jours après l'achat, par exemple. Tant qu'il n'est pas associé, ses ventes sont gardées de côté.",
       ],
     },
     {
-      title: "Associez chaque produit à une offre",
-      text: [
-        "Chaque produit vendu arrive dans ",
-        { strong: "Offres à associer" },
-        `. Choisissez l'offre qui lui correspond et le délai de la demande : de ${MIN_REQUEST_DELAY_DAYS} à ${MAX_REQUEST_DELAY_DAYS} jours après l'achat. Les ventes reçues entre-temps ne sont pas perdues : leur demande part au délai choisi.`,
-      ],
-    },
-    {
-      title: "Collez le widget sur votre page de vente",
-      text: [
-        "Dans ",
-        { strong: "Widgets" },
-        ", choisissez un mur, un carrousel ou un badge, puis ",
-        { strong: "Copier le code" },
-        ". Dans l'éditeur de votre page Systeme.io :",
-      ],
+      title: "Coller le widget sur votre page de vente",
+      text: ["Dans votre espace, ouvrez Widgets et copiez le code. Puis, dans Systeme.io :"],
       illustration: "paste-widget-screens",
     },
   ],
   optionalStep: {
-    title: "Facultatif : les inscriptions sans vente",
+    title: "Facultatif : les inscriptions sans vente",
     text: [
-      "Vous offrez une formation ? Systeme.io n'y voit pas de vente. Une règle d'automatisation nous prévient quand même de chaque inscription, à la même adresse : dans Systeme.io, ",
+      "Vous offrez une formation ? Systeme.io n'y voit pas de vente. Une règle d'automatisation nous prévient quand même de chaque inscription.",
+    ],
+    illustration: "systeme-enrollment-rule",
+    note: [
+      "Dans Systeme.io : ",
       { strong: "Automatisations" },
       ", puis ",
       { strong: "Règles" },
       " et ",
       { strong: "Créer" },
-      ".",
+      ". Chaque inscription arrive avec le nom de la formation. Associez-la à une offre, comme à l'étape 5.",
     ],
-    illustration: "systeme-enrollment-rule",
   },
-  afterInstall:
-    "Ensuite, tout se fait seul. Chaque avis reçu arrive « En attente » dans votre espace : un clic sur « Valider », et il rejoint votre page.",
   faq: [
     {
-      question: "Faut-il un plan payant Systeme.io ?",
+      question: "Mes ventes passées sont-elles prises en compte ?",
       answer:
-        "Non. Les webhooks des paramètres existent dès le plan gratuit de Systeme.io. Les inscriptions sans vente demandent une règle d'automatisation : le plan gratuit en permet une.",
+        "Non : seules les ventes reçues après la connexion déclenchent une demande. Pour vos clients passés, envoyez des demandes depuis votre espace, une à la fois.",
     },
     {
-      question: "Et mes clients d'avant la connexion ?",
+      question: "Que se passe-t-il si une vente est annulée ?",
       answer:
-        "Systeme.io ne renvoie pas les ventes passées. Pour ces clients, « Demander un avis » envoie la même demande, client par client. Les témoignages déjà reçus s'importent depuis un fichier CSV.",
+        "Avec « Vente annulée » cochée à l'étape 3, Systeme.io nous prévient du remboursement. Pour l'instant, la demande n'est pas annulée toute seule : elle attend son délai, et vous l'annulez depuis la page Demandes de votre espace.",
     },
     {
-      question: "Que se passe-t-il quand une vente est remboursée ?",
+      question: "Et les formations offertes ?",
       answer:
-        "La demande attend son délai avant de partir. D'ici là, annulez-la d'un clic dans la page Demandes de votre espace.",
+        "Une inscription gratuite n'est pas une vente pour Systeme.io. Ajoutez la règle d'automatisation de l'étape facultative : chaque inscription déclenche alors une demande, comme une vente.",
     },
     {
-      question: "Les e-mails partent-ils à mon nom ?",
+      question: "De qui vient l'e-mail que reçoit mon client ?",
       answer:
-        "Oui. Ils portent le nom de votre espace, et les réponses arrivent dans votre boîte. Ils partent d'une adresse technique de PULSACITY, pour bien arriver en boîte de réception.",
+        "De vous : il porte le nom de votre espace, et les réponses arrivent dans votre boîte. Il part d'une adresse technique de PULSACITY, pour bien arriver en boîte de réception. Chaque e-mail permet de se désinscrire en un clic.",
     },
     {
-      question: "Le widget ralentit-il ma page ?",
+      question: "Puis-je changer d'adresse et de clé ?",
       answer:
-        "Non. C'est un seul petit fichier, chargé après votre page, qui réserve sa place pour que rien ne se décale. Sur une vraie page Systeme.io, PageSpeed Insights ne mesure aucun effet du widget.",
+        "Oui, depuis la page Systeme.io de votre espace : « Changer d'adresse et de clé ». Les anciennes cessent aussitôt de fonctionner : collez les nouvelles dans Systeme.io.",
     },
   ],
-  relatedGuide: "ajouter-des-temoignages-sur-une-page-systeme-io",
 };

@@ -8,19 +8,20 @@ import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 import { MARKETING_PATHS } from "./marketing-paths";
 
+/** Maquettes 7, 8, 21 to 24 (4 October): the sections of the site, then the space. */
 const NAV_LINKS = [
-  { href: MARKETING_PATHS.howItWorks, label: "Fonctionnement" },
+  { href: MARKETING_PATHS.integrations, label: "Intégrations" },
   { href: MARKETING_PATHS.pricing, label: "Tarifs" },
-  { href: MARKETING_PATHS.questions, label: "Questions" },
+  { href: MARKETING_PATHS.guides, label: "Guides" },
   { href: MARKETING_PATHS.signIn, label: "Se connecter" },
 ] as const;
 
 const FOCUS_RING = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
 
-/** The page's own link is underlined and announced, like « Tarifs » on maquette 8. */
-const isCurrent = (pathname: string, href: string) => !href.includes("#") && pathname === href;
+/** The section of the page is underlined and announced: « Intégrations » on /integrations/systeme-io too. */
+const isCurrent = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-/** Maquettes 7 and 8: four links and « Créer mon espace gratuit » on a computer; a menu behind one button on a phone. */
+/** Four links and « Créer mon espace gratuit » on a computer; on a phone, a menu over a veil of Encre (m24). */
 export const MarketingNav = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -80,21 +81,30 @@ export const MarketingNav = () => {
         <Icon name={isOpen ? "close" : "menu"} size={24} />
       </button>
 
+      {isOpen ? (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-hidden="true"
+          onClick={close}
+          className="fixed inset-x-[0] top-[60px] bottom-[0] z-10 bg-[rgba(22,33,62,0.48)] desktop:hidden"
+        />
+      ) : null}
       <nav
         id={menuId}
         aria-label="Site"
         hidden={!isOpen}
-        className="absolute inset-x-[0] top-full z-20 border-b border-hairline-200 bg-white px-page-gutter pt-2 pb-5 shadow-float desktop:hidden"
+        className="absolute inset-x-[0] top-full z-20 bg-white px-page-gutter pt-2 pb-5 desktop:hidden"
       >
         <ul className="flex flex-col">
           {NAV_LINKS.map((link) => (
-            <li key={link.href} className="border-b border-hairline-200">
+            <li key={link.href} className="border-b border-hairline-200 last:border-b-[0]">
               <Link
                 href={link.href}
                 onClick={close}
                 aria-current={isCurrent(pathname, link.href) ? "page" : undefined}
                 className={cn(
-                  "flex min-h-[48px] items-center text-body font-medium text-ink-900 aria-[current=page]:font-semibold",
+                  "flex min-h-[56px] items-center font-serif text-quote text-ink-900 underline-offset-[6px] aria-[current=page]:font-medium aria-[current=page]:underline",
                   FOCUS_RING,
                 )}
               >
@@ -103,7 +113,7 @@ export const MarketingNav = () => {
             </li>
           ))}
         </ul>
-        <Link href={MARKETING_PATHS.signUp} onClick={close} className={cn(PRIMARY_BUTTON_CLASSES, "mt-5 w-full")}>
+        <Link href={MARKETING_PATHS.signUp} onClick={close} className={cn(PRIMARY_BUTTON_CLASSES, "mt-5 h-[56px] w-full")}>
           Créer mon espace gratuit
         </Link>
       </nav>

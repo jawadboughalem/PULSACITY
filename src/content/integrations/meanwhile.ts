@@ -1,17 +1,36 @@
-import { PLANS } from "@/config/plans";
+import type { MeanwhileItem } from "./types";
 
-/** What works with any tool, while its connector is to come (/integrations/stripe, /integrations/calendly). */
-export const MEANWHILE = [
+/** /integrations, « Votre outil n'est pas encore là ? » (m21): three columns, each under its icon. */
+export const WITHOUT_CONNECTOR: MeanwhileItem[] = [
+  {
+    icon: "email",
+    title: "Demander un avis",
+    text: "Depuis votre espace, envoyez une demande à un client, une à la fois. Son nom et son adresse e-mail suffisent.",
+  },
+  {
+    icon: "connection",
+    title: "Votre lien de collecte",
+    text: "Un lien à votre nom, à partager où vous voulez : e-mail, message, groupe de clients. L'avis se laisse en deux minutes.",
+  },
+  {
+    icon: "grid",
+    title: "Le widget",
+    text: "Il se colle sur toute page qui accepte un code HTML, et reprend votre police et votre couleur.",
+  },
+];
+
+/** The page of a connector to come, « En attendant, sans connecteur » (m21): one row each. */
+export const MEANWHILE: MeanwhileItem[] = [
   {
     title: "Demander un avis",
-    text: `Saisissez le prénom, l'adresse et l'offre d'un client : la même demande part, avec sa relance. Jusqu'à ${PLANS.free.limits.manualRequestsPerDay} par jour.`,
+    text: "Depuis votre espace, une demande à la fois : un nom, une adresse e-mail, une offre. Idéal juste après une séance.",
   },
   {
     title: "Votre lien de collecte",
-    text: "Une page à votre nom où vos clients laissent leur avis en moins d'une minute. À glisser dans vos e-mails, vos messages ou votre espace membre.",
+    text: "Un lien à votre nom, à glisser dans votre e-mail de suivi ou dans un message. L'avis se laisse en deux minutes.",
   },
   {
-    title: "Le widget sur votre page de vente",
-    text: "Mur, carrousel ou badge : collé une fois, il affiche chaque avis validé, sur n'importe quelle page qui accepte un bloc de code HTML.",
+    title: "Vos avis déjà reçus",
+    text: "Importez-les d'un fichier CSV, ou ajoutez à la main ceux reçus par message. Ils rejoignent les autres.",
   },
 ];

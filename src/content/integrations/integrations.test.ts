@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getConnectorBySlug, listConnectors } from "@/lib/connectors/registry";
 import { UPCOMING_CONNECTOR_IDS } from "@/lib/connectors/upcoming-connectors";
-import { findGuide } from "../guides";
 import { INTEGRATIONS, findIntegration } from ".";
 
 describe("INTEGRATIONS", () => {
@@ -25,10 +24,15 @@ describe("INTEGRATIONS", () => {
     }
   });
 
-  it("keeps the addresses unique, and leads each available page to an existing guide", () => {
+  it("keeps the addresses unique", () => {
     expect(new Set(INTEGRATIONS.map((integration) => integration.slug)).size).toBe(INTEGRATIONS.length);
+  });
+
+  it("copies the address in one step, the one the rule of the optional step sends back to", () => {
     for (const integration of INTEGRATIONS) {
-      if (integration.status === "available") expect(findGuide(integration.relatedGuide)).not.toBeNull();
+      if (integration.status !== "available") continue;
+      const addressSteps = integration.installSteps.filter((step) => step.illustration === "connection-address");
+      expect(addressSteps).toHaveLength(1);
     }
   });
 

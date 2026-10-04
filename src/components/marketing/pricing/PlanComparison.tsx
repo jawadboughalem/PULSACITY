@@ -14,18 +14,38 @@ const PHONE_VISIBILITY: Record<PlanId, string> = {
   pro: "hidden group-data-[choice=pro]/compare:table-cell desktop:table-cell",
 };
 
+/** m8: in bold on a phone, where one plan shows at a time; regular on a computer, where the three sit side by side. */
+/** m8 on a computer: the features take two fifths, Pro a little less than the others. */
+const COLUMN_WIDTHS: Record<PlanId, string> = {
+  free: "desktop:w-[20.5%]",
+  essentiel: "desktop:w-[20%]",
+  pro: "desktop:w-[18.5%]",
+};
+
 const Value = ({ value }: { value: ComparisonValue }) => {
-  if (value.kind === "included") {
-    return (
-      <>
-        <Icon name="check" size={20} className="ml-auto desktop:ml-[0]" />
-        <span className="sr-only">Inclus</span>
-      </>
-    );
+  switch (value.kind) {
+    case "included":
+      return (
+        <>
+          <Icon name="check" size={20} className="ml-auto desktop:ml-[0]" />
+          <span className="sr-only">Inclus</span>
+        </>
+      );
+    case "excluded":
+      return (
+        <span className="text-slate-600">
+          <span className="desktop:hidden">{value.label}</span>
+          <span aria-hidden="true" className="hidden desktop:inline">
+            —
+          </span>
+          <span className="sr-only hidden desktop:inline">{value.label}</span>
+        </span>
+      );
+    case "soon":
+      return <span className="font-semibold desktop:font-normal desktop:text-slate-600">{value.label}</span>;
+    case "text":
+      return <span className="font-semibold desktop:font-normal">{value.label}</span>;
   }
-  return (
-    <span className={value.kind === "excluded" ? "text-slate-600" : "font-semibold"}>{value.label}</span>
-  );
 };
 
 /** « Comparer en détail » of maquette 8: one row per feature, grouped; Essentiel's column on Papier. */
@@ -33,9 +53,9 @@ export const PlanComparison = () => (
   <table className="w-full border-collapse text-left text-body">
     <caption className="sr-only">Ce que comprend chaque plan</caption>
     <colgroup>
-      <col className="desktop:w-[40%]" />
+      <col className="desktop:w-[41%]" />
       {PLAN_IDS.map((id) => (
-        <col key={id} className="desktop:w-[20%]" />
+        <col key={id} className={COLUMN_WIDTHS[id]} />
       ))}
     </colgroup>
     <thead className="sr-only desktop:not-sr-only">
@@ -59,11 +79,11 @@ export const PlanComparison = () => (
     <tbody>
       {PLAN_COMPARISON.map((group) => (
         <Fragment key={group.title}>
-          <tr className="border-b border-ink-900">
+          <tr className="border-b border-ink-900 desktop:border-b-[0]">
             <th
               scope="colgroup"
               colSpan={PLAN_IDS.length + 1}
-              className="pt-7 pb-3 text-small font-semibold text-slate-600"
+              className="pt-7 pb-3 text-small font-semibold text-slate-600 desktop:pt-6 desktop:pb-2"
             >
               {group.title}
             </th>

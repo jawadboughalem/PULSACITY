@@ -13,7 +13,7 @@ export const generateMetadata = () =>
   });
 
 const PrivacyPage = () => (
-  <LegalPage title="Politique de confidentialité" updatedOn="4 octobre 2026">
+  <LegalPage name="confidentialite" title="Politique de confidentialité" updatedOn="4 octobre 2026">
     <LegalText />
   </LegalPage>
 );

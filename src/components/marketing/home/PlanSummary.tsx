@@ -13,7 +13,7 @@ export const PlanSummary = () => (
       >
         <div className="flex items-baseline justify-between gap-4">
           <h3 className="font-serif text-h2 font-medium">{plan.name}</h3>
-          {plan.isRecommended ? <span className="text-small font-semibold text-carmine">Recommandé</span> : null}
+          {plan.isRecommended ? <span className="text-small font-semibold">Recommandé</span> : null}
         </div>
         <p className="flex items-baseline gap-1">
           <PlanPrice amountCents={readPlanPrice(plan.id, "monthly")} size="medium" />

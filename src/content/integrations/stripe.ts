@@ -1,4 +1,3 @@
-import { MEANWHILE } from "./meanwhile";
 import type { UpcomingIntegration } from "./types";
 
 export const STRIPE: UpcomingIntegration = {
@@ -6,19 +5,17 @@ export const STRIPE: UpcomingIntegration = {
   slug: "stripe",
   connector: "stripe",
   name: "Stripe",
-  summary: "Paiements en ligne : une demande d'avis après chaque paiement réussi.",
+  summary: "Paiements en ligne. Une demande d'avis après chaque paiement réussi.",
   seo: {
     title: "Témoignages automatiques pour Stripe, bientôt",
     description:
       "Bientôt, chaque paiement Stripe réussi déclenchera une demande d'avis à votre nom. Laissez votre adresse pour être prévenu le jour de sa sortie.",
   },
   heading: "Témoignages automatiques pour Stripe",
-  intro:
-    "Vous encaissez avec Stripe : liens de paiement, Checkout ou abonnements. Bientôt, chaque paiement réussi déclenchera une demande d'avis à votre nom, au moment choisi.",
+  intro: "Bientôt, chaque paiement réussi sur Stripe déclenchera une demande d'avis à votre nom.",
   willDo: [
-    "Une demande d'avis après chaque paiement réussi, au délai choisi pour l'offre.",
-    "Une seule relance sans réponse, et la désinscription en un clic.",
-    "Les avis validés sur votre page de vente, avec le même widget.",
+    "Chaque paiement réussi déclenche une demande d'avis, au délai choisi pour l'offre.",
+    "Un paiement remboursé annule la demande prévue.",
+    "Vos produits Stripe s'associent à vos offres PULSACITY, comme les produits Systeme.io.",
   ],
-  meanwhile: MEANWHILE,
 };

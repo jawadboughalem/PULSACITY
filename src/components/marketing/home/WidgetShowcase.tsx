@@ -91,7 +91,8 @@ const LiveWidget = ({ payload }: { payload: WidgetPayload }) => {
 
 /**
  * Maquette 7, « Chez vous, avec vos couleurs »: the sales page of Julie Nutrition, with her font and her green, and the
- * real widget on it. A carousel on a computer; on a phone, the badge near the top, then the carousel.
+ * real widget on it: the badge near the top, then the carousel. On a phone, the page keeps narrow margins so that the
+ * widget has the width of a real page of 360 px: the whole badge, and the points under the carousel.
  */
 export const WidgetShowcase = () => (
   <figure className="border border-hairline-200 bg-white font-[Georgia,'Times_New_Roman',serif] text-ink-900">
@@ -103,14 +104,11 @@ export const WidgetShowcase = () => (
       </span>
       Page de vente de Julie Nutrition · exemple
     </figcaption>
-    <div className="px-4 py-4 desktop:h-[56px] desktop:py-[0]">
-      {/* The widget's host is always displayed (w.js): its wrapper hides it on a computer. */}
-      <div className="min-h-[72px] desktop:hidden">
-        <LiveWidget payload={BADGE} />
-      </div>
+    <div className="min-h-[104px] px-1 py-4 desktop:min-h-[56px] desktop:px-9 desktop:py-2">
+      <LiveWidget payload={BADGE} />
     </div>
-    <div className="bg-paper-100 px-5 py-7 desktop:px-9 desktop:py-9">
-      <p className="mb-5 text-[28px] leading-[34px] font-semibold desktop:mb-6 desktop:text-[36px] desktop:leading-[44px]">
+    <div className="bg-paper-100 px-2 py-7 desktop:px-9 desktop:py-9">
+      <p className="mb-5 px-4 text-[28px] leading-[34px] font-semibold desktop:mb-6 desktop:px-[0] desktop:text-[36px] desktop:leading-[44px]">
         Ils ont suivi le programme
       </p>
       <div className="min-h-[440px] desktop:min-h-[360px]">

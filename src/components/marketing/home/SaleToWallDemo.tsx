@@ -24,7 +24,7 @@ const SaleNotification = () => (
         <span className="font-semibold">Systeme.io</span>
         <span className="text-slate-600">maintenant</span>
       </span>
-      <span className="text-body font-semibold">Nouvelle vente :</span>
+      <span className="text-body font-semibold">Nouvelle vente :</span>
       <span className="text-body">Programme 30 jours — Camille</span>
     </span>
   </div>
@@ -34,7 +34,7 @@ const SaleNotification = () => (
 const RequestEmail = () => (
   <div className="flex w-full flex-col gap-2 border border-hairline-200 bg-white p-4">
     <span className="text-legal text-slate-600">Julie Nutrition via PULSACITY</span>
-    <span className="text-small font-semibold">Camille, votre avis sur le Programme 30 jours ?</span>
+    <span className="text-small font-semibold">Camille, votre avis sur le Programme 30 jours ?</span>
     <span className="font-[Georgia,'Times_New_Roman',serif] text-legal">
       Bonjour Camille, merci d&apos;avoir suivi le programme. Une note et quelques mots suffisent.
     </span>
@@ -49,7 +49,7 @@ const ReviewCard = () => (
   <div className="flex w-full flex-col gap-3 border border-hairline-200 bg-white p-4">
     <Stars size={20} />
     <p className="font-serif text-quote">
-      « En 30 jours j&apos;ai arrêté de grignoter le soir. Julie explique sans culpabiliser. »
+      « En 30 jours j&apos;ai arrêté de grignoter le soir. Julie explique sans culpabiliser. »
     </p>
     <span className="text-small text-slate-600">Camille R., Enseignante</span>
   </div>
@@ -63,7 +63,7 @@ const MiniCard = ({ quote, name, isNew = false }: { quote: string; name: string;
     )}
   >
     {isNew ? <Stars size={12} /> : null}
-    <p className="font-serif text-legal">{`« ${quote} »`}</p>
+    <p className="font-serif text-legal">{`« ${quote} »`}</p>
     <span className="text-legal font-semibold">{name}</span>
   </div>
 );
@@ -86,7 +86,7 @@ type DemoStep = {
   label: string;
   caption: string;
   illustration: ReactNode;
-  /** The wall fills its frame from the top; the others sit in the middle. */
+  /** The wall fills its frame from the top, and grows on a narrow screen; the others sit in the middle. */
   isTopAligned?: boolean;
 };
 
@@ -121,9 +121,15 @@ const DEMO_STEPS: DemoStep[] = [
 export const SaleToWallDemo = () => (
   <div className="relative">
     <span aria-hidden="true" className="absolute inset-x-[0] top-[20px] hidden h-px bg-ink-900 desktop:block" />
-    <ol aria-label="D'une vente à un témoignage, en quatre temps" className="relative grid gap-6 desktop:grid-cols-4">
+    <ol
+      aria-label="D'une vente à un témoignage, en quatre temps"
+      className="relative grid gap-6 desktop:grid-cols-4 desktop:grid-rows-[auto_auto_auto]"
+    >
       {DEMO_STEPS.map((step, index) => (
-        <li key={step.label} className="relative grid grid-cols-[40px_1fr] gap-x-3 desktop:flex desktop:flex-col desktop:gap-4">
+        <li
+          key={step.label}
+          className="relative grid grid-cols-[40px_1fr] gap-x-3 desktop:row-span-3 desktop:grid-cols-1 desktop:grid-rows-subgrid desktop:gap-y-4"
+        >
           {index === DEMO_STEPS.length - 1 ? null : (
             <span aria-hidden="true" className="absolute top-[40px] -bottom-6 left-[20px] w-px bg-ink-900 desktop:hidden" />
           )}
@@ -138,12 +144,13 @@ export const SaleToWallDemo = () => (
               {step.label}
             </span>
           </div>
-          <div className="col-start-2 mt-4 flex flex-col gap-4 desktop:mt-[0]">
+          {/* On a computer, the frames of the four times share one row: as high as the wall, the highest. */}
+          <div className="col-start-2 mt-4 flex flex-col gap-4 desktop:contents">
             <div
               aria-hidden="true"
               className={cn(
-                "flex h-[248px] justify-center overflow-hidden bg-paper-100 px-4",
-                step.isTopAligned ? "items-start pt-5" : "items-center",
+                "flex min-h-[248px] justify-center bg-paper-100 px-4",
+                step.isTopAligned ? "items-start py-4" : "items-center",
               )}
             >
               {step.illustration}

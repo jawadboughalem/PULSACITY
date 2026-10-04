@@ -268,6 +268,16 @@ export const connectorWaitlistEmails = pgTable(
   (table) => [unique("connector_waitlist_emails_connector_email_unique").on(table.connector, table.email)],
 ).enableRLS();
 
+/**
+ * « Dites-nous quel outil » of /integrations: a visitor without a space names the tool where they sell. Only the name
+ * is kept, without any address, to count the tools asked for and choose the next connectors.
+ */
+export const toolSuggestions = pgTable("tool_suggestions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  toolName: text("tool_name").notNull(),
+  createdAt: timestamptz("created_at").notNull().defaultNow(),
+}).enableRLS();
+
 export const customers = pgTable(
   "customers",
   {

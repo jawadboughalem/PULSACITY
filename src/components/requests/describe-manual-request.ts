@@ -1,21 +1,16 @@
 import { formatDayMonth, formatDayMonthYear } from "@/lib/dates/format-french-date";
+import { describeMissingEmailPart } from "@/lib/forms/describe-invalid-email";
 import { endSentence } from "@/lib/french/typography";
 import type { ExistingRequest } from "@/lib/requests/request-review-manually";
-
-const EXAMPLE_DOMAIN = "gmail.com";
 
 /** m20, under the address: what is missing, with the address the creator typed completed as an example. */
 export const describeInvalidEmail = (value: string): string => {
   const typed = value.trim();
   if (!typed) return "Indiquez l'adresse e-mail de cette personne : c'est là que part la demande.";
-  const [local = "", domain = "", ...rest] = typed.split("@");
-  if (!typed.includes("@") && /^[^\s@]+$/.test(typed)) {
-    return `Il manque le « @ » de l'adresse, par exemple ${typed}@${EXAMPLE_DOMAIN}.`;
-  }
-  if (rest.length === 0 && local && domain && /^[^\s@.]+$/.test(domain)) {
-    return `Il manque la fin de l'adresse, par exemple ${local}@${domain}.com.`;
-  }
-  return "Cette adresse e-mail est incomplète. Écrivez-la en entier, par exemple elodie@exemple.fr.";
+  return (
+    describeMissingEmailPart(typed) ??
+    "Cette adresse e-mail est incomplète. Écrivez-la en entier, par exemple elodie@exemple.fr."
+  );
 };
 
 /** m20, under the names: how the e-mail greets the customer. */
