@@ -250,6 +250,8 @@ Tu vérifies le site public de PULSACITY en production. Tu ne crées aucun compt
 Compte rendu à me donner : les points 1 à 6 avec « OK » ou ta description, les notes PageSpeed des trois pages, et une capture d'écran de chaque point qui n'est pas OK.
 ```
 
+Fait le 4 octobre : points 1 à 5 conformes. Le point 6 ne peut plus passer tel qu'il est écrit : Google a retiré les FAQ de ses résultats (mai 2026) puis de cet outil (juin 2026), et l'outil n'a pas montré l'Organization, pourtant valide pour le validateur de schema.org (voir `etat.md`).
+
 ---
 
 ## Ce que les textes légaux attendent du fondateur
