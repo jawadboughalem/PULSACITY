@@ -7,7 +7,7 @@ Dans l'ordre. Chaque bloc est un prompt à coller tel quel, à l'endroit indiqu�
 - Prompt 4 (Claude Design) : les maquettes qui manquent.
 - Prompt 5 (Claude in Chrome) : vérification sur pulsacity.com, après la fusion.
 
-Adresse de l'aperçu : https://pulsacity-git-claude-youthful-planck-ef7owc-jawadboughalems-projects.vercel.app. Aucun compte n'est nécessaire : toutes les pages du lot sont publiques. Il faut seulement être connecté à Vercel dans le navigateur (protection des aperçus).
+Adresse de l'aperçu : https://pulsacity-git-claude-youthful-p-d48c42-jawadboughalems-projects.vercel.app. Aucun compte n'est nécessaire : toutes les pages du lot sont publiques. Il faut seulement être connecté à Vercel dans le navigateur (protection des aperçus).
 
 Déjà vérifié par Claude Code dans son conteneur, sur le build de production :
 - accueil et tarifs à côté de m7 et m8, à 1440 px et 390 px ; toutes les pages à 360 px et 1440 px, sans débordement ;
@@ -45,7 +45,7 @@ Compte rendu à me donner : la couleur de l'exécution, son numéro, et la ligne
 Avant ce prompt : fenêtre en grand, connecté à Vercel. Choisissez une adresse de test qui arrive dans votre boîte (par exemple un alias avec « +recette7 ») et remplacez ADRESSE_TEST par elle dans le prompt.
 
 ```
-Tu fais la recette du site public de PULSACITY sur l'aperçu https://pulsacity-git-claude-youthful-planck-ef7owc-jawadboughalems-projects.vercel.app, fenêtre en grand. Tu ne crées aucun compte et tu ne remplis aucun formulaire, sauf au point 15. Pour chaque point, note « OK » ou décris ce que tu vois.
+Tu fais la recette du site public de PULSACITY sur l'aperçu https://pulsacity-git-claude-youthful-p-d48c42-jawadboughalems-projects.vercel.app, fenêtre en grand. Tu ne crées aucun compte et tu ne remplis aucun formulaire, sauf au point 15. Pour chaque point, note « OK » ou décris ce que tu vois.
 
 A. L'accueil (/)
 1. En haut : le logo (une petite fusée et « Pulsacity »), puis « Fonctionnement », « Tarifs », « Questions », « Se connecter » et le bouton cerclé « Créer mon espace gratuit ».
@@ -88,7 +88,7 @@ Compte rendu à me donner : les points 1 à 19 avec « OK » ou ta description, 
 Avant ce prompt : connecté à Vercel, en 360 × 800 (le même cadre que d'habitude).
 
 ```
-Tu fais la recette du site public de PULSACITY à 360 px de large, sur l'aperçu https://pulsacity-git-claude-youthful-planck-ef7owc-jawadboughalems-projects.vercel.app. Tu ne remplis aucun formulaire. Pour chaque point, note « OK » ou décris ce que tu vois.
+Tu fais la recette du site public de PULSACITY à 360 px de large, sur l'aperçu https://pulsacity-git-claude-youthful-p-d48c42-jawadboughalems-projects.vercel.app. Tu ne remplis aucun formulaire. Pour chaque point, note « OK » ou décris ce que tu vois.
 
 1. Accueil : en haut, le logo et un bouton à trois traits. Touche-le : un menu s'ouvre avec « Fonctionnement », « Tarifs », « Questions », « Se connecter » et le bouton « Créer mon espace gratuit » ; le bouton devient une croix. Touche la croix : le menu se ferme.
 2. Le grand titre, la phrase, le bouton « Créer mon espace gratuit » sur toute la largeur et, centré dessous, « Compatible avec Systeme.io ».
