@@ -7,6 +7,7 @@ Dans l'ordre. Chaque bloc est un prompt à coller tel quel, à l'endroit indiqu�
 - Prompt 4 (Claude Design) : les maquettes qui manquent.
 - Prompts 6 et 7 (Claude in Chrome) : contre-recette du deuxième passage (maquettes m21 à m24 et corrections de la première recette), sur l'aperçu, avant la fusion.
 - Prompt 8 (Claude in Chrome) : les quatre corrections de la contre-recette, sur l'aperçu, avant la fusion.
+- Prompt 9 (Claude in Chrome) : le bandeau de « Me prévenir » à 360 px avec une adresse longue, avant la fusion.
 - Prompt 5 (Claude in Chrome) : vérification sur pulsacity.com, après la fusion, en dernier.
 
 Adresse de l'aperçu : https://pulsacity-git-claude-youthful-p-d48c42-jawadboughalems-projects.vercel.app. Aucun compte n'est nécessaire : toutes les pages du lot sont publiques. Il faut seulement être connecté à Vercel dans le navigateur (protection des aperçus).
@@ -212,6 +213,22 @@ Tu vérifies quatre corrections du site public de PULSACITY sur l'aperçu https:
 4. /integrations/systeme-io, « Vos questions » : ouvre « Que se passe-t-il si une vente est annulée ? ». La réponse dit qu'il faut cocher « Vente annulée » à l'étape 3, que la demande prévue s'annulera seule bientôt sans rien changer au réglage, et qu'en attendant on l'annule depuis la page Demandes. À 360 px, à l'étape 2, le champ de l'adresse finit par « … ».
 
 Compte rendu à me donner : les points 1 à 4 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK. Jamais l'adresse e-mail de test.
+```
+
+---
+
+## 9. Le bandeau de « Me prévenir » à 360 px
+
+Avant ce prompt : connecté à Vercel, dans le cadre de 360 px. Remplacez ADRESSE_LONGUE par une variante « +… » de votre adresse de test, longue et sans trait d'union (la même que la dernière fois convient : une adresse déjà inscrite reçoit la même confirmation).
+
+```
+Tu vérifies une correction du site public de PULSACITY à 360 px de large, sur l'aperçu https://pulsacity-git-claude-youthful-p-d48c42-jawadboughalems-projects.vercel.app. Tu ne crées aucun compte. Pour chaque point, note « OK » ou décris ce que tu vois.
+
+1. Ouvre /integrations/stripe. Écris ADRESSE_LONGUE dans « Adresse e-mail » et touche « Me prévenir ».
+2. Le bandeau vert « Nous vous préviendrons par e-mail. » reste dans le cadre gris : l'adresse passe à la ligne si elle est trop longue (coupée au besoin à l'intérieur), et « e-mail » n'est pas coupé.
+3. La page ne défile pas sur le côté.
+
+Compte rendu à me donner : les points 1 à 3 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK, l'adresse masquée.
 ```
 
 ---

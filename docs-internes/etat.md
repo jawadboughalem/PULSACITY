@@ -60,6 +60,7 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 
 - 21 points sur 24 OK. Corrigés : le badge de l'exemple dépassait encore de 9 à 10 px à 360 px (Georgia de Windows est plus large que la police de remplacement du conteneur : environ 311 px au lieu de 297) ; le cadre de Julie prend maintenant 8 px des marges de la page sur téléphone et le badge n'a plus de marge intérieure (326 px pour lui). « e-mail » ne se coupe plus en fin de ligne (gardé par le test d'espacement). Le sommaire marque la dernière rubrique en bas de page, et la rubrique atteinte par un lien tant qu'elle est en vue (`src/lib/content/pick-current-heading.ts`). Le champ d'adresse de l'aperçu finit par « … ».
 - « Vente annulée » (Systeme.io) : la réponse dit maintenant à quoi sert la case : l'annulation nous arrive et est gardée, et la demande prévue s'annulera seule bientôt, sans rien changer au réglage. Engagement à tenir : capturer « Vente annulée » et l'annuler automatiquement (voir « Questions ouvertes »), comme la page Stripe le promet.
+- Dernière vérification (prompt 8) : 3 points sur 4 OK. À 360 px, une adresse de 37 caractères sans trait d'union poussait le bandeau « Nous vous préviendrons par e-mail. » hors de l'écran (23 px de défilement). Corrigé dans `StatusBanner` : la colonne de texte peut rétrécir et coupe un mot trop long ; les bandeaux de l'espace en profitent aussi.
 - Gardés comme les maquettes : les deux « Copier » de styles différents (m21, m5 : l'adresse en bouton principal avec icône, la clé en bouton secondaire) ; le badge « Disponible » qui passe sous « Systeme.io » quand la ligne est trop courte (m21 sur téléphone).
 - À proposer pour le widget (pas fait dans ce lot) : sous environ 312 px de large, le badge de `w.js` déborde de son conteneur, tout en restant sur une seule ligne. Piste : une requête de conteneur qui resserre les avatars sous cette largeur.
 
@@ -205,7 +206,7 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 5. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
 6. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 7. Sentry, avant le lancement.
-8. Lot 7 (PR #27) : dernière vérification sur l'aperçu (prompt 8 de `recette/lot-7-site.md`), puis fusion et vérification en production (prompt 5).
+8. Lot 7 (PR #27) : vérification du bandeau à 360 px (prompt 9 de `recette/lot-7-site.md`), puis fusion et vérification en production (prompt 5).
 9. Textes légaux : informations à fournir (SIREN, adresse, directeur de la publication, contact…, liste dans `recette/lot-7-site.md`), puis relecture par un juriste avant `LEGAL_VALIDATED=true`.
 10. Après la mise en ligne du site : déclarer pulsacity.com dans Google Search Console et y envoyer le plan du site (prompt à écrire ; une vérification par enregistrement DNS chez OVH ne touche ni MX ni SPF).
 
