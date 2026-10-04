@@ -9,6 +9,8 @@ const DAY_MONTH_YEAR = new Intl.DateTimeFormat("fr-FR", {
   year: "numeric",
 });
 
+const LONG_DATE = new Intl.DateTimeFormat("fr-FR", { timeZone: PARIS, day: "numeric", month: "long", year: "numeric" });
+
 const HOUR_MINUTE = new Intl.DateTimeFormat("fr-FR", { timeZone: PARIS, hour: "2-digit", minute: "2-digit" });
 
 /** French writes the first day of a month « 1er ». */
@@ -19,6 +21,9 @@ export const formatDayMonth = (date: Date): string => withFirstDay(DAY_MONTH.for
 
 /** « 26 sept. 2026 » */
 export const formatDayMonthYear = (date: Date): string => withFirstDay(DAY_MONTH_YEAR.format(date));
+
+/** « 4 octobre 2026 », « 1er octobre 2026 »: the dates of the public site's texts (m22, m23). */
+export const formatLongDate = (date: Date): string => withFirstDay(LONG_DATE.format(date));
 
 /** « 26 sept. 2026 à 21:47 » */
 export const formatDateTime = (date: Date): string => `${DAY_MONTH_YEAR.format(date)} à ${HOUR_MINUTE.format(date)}`;

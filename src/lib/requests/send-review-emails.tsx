@@ -9,11 +9,10 @@ import type { PurchaseEventType } from "@/lib/connectors/types";
 import { startOfParisMonth } from "@/lib/dates/paris-date";
 import { type CustomerEmail, sendCustomerEmail } from "@/lib/email/send-email";
 import { REQUEST_TOKEN_PARAMETER } from "@/lib/testimonials/read-request-token";
+import { REMINDER_DELAY_DAYS } from "./request-timing";
 import { buildUnsubscribeUrl } from "./unsubscribe-token";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-
-export const REMINDER_DELAY_DAYS = 4;
 
 /** Past this many failed sends in a row, a request stops retrying: « Échec », and « Envoyer maintenant » to try again. */
 export const MAX_FAILED_ATTEMPTS = 3;

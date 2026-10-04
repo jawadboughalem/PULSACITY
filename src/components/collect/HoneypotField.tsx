@@ -1,4 +1,4 @@
-import { HONEYPOT_FIELD_NAME } from "@/lib/testimonials/testimonial-form-schema";
+import { HONEYPOT_FIELD_NAME } from "@/lib/forms/honeypot";
 
 type HoneypotFieldProps = {
   value: string;

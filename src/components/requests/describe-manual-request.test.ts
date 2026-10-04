@@ -21,7 +21,7 @@ const EXISTING = {
 describe("describeInvalidEmail", () => {
   it("says what is missing, with the typed address completed", () => {
     expect(describeInvalidEmail("elodie.v@gmail")).toBe("Il manque la fin de l'adresse, par exemple elodie.v@gmail.com.");
-    expect(describeInvalidEmail("elodie.v")).toBe("Il manque le « @ » de l'adresse, par exemple elodie.v@gmail.com.");
+    expect(describeInvalidEmail("elodie.v")).toBe("Il manque le « @ » de l'adresse, par exemple elodie.v@gmail.com.");
     expect(describeInvalidEmail(" ")).toBe("Indiquez l'adresse e-mail de cette personne : c'est là que part la demande.");
     expect(describeInvalidEmail("elodie v@@x")).toBe(
       "Cette adresse e-mail est incomplète. Écrivez-la en entier, par exemple elodie@exemple.fr.",

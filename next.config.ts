@@ -1,3 +1,4 @@
+import createMDX from "@next/mdx";
 import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 
@@ -21,7 +22,10 @@ const nextConfig: NextConfig = {
   ],
 };
 
-export default withSentryConfig(nextConfig, {
+/** The guides and the legal texts are .mdx files imported by their pages (src/content), never routes of their own. */
+const withMDX = createMDX();
+
+export default withSentryConfig(withMDX(nextConfig), {
   silent: !process.env.CI,
   telemetry: false,
 });

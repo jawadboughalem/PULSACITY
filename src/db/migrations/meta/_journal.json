@@ -64,6 +64,20 @@
       "when": 1791040179095,
       "tag": "0008_purchase_created_at",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791105975505,
+      "tag": "0009_public_connector_waitlist",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1791114053299,
+      "tag": "0010_public_tool_suggestions",
+      "breakpoints": true
     }
   ]
 }

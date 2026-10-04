@@ -1,0 +1,47 @@
+import { PLANS } from "@/config/plans";
+import { formatPrice } from "@/lib/french/format-price";
+
+## 1. Objet
+
+Ces conditions générales de vente (CGV) s'appliquent aux abonnements payants de PULSACITY : les plans Essentiel et Pro. Elles complètent les [conditions générales d'utilisation](/cgu). Le plan Gratuit reste gratuit, sans limite de durée.
+
+## 2. Prix
+
+Les prix sont indiqués TVA comprise : le montant affiché est celui que vous payez.
+
+- **Essentiel** : {formatPrice(PLANS.essentiel.priceCents.monthly, "EUR")} par mois, ou {formatPrice(PLANS.essentiel.priceCents.yearly, "EUR")} par an.
+- **Pro** : {formatPrice(PLANS.pro.priceCents.monthly, "EUR")} par mois, ou {formatPrice(PLANS.pro.priceCents.yearly, "EUR")} par an.
+
+Une entreprise d'un autre pays de l'Union européenne, qui indique son numéro de TVA, est en autoliquidation : elle paie le même montant, sans TVA. <ToComplete>régime de TVA de l'entité qui facture, à confirmer avec l'expert-comptable</ToComplete>
+
+## 3. Commande et paiement
+
+L'abonnement se souscrit depuis l'espace du créateur. Le paiement se fait par carte bancaire, par l'intermédiaire de Stripe, au début de chaque période. Une facture est disponible dans l'espace après chaque paiement.
+
+## 4. Durée et renouvellement
+
+L'abonnement est sans engagement. Il se renouvelle automatiquement à la fin de chaque période, mensuelle ou annuelle, jusqu'à sa résiliation.
+
+## 5. Changement de plan
+
+Le créateur peut changer de plan ou de période à tout moment depuis son espace. Un passage à un plan supérieur, ou du mensuel à l'annuel, prend effet tout de suite : ce qui reste de la période déjà payée est déduit. <ToComplete>règle pour un passage à un plan inférieur, à valider</ToComplete>
+
+## 6. Résiliation
+
+Le créateur résilie à tout moment depuis son espace, sans frais ni préavis. L'abonnement prend fin à la fin de la période déjà payée, qui n'est pas remboursée. L'espace repasse alors au plan Gratuit : aucune donnée n'est supprimée.
+
+## 7. Défaut de paiement
+
+Si un paiement échoue, Stripe le présente à nouveau pendant quelques jours, et le créateur est prévenu par e-⁠mail. Sans paiement, l'espace repasse au plan Gratuit, sans perte de données.
+
+## 8. Droit de rétractation
+
+Le service s'adresse aux professionnels, pour leur activité : le droit de rétractation des consommateurs ne s'applique pas. <ToComplete>cas des professionnels de cinq salariés au plus (article L221-3 du Code de la consommation), à valider par un juriste</ToComplete>
+
+## 9. Évolution des prix
+
+PULSACITY peut faire évoluer ses prix. Le créateur est prévenu par e-⁠mail au moins 30 jours avant. Le nouveau prix s'applique à partir du renouvellement suivant ; le créateur peut résilier avant.
+
+## 10. Droit applicable
+
+Ces conditions sont soumises au droit français. En cas de litige, et à défaut d'accord amiable, les tribunaux de <ToComplete>ville du siège</ToComplete> sont compétents.

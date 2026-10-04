@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { HONEYPOT_FIELD_NAME } from "@/lib/forms/honeypot";
 
 export const MAX_TESTIMONIAL_LENGTH = 2000;
 export const MAX_AUTHOR_NAME_LENGTH = 80;
 export const MAX_AUTHOR_TITLE_LENGTH = 80;
 export const RATINGS = [1, 2, 3, 4, 5] as const;
-export const HONEYPOT_FIELD_NAME = "pulsacity_check";
+export { HONEYPOT_FIELD_NAME };
 
 const optionalText = (maxLength: number) =>
   z

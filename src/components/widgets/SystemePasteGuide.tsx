@@ -24,15 +24,20 @@ const renderPart = (part: PasteGuidePart, index: number) =>
     </strong>
   );
 
-type PasteGuideStepsProps = { layout: "grid" | "column" };
+type PasteGuideStepsProps = { layout: "grid" | "pairs" | "column" };
 
-/** The four steps, each with its drawing: side by side in the editor, one below the other on its own page. */
+const LIST_CLASSES: Record<PasteGuideStepsProps["layout"], string> = {
+  grid: "grid grid-cols-[repeat(auto-fill,minmax(232px,1fr))] gap-5",
+  pairs: "grid gap-5 desktop:grid-cols-2",
+  column: "flex flex-col",
+};
+
+/**
+ * The four steps, each with its drawing: side by side in the editor, two by two on the public page of Systeme.io (m21),
+ * one below the other on its own page.
+ */
 export const PasteGuideSteps = ({ layout }: PasteGuideStepsProps) => (
-  <ol
-    className={cn(
-      layout === "grid" ? "grid grid-cols-[repeat(auto-fill,minmax(232px,1fr))] gap-5" : "flex flex-col",
-    )}
-  >
+  <ol className={LIST_CLASSES[layout]}>
     {PASTE_GUIDE_STEPS.map((parts, index) => (
       <li
         key={index}
@@ -42,7 +47,7 @@ export const PasteGuideSteps = ({ layout }: PasteGuideStepsProps) => (
         )}
       >
         <div className="border border-hairline-200 bg-paper-100">{DRAWINGS[index]}</div>
-        <p className={layout === "grid" ? "text-small" : "text-body"}>
+        <p className={layout === "column" ? "text-body" : "text-small"}>
           <span className="font-semibold">{`${index + 1}.`}</span> {parts.map(renderPart)}
         </p>
       </li>

@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Prochain lot : le site marketing, les guides et les pages légales. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Lot 7 en cours : le site public (accueil, tarifs, intégrations, guides, pages légales), PR #27, en recette sur son aperçu ; deuxième passage le 4 octobre avec les maquettes m21 à m24 et les corrections de la première recette. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -14,6 +14,55 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 - Suite du lot 6, maquettes du 3 octobre : Demandes (m19), Connecteurs (m5 : téléphone, clé différente, changer d'adresse, inscriptions sans vente), désinscription (m1). PR #24, fusionnée le 3 octobre, migration 0007 appliquée en production.
 - « Demander un avis » (m20) : demande d'avis à un client saisi à la main, depuis Demandes et l'accueil (PR #25, fusionnée le 3 octobre, migration 0008 appliquée en production).
 - Trois environnements : local, recette sur chaque aperçu Vercel, migrations de production lancées à chaque fusion et attendues par Vercel avant la mise en ligne (PR #16).
+
+## Lot 7 (PR #27), site public, en recette
+
+- Accueil (m7) : promesse, démo en quatre temps (vente, demande, avis, mur), comment ça marche, exemple de widget réel (le moteur de `w.js` sur la page de Julie Nutrition : badge et carrousel), connecteurs, tarifs résumés, questions, appel final.
+- Tarifs (m8) : Mensuel ou Annuel, les trois plans, « Comparer en détail » (toutes les lignes sur ordinateur, choix du plan sur téléphone), questions de facturation. Prix, limites et « 2 mois offerts » calculés depuis `plans.ts` (`src/content/plan-offer.ts`).
+- Intégrations (m21) : `/integrations` et une page par connecteur, chacune générée depuis son fichier de contenu (`src/content/integrations/`). `/integrations/systeme-io` porte le guide d'installation en six étapes, plus l'étape facultative, avec les dessins de l'espace (m5, m6). Stripe et Calendly en « Bientôt », avec « Me prévenir » public : table `connector_waitlist_emails` (migration 0009), 5 adresses par heure et par adresse IP, champ piège. « Dites-nous quel outil » public : table `tool_suggestions` (migration 0010), le nom de l'outil seulement, mêmes protections.
+- Guides (m22) : `/guides` en deux groupes, « Démarrer » et « Aller plus loin », et `/guides/[slug]` en MDX (`@next/mdx`) avec son sommaire (« Dans ce guide », à droite sur ordinateur, replié sur téléphone, lu dans les titres du texte). Trois guides : récolter des témoignages pour une formation en ligne, ajouter des témoignages sur une page Systeme.io, témoignages et RGPD.
+- Textes légaux (m23), en brouillon, en MDX : mentions légales, CGU (accord de sous-traitance RGPD en annexe), CGV, confidentialité (cookies compris), avec le sommaire « Sur cette page ». Bandeau « Brouillon en cours de relecture », `noindex` et absents du plan du site tant que `LEGAL_VALIDATED` n'est pas `true`. Les informations à fournir sont surlignées en Attention « [À COMPLÉTER : …] » (liste dans `recette/lot-7-site.md`).
+- Menu du site (m24) : Intégrations, Tarifs, Guides, Se connecter ; sur téléphone, sous un voile Encre.
+- SEO : titre, description, adresse canonique et Open Graph sur chaque page ; `sitemap.xml`, `robots.txt` (l'espace, l'API, les pages de collecte et la désinscription exclus ; aperçus fermés) ; une image de partage générée par page (`next/og`, polices dans `assets/og-fonts/`) ; données structurées Organization (accueil) et FAQPage (accueil, tarifs, Systeme.io).
+- Espaces insécables avant « ? ! : ; » et dans « » sur tous les textes du site, gardés par un test (`src/content/french-spacing.test.ts`).
+- Vérifié dans le conteneur le 4 octobre (deuxième passage) : Lighthouse mobile 94 (`/`), 95 (`/integrations/systeme-io`), 96 (`/tarifs`), 95 (`/integrations` et un guide) en performance, 100 en accessibilité, CLS 0 ; aucun lien mort ni ancre manquante sur 16 pages ; 360 px et 1440 px sans débordement ni erreur dans la console.
+
+## Décisions du 4 octobre (lot 7)
+
+- Prix de l'accueil : ceux de m8 et de la décision du 2 octobre (9,99 € TVA comprise, « Tri par offre » dans tous les plans), pas les « 9 € HT » restés dans m7. Lien « Voir le détail des tarifs » en Carmin (charte), pas en vert (m7).
+- Logo : celui de l'identité v2 (fusée) dans l'en-tête et le pied de page, à la place du wordmark de m7 et m8 (`identite-v2/SPEC.md`).
+- « Compatible avec Systeme.io » : le texte et la coche verte de m7, sans logo officiel (décision du 3 octobre) ; il mène à `/integrations/systeme-io`. Les lignes des connecteurs gardent l'initiale dans une case, comme l'espace.
+- Démo de l'accueil : immobile, les quatre temps visibles ensemble comme dans la page de m7 (pas d'animation d'apparition).
+- Exemple de widget : le vrai moteur de rendu de `w.js`, en données d'exemple (Julie Nutrition, vert #4F6F52, 47 avis, 4,8). La page de Julie est en Georgia, comme l'aperçu de l'éditeur.
+- Boutons de l'accueil à 56 px de haut, comme m7 (la charte dit 48 pour le bouton principal ; 56 est une hauteur de la charte, celle de la collecte).
+- Comparatif de m8 sur ordinateur : vide dans l'export, construit avec les lignes de m8 sur téléphone.
+- « Choisir Essentiel » et « Choisir Pro » mènent à l'inscription tant que Stripe n'est pas branché.
+- CGV ajoutées aux pages légales demandées : le pied de page de m7 les liste, et la décision des prix les prévoit. « Cookies » mène à la rubrique de la confidentialité, « Contact » à celle des mentions légales, faute d'adresse de support.
+- « Me prévenir » public : une adresse par connecteur et par visiteur, supprimée après l'annonce. Pas d'e-mail de confirmation.
+- Pages sans maquette (`/integrations`, `/guides`, légal, menu du téléphone) : construites avec les éléments de m7 et m8 ; demande à Design dans `recette/lot-7-site.md` (prompt 4).
+- Le délai par défaut (14 jours) et la relance (4 jours) sont lus dans `src/lib/requests/request-timing.ts`, comme le code d'envoi. Le nom du champ piège quitte le schéma du formulaire de collecte (`src/lib/forms/honeypot.ts`) : aucune page publique ne charge plus Zod.
+
+## Décisions du 4 octobre, deuxième passage (maquettes m21 à m24 et première recette)
+
+- Les quatre choix de Design sont appliqués : menu Intégrations, Tarifs, Guides, Se connecter ; voile Encre derrière le menu du téléphone ; logo de l'identité v2 partout ; à la place des « [Capture] », les dessins de l'espace (m5, m6), avec leurs légendes.
+- « Recommandé » en Encre sur l'accueil comme sur `/tarifs` (m8) : la charte réserve le Carmin aux étoiles, aux liens et au bouton discret ; m7 le montre en Carmin.
+- Carte « Action » de l'étape facultative : elle renvoie à l'étape où l'adresse se copie, la 2 sur la page publique, la 1 dans l'espace (m5).
+- Question « Que se passe-t-il si une vente est annulée ? » : elle dit ce qui se passe aujourd'hui. « Vente annulée » nous arrive et est gardée, mais la demande n'est pas annulée toute seule (pas encore de capture de cet événement) : le créateur l'annule depuis Demandes.
+- Note de l'étape facultative : « Chaque inscription arrive avec le nom de la formation », sans « comme une vente à 0 € » (m21) : une inscription arrive comme une inscription, sans prix.
+- Pas construits, faute d'adresse de support : « Un souci à une étape ? Écrivez-nous » (m21), « Une question sans réponse ici ? Nous écrire » (m22), « Toujours rien ? Écrivez-nous » (m22). À ajouter avec l'adresse (Questions ouvertes).
+- « Dites-nous quel outil » public : le nom de l'outil seulement, sans adresse ni promesse de prévenir, pour ne garder aucune donnée personnelle. La confidentialité le dit.
+- « Me prévenir » public : les textes et les trois états de m21 ; le message d'adresse incomplète complète l'adresse tapée (« par exemple julie@example.com »), comme m20.
+- Guides : nos trois guides, rangés dans les groupes de m22 (« Démarrer » : récolter, puis afficher ; « Aller plus loin » : RGPD), avec une ligne de résumé chacun. Les six guides de m22 (connecter Systeme.io, coller le widget, choisir le délai, recueillir sans connecteur, importer, formations offertes) ne sont pas écrits : un prochain lot de contenu.
+- Exemple de widget : le badge aussi sur ordinateur, dans la bande blanche du haut de la page de Julie (m7 la laisse vide). Sur téléphone, la page de Julie garde des marges de 4 et 8 px pour que le widget ait la largeur d'une vraie page de 360 px : badge en entier, points sous le carrousel (en dessous de 288 px, `w.js` remplace les points par « 1 sur 4 », règle du widget inchangée).
+- Démo de l'accueil : les quatre cadres prennent la hauteur du plus haut (le mur), sur une même ligne sur ordinateur ; rien n'est coupé, sur téléphone non plus.
+
+## Contre-recette du 4 octobre (prompts 6 et 7) et suites
+
+- 21 points sur 24 OK. Corrigés : le badge de l'exemple dépassait encore de 9 à 10 px à 360 px (Georgia de Windows est plus large que la police de remplacement du conteneur : environ 311 px au lieu de 297) ; le cadre de Julie prend maintenant 8 px des marges de la page sur téléphone et le badge n'a plus de marge intérieure (326 px pour lui). « e-mail » ne se coupe plus en fin de ligne (gardé par le test d'espacement). Le sommaire marque la dernière rubrique en bas de page, et la rubrique atteinte par un lien tant qu'elle est en vue (`src/lib/content/pick-current-heading.ts`). Le champ d'adresse de l'aperçu finit par « … ».
+- « Vente annulée » (Systeme.io) : la réponse dit maintenant à quoi sert la case : l'annulation nous arrive et est gardée, et la demande prévue s'annulera seule bientôt, sans rien changer au réglage. Engagement à tenir : capturer « Vente annulée » et l'annuler automatiquement (voir « Questions ouvertes »), comme la page Stripe le promet.
+- Dernière vérification (prompt 8) : 3 points sur 4 OK. À 360 px, une adresse de 37 caractères sans trait d'union poussait le bandeau « Nous vous préviendrons par e-mail. » hors de l'écran (23 px de défilement). Corrigé dans `StatusBanner` : la colonne de texte peut rétrécir et coupe un mot trop long ; les bandeaux de l'espace en profitent aussi.
+- Gardés comme les maquettes : les deux « Copier » de styles différents (m21, m5 : l'adresse en bouton principal avec icône, la clé en bouton secondaire) ; le badge « Disponible » qui passe sous « Systeme.io » quand la ligne est trop courte (m21 sur téléphone).
+- À proposer pour le widget (pas fait dans ce lot) : sous environ 312 px de large, le badge de `w.js` déborde de son conteneur, tout en restant sur une seule ligne. Piste : une requête de conteneur qui resserre les avatars sous cette largeur.
 
 ## Lot 6 (PR #23), en ligne depuis le 3 octobre
 
@@ -90,8 +139,8 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 
 - « Vente annulée » de Systeme.io : son payload n'a jamais été capturé (un remboursement de paiement à la livraison n'émet rien). Les événements reçus sont gardés sans être lus ; une demande d'une vente remboursée part donc quand même, sauf si le créateur l'annule dans Demandes. À capturer avec une vente Stripe en mode test, puis à traiter.
 - Pages Réglages et Facturation de l'espace.
-- Stripe (abonnements, Checkout, portail) et page Tarifs.
-- Site : accueil (maquette 7), intégrations, guides, pages légales.
+- Stripe (abonnements, Checkout, portail) : la page Tarifs existe (lot 7), ses boutons mènent à l'inscription.
+- Le paramètre de parrainage `?ref=` des mentions « Propulsé par » arrive sur l'accueil, mais rien ne l'enregistre encore.
 
 ## Fait le 1er octobre (prompts de `docs-internes/recette/actions-1er-octobre.md`)
 
@@ -157,7 +206,9 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 5. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
 6. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 7. Sentry, avant le lancement.
-8. Prochain lot : le site marketing, les guides et les pages légales (PROMPT 6 du fondateur, déjà prêt).
+8. Lot 7 (PR #27) : vérification du bandeau à 360 px (prompt 9 de `recette/lot-7-site.md`), puis fusion et vérification en production (prompt 5).
+9. Textes légaux : informations à fournir (SIREN, adresse, directeur de la publication, contact…, liste dans `recette/lot-7-site.md`), puis relecture par un juriste avant `LEGAL_VALIDATED=true`.
+10. Après la mise en ligne du site : déclarer pulsacity.com dans Google Search Console et y envoyer le plan du site (prompt à écrire ; une vérification par enregistrement DNS chez OVH ne touche ni MX ni SPF).
 
 Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
@@ -270,7 +321,9 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 - Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
-- Adresse de support : « Aide et contact » pointe vers `/aide`, qui n'existe pas, et la page du guide sur mobile (« Bloquée à une étape ? Écrivez-nous ») l'attend aussi : sa ligne n'est pas affichée en attendant.
+- Adresse de support : « Aide et contact » pointe vers `/aide`, qui n'existe pas, et la page du guide sur mobile (« Bloquée à une étape ? Écrivez-nous ») l'attend aussi : sa ligne n'est pas affichée en attendant. Le lien « Contact » du pied de page mène aux mentions légales, où l'adresse est encore « [À COMPLÉTER] ». Le site public l'attend aussi : « Écrivez-nous » de m21 et m22.
+- Le voile des fenêtres de dialogue de l'espace est à 12 % d'Encre ; celui du menu du site (m24) à 48 %, comme le dit Design pour les dialogues. À aligner quand on touchera les dialogues.
+- Dans ce conteneur (Node 22.22.0), `decode-csv-file.test.ts` échoue sur `main` comme sur la PR #27 : l'octet 0x9C de Windows‑1252 n'y donne pas « œ ». La CI, sur son propre Node 22, est verte. À surveiller si la CI passe à cette version.
 - Effet de 9,99 € sur le passage au payant : à vérifier avec les premiers chiffres de Stripe.
 - E-mails aux clients : la loi sur la prospection demande l'adresse postale de l'expéditeur ; m3 la prévoit pour le créateur, PULSACITY ne la demande pas encore.
 - Avant le lancement : afficher le JSON brut d'un événement inconnu à Claude Code (requête SQL dans Supabase, par prompt) pour capturer « Vente annulée » le jour où un créateur en reçoit une.

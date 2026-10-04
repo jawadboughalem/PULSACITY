@@ -17,6 +17,7 @@ import { WIDGET_TYPES, type WidgetCardStyle, type WidgetTheme } from "../../widg
 import { PLAN_IDS } from "../config/plans";
 import type { ConnectionConfig, WebhookHeaders } from "../lib/connectors/types";
 import type { WebhookEventError, WebhookEventOutcome } from "../lib/connectors/webhook-event-states";
+import { DEFAULT_REQUEST_DELAY_DAYS } from "../lib/requests/request-timing";
 
 function timestamptz(name: string) {
   return timestamp(name, { withTimezone: true });
@@ -184,7 +185,7 @@ export const products = pgTable(
       .references(() => spaces.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     slug: text("slug").notNull(),
-    requestDelayDays: integer("request_delay_days").notNull().default(14),
+    requestDelayDays: integer("request_delay_days").notNull().default(DEFAULT_REQUEST_DELAY_DAYS),
     requestsEnabled: boolean("requests_enabled").notNull().default(true),
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
@@ -251,6 +252,31 @@ export const connectorWaitlist = pgTable(
       .nullsNotDistinct(),
   ],
 ).enableRLS();
+
+/**
+ * « Me prévenir » of the public connector pages (/integrations/stripe): a visitor without a space leaves an address.
+ * Deleted once the announcement is sent (politique de confidentialité).
+ */
+export const connectorWaitlistEmails = pgTable(
+  "connector_waitlist_emails",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    connector: text("connector").notNull(),
+    email: text("email").notNull(),
+    createdAt: timestamptz("created_at").notNull().defaultNow(),
+  },
+  (table) => [unique("connector_waitlist_emails_connector_email_unique").on(table.connector, table.email)],
+).enableRLS();
+
+/**
+ * « Dites-nous quel outil » of /integrations: a visitor without a space names the tool where they sell. Only the name
+ * is kept, without any address, to count the tools asked for and choose the next connectors.
+ */
+export const toolSuggestions = pgTable("tool_suggestions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  toolName: text("tool_name").notNull(),
+  createdAt: timestamptz("created_at").notNull().defaultNow(),
+}).enableRLS();
 
 export const customers = pgTable(
   "customers",
