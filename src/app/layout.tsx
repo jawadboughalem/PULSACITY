@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Newsreader, Public_Sans } from "next/font/google";
+import { readSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -17,6 +18,7 @@ const publicSans = Public_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(readSiteUrl()),
   title: "PULSACITY",
   icons: {
     icon: [

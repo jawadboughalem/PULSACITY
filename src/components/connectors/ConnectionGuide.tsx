@@ -119,10 +119,24 @@ const RuleCard = ({ caption, name, hint }: RuleBox) => (
   </div>
 );
 
-export const ConnectionOptionalStep = ({ connectorId }: { connectorId: string }) => {
+/** The automation rule of the optional step: its trigger, then its action. Also on the public page of the connector. */
+export const ConnectionRule = ({ connectorId }: { connectorId: string }) => {
   const guide = OPTIONAL_GUIDES[connectorId];
   if (!guide) return null;
   const [trigger, action] = guide.rule;
+  return (
+    <div className="flex max-w-[720px] flex-col items-stretch gap-2 desktop:flex-row desktop:items-center desktop:gap-4">
+      <RuleCard {...trigger} />
+      <Icon name="chevronDown" size={20} className="shrink-0 self-center desktop:hidden" />
+      <Icon name="chevronRight" size={20} className="hidden shrink-0 desktop:block" />
+      <RuleCard {...action} />
+    </div>
+  );
+};
+
+export const ConnectionOptionalStep = ({ connectorId }: { connectorId: string }) => {
+  const guide = OPTIONAL_GUIDES[connectorId];
+  if (!guide) return null;
   return (
     <section aria-labelledby="optional-step" className="flex gap-4 border-b border-hairline-200 py-6 desktop:gap-5 desktop:py-7">
       <span
@@ -138,12 +152,7 @@ export const ConnectionOptionalStep = ({ connectorId }: { connectorId: string })
           </h3>
           <p className="max-w-text text-body text-slate-600">{guide.description}</p>
         </div>
-        <div className="flex max-w-[720px] flex-col items-stretch gap-2 desktop:flex-row desktop:items-center desktop:gap-4">
-          <RuleCard {...trigger} />
-          <Icon name="chevronDown" size={20} className="shrink-0 self-center desktop:hidden" />
-          <Icon name="chevronRight" size={20} className="hidden shrink-0 desktop:block" />
-          <RuleCard {...action} />
-        </div>
+        <ConnectionRule connectorId={connectorId} />
         <p className="max-w-text text-small">{guide.parts.map(renderPart)}</p>
       </div>
     </section>

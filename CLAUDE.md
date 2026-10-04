@@ -46,7 +46,7 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 ## Structure
 
 ```
-src/app/(marketing)/          # /, /integrations, /integrations/[connector], /tarifs, /guides/[slug], légal
+src/app/(marketing)/          # /, /integrations, /integrations/[connector], /tarifs, /guides, /guides/[slug], légal
 src/app/(auth)/               # /inscription, /connexion
 src/app/app/                  # /app, /app/temoignages, /app/offres, /app/widgets, /app/connecteurs, /app/connecteurs/[connector], /app/demandes, /app/reglages, /app/facturation
 src/app/t/[spaceSlug]/        # page publique de collecte (+ /t/[spaceSlug]/[productSlug])
@@ -63,9 +63,11 @@ src/lib/connectors/           # types.ts (contrat), registry.ts, moteur (récept
 src/lib/purchases/            # record-purchase.ts : de NormalizedPurchase au client, à l'achat et à la demande
 src/lib/requests/             # planification et envoi des demandes
 src/emails/                   # templates React Email
+src/content/                  # textes du site : offres (depuis plans.ts), FAQ, un fichier par connecteur (integrations/), guides et textes légaux en MDX
 docs-internes/                # décisions, payloads, recette ; etat.md : où en est le projet
 scripts/seed-demo.mjs         # espace de démonstration (local, recette)
 compose.yaml                  # Postgres local
+assets/og-fonts/              # polices WOFF des images de partage (next/og)
 ```
 
 ## Modèle de données
@@ -83,6 +85,7 @@ compose.yaml                  # Postgres local
 - `widgets` : id, spaceId, name (nullable, pour le créateur seul), type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur d'accent, nombre max, afficher photo/note/date, masquer « Propulsé par » (Pro), style des cartes), firstLoadedAt (premier affichage sur une page), createdAt
 - `webhook_events` : id, connectionId, rawPayload (jsonb), rawBody (octets reçus, pour la signature), headers (jsonb), eventType, receivedAt, processedAt, outcome, purchaseId, error — journal complet, rejouable
 - `connector_waitlist` : id, spaceId, connector, toolName, createdAt — « Me prévenir » et « Dites-nous quel outil »
+- `connector_waitlist_emails` : id, connector, email, createdAt (unique connector + email) — « Me prévenir » des pages publiques /integrations/[connector], pour un visiteur sans espace ; supprimée après l'annonce
 - `stripe_events` : id, type, processedAt
 
 ## Plans (`src/config/plans.ts`)

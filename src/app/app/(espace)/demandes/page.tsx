@@ -43,7 +43,7 @@ import {
   listSpaceRequests,
   loadReadyRequest,
 } from "@/lib/requests/list-space-requests";
-import { REMINDER_DELAY_DAYS } from "@/lib/requests/send-review-emails";
+import { REMINDER_DELAY_DAYS } from "@/lib/requests/request-timing";
 import { listAssociableProducts } from "@/lib/spaces/list-space-products";
 import { getCurrentSpace } from "@/lib/spaces/get-current-space";
 

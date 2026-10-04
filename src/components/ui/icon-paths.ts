@@ -45,6 +45,9 @@ export const ICON_PATHS = {
   wall: ["M4 4h6.5v9.5H4z", "M13.5 4H20v4.5h-6.5z", "M4 16.5h6.5V20H4z", "M13.5 11.5H20V20h-6.5z"],
   carousel: ["M6.5 5h11v14h-11z", "M3.5 8v8", "M20.5 8v8"],
   badge: ["M3.5 8.5h17v7h-17z", drawCircle(8, 12, 1.5)],
+  menu: ["M4 7h16", "M4 12h16", "M4 17h16"],
+  bag: ["M5 8h14l-1 12H6z", "M9 10V7a3 3 0 0 1 6 0v3"],
+  check: ["M5 12.5l4.5 4.5L19 7.5"],
 } as const;
 
 export type IconName = keyof typeof ICON_PATHS;
