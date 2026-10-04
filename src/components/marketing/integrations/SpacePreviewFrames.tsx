@@ -2,8 +2,9 @@ import type { ReactNode } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 
+/** A field of the space, read-only: one line, cut with « … » when the window is narrow. */
 const FIELD_CLASSES =
-  "flex h-[48px] min-w-[0] items-center overflow-hidden rounded-sm border border-gray-400 bg-paper-100 px-4 text-body whitespace-nowrap desktop:flex-1";
+  "block h-[48px] min-w-[0] truncate rounded-sm border border-gray-400 bg-paper-100 px-4 text-body leading-[46px] desktop:flex-1";
 
 const BUTTON_CLASSES = "flex h-[48px] shrink-0 items-center justify-center gap-2 rounded-sm px-5 text-body font-semibold";
 

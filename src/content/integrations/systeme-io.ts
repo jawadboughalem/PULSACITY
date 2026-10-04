@@ -35,7 +35,7 @@ export const SYSTEME_IO: AvailableIntegration = {
   installSteps: [
     {
       title: "Créer votre espace",
-      text: ["C'est gratuit. Une adresse e-mail suffit : vous recevez un lien pour entrer, sans mot de passe."],
+      text: ["C'est gratuit. Une adresse e-⁠mail suffit : vous recevez un lien pour entrer, sans mot de passe."],
     },
     {
       title: "Copier votre adresse et votre clé",
@@ -93,7 +93,7 @@ export const SYSTEME_IO: AvailableIntegration = {
     {
       question: "Que se passe-t-il si une vente est annulée ?",
       answer:
-        "Avec « Vente annulée » cochée à l'étape 3, Systeme.io nous prévient du remboursement. Pour l'instant, la demande n'est pas annulée toute seule : elle attend son délai, et vous l'annulez depuis la page Demandes de votre espace.",
+        "Cochez « Vente annulée » à l'étape 3 : Systeme.io nous prévient alors de chaque remboursement, et nous le gardons. Bientôt, la demande prévue s'annulera seule, sans rien changer à votre réglage. En attendant, annulez-la depuis la page Demandes de votre espace.",
     },
     {
       question: "Et les formations offertes ?",
@@ -101,9 +101,9 @@ export const SYSTEME_IO: AvailableIntegration = {
         "Une inscription gratuite n'est pas une vente pour Systeme.io. Ajoutez la règle d'automatisation de l'étape facultative : chaque inscription déclenche alors une demande, comme une vente.",
     },
     {
-      question: "De qui vient l'e-mail que reçoit mon client ?",
+      question: "De qui vient l'e-⁠mail que reçoit mon client ?",
       answer:
-        "De vous : il porte le nom de votre espace, et les réponses arrivent dans votre boîte. Il part d'une adresse technique de PULSACITY, pour bien arriver en boîte de réception. Chaque e-mail permet de se désinscrire en un clic.",
+        "De vous : il porte le nom de votre espace, et les réponses arrivent dans votre boîte. Il part d'une adresse technique de PULSACITY, pour bien arriver en boîte de réception. Chaque e-⁠mail permet de se désinscrire en un clic.",
     },
     {
       question: "Puis-je changer d'adresse et de clé ?",

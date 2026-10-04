@@ -5,12 +5,12 @@ export const WITHOUT_CONNECTOR: MeanwhileItem[] = [
   {
     icon: "email",
     title: "Demander un avis",
-    text: "Depuis votre espace, envoyez une demande à un client, une à la fois. Son nom et son adresse e-mail suffisent.",
+    text: "Depuis votre espace, envoyez une demande à un client, une à la fois. Son nom et son adresse e-⁠mail suffisent.",
   },
   {
     icon: "connection",
     title: "Votre lien de collecte",
-    text: "Un lien à votre nom, à partager où vous voulez : e-mail, message, groupe de clients. L'avis se laisse en deux minutes.",
+    text: "Un lien à votre nom, à partager où vous voulez : e-⁠mail, message, groupe de clients. L'avis se laisse en deux minutes.",
   },
   {
     icon: "grid",
@@ -23,11 +23,11 @@ export const WITHOUT_CONNECTOR: MeanwhileItem[] = [
 export const MEANWHILE: MeanwhileItem[] = [
   {
     title: "Demander un avis",
-    text: "Depuis votre espace, une demande à la fois : un nom, une adresse e-mail, une offre. Idéal juste après une séance.",
+    text: "Depuis votre espace, une demande à la fois : un nom, une adresse e-⁠mail, une offre. Idéal juste après une séance.",
   },
   {
     title: "Votre lien de collecte",
-    text: "Un lien à votre nom, à glisser dans votre e-mail de suivi ou dans un message. L'avis se laisse en deux minutes.",
+    text: "Un lien à votre nom, à glisser dans votre e-⁠mail de suivi ou dans un message. L'avis se laisse en deux minutes.",
   },
   {
     title: "Vos avis déjà reçus",

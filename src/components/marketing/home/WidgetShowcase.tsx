@@ -91,11 +91,12 @@ const LiveWidget = ({ payload }: { payload: WidgetPayload }) => {
 
 /**
  * Maquette 7, « Chez vous, avec vos couleurs »: the sales page of Julie Nutrition, with her font and her green, and the
- * real widget on it: the badge near the top, then the carousel. On a phone, the page keeps narrow margins so that the
- * widget has the width of a real page of 360 px: the whole badge, and the points under the carousel.
+ * real widget on it: the badge near the top, then the carousel. On a phone, the frame takes 8 px of the page margins
+ * and keeps narrow ones inside, so that the widget has the width of a real page of 360 px: the whole badge (about 311 px
+ * in Georgia bold), and the points under the carousel (288 px).
  */
 export const WidgetShowcase = () => (
-  <figure className="border border-hairline-200 bg-white font-[Georgia,'Times_New_Roman',serif] text-ink-900">
+  <figure className="-mx-2 border border-hairline-200 bg-white font-[Georgia,'Times_New_Roman',serif] text-ink-900 desktop:mx-[0]">
     <figcaption className="sr-only font-sans text-legal text-slate-600 desktop:not-sr-only desktop:flex desktop:h-[40px] desktop:items-center desktop:gap-4 desktop:border-b desktop:border-hairline-200 desktop:px-4">
       <span aria-hidden="true" className="hidden gap-2 desktop:flex">
         <span className="size-[8px] rounded-full bg-hairline-200" />
@@ -104,7 +105,7 @@ export const WidgetShowcase = () => (
       </span>
       Page de vente de Julie Nutrition · exemple
     </figcaption>
-    <div className="min-h-[104px] px-1 py-4 desktop:min-h-[56px] desktop:px-9 desktop:py-2">
+    <div className="min-h-[104px] py-4 desktop:min-h-[56px] desktop:px-9 desktop:py-2">
       <LiveWidget payload={BADGE} />
     </div>
     <div className="bg-paper-100 px-2 py-7 desktop:px-9 desktop:py-9">

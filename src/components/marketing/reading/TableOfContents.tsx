@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { pickCurrentHeading } from "@/lib/content/pick-current-heading";
 import type { TextHeading } from "@/lib/content/text-headings";
 import { cn } from "@/lib/cn";
-
-/** The title read last above this line of the window is the one being read. */
-const READING_LINE = 120;
 
 const useCurrentHeading = (headings: TextHeading[]): string | null => {
   const [currentId, setCurrentId] = useState<string | null>(headings[0]?.id ?? null);
@@ -15,12 +13,17 @@ const useCurrentHeading = (headings: TextHeading[]): string | null => {
     let frame = 0;
     const update = () => {
       frame = 0;
-      let current = headings[0]?.id ?? null;
-      for (const heading of headings) {
+      const positions = headings.flatMap((heading) => {
         const element = document.getElementById(heading.id);
-        if (element && element.getBoundingClientRect().top <= READING_LINE) current = heading.id;
-      }
-      setCurrentId(current);
+        return element ? [{ id: heading.id, top: element.getBoundingClientRect().top }] : [];
+      });
+      setCurrentId(
+        pickCurrentHeading(positions, {
+          height: window.innerHeight,
+          isAtEnd: window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2,
+          hash: decodeURIComponent(window.location.hash),
+        }),
+      );
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -28,9 +31,11 @@ const useCurrentHeading = (headings: TextHeading[]): string | null => {
     update();
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
+    window.addEventListener("hashchange", schedule);
     return () => {
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
+      window.removeEventListener("hashchange", schedule);
       if (frame) cancelAnimationFrame(frame);
     };
   }, [headings]);

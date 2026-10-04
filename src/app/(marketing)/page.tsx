@@ -32,7 +32,7 @@ const HOW_IT_WORKS = [
   },
   {
     title: "Vos clients reçoivent une demande",
-    text: "Un e-mail à votre nom, au moment que vous choisissez pour chaque offre. Une seule relance, jamais plus.",
+    text: "Un e-⁠mail à votre nom, au moment que vous choisissez pour chaque offre. Une seule relance, jamais plus.",
   },
   {
     title: "Vous validez, votre page s'enrichit",

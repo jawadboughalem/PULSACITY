@@ -12,10 +12,10 @@ import { describeMissingEmailPart } from "@/lib/forms/describe-invalid-email";
 /** m21, under the address: what is missing, the address typed completed as an example. */
 const describeInvalidEmail = (value: string): string => {
   const typed = value.trim();
-  if (!typed) return "Indiquez votre adresse e-mail : c'est là que nous vous préviendrons.";
+  if (!typed) return "Indiquez votre adresse e-⁠mail : c'est là que nous vous préviendrons.";
   return (
     describeMissingEmailPart(typed) ??
-    "Cette adresse e-mail est incomplète. Écrivez-la en entier, par exemple julie@example.com."
+    "Cette adresse e-⁠mail est incomplète. Écrivez-la en entier, par exemple julie@example.com."
   );
 };
 
@@ -43,8 +43,8 @@ export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistF
         {`Être prévenu à la sortie de ${connectorName}`}
       </h2>
       {result?.ok ? (
-        <StatusBanner tone="success" title="Nous vous préviendrons par e-mail.">
-          {`À l'adresse ${result.data.email}, le jour de la sortie de ${connectorName}. Un seul e-mail.`}
+        <StatusBanner tone="success" title="Nous vous préviendrons par e-⁠mail.">
+          {`À l'adresse ${result.data.email}, le jour de la sortie de ${connectorName}. Un seul e-⁠mail.`}
         </StatusBanner>
       ) : (
         <form
@@ -68,7 +68,7 @@ export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistF
                 id={fieldId}
                 name="email"
                 type="email"
-                label="Adresse e-mail"
+                label="Adresse e-⁠mail"
                 placeholder="vous@example.com"
                 autoComplete="email"
                 inputMode="email"
@@ -88,7 +88,7 @@ export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistF
             </button>
           </div>
           {isInvalid ? null : (
-            <p className="text-small text-slate-600">Un seul e-mail, le jour de la sortie. Votre adresse ne sert qu&apos;à cela.</p>
+            <p className="text-small text-slate-600">Un seul e-⁠mail, le jour de la sortie. Votre adresse ne sert qu&apos;à cela.</p>
           )}
         </form>
       )}

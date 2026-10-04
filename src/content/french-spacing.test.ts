@@ -19,8 +19,11 @@ const listFiles = (folder: string): string[] =>
     return /\.(tsx?|mdx)$/.test(name) && !/\.test\./.test(name) ? [path] : [];
   });
 
-/** A space that a line can break: before « ? ! : ; », after « « », before « » ». */
-const BREAKABLE_SPACE = / (?=[?!:;](?:\s|$|[»"'’)\]}]))|« | »/;
+/**
+ * A place where a line can break and should not: a space before « ? ! : ; », after « « » or before « » », and the
+ * hyphen of « e-mail », which takes a word joiner (U+2060, invisible) after it.
+ */
+const BREAKABLE = / (?=[?!:;](?:\s|$|[»"'’)\]}]))|« | »|\b[eE]-(?!\u2060)mails?\b/;
 
 const TEXT_KINDS = new Set([
   ts.SyntaxKind.StringLiteral,
@@ -47,11 +50,11 @@ const readTexts = (path: string): string[] => {
 };
 
 describe("French spacing of the public site", () => {
-  it("never lets a « ? », a « : » or a guillemet start a line alone", () => {
+  it("never lets a « ? », a « : » or a guillemet start a line alone, nor « e-mail » break in two", () => {
     const files = [...FOLDERS.flatMap(listFiles), ...FILES];
     const breakable = files.flatMap((path) =>
       readTexts(path)
-        .filter((text) => BREAKABLE_SPACE.test(text))
+        .filter((text) => BREAKABLE.test(text))
         .map((text) => `${path}: ${text.trim().slice(0, 80)}`),
     );
     expect(breakable).toEqual([]);

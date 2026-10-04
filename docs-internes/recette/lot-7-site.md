@@ -6,6 +6,7 @@ Dans l'ordre. Chaque bloc est un prompt à coller tel quel, à l'endroit indiqu�
 - Prompts 2 et 3 (Claude in Chrome) : recette sur l'aperçu de la PR #27, avant la fusion.
 - Prompt 4 (Claude Design) : les maquettes qui manquent.
 - Prompts 6 et 7 (Claude in Chrome) : contre-recette du deuxième passage (maquettes m21 à m24 et corrections de la première recette), sur l'aperçu, avant la fusion.
+- Prompt 8 (Claude in Chrome) : les quatre corrections de la contre-recette, sur l'aperçu, avant la fusion.
 - Prompt 5 (Claude in Chrome) : vérification sur pulsacity.com, après la fusion, en dernier.
 
 Adresse de l'aperçu : https://pulsacity-git-claude-youthful-p-d48c42-jawadboughalems-projects.vercel.app. Aucun compte n'est nécessaire : toutes les pages du lot sont publiques. Il faut seulement être connecté à Vercel dans le navigateur (protection des aperçus).
@@ -194,6 +195,23 @@ Tu fais la contre-recette du site public de PULSACITY à 360 px de large, sur l'
 10. Sur toutes ces pages, rien ne déborde sur le côté.
 
 Compte rendu à me donner : les points 1 à 10 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK.
+```
+
+---
+
+## 8. Dernière vérification sur l'aperçu
+
+Avant ce prompt : connecté à Vercel. Remplacez ADRESSE_TEST par une adresse de test (un nouvel alias, par exemple « +recette7c »).
+
+```
+Tu vérifies quatre corrections du site public de PULSACITY sur l'aperçu https://pulsacity-git-claude-youthful-p-d48c42-jawadboughalems-projects.vercel.app. Tu ne crées aucun compte. Pour chaque point, note « OK » ou décris ce que tu vois.
+
+1. À 360 px de large (même cadre que la dernière fois) : sur l'accueil, « Chez vous, avec vos couleurs ». Le cadre de Julie Nutrition est un peu plus large que le texte au-dessus, et le badge « 4,8/5 · 47 avis » tient entièrement dedans, avec un peu de blanc de chaque côté. Sous le carrousel, quatre points.
+2. Fenêtre en grand : /confidentialite. Clique sur « Cookies » dans le pied de page : dans « Sur cette page », « Cookies » est marqué d'un trait foncé. Clique ensuite sur « Vos droits » dans « Sur cette page » : « Vos droits » est marqué. Remonte tout en haut : « Qui sommes-nous » est marqué.
+3. Fenêtre en grand : /integrations/stripe. Écris ADRESSE_TEST et clique sur « Me prévenir ». Dans le bandeau vert, « e-mail » n'est jamais coupé en fin de ligne. Recommence à 360 px avec un autre alias : même chose.
+4. /integrations/systeme-io, « Vos questions » : ouvre « Que se passe-t-il si une vente est annulée ? ». La réponse dit qu'il faut cocher « Vente annulée » à l'étape 3, que la demande prévue s'annulera seule bientôt sans rien changer au réglage, et qu'en attendant on l'annule depuis la page Demandes. À 360 px, à l'étape 2, le champ de l'adresse finit par « … ».
+
+Compte rendu à me donner : les points 1 à 4 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK. Jamais l'adresse e-mail de test.
 ```
 
 ---

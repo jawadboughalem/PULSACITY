@@ -56,6 +56,13 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 - Exemple de widget : le badge aussi sur ordinateur, dans la bande blanche du haut de la page de Julie (m7 la laisse vide). Sur téléphone, la page de Julie garde des marges de 4 et 8 px pour que le widget ait la largeur d'une vraie page de 360 px : badge en entier, points sous le carrousel (en dessous de 288 px, `w.js` remplace les points par « 1 sur 4 », règle du widget inchangée).
 - Démo de l'accueil : les quatre cadres prennent la hauteur du plus haut (le mur), sur une même ligne sur ordinateur ; rien n'est coupé, sur téléphone non plus.
 
+## Contre-recette du 4 octobre (prompts 6 et 7) et suites
+
+- 21 points sur 24 OK. Corrigés : le badge de l'exemple dépassait encore de 9 à 10 px à 360 px (Georgia de Windows est plus large que la police de remplacement du conteneur : environ 311 px au lieu de 297) ; le cadre de Julie prend maintenant 8 px des marges de la page sur téléphone et le badge n'a plus de marge intérieure (326 px pour lui). « e-mail » ne se coupe plus en fin de ligne (gardé par le test d'espacement). Le sommaire marque la dernière rubrique en bas de page, et la rubrique atteinte par un lien tant qu'elle est en vue (`src/lib/content/pick-current-heading.ts`). Le champ d'adresse de l'aperçu finit par « … ».
+- « Vente annulée » (Systeme.io) : la réponse dit maintenant à quoi sert la case : l'annulation nous arrive et est gardée, et la demande prévue s'annulera seule bientôt, sans rien changer au réglage. Engagement à tenir : capturer « Vente annulée » et l'annuler automatiquement (voir « Questions ouvertes »), comme la page Stripe le promet.
+- Gardés comme les maquettes : les deux « Copier » de styles différents (m21, m5 : l'adresse en bouton principal avec icône, la clé en bouton secondaire) ; le badge « Disponible » qui passe sous « Systeme.io » quand la ligne est trop courte (m21 sur téléphone).
+- À proposer pour le widget (pas fait dans ce lot) : sous environ 312 px de large, le badge de `w.js` déborde de son conteneur, tout en restant sur une seule ligne. Piste : une requête de conteneur qui resserre les avatars sous cette largeur.
+
 ## Lot 6 (PR #23), en ligne depuis le 3 octobre
 
 - Moteur de connecteurs : `/api/connectors/[connector]/[token]` résout le connecteur par le registre (`src/lib/connectors/registry.ts`) et la connexion par son jeton, 404 silencieux sinon. Le corps brut et les en-têtes vont dans `webhook_events`, la réponse 200 part tout de suite, le traitement suit (`after()`), et la tâche d'envoi rattrape un événement resté non traité. Le cœur (`src/lib/purchases/record-purchase.ts`) ne connaît que `NormalizedPurchase`. Ajouter un connecteur : son dossier et une ligne dans le registre (prouvé le 3 octobre avec un faux connecteur « test », puis retiré ; un test Vitest garde la preuve).
@@ -198,7 +205,7 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 5. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
 6. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 7. Sentry, avant le lancement.
-8. Lot 7 (PR #27) : contre-recette du deuxième passage sur l'aperçu (prompts 6 et 7 de `recette/lot-7-site.md`), puis fusion et vérification en production (prompt 5).
+8. Lot 7 (PR #27) : dernière vérification sur l'aperçu (prompt 8 de `recette/lot-7-site.md`), puis fusion et vérification en production (prompt 5).
 9. Textes légaux : informations à fournir (SIREN, adresse, directeur de la publication, contact…, liste dans `recette/lot-7-site.md`), puis relecture par un juriste avant `LEGAL_VALIDATED=true`.
 10. Après la mise en ligne du site : déclarer pulsacity.com dans Google Search Console et y envoyer le plan du site (prompt à écrire ; une vérification par enregistrement DNS chez OVH ne touche ni MX ni SPF).
 

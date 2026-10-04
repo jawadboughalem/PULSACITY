@@ -53,7 +53,7 @@ export const GUIDES: Guide[] = [
     title: "Témoignages clients et RGPD : ce qu'un formateur doit savoir",
     summary: "Consentement, photo, durée de conservation : les règles pour publier les avis.",
     description:
-      "Consentement, droit à l'image, demandes d'avis par e-mail, durée de conservation : les règles à connaître pour publier les avis de vos clients en toute sérénité.",
+      "Consentement, droit à l'image, demandes d'avis par e-⁠mail, durée de conservation : les règles à connaître pour publier les avis de vos clients en toute sérénité.",
     updatedAt: "2026-10-04",
     readingMinutes: 7,
     load: () => import("./temoignages-clients-rgpd-formateur.mdx"),

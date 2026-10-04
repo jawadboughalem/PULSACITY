@@ -98,7 +98,7 @@ const DEMO_STEPS: DemoStep[] = [
   },
   {
     label: "Jour 30 · la demande part",
-    caption: "Un e-mail au nom de Julie, au moment choisi.",
+    caption: "Un e-⁠mail au nom de Julie, au moment choisi.",
     illustration: <RequestEmail />,
   },
   {

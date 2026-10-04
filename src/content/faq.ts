@@ -34,7 +34,7 @@ export const HOME_FAQ: FaqEntry[] = [
   {
     question: "Mes clients peuvent-ils se désinscrire ?",
     answer:
-      "Oui, en un clic. Chaque e-mail contient un lien de désinscription, et la plupart des messageries affichent aussi un bouton. Un client reçoit au plus deux e-mails par offre : la demande et une relance.",
+      "Oui, en un clic. Chaque e-⁠mail contient un lien de désinscription, et la plupart des messageries affichent aussi un bouton. Un client reçoit au plus deux e-⁠mails par offre : la demande et une relance.",
   },
   {
     question: "Est-ce compatible avec mon site ?",
