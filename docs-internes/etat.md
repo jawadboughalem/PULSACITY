@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Lot 7 en cours : le site public (accueil, tarifs, intégrations, guides, pages légales), PR #27, en recette sur son aperçu ; deuxième passage le 4 octobre avec les maquettes m21 à m24 et les corrections de la première recette. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Le lot 7, le site public (accueil, tarifs, intégrations, guides, pages légales), est en ligne depuis le 4 octobre (PR #27) et vérifié en production. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -13,9 +13,10 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 - Lot 6, connecteurs et demandes : moteur de connecteurs, connecteur Systeme.io, pages Connecteurs et Demandes, offres à associer, e-mails de demande et de relance, désinscription (PR #23, fusionnée le 3 octobre, migration 0006 appliquée en production).
 - Suite du lot 6, maquettes du 3 octobre : Demandes (m19), Connecteurs (m5 : téléphone, clé différente, changer d'adresse, inscriptions sans vente), désinscription (m1). PR #24, fusionnée le 3 octobre, migration 0007 appliquée en production.
 - « Demander un avis » (m20) : demande d'avis à un client saisi à la main, depuis Demandes et l'accueil (PR #25, fusionnée le 3 octobre, migration 0008 appliquée en production).
+- Lot 7, site public : accueil (m7), tarifs (m8), intégrations (m21), guides (m22), pages légales en brouillon (m23), menu du téléphone (m24), SEO (PR #27, fusionnée le 4 octobre, migrations 0009 et 0010 appliquées en production). Détail ci-dessous.
 - Trois environnements : local, recette sur chaque aperçu Vercel, migrations de production lancées à chaque fusion et attendues par Vercel avant la mise en ligne (PR #16).
 
-## Lot 7 (PR #27), site public, en recette
+## Lot 7 (PR #27), site public, en ligne depuis le 4 octobre
 
 - Accueil (m7) : promesse, démo en quatre temps (vente, demande, avis, mur), comment ça marche, exemple de widget réel (le moteur de `w.js` sur la page de Julie Nutrition : badge et carrousel), connecteurs, tarifs résumés, questions, appel final.
 - Tarifs (m8) : Mensuel ou Annuel, les trois plans, « Comparer en détail » (toutes les lignes sur ordinateur, choix du plan sur téléphone), questions de facturation. Prix, limites et « 2 mois offerts » calculés depuis `plans.ts` (`src/content/plan-offer.ts`).
@@ -26,6 +27,13 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 - SEO : titre, description, adresse canonique et Open Graph sur chaque page ; `sitemap.xml`, `robots.txt` (l'espace, l'API, les pages de collecte et la désinscription exclus ; aperçus fermés) ; une image de partage générée par page (`next/og`, polices dans `assets/og-fonts/`) ; données structurées Organization (accueil) et FAQPage (accueil, tarifs, Systeme.io).
 - Espaces insécables avant « ? ! : ; » et dans « » sur tous les textes du site, gardés par un test (`src/content/french-spacing.test.ts`).
 - Vérifié dans le conteneur le 4 octobre (deuxième passage) : Lighthouse mobile 94 (`/`), 95 (`/integrations/systeme-io`), 96 (`/tarifs`), 95 (`/integrations` et un guide) en performance, 100 en accessibilité, CLS 0 ; aucun lien mort ni ancre manquante sur 16 pages ; 360 px et 1440 px sans débordement ni erreur dans la console.
+
+## Vérification du lot 7 en production (4 octobre, prompt 5 de `recette/lot-7-site.md`)
+
+- pulsacity.com sert l'accueil, à la place de la page « bientôt ». `robots.txt` et `sitemap.xml` conformes : 10 pages, aucune page légale (elles portent aussi `noindex`).
+- PageSpeed mobile : accueil 96, `/integrations/systeme-io` 90, `/tarifs` 98 en performance ; 100 en accessibilité, bonnes pratiques et SEO sur les trois. La page Systeme.io est la plus lente (affichage de l'élément principal 3,3 s) : PageSpeed y relève environ 69 Kio de JavaScript inutilisé et 120 ms de fichiers qui bloquent l'affichage. À regarder dans un lot suivant.
+- Image de partage de `/integrations/systeme-io` conforme. Avertissement mineur d'opengraph.xyz : la description fait 148 caractères pour environ 125 conseillés.
+- Données structurées : le test des résultats enrichis de Google ne détecte rien, ni sur l'accueil ni sur `/tarifs`, alors que le HTML exploré contient l'Organization et la FAQ et que le validateur de schema.org les reconnaît sans erreur. Pour la FAQ, c'est attendu : Google n'affiche plus les FAQ dans ses résultats depuis le 7 mai 2026 et les a retirées de cet outil en juin 2026 (Search Engine Land, Search Engine Journal). Le balisage reste, sans effet dans Google. Pour l'Organization (nom, adresse, logo de 512 px, ce que demande la documentation de Google), cause inconnue : à suivre dans la Search Console une fois le site validé (« À faire »).
 
 ## Décisions du 4 octobre (lot 7)
 
@@ -206,9 +214,9 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 5. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
 6. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 7. Sentry, avant le lancement.
-8. Lot 7 (PR #27) : vérification du bandeau à 360 px (prompt 9 de `recette/lot-7-site.md`), puis fusion et vérification en production (prompt 5).
+8. Performance de `/integrations/systeme-io` (90 sur mobile) : réduire le JavaScript inutilisé et les fichiers qui bloquent l'affichage, dans un lot suivant.
 9. Textes légaux : informations à fournir (SIREN, adresse, directeur de la publication, contact…, liste dans `recette/lot-7-site.md`), puis relecture par un juriste avant `LEGAL_VALIDATED=true`.
-10. Après la mise en ligne du site : déclarer pulsacity.com dans Google Search Console et y envoyer le plan du site (prompt à écrire ; une vérification par enregistrement DNS chez OVH ne touche ni MX ni SPF).
+10. Le site est en ligne : déclarer pulsacity.com dans Google Search Console, y envoyer le plan du site et y suivre la reconnaissance de l'Organization (prompt à écrire ; une vérification par enregistrement DNS chez OVH ne touche ni MX ni SPF).
 
 Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
