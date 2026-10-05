@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Le lot 7, le site public (accueil, tarifs, intégrations, guides, pages légales), est en ligne depuis le 4 octobre (PR #27) et vérifié en production. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 5 octobre 2026. La V0 n'est pas terminée : la feuille de route pour la finir (design v2, écrans manquants, entreprise et textes légaux, tarifs, catalogue des connecteurs, commercialisation) est dans `docs-internes/fin-v0/README.md`, avec tous ses prompts dans l'ordre. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Le lot 7, le site public (accueil, tarifs, intégrations, guides, pages légales), est en ligne depuis le 4 octobre (PR #27) et vérifié en production. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -15,6 +15,10 @@ Mis à jour le 4 octobre 2026. Le lot 6 est en ligne en entier et vérifié en p
 - « Demander un avis » (m20) : demande d'avis à un client saisi à la main, depuis Demandes et l'accueil (PR #25, fusionnée le 3 octobre, migration 0008 appliquée en production).
 - Lot 7, site public : accueil (m7), tarifs (m8), intégrations (m21), guides (m22), pages légales en brouillon (m23), menu du téléphone (m24), SEO (PR #27, fusionnée le 4 octobre, migrations 0009 et 0010 appliquées en production). Détail ci-dessous.
 - Trois environnements : local, recette sur chaque aperçu Vercel, migrations de production lancées à chaque fusion et attendues par Vercel avant la mise en ligne (PR #16).
+
+## Finir la V0 (feuille de route du 5 octobre)
+
+Le fondateur juge la V0 inachevée : design trop fade et trop proche du style des assistants d'IA, écrans manquants (Réglages, Mon compte, Abonnement et factures, Aide et contact), entreprise pas encore créée et textes légaux à compléter, tarifs à confirmer, Systeme.io trop au centre, commercialisation à préparer. `docs-internes/fin-v0/` donne l'ordre de toutes les actions (phases A à F) et leurs prompts : Claude Chat (décisions, projet « PULSACITY — Stratégie »), Claude in Chrome (services), Claude Design (nouveau projet « PULSACITY v2 », l'actuel gardé comme référence de la v1), Claude Code (lots 4.1 à 4.11). La V1 attend ; la recette de bout en bout en production devient le lot 4.11, juste avant le lancement.
 
 ## Lot 7 (PR #27), site public, en ligne depuis le 4 octobre
 
