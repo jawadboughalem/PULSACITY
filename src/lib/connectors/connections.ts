@@ -28,6 +28,16 @@ export const findConnection = async (
   return connection ?? null;
 };
 
+/** Whether a sale already reaches the space from one of its tools, whichever it is. */
+export const hasActiveConnection = async (database: Database, spaceId: string): Promise<boolean> => {
+  const [connection] = await database
+    .select({ id: connections.id })
+    .from(connections)
+    .where(and(eq(connections.spaceId, spaceId), eq(connections.status, "active")))
+    .limit(1);
+  return connection !== undefined;
+};
+
 /** The address exists from the first visit of the connector's page, ready to copy. */
 export const findOrCreateConnection = async (
   database: Database,

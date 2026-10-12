@@ -144,7 +144,7 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
 
     <FinalCall
       title="Vos clients ont déjà quelque chose à dire."
-      text={`Deux minutes pour connecter ${integration.name}, et la prochaine vente fait le reste.`}
+      text={`Connectez ${integration.name} : la prochaine vente fait le reste.`}
     />
   </>
 );

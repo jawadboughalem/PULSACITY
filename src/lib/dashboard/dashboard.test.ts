@@ -196,7 +196,7 @@ describe("readSetupSteps", () => {
 
     expect(await readSetupSteps(database, spaceId)).toEqual({
       isLinkShared: false,
-      systeme: "none",
+      connection: "none",
       isWidgetPasted: false,
     });
   });
@@ -207,7 +207,7 @@ describe("readSetupSteps", () => {
 
     expect(await readSetupSteps(database, spaceId)).toEqual({
       isLinkShared: false,
-      systeme: "active",
+      connection: "active",
       isWidgetPasted: true,
     });
   });
@@ -215,12 +215,21 @@ describe("readSetupSteps", () => {
   it("sees a Systeme.io connection with a problem", async () => {
     await database.insert(connections).values({ spaceId, connector: "systeme", webhookToken: randomUUID(), status: "error" });
 
-    expect(await readSetupSteps(database, spaceId)).toMatchObject({ systeme: "error" });
+    expect(await readSetupSteps(database, spaceId)).toMatchObject({ connection: "error" });
   });
 
   it("waits for the first sale of a Systeme.io connection", async () => {
     await database.insert(connections).values({ spaceId, connector: "systeme", webhookToken: randomUUID() });
 
-    expect(await readSetupSteps(database, spaceId)).toMatchObject({ systeme: "pending" });
+    expect(await readSetupSteps(database, spaceId)).toMatchObject({ connection: "pending" });
+  });
+
+  it("counts any tool as connected once one of its connections is active", async () => {
+    await database.insert(connections).values([
+      { spaceId, connector: "systeme", webhookToken: randomUUID(), status: "error" },
+      { spaceId, connector: "universal", webhookToken: randomUUID(), status: "active" },
+    ]);
+
+    expect(await readSetupSteps(database, spaceId)).toMatchObject({ connection: "active" });
   });
 });

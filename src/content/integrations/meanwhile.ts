@@ -10,7 +10,7 @@ export const WITHOUT_CONNECTOR: MeanwhileItem[] = [
   {
     icon: "connection",
     title: "Votre lien de collecte",
-    text: "Un lien à votre nom, à partager où vous voulez : e-⁠mail, message, groupe de clients. L'avis se laisse en deux minutes.",
+    text: "Un lien à votre nom, à partager où vous voulez : e-⁠mail, message, groupe de clients. L'avis se laisse depuis un téléphone.",
   },
   {
     icon: "grid",
@@ -27,7 +27,7 @@ export const MEANWHILE: MeanwhileItem[] = [
   },
   {
     title: "Votre lien de collecte",
-    text: "Un lien à votre nom, à glisser dans votre e-⁠mail de suivi ou dans un message. L'avis se laisse en deux minutes.",
+    text: "Un lien à votre nom, à glisser dans votre e-⁠mail de suivi ou dans un message. L'avis se laisse depuis un téléphone.",
   },
   {
     title: "Vos avis déjà reçus",

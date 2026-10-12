@@ -1,9 +1,9 @@
 # Lot 4.1 — les décisions appliquées : textes à valider, puis recette
 
 Dans l'ordre :
-- Partie A : les textes qui supposent Systeme.io, et les durées affichées. Vous validez, corrigez ou refusez chaque ligne ; Claude Code applique ce que vous validez dans la même PR.
+- Partie A : les textes qui supposent Systeme.io, et les durées affichées. Validée par le fondateur le 12 octobre, appliquée dans la PR #33.
 - Prompt 1 : l'espace de démonstration de recette, rempli depuis la branche de la PR.
-- Prompts 2 et 3 : recette sur l'aperçu, sur ordinateur puis à 360 px. À lancer après l'application de la partie A.
+- Prompts 2 et 3 : recette sur l'aperçu, sur ordinateur puis à 360 px.
 - Prompt 4 : vérification sur pulsacity.com, après la fusion.
 
 Ce lot ne touche à aucun service : aucune action à faire de votre côté sur Vercel, Supabase, Stripe ou ailleurs. Aucune migration.
@@ -11,13 +11,16 @@ Ce lot ne touche à aucun service : aucune action à faire de votre côté sur V
 Adresse de l'aperçu (PR #33) : https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app
 
 Déjà vérifié par Claude Code dans son conteneur :
+- un espace neuf : accueil, Témoignages, Demandes et Offres vides disent « l'outil où vous vendez » ou « votre outil », sans « Systeme.io », et leur bouton « Connecter mon outil » (« Connectez votre outil » sur Offres) mène à Connecteurs ; l'étape « Connecter votre outil de vente » se coche dès qu'un connecteur, quel qu'il soit, est actif ;
 - `pnpm lint`, `pnpm typecheck`, `pnpm build` ; `pnpm test` vert, sauf `decode-csv-file.test.ts`, qui échoue déjà sur `main` dans ce conteneur (Node 22.22, voir `etat.md`) et passe en CI ;
 - `/`, `/tarifs` (Mensuel et Annuel), `/cgv`, `/integrations` et `/app/widgets` à 360, 1024 et 1440 px : aucun débordement, aucune erreur dans la console ; sur ordinateur, les boutons et les listes des trois plans sont sur la même ligne ;
 - le catalogue n'est pas publié : le plan du site et `/integrations` gardent Systeme.io, Stripe et Calendly, et `/integrations/kajabi` répond 404.
 
 ---
 
-## A. Les textes qui supposent Systeme.io : propositions à valider
+## A. Les textes qui supposent Systeme.io : validés et appliqués
+
+Réponse du fondateur, le 12 octobre : tout est validé. « Connecter mon outil », car plusieurs outils sortent au lancement, puis d'autres rapidement. D3, laissé à l'arbitrage de Claude Code : les deux durées de saisie restent jusqu'aux maquettes v2.
 
 Règle suivie : un texte général parle de « l'outil où vous vendez » ; Systeme.io reste nommé là où l'on parle de son connecteur, de son guide ou de son éditeur de pages. Répondez par numéro : « OK », une correction, ou « non ».
 
@@ -65,7 +68,7 @@ Ils parlent des connecteurs disponibles : ils sont vrais aujourd'hui et changent
 `positionnement.md` (« Incitations ») : « aucune durée d'installation ni de saisie affichée avant d'avoir chronométré trois vraies installations. » Le site en affiche plusieurs.
 - D1, installation, à retirer : « Deux minutes, sans rien installer » (S3), « Deux minutes pour connecter … » (S4, et l'appel final de la page Systeme.io, qui deviendrait « Connectez Systeme.io : la prochaine vente fait le reste. »), « Deux minutes, depuis votre ordinateur » (avantage de la page Systeme.io, qui deviendrait « Plus simple depuis un ordinateur. »), « environ 2 minutes » du guide du widget (E9, et la même ligne dans l'éditeur).
 - D2, saisie, à retirer : « L'avis se laisse en deux minutes. » (Intégrations et pages « Bientôt », qui deviendrait « L'avis se laisse depuis un téléphone. »).
-- D3, question : la page de collecte (« Comptez moins d'une minute. ») et le bouton de l'e-mail de demande (« Donner mon avis (1 minute) », m3, repris dans la démo de l'accueil) annoncent aussi une durée de saisie. CLAUDE.md promet « moins de 60 secondes ». Proposition : les garder jusqu'aux maquettes v2 de la collecte et des e-mails (3.6, lot 4.8), et les mesurer d'ici là. À vous de trancher.
+- D3, question : la page de collecte (« Comptez moins d'une minute. ») et le bouton de l'e-mail de demande (« Donner mon avis (1 minute) », m3, repris dans la démo de l'accueil) annoncent aussi une durée de saisie. CLAUDE.md promet « moins de 60 secondes ». Arbitrage : elles restent jusqu'aux maquettes v2 de la collecte et des e-mails (3.6, lot 4.8), et se mesurent d'ici là. La démo de l'accueil garde aussi « 2 minutes plus tard », un exemple de déroulé, pas une promesse.
 
 ---
 
@@ -124,6 +127,14 @@ E. Espace
 13. Ouvre https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/app/widgets : l'encadré du bas dit « Avec le plan Essentiel, à 9,99 € par mois, vous créez autant de widgets que vous voulez : un pour chaque page de vente. »
 14. Ouvre https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/app/connecteurs : Systeme.io, puis Stripe et Calendly en « Bientôt », avec leurs textes d'avant (« Paiements en ligne : … », « Rendez-vous : … »), et aucun autre outil.
 
+F. Textes qui ne supposent plus Systeme.io
+15. Accueil (https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/) : sous le grand titre, « Après chaque vente, votre client reçoit un e-mail à votre nom qui lui demande son avis, au bon moment. Vous validez, et son témoignage s'affiche sur votre page de vente. » Dans « Comment ça marche », l'étape 1 : « Reliez l'outil où vous vendez », puis « Une adresse à coller une fois dans votre outil de vente, Systeme.io par exemple. Rien à installer. » Tout en bas : « Reliez l'outil où vous vendez : la prochaine vente fait le reste. »
+16. Le même texte tout en bas de https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/integrations et de https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/guides. Sur https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/integrations/systeme-io : « … Plus simple depuis un ordinateur. » sous « Rien à installer », et tout en bas « Connectez Systeme.io : la prochaine vente fait le reste. » Sur https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/integrations/stripe : « L'avis se laisse depuis un téléphone. »
+17. Cherche « Deux minutes » sur ces cinq pages : aucun résultat.
+18. Accueil de l'espace (https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/app) : dans « Étapes restantes », l'étape s'appelle « Connecter votre outil de vente », et elle est cochée.
+19. Sur https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/app/demandes, clique sur « Demander un avis » : sous le titre, « … Il reçoit le même e-mail qu'après une vente reçue d'un outil connecté, au nom de Julie Nutrition. » Ferme la fenêtre sans rien envoyer.
+20. Ouvre un widget depuis https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/app/widgets (« Modifier ») : le guide sous l'éditeur s'appelle « Coller dans Systeme.io » et dit « 4 étapes », sans durée. Clique sur « Copier le code » : la phrase dessous devient « Collez-le maintenant dans votre page. Sur Systeme.io, suivez les 4 étapes ci-dessous. »
+
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu, sans adresse e-mail.
 ```
 
@@ -139,6 +150,8 @@ Tu continues la recette de PULSACITY sur l'aperçu https://pulsacity-git-claude-
 3. https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/ : section Tarifs, les trois plans l'un sous l'autre, la ligne du prix de lancement sous Essentiel et sous Pro, rien ne dépasse.
 4. https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/cgv : la partie « 2. Prix » se lit sans défilement horizontal.
 5. https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/app/widgets : l'encadré « Avec le plan Essentiel, à 9,99 € par mois, … » en entier, rien ne dépasse.
+6. Ouvre un widget (« Modifier »), puis l'onglet de l'installation : « Plus simple depuis un ordinateur », puis « Le code se colle dans l'éditeur de votre page, plus confortable sur grand écran. Recevez-le par e-mail et ouvrez-le sur votre ordinateur. » Touche « Copier le code » : « Collez-le dans votre page, dans un bloc de code HTML. Le guide Systeme.io vous montre où. »
+7. Touche « M'envoyer le code », puis dis-moi : « Ouvrez l'e-mail du code, puis dites-moi OK. » Attends mon OK. Je vérifie moi-même : « Collez-le une seule fois dans un bloc de code HTML de votre page de vente. », puis « Sur Systeme.io : 4 étapes », sans durée.
 
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu.
 ```
@@ -153,8 +166,29 @@ Tu vérifies la mise en ligne des nouveaux prix de PULSACITY sur https://pulsaci
 1. https://pulsacity.com/tarifs : sous le titre, « … Sans engagement. Prix finaux : rien ne s'ajoute au paiement. » ; Essentiel « 9,99 € » avec « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois. » ; Pro « 19,99 € » avec « … Ensuite, 24,99 € par mois. » ; les trois boutons à la même hauteur.
 2. Ctrl+F « TVA comprise » sur /tarifs et sur https://pulsacity.com/ : aucun résultat.
 3. « Les prix incluent-ils la TVA ? » dit « Le prix affiché est celui que vous payez. PULSACITY ne facture pas de TVA aujourd'hui : … ».
-4. https://pulsacity.com/integrations : Systeme.io, Stripe et Calendly, avec leurs nouvelles phrases, et rien d'autre.
+4. https://pulsacity.com/integrations : Systeme.io, Stripe et Calendly, avec leurs nouvelles phrases, et rien d'autre. Tout en bas : « Reliez l'outil où vous vendez : la prochaine vente fait le reste. »
 5. https://pulsacity.com/cgv : bandeau « Brouillon », et la partie « 2. Prix » avec les prix publics puis le prix de lancement.
+6. https://pulsacity.com/ : sous le grand titre, « Après chaque vente, votre client reçoit un e-mail à votre nom qui lui demande son avis, au bon moment. … », sans « Systeme.io » ; l'étape 1 de « Comment ça marche » est « Reliez l'outil où vous vendez ».
 
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu.
+```
+
+---
+
+## Claude Design — les décisions à appliquer dans la refonte v2
+
+À coller dans le projet Claude Design « PULSACITY v2 », pendant la refonte graphique.
+
+```
+Avant de continuer la refonte, voici les décisions du 12 octobre déjà appliquées au site (lot 4.1). Respecte-les dans toutes les maquettes v2, et signale-moi toute maquette déjà faite qui les contredit.
+
+1. Prix. Gratuit 0 €. Essentiel : 9,99 € par mois ou 99 € par an (prix de lancement), 14,99 € et 149 € ensuite. Pro : 19,99 € par mois ou 199 € par an, 24,99 € et 249 € ensuite. On affiche le prix de lancement comme le prix payé, et juste dessous, en petit : « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois. » (24,99 € pour Pro ; « 149 € par an » et « 249 € par an » en Annuel). Ni prix barré, ni compteur. « Annuel : 2 mois offerts ».
+2. Cette ligne n'existe que sous les plans payants : dans les colonnes de prix (Tarifs et accueil), prévois sa place pour que les boutons et les listes des trois plans restent alignés.
+3. Plus jamais « TVA comprise » ni « HT » : PULSACITY ne facture pas de TVA. Sous le titre de Tarifs : « Prix finaux : rien ne s'ajoute au paiement. »
+4. Plus de « tout Systeme.io ». Plusieurs outils sortent au lancement, d'autres suivent vite. Les textes généraux disent « l'outil où vous vendez » ; le bouton est « Connecter mon outil » et mène à la liste des connecteurs. Systeme.io n'est nommé que là où l'on parle de son connecteur ou de son guide.
+5. Catalogue : 6 familles, 19 outils (decisions/connecteurs.md). Disponibles : Systeme.io et le connecteur universel. Les autres en « Bientôt », sans date, avec « En attendant : avec Zapier ou Make ». « Fonctionne avec … », jamais « partenaire officiel ».
+6. Aucune durée d'installation ou de saisie (« 2 minutes », « en moins d'une minute ») tant qu'elle n'est pas chronométrée sur de vraies installations. La page de collecte et l'e-mail de demande en portent encore une (« Comptez moins d'une minute », « Donner mon avis (1 minute) ») : propose leur version v2 sans durée.
+7. Rien d'inventé : aucun client, logo, compteur ni témoignage ; « Exemple, avis fictifs » sous chaque exemple, avec une note d'exemple à 4,7/5 plutôt que 4,9/5. Jamais « avis vérifiés ».
+
+Les détails sont dans decisions/tarifs.md, connecteurs.md, positionnement.md et arbitrages.md (n° 1 et 2).
 ```

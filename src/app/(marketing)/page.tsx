@@ -21,14 +21,14 @@ export const generateMetadata = () =>
   buildPageMetadata({
     title: "Vos ventes deviennent des témoignages, automatiquement",
     description:
-      "Après chaque vente sur Systeme.io, votre client reçoit une demande d'avis à votre nom. Vous validez, et son témoignage s'affiche sur votre page de vente. Gratuit pour commencer.",
+      "Après chaque vente, PULSACITY demande l'avis de votre client à votre nom et affiche son témoignage sur votre page de vente. Gratuit, sans carte bancaire.",
     path: MARKETING_PATHS.home,
   });
 
 const HOW_IT_WORKS = [
   {
-    title: "Connectez Systeme.io",
-    text: "Une adresse et une clé à coller dans vos paramètres Systeme.io. Deux minutes, sans rien installer.",
+    title: "Reliez l'outil où vous vendez",
+    text: "Une adresse à coller une fois dans votre outil de vente, Systeme.io par exemple. Rien à installer.",
   },
   {
     title: "Vos clients reçoivent une demande",
@@ -52,8 +52,8 @@ const HomePage = () => (
           Vos ventes deviennent des témoignages, automatiquement.
         </h1>
         <p className="font-serif text-quote desktop:max-w-[660px]">
-          Après chaque vente sur Systeme.io, votre client reçoit une demande d&apos;avis à votre nom. Vous validez, et son
-          témoignage s&apos;affiche sur votre page de vente.
+          Après chaque vente, votre client reçoit un e-⁠mail à votre nom qui lui demande son avis, au bon moment. Vous
+          validez, et son témoignage s&apos;affiche sur votre page de vente.
         </p>
       </div>
       <div className="mt-6 flex flex-col items-center gap-5 desktop:flex-row desktop:gap-5">
@@ -132,7 +132,7 @@ const HomePage = () => (
 
     <FinalCall
       title="Vos clients ont déjà quelque chose à dire."
-      text="Deux minutes pour connecter Systeme.io, et la prochaine vente fait le reste."
+      text="Reliez l'outil où vous vendez : la prochaine vente fait le reste."
     />
   </>
 );

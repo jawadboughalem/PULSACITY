@@ -14,6 +14,7 @@ import {
 } from "@/db/schema";
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
+import { hasActiveConnection } from "./connections";
 import { listConnectionEvents, loadConnectionOverview } from "./load-connection-overview";
 import { associateExternalProduct, joinConnectorWaitlist, replayOwnedEvent } from "./manage-connection";
 import { processWebhookEvent } from "./process-webhook-event";
@@ -152,6 +153,22 @@ describe("loadConnectionOverview", () => {
 
     await replayOwnedEvent(database, userId, eventId);
     expect(await loadConnectionOverview(database, connection)).toMatchObject({ setAsideCount: 0 });
+  });
+});
+
+describe("hasActiveConnection", () => {
+  it("sees an active connection of any tool, and nothing of another space", async () => {
+    const otherSpaceId = await insertTestSpace(database, await insertTestUser(database, "marc@exemple.fr"), "marc-coaching");
+    expect(await hasActiveConnection(database, spaceId)).toBe(true);
+    expect(await hasActiveConnection(database, otherSpaceId)).toBe(false);
+
+    await database.update(connections).set({ status: "error" }).where(eq(connections.id, connectionId));
+    expect(await hasActiveConnection(database, spaceId)).toBe(false);
+
+    await database
+      .insert(connections)
+      .values({ spaceId, connector: "universal", webhookToken: "jeton-universel-0123456789", status: "active" });
+    expect(await hasActiveConnection(database, spaceId)).toBe(true);
   });
 });
 

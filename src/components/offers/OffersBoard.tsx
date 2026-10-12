@@ -61,12 +61,12 @@ export const OffersBoard = ({ offers, connectors, today }: OffersBoardProps) => 
           </p>
           <div className="pt-2">{addButton}</div>
           <p className="border-t border-hairline-200 pt-4 text-small text-slate-600">
-            Vous vendez sur Systeme.io ?{" "}
+            Vous vendez en ligne ?{" "}
             <Link
               href={CONNECTORS_SECTION_HREF}
               className="font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
             >
-              Connectez-le
+              Connectez votre outil
             </Link>{" "}
             : vos produits arriveront tout seuls.
           </p>

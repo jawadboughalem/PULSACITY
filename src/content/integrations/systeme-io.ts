@@ -21,7 +21,7 @@ export const SYSTEME_IO: AvailableIntegration = {
   benefits: [
     {
       title: "Rien à installer",
-      text: "Une adresse et une clé à coller dans vos paramètres Systeme.io. Deux minutes, depuis votre ordinateur.",
+      text: "Une adresse et une clé à coller dans vos paramètres Systeme.io. Plus simple depuis un ordinateur.",
     },
     {
       title: "Au bon moment, pour chaque offre",

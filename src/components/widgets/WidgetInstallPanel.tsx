@@ -73,8 +73,8 @@ export const WidgetInstallPanel = ({ widgetId, snippet, email, guideHref }: Widg
           <div className="flex flex-col gap-3 bg-paper-100 p-4">
             <p className="text-body font-semibold">Plus simple depuis un ordinateur</p>
             <p className="text-small">
-              Le code se colle dans l&apos;éditeur de Systeme.io, plus confortable sur grand écran. Recevez-le par e-mail et
-              ouvrez-le sur votre ordinateur.
+              Le code se colle dans l&apos;éditeur de votre page, plus confortable sur grand écran. Recevez-le par
+              e-mail et ouvrez-le sur votre ordinateur.
             </p>
             <button type="button" onClick={send} disabled={isSending} className={cn(PRIMARY_BUTTON_CLASSES, "w-full")}>
               <Icon name="mail" size={20} />
@@ -97,7 +97,7 @@ export const WidgetInstallPanel = ({ widgetId, snippet, email, guideHref }: Widg
         </button>
         <p aria-live="polite" className="text-small text-slate-600">
           {isCopied
-            ? "Collez-le dans Systeme.io, dans un élément Code HTML. Le guide vous montre où."
+            ? "Collez-le dans votre page, dans un bloc de code HTML. Le guide Systeme.io vous montre où."
             : "Un seul code pour ce widget : vos réglages s'appliquent même après l'avoir collé."}
         </p>
         <Link href={guideHref} className={cn(LINK_CLASSES, "self-start text-body")}>

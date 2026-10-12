@@ -24,7 +24,7 @@ const FormationsStepPage = async () => {
       <OnboardingStepHeading
         step={2}
         title="Vos formations"
-        description="Ajoutez les formations et offres que vous vendez. Chacune aura son lien de collecte. Vous pourrez les relier à Systeme.io ensuite."
+        description="Ajoutez les formations et offres que vous vendez. Chacune aura son lien de collecte. Vous pourrez les relier à votre outil de vente ensuite."
       />
       <AddFormationForm key={formations.length} />
       {formations.length > 0 ? (

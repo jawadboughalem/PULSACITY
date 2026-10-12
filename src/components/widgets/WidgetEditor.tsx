@@ -113,7 +113,7 @@ const CopyCodeBlock = ({ isCopied, onCopy }: { isCopied: boolean; onCopy: () => 
     </button>
     <p aria-live="polite" className="text-small text-slate-600">
       {isCopied
-        ? "Collez-le maintenant dans Systeme.io : suivez les 4 étapes ci-dessous."
+        ? "Collez-le maintenant dans votre page. Sur Systeme.io, suivez les 4 étapes ci-dessous."
         : "Un seul code pour ce widget : vos réglages s'appliquent même après l'avoir collé."}
     </p>
   </div>
