@@ -8,7 +8,7 @@ Dans l'ordre :
 
 Ce lot ne touche à aucun service : aucune action à faire de votre côté sur Vercel, Supabase, Stripe ou ailleurs. Aucune migration.
 
-Adresse de l'aperçu : celle du commentaire de Vercel sur la PR (« Visit Preview »).
+Adresse de l'aperçu (PR #33) : https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app
 
 Déjà vérifié par Claude Code dans son conteneur :
 - `pnpm lint`, `pnpm typecheck`, `pnpm build` ; `pnpm test` vert, sauf `decode-csv-file.test.ts`, qui échoue déjà sur `main` dans ce conteneur (Node 22.22, voir `etat.md`) et passe en CI ;
@@ -92,12 +92,12 @@ Compte rendu à me donner : la branche choisie, le plan, et la couleur de l'exé
 
 ## 2. Recette sur ordinateur, sur l'aperçu
 
-Avant ce prompt : ouvrez l'aperçu de la PR et connectez-vous vous-même avec l'adresse du prompt 1, fenêtre en grand. Remplacez ADRESSE_APERCU par l'adresse de l'aperçu.
+Avant ce prompt : ouvrez l'aperçu de la PR et connectez-vous vous-même avec l'adresse du prompt 1, fenêtre en grand. 
 
 ```
-Tu fais la recette des prix et du catalogue de PULSACITY sur l'aperçu ADRESSE_APERCU, fenêtre en grand. Je suis connecté. Tu ne crées aucun compte et tu ne remplis aucun formulaire. Pour chaque point, note « OK » ou décris ce que tu vois.
+Tu fais la recette des prix et du catalogue de PULSACITY sur l'aperçu https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app, fenêtre en grand. Je suis connecté. Tu ne crées aucun compte et tu ne remplis aucun formulaire. Pour chaque point, note « OK » ou décris ce que tu vois.
 
-A. Tarifs (ADRESSE_APERCU/tarifs), « Mensuel » choisi
+A. Tarifs (https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/tarifs), « Mensuel » choisi
 1. Sous le titre « Un prix simple, qui suit vos ventes. » : « Commencez gratuitement. Passez à Essentiel quand les avis arrivent. Sans engagement. Prix finaux : rien ne s'ajoute au paiement. »
 2. Cherche « TVA comprise » dans la page (Ctrl+F) : aucun résultat.
 3. Gratuit : « 0 € », « pour toujours », aucune ligne dessous. Essentiel : « 9,99 € », « par mois », puis « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois. » Pro : « 19,99 € », « par mois », puis « … Ensuite, 24,99 € par mois. » Aucun prix barré, aucun compteur.
@@ -109,20 +109,20 @@ A. Tarifs (ADRESSE_APERCU/tarifs), « Mensuel » choisi
    - « Puis-je passer du mensuel à l'annuel ? » : « Oui, depuis votre espace. Le changement prend effet à la fin du mois déjà payé. L'année coûte 10 mois : 2 mois sont offerts. »
 7. Lance dans la console : document.querySelector('meta[name="description"]').content. Attendu : « Commencez gratuitement. Essentiel à 9,99 € par mois, Pro pour retirer la mention PULSACITY. Prix finaux, sans engagement, 2 mois offerts à l'année. »
 
-B. Accueil (ADRESSE_APERCU/)
+B. Accueil (https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/)
 8. Section « Tarifs » : Gratuit « 0 € pour toujours » ; Essentiel « 9,99 € par mois » puis la ligne du prix de lancement avec « 14,99 € par mois » ; Pro « 19,99 € par mois » puis la ligne avec « 24,99 € par mois ». Les trois phrases (« Pour recueillir vos premiers avis. », etc.) sont sur la même ligne, les listes aussi.
 
-C. CGV (ADRESSE_APERCU/cgv)
+C. CGV (https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/cgv)
 9. Partie « 2. Prix » : « Les prix sont des prix finaux : le montant affiché est celui que vous payez, rien ne s'y ajoute. PULSACITY ne facture pas de TVA aujourd'hui. » ; « Essentiel : 14,99 € par mois, ou 149 € par an. » ; « Pro : 24,99 € par mois, ou 249 € par an. » ; puis « Prix de lancement : les bêta-testeurs et les 100 premiers abonnés payants paient Essentiel 9,99 € par mois ou 99 € par an, et Pro 19,99 € par mois ou 199 € par an. Ce prix est gardé à vie, tant que l'abonnement ne s'interrompt pas. »
 10. Partie « 5. Changement de plan » : un plan supérieur tout de suite, ce qui reste déduit ; un plan inférieur, ou un changement de période, à la fin de la période déjà payée, sans remboursement. Partie « 9. Évolution des prix » : un nouveau prix pour les nouveaux abonnés seulement, une hausse exceptionnelle annoncée par e-mail 30 jours avant, une baisse pour tous tout de suite.
 
-D. Intégrations (ADRESSE_APERCU/integrations)
+D. Intégrations (https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/integrations)
 11. Trois lignes, et seulement trois : Systeme.io « Une demande d'avis après chaque vente ou inscription à une formation. » (Disponible) ; Stripe « Une demande d'avis après chaque paiement réussi. » (Bientôt) ; Calendly « Une demande d'avis après chaque rendez-vous passé. » (Bientôt).
-12. Ouvre ADRESSE_APERCU/integrations/kajabi : page introuvable. Ouvre ADRESSE_APERCU/sitemap.xml : aucune adresse ne contient « kajabi », « zapier » ou « connecteur-universel ».
+12. Ouvre https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/integrations/kajabi : page introuvable. Ouvre https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/sitemap.xml : aucune adresse ne contient « kajabi », « zapier » ou « connecteur-universel ».
 
 E. Espace
-13. Ouvre ADRESSE_APERCU/app/widgets : l'encadré du bas dit « Avec le plan Essentiel, à 9,99 € par mois, vous créez autant de widgets que vous voulez : un pour chaque page de vente. »
-14. Ouvre ADRESSE_APERCU/app/connecteurs : Systeme.io, puis Stripe et Calendly en « Bientôt », avec leurs textes d'avant (« Paiements en ligne : … », « Rendez-vous : … »), et aucun autre outil.
+13. Ouvre https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/app/widgets : l'encadré du bas dit « Avec le plan Essentiel, à 9,99 € par mois, vous créez autant de widgets que vous voulez : un pour chaque page de vente. »
+14. Ouvre https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/app/connecteurs : Systeme.io, puis Stripe et Calendly en « Bientôt », avec leurs textes d'avant (« Paiements en ligne : … », « Rendez-vous : … »), et aucun autre outil.
 
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu, sans adresse e-mail.
 ```
@@ -132,13 +132,13 @@ Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu
 ## 3. Recette à 360 px, sur l'aperçu
 
 ```
-Tu continues la recette de PULSACITY sur l'aperçu ADRESSE_APERCU, dans un cadre de 360 px de large (outils de développement, mode appareil, largeur 360). Je suis connecté. Pour chaque point, note « OK » ou décris ce que tu vois.
+Tu continues la recette de PULSACITY sur l'aperçu https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app, dans un cadre de 360 px de large (outils de développement, mode appareil, largeur 360). Je suis connecté. Pour chaque point, note « OK » ou décris ce que tu vois.
 
-1. ADRESSE_APERCU/tarifs : les trois plans l'un sous l'autre. Sous « 9,99 € » et « par mois », la ligne du prix de lancement sur deux ou trois lignes, en entier ; pareil sous « 19,99 € ». Rien ne dépasse à droite : document.documentElement.scrollWidth vaut 360.
+1. https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/tarifs : les trois plans l'un sous l'autre. Sous « 9,99 € » et « par mois », la ligne du prix de lancement sur deux ou trois lignes, en entier ; pareil sous « 19,99 € ». Rien ne dépasse à droite : document.documentElement.scrollWidth vaut 360.
 2. Touche « Annuel » : « 99 € », « 199 € », et les lignes avec « 149 € par an » et « 249 € par an ».
-3. ADRESSE_APERCU/ : section Tarifs, les trois plans l'un sous l'autre, la ligne du prix de lancement sous Essentiel et sous Pro, rien ne dépasse.
-4. ADRESSE_APERCU/cgv : la partie « 2. Prix » se lit sans défilement horizontal.
-5. ADRESSE_APERCU/app/widgets : l'encadré « Avec le plan Essentiel, à 9,99 € par mois, … » en entier, rien ne dépasse.
+3. https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/ : section Tarifs, les trois plans l'un sous l'autre, la ligne du prix de lancement sous Essentiel et sous Pro, rien ne dépasse.
+4. https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/cgv : la partie « 2. Prix » se lit sans défilement horizontal.
+5. https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/app/widgets : l'encadré « Avec le plan Essentiel, à 9,99 € par mois, … » en entier, rien ne dépasse.
 
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu.
 ```
