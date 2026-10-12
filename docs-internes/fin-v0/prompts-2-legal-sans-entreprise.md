@@ -7,9 +7,9 @@ Stratégie du 12 octobre : PULSACITY encaisse dès la V0, en tant que particulie
 | K | La domiciliation Kandbaz : la garder ou la résilier | Claude in Chrome | En premier |
 | 2.2 | L'adresse e-mail | Fait : contact@pulsacity.com, redirection OVH | — |
 | 2.4 | Les contrats de traitement des prestataires | Claude in Chrome | Avant le lot 4.9 |
-| 2.7 | La relecture des textes légaux | Claude Chat | Après 1.1 et 2.4 |
+| 2.7 | La relecture des textes légaux | Claude Chat | Après 2.4 |
 | 2.6 | Les informations des textes légaux | Vous, vers Claude Code | Au début du lot 4.9 |
-| 2.8 | Le compte Stripe : ouverture, réglages, activation | Vous, puis Claude in Chrome | Ouverture et réglages après 1.1 ; activation après les lots 4.4 et 4.9 |
+| 2.8 | Le compte Stripe : ouverture, réglages, activation | Vous, puis Claude in Chrome | Ouverture et réglages avant le lot 4.5 ; activation après les lots 4.4 et 4.9 |
 
 Les prompts Claude Chat se lancent dans le projet « PULSACITY — Stratégie » (prompt 0). Les prompts Claude in Chrome, dans le groupe d'onglets « PULSACITY », après vous être connecté vous-même au service.
 
@@ -19,13 +19,13 @@ Ce que deviennent les textes légaux :
 
 | Texte | Sort |
 | --- | --- |
-| Mentions légales | Celles d'un vendeur particulier : nom, adresse, téléphone, e-mail (à confirmer par 1.1), et l'hébergeur |
+| Mentions légales | Celles d'un vendeur particulier : nom, adresse, téléphone, e-mail (à confirmer par 2.7), et l'hébergeur |
 | CGV | Gardées et publiées : celles d'un vendeur particulier, sans TVA |
 | CGU, avec l'annexe de sous-traitance RGPD | Gardées |
 | Politique de confidentialité, cookies compris | Gardée : le RGPD s'applique aussi à un particulier |
 | Contact | `/aide` (lot 4.4), et contact@pulsacity.com |
 
-1.1 confirme ou corrige ce tableau ; 2.7 relit les textes ; le lot 4.9 les met en ligne.
+2.7 confirme ou corrige ce tableau et réécrit les textes ; le lot 4.9 les met en ligne. Le prompt 1.1 n'a pas été lancé : 2.7 reprend ses questions sur les textes, et l'ouverture du compte Stripe (2.8 a) montre ce que Stripe demande à un particulier.
 
 ---
 
@@ -93,14 +93,14 @@ Claude Chat réécrit les textes ; une relecture par un juriste reste conseillé
 ```
 Prompt 2.7 — Relire les textes légaux d'un vendeur particulier.
 
-Contexte : compte rendu 1.1 (encaisser sans entreprise) et compte rendu 2.4 (les prestataires). Voici les quatre textes de PULSACITY, écrits pour une entreprise et encore en brouillon. Les passages « [À COMPLÉTER : …] » attendent une information ou une décision. Je vends des abonnements en tant que particulier, sans TVA, jusqu'au seuil où je créerai une micro-entreprise.
+Contexte : seuil-micro-entreprise.md, les décisions tarifs.md et positionnement.md (avis en ligne), et le compte rendu 2.4 (les prestataires). Le prompt 1.1 n'a pas été lancé : vérifie aussi, sources officielles à l'appui, ce qu'un vendeur particulier doit publier (nom, adresse, téléphone), comment il déclare ce qu'il encaisse, et la mention de TVA de ses reçus. Voici les quatre textes de PULSACITY, écrits pour une entreprise et encore en brouillon. Les passages « [À COMPLÉTER : …] » attendent une information ou une décision. Je vends des abonnements en tant que particulier, sans TVA, jusqu'au seuil où je créerai une micro-entreprise.
 
 [Les quatre textes : mentions légales, CGU avec leur annexe de sous-traitance, CGV, politique de confidentialité.]
 
 Réécris-les pour un vendeur particulier, au regard du droit français et européen en vigueur en octobre 2026. Pour chaque point : ce qui va, ce qui manque, ce qui est risqué, et la rédaction que tu proposes.
 
 1. Les mentions légales d'un particulier qui vend en ligne (LCEN).
-2. Les CGV : vendeur particulier, prix TVA non applicable, commande et paiement, renouvellement, résiliation, changement de plan (dont le passage à un plan inférieur décidé en 1.3), défaut de paiement, évolution des prix, rétractation des professionnels de cinq salariés au plus (article L221-3 du Code de la consommation) et médiateur, ce qui se passera quand une micro-entreprise reprendra les abonnements.
+2. Les CGV : vendeur particulier, prix finaux sans TVA, prix fondateur, commande et paiement, renouvellement, résiliation, changement de plan (règles de tarifs.md), défaut de paiement, évolution des prix (la règle des hausses de tarifs.md), offre des bêta-testeurs, rétractation des professionnels de cinq salariés au plus (article L221-3 du Code de la consommation) et médiateur, ce qui se passera quand une micro-entreprise reprendra les abonnements.
 3. Les CGU : objet, engagements du créateur, contenus, disponibilité, responsabilité d'un particulier et son plafond, fin du service et suppression des données, modification des conditions, droit applicable et tribunal compétent face à des clients qui ne sont pas commerçants.
 4. L'annexe de sous-traitance (article 28 du RGPD), quand le sous-traitant est un particulier.
 5. La politique de confidentialité : l'identité du responsable du traitement, les finalités, les bases légales, les durées de conservation, les destinataires et les transferts hors de l'Union (compte rendu 2.4), les droits, les deux cookies nécessaires.
@@ -125,11 +125,11 @@ Remplissez ce modèle et envoyez-le à Claude Code, avec le compte rendu de 2.7 
 Informations pour les textes légaux (lot 4.9)
 
 Vendeur et éditeur
-- Qualité : particulier (d'après 1.1)
+- Qualité : vendeur particulier
 - Nom commercial du service : PULSACITY
-- Ce qui est publié : [d'après 1.1 : nom, adresse, téléphone…] (les valeurs : Vercel)
+- Ce qui est publié : [d'après 2.7 : nom, adresse, téléphone…] (les valeurs : Vercel)
 - E-mail, pour tout : contact@pulsacity.com
-- TVA : [mention d'après 1.1]
+- TVA : [mention d'après 2.7]
 
 Confidentialité
 - Délai de suppression après la fermeture d'un espace : [par exemple 30 jours]
@@ -143,7 +143,7 @@ CGU
 - Durée de conservation des notifications des outils connectés : [par exemple 90 jours]
 
 CGV
-- Passage à un plan inférieur : [compte rendu 1.3]
+- Changements de plan et hausses de prix : docs-internes/decisions/tarifs.md
 - Professionnels de cinq salariés au plus (article L221-3) : [d'après 2.7]
 ```
 
@@ -151,7 +151,7 @@ CGV
 
 ## 2.8 Le compte Stripe, en particulier
 
-En trois temps. 1.1 dit d'abord ce que Stripe accepte d'un particulier en France.
+En trois temps. À l'ouverture du compte, Stripe montre ce qu'il demande à un particulier : notez-le pour 2.7.
 
 ### 2.8 a — Ouvrir le compte (vous)
 
@@ -162,7 +162,7 @@ Sur https://dashboard.stripe.com/register, avec l'adresse contact@pulsacity.com.
 Avant ce prompt :
 - connectez-vous à Stripe ;
 - téléchargez depuis le dépôt l'icône `public/icon-512.png` et le logo `docs-internes/identite-v2/assets/svg/pulsacity-logo.svg` (ou ceux de la charte v2 s'ils existent déjà) ;
-- préparez le pied de page des reçus et des factures : les mentions de 1.1 (vendeur particulier, TVA non applicable), avec vos informations. Vous le collez vous-même dans Stripe, et il n'apparaît pas dans le compte rendu.
+- préparez le pied de page des reçus et des factures : les mentions de 2.7 (vendeur particulier, sans TVA), avec vos informations. Vous le collez vous-même dans Stripe, et il n'apparaît pas dans le compte rendu.
 
 ```
 Tu m'aides à régler le compte Stripe de PULSACITY, en mode test. Je suis connecté. Tu ne crées ni produit, ni prix, ni webhook, ni clé : ce sera le lot suivant.

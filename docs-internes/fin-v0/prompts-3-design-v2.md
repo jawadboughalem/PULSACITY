@@ -11,7 +11,7 @@
 1. Dans Claude Design, créez le projet « PULSACITY v2 ».
 2. Ajoutez-y ces fichiers :
    - `docs-internes/fin-v0/brief-pulsacity.md` et `docs-internes/fin-v0/inventaire-ecrans.md` ;
-   - `docs-internes/decisions/connecteurs.md`, le catalogue des connecteurs (compte rendu 1.2) ;
+   - les décisions de `docs-internes/decisions/` : `connecteurs.md` (catalogue), `tarifs.md` (prix), `positionnement.md` (textes de l'accueil, avis en ligne), `commercialisation.md` (bêta, acquisition) et `arbitrages.md` (qui les corrige là où elles se contredisent) ;
    - `docs-internes/charte.md`, la charte v1, comme « ce qu'on quitte » ;
    - le logo actuel : `docs-internes/identite-v2/assets/svg/pulsacity-logo.svg`, `pulsacity-symbole.svg` et `pulsacity-symbole-petit.svg` ;
    - vos 10 à 15 captures du prompt 1.4 ;
@@ -138,28 +138,26 @@ Où : Claude Design, projet « PULSACITY v2 ». Après 3.2. Ces écrans passent 
 ```
 Prompt 3.3 — Les écrans à créer.
 
-Fichiers du projet : inventaire-ecrans.md, partie 8.
+Fichiers du projet : inventaire-ecrans.md (partie 8), et les décisions tarifs.md, connecteurs.md, positionnement.md, commercialisation.md, corrigées par arbitrages.md.
 
-[Compte rendu 1.3 (prix, contenu des plans, règle du plan inférieur). Le catalogue des connecteurs, connecteurs.md, est dans les fichiers du projet.]
-
-Avec la charte v2, dans la coque de l'espace (ou celle du site pour « Aide et contact » et les pages publiques), dessine chaque écran de la partie 8 avec chacun des états listés, à 1440 px et à 360 px :
-1. Réglages (8.1).
+Avec la charte v2, dans la coque de l'espace (ou celle du site pour « Aide et contact » et les pages publiques), dessine chaque écran avec chacun de ses états, à 1440 px et à 360 px :
+1. Réglages (8.1), avec la case « J'offre une contrepartie à mes clients » (positionnement.md, avis en ligne, point 7).
 2. Mon compte (8.2), avec l'export des données, et la suppression de l'espace : fenêtre de confirmation, puis page « Votre espace est supprimé ».
-3. Abonnement et factures (8.3), avec chacun de ces états :
-   - Gratuit avec sa consommation, Essentiel mensuel, Pro annuel ;
+3. Abonnement et factures (8.3), avec les prix de tarifs.md et le prix fondateur (arbitrages.md, n° 1), et chacun de ces états :
+   - Gratuit avec sa consommation, Essentiel mensuel au prix fondateur, Pro annuel ;
+   - bêta-testeur : Essentiel offert 3 mois, date du premier prélèvement ;
    - retour du paiement réussi ; paiement en cours de confirmation ; paiement abandonné ;
    - paiement échoué, et son bandeau dans le reste de l'espace ;
-   - résiliation programmée ; passage à un plan inférieur programmé ;
-   - code promotionnel, dont Essentiel offert aux bêta-testeurs.
+   - résiliation programmée ; passage à un plan inférieur programmé ; retour au Gratuit, avec le widget gardé et les autres en pause.
 4. Aide et contact (8.4), avec le formulaire « Écrivez-nous » et ses états.
 5. Le catalogue des connecteurs (8.5, et connecteurs.md) :
    - la page publique « Intégrations » et la page Connecteurs de l'espace, en six familles, avec les états disponible, bientôt, inscrit, et « Dites-nous quel outil » ;
    - la page publique d'un outil « Bientôt », avec « En attendant : avec Zapier ou Make » ;
    - le connecteur universel : sa page publique, sa page de connexion dans l'espace (adresse propre à l'espace, comme Systeme.io), et ses guides Zapier, Make, n8n et Podia ;
    - la liste « Compatible avec votre site ».
-6. [Si 1.6 l'a retenu : le parrainage (8.7).]
+6. Le parrainage (commercialisation.md, P1 n° 6) : le lien de l'espace, les filleuls, le mois offert par filleul payant.
 
-Textes : français, vouvoiement, phrases courtes, casse de phrase. Une erreur dit ce qui s'est passé et quoi faire ; un état vide, une phrase et l'action suivante. Aucun mot technique (ni « webhook », ni « API », ni « token »). Les interdits de 3.1 restent.
+Textes : français, vouvoiement, phrases courtes, casse de phrase. Une erreur dit ce qui s'est passé et quoi faire ; un état vide, une phrase et l'action suivante. Aucun mot technique (ni « webhook », ni « API », ni « token »). Pas de « TVA comprise » : « Prix finaux ». Les interdits de 3.1 restent.
 
 Exporte comme en 3.2 (PNG 2x, mêmes noms, INDEX.md des planches de ce prompt), dans un ZIP.
 ```
@@ -173,10 +171,16 @@ Où : Claude Design, projet « PULSACITY v2 ». Ajoutez au projet les maquettes 
 ```
 Prompt 3.4 — L'espace du créateur en v2.
 
-Fichiers du projet : inventaire-ecrans.md (parties 2, 3 et 7) et les maquettes v1 de ces écrans. Les maquettes v1 donnent les contenus, les états et les textes ; la charte v2 donne l'apparence.
+Fichiers du projet : inventaire-ecrans.md (parties 2, 3 et 7), les maquettes v1 de ces écrans, et les décisions positionnement.md et commercialisation.md, corrigées par arbitrages.md. Les maquettes v1 donnent les contenus, les états et les textes ; la charte v2 donne l'apparence.
 
 1. Redessine en v2 chaque écran des parties 2 et 3, avec chacun des états listés, à 1440 px et à 360 px. Ne change ni les contenus, ni les états, ni les textes, ni l'ordre des actions. Si la v2 demande de déplacer un élément pour qu'il se lise mieux, fais-le, et note-le sur la planche.
-2. Dessine aussi ce qui n'a pas de maquette aujourd'hui (partie 7) : l'historique d'un connecteur, la fenêtre de suppression définitive d'un témoignage, la fenêtre « Corriger l'adresse », le résultat vide d'un filtre, les messages après une action (enregistré, copié, envoyé).
+2. Les connecteurs de l'espace en six familles, comme en 3.3.
+3. Dessine aussi ce qui n'a pas de maquette aujourd'hui (partie 7) : l'historique d'un connecteur, la fenêtre de suppression définitive d'un témoignage, la fenêtre « Corriger l'adresse », le résultat vide d'un filtre, les messages après une action (enregistré, copié, envoyé).
+4. Ce que les décisions ajoutent :
+   - à l'inscription, la question « Comment avez-vous connu PULSACITY ? » (commercialisation.md), facultative ;
+   - sur la fiche d'un témoignage, sa provenance (vente reçue, demande manuelle, ajout, import, lien public) et sa date d'achat (positionnement.md, points 1 et 2) ;
+   - « Masquer » avec son motif, transmis au client (point 6) ;
+   - « Corriger le texte affiché » : la correction envoyée à l'accord du client, l'attente, l'accord, le refus ; sans accord, seul le masquage d'un nom ou d'une coordonnée (point 4).
 
 Mêmes règles de textes et mêmes interdits qu'en 3.1. Exporte comme en 3.2, dans un ZIP.
 ```
@@ -190,16 +194,19 @@ Où : Claude Design, projet « PULSACITY v2 ». Ajoutez au projet les maquettes 
 ```
 Prompt 3.5 — Le site public en v2.
 
-Fichiers du projet : inventaire-ecrans.md (partie 1) et les maquettes v1 de ces écrans.
+Fichiers du projet : inventaire-ecrans.md (partie 1), les maquettes v1 de ces écrans, et les décisions positionnement.md, tarifs.md et connecteurs.md, corrigées par arbitrages.md.
 
-[Comptes rendus 1.5 (positionnement et textes de la page d'accueil) et 1.3 (prix). Le catalogue des connecteurs, connecteurs.md, est dans les fichiers du projet.]
-
-1. La page d'accueil v2, avec les sections et les textes du compte rendu 1.5, dans leur ordre :
-   - la démo en quatre temps (vente, e-mail, avis, mur) et l'exemple de widget réel restent, redessinés ;
-   - le catalogue des connecteurs par familles (connecteurs.md) : Systeme.io y est un outil parmi d'autres, pas le centre de la page ;
-   - le bouton qui reste visible en bas de l'écran sur téléphone, si 1.5 l'a retenu.
-2. Tarifs (avec les prix de 1.3) ; Intégrations (avec le catalogue de 3.3), une intégration disponible, une intégration « Bientôt », Guides, un guide, chacune des quatre pages légales avec son sommaire, page introuvable, erreur, menu du téléphone.
-3. Le modèle des images de partage (1200 × 630 px) : page d'accueil, une page d'intégration, un guide.
+1. La page d'accueil v2, avec les douze sections et les textes de positionnement.md, dans leur ordre, corrigés par arbitrages.md :
+   - prix affichés : le prix fondateur, avec la ligne « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois » (n° 1) ;
+   - « Prix finaux » au lieu de « TVA comprise » (n° 2) ;
+   - la démo en quatre temps (vente, e-mail, avis, mur) et l'exemple de widget réel, redessinés, avec « Exemple, avis fictifs » ;
+   - la démo à manipuler « Écrire un avis de test » : le visiteur écrit un avis et le voit arriver sur le mur, rien n'est enregistré ;
+   - le catalogue des connecteurs par familles : Systeme.io y est un outil parmi d'autres ;
+   - la barre fixe sur téléphone : quand elle apparaît, quand elle disparaît, sans rien masquer.
+2. Tarifs, avec le prix fondateur et les prix publics, « Prix finaux : rien ne s'ajoute au paiement », et ses questions.
+3. La page « À propos de ces avis » (positionnement.md, point 3) : contrôle, contrepartie, modification, ordre d'affichage, motifs de refus.
+4. Intégrations (avec le catalogue de 3.3), une intégration disponible, une intégration « Bientôt », Guides, un guide, chacune des quatre pages légales avec son sommaire, page introuvable, erreur, menu du téléphone.
+5. Le modèle des images de partage (1200 × 630 px) : page d'accueil, une page d'intégration, un guide.
 
 Chaque écran à 1440 px et à 360 px, avec chacun des états de l'inventaire. Mêmes règles de textes et mêmes interdits qu'en 3.1. Exporte comme en 3.2, dans un ZIP.
 ```
@@ -213,11 +220,18 @@ Où : Claude Design, projet « PULSACITY v2 ». Ajoutez au projet les maquettes 
 ```
 Prompt 3.6 — La page de collecte, les e-mails et le widget en v2.
 
-Fichiers du projet : inventaire-ecrans.md (parties 4 à 6) et les maquettes v1 de ces écrans.
+Fichiers du projet : inventaire-ecrans.md (parties 4 à 6), les maquettes v1 de ces écrans, et les décisions positionnement.md, tarifs.md et commercialisation.md, corrigées par arbitrages.md.
 
-1. La page de collecte et la désinscription, à 360 px et à 1440 px, avec chacun de leurs états. Elles portent l'identité du créateur (son logo, sa couleur d'accent) ; PULSACITY y reste discret. Le bouton « Envoyer mon avis » reste le seul bouton plein en couleur d'accent.
-2. Les e-mails, à 600 px et sur téléphone, en polices système : demande, relance, version texte de la demande, « Votre lien », « Nouveau témoignage » (standard et plan Gratuit plein), « Code du widget ». Ceux qui vont aux clients partent au nom du créateur, avec son nom, son logo et sa couleur.
-3. Le widget : mur, carrousel et badge, en thèmes clair, sombre et automatique, avec leurs états de chargement. Montre-les sur deux pages de vente différentes : l'une claire, avec une police à empattements ; l'autre sombre, avec une police sans empattements. Le widget prend la police de la page qui l'accueille, n'a pas d'autre identité que celle du créateur, et ne casse jamais la mise en page. « Propulsé par PULSACITY » est discret mais lisible.
+1. La page de collecte et la désinscription, à 360 px et à 1440 px, avec chacun de leurs états. Elles portent l'identité du créateur (son logo, sa couleur d'accent) ; PULSACITY y reste discret. Le bouton « Envoyer mon avis » reste le seul bouton plein en couleur d'accent. La mention de la contrepartie, si le créateur l'a cochée.
+2. Les e-mails, à 600 px et sur téléphone, en polices système :
+   - aux clients du créateur, à son nom, avec son logo et sa couleur : demande, relance, version texte de la demande, demande d'accord pour une correction, motif d'un avis masqué ;
+   - au créateur : « Votre lien », « Nouveau témoignage » (standard et plan Gratuit plein), « Code du widget », les quatre e-mails d'accueil J0, J1, J3 et J7 (commercialisation.md), le rappel 7 jours avant le premier prélèvement d'un bêta-testeur (tarifs.md).
+3. Le widget : mur, carrousel et badge, en thèmes clair, sombre et automatique, avec leurs états de chargement.
+   - Sur chaque témoignage : la date de l'avis et le mois de l'achat (positionnement.md, point 2).
+   - Le lien « À propos de ces avis », sur tous les plans, distinct de « Propulsé par PULSACITY » (point 3).
+   - La mention « Bêta-testeur · plan Essentiel offert pendant la bêta », pour le mur de PULSACITY.
+   - Montre-les sur deux pages de vente différentes : l'une claire, avec une police à empattements ; l'autre sombre, avec une police sans empattements. Le widget prend la police de la page qui l'accueille, n'a pas d'autre identité que celle du créateur, et ne casse jamais la mise en page. « Propulsé par PULSACITY » est discret mais lisible.
+4. L'image de partage d'un témoignage validé (1080 × 1350 et 1200 × 630 px), aux couleurs du créateur.
 
 Mêmes règles de textes et mêmes interdits qu'en 3.1. Exporte comme en 3.2, dans un ZIP.
 ```

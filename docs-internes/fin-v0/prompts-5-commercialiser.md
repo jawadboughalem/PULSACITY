@@ -21,13 +21,13 @@ Où : Claude Design, projet « PULSACITY v2 », nouvelle page « Réseaux sociau
 ```
 Prompt 5.1 — Le kit des réseaux sociaux.
 
-[Compte rendu 1.6 : réseaux retenus, formats, piliers de contenu.]
+Fichiers du projet : commercialisation.md (réseaux, rythme, piliers, production, bêta), positionnement.md (messages), arbitrages.md. Réseaux retenus : LinkedIn, Instagram, YouTube (Shorts et tutoriels) ; Facebook pour les groupes seulement.
 
 Avec la charte v2, crée une page « Réseaux sociaux » :
 
 1. Les profils, pour chaque réseau retenu : photo de profil (le symbole), bannières (profil et page entreprise LinkedIn, YouTube, Facebook), aux dimensions d'octobre 2026, avec les zones visibles sur téléphone et sur ordinateur.
 
-2. Les modèles de publication, chacun avec un exemple rempli de vrais textes :
+2. Les quatre modèles de commercialisation.md, chacun avec un exemple rempli de vrais textes : carrousel, couverture verticale, citation d'avis, avant-après. Puis leurs variantes :
    - carrousel LinkedIn et Instagram (1080 × 1350 px) : couverture, page de contenu, page avec une capture du produit, dernière page avec l'appel à l'action ;
    - publication simple (1080 × 1350 et 1080 × 1080 px) : citation, chiffre sourcé, astuce ;
    - couverture de Reel, de Short et de story (1080 × 1920 px), avec les zones masquées par l'interface de chaque réseau ;
@@ -77,7 +77,7 @@ Ce studio sert deux fois : ses modèles sont la base de la fonctionnalité V1 «
 
 ### Un projet Claude par réseau
 
-Où : claude.ai, un projet par réseau retenu en 1.6 : « PULSACITY — LinkedIn », « PULSACITY — Instagram », « PULSACITY — YouTube »… Fichiers de chaque projet : brief-pulsacity.md, les comptes rendus 1.5 et 1.6, le README du studio (les colonnes du CSV), et le bilan de la vague précédente.
+Où : claude.ai, un projet par réseau retenu : « PULSACITY — LinkedIn », « PULSACITY — Instagram », « PULSACITY — YouTube ». Fichiers de chaque projet : brief-pulsacity.md, positionnement.md, commercialisation.md, arbitrages.md, le README du studio (les colonnes du CSV), et le bilan de la vague précédente.
 
 Instructions du projet (remplacez RÉSEAU) :
 
@@ -125,7 +125,7 @@ Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation.
 ```
 Prompt 5.4 — La bêta privée, puis le lancement.
 
-Contexte : comptes rendus 1.3, 1.5 et 1.6. La V0 est complète : paiements, réglages, aide et contact, v2, textes légaux validés.
+Contexte : les décisions tarifs.md, positionnement.md et commercialisation.md (bêta, plan à 90 jours), corrigées par arbitrages.md (Essentiel offert 3 mois, carte demandée). Ce dont la bêta a besoin est en ligne : paiements, réglages, aide et contact, connecteur universel, accueil et acquisition, avis en ligne, textes légaux validés.
 
 1. La bêta : le message d'invitation (LinkedIn, Instagram, groupes, e-mail), les endroits où le publier, l'offre aux bêta-testeurs (Essentiel offert par un code promotionnel, décidé en 1.3), le déroulé pour chacun (installation accompagnée, points d'étape), le questionnaire de retour, et la demande de témoignage sur PULSACITY, faite avec notre propre lien de collecte.
 2. Une grille pour trier leurs retours avant le lancement : bloquant, gênant, idée.
@@ -144,7 +144,7 @@ Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation,
 ```
 Prompt 5.5 — La publicité payante.
 
-Contexte : comptes rendus 1.6 et 5.4. Les chiffres de nos premières semaines, par source : [visites, inscriptions, premiers widgets affichés, passages au payant].
+Contexte : commercialisation.md (partie « Publicité ») et le compte rendu 5.4. Les chiffres de nos premières semaines, par source : [visites, inscriptions, premiers widgets affichés, passages au payant].
 
 1. Faut-il commencer maintenant ? Sur quel réseau, avec quel budget de test (par jour, sur quelle durée), quelle cible, quelles créations (modèles du studio) ?
 2. La mesure : liens suivis (paramètres UTM), ce que notre mesure d'audience sans cookie permet, et ce qu'un pixel publicitaire (Meta, LinkedIn, TikTok) imposerait : bandeau de consentement conforme à la CNIL, politique de confidentialité mise à jour.
