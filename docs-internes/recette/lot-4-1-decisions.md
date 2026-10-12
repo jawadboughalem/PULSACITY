@@ -94,6 +94,29 @@ Compte rendu à me donner : le message d'erreur, les 30 dernières lignes des jo
 
 ---
 
+## 0 bis. Supabase — réveiller la base de recette
+
+Le 12 octobre, « Recette demo space » a échoué : la base de recette ne répondait plus (« tenant/user not found »). Sur l'offre gratuite, Supabase met un projet en pause après 7 jours sans activité. À lancer avant le prompt 1 quand la dernière recette date de plus d'une semaine.
+
+```
+Tu m'aides à réveiller la base de recette de PULSACITY sur Supabase. Je suis connecté à Supabase. Tu ne crées rien et tu ne changes aucun réglage.
+
+Où : https://supabase.com/dashboard/projects (organisation PULSACITY).
+
+Étapes :
+1. Repère le projet « pulsacity-recette ». Note son état tel qu'il est affiché (par exemple « Paused », « Active », « Healthy »).
+2. S'il est en pause : ouvre-le, clique sur « Restore project » (ou « Resume project »), puis confirme. Attends qu'il redevienne actif : cela prend quelques minutes. Recharge la page si besoin.
+3. S'il n'est pas en pause, ou si tu ne le trouves pas : arrête-toi et décris ce que tu vois, sans rien changer.
+
+Ne touche surtout pas : au projet « PULSACITY » (la production), aux mots de passe, aux clés, aux réglages de la base, à la facturation ni au plan.
+
+Vérification : le projet « pulsacity-recette » est affiché comme actif, sans bandeau de pause.
+
+Compte rendu à me donner : l'état du projet avant, ce que tu as fait, et l'état après. Aucun identifiant de projet, aucune adresse de connexion.
+```
+
+---
+
 ## 1. GitHub — l'espace de démonstration de recette, depuis la branche de la PR
 
 ```
