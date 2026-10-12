@@ -15,16 +15,18 @@ Chaque prompt se colle dans une nouvelle session Claude Code dans le cloud (clau
 | N° | Lot | Après |
 | --- | --- | --- |
 | 4.1 | Les décisions de l'étape 1 dans le dépôt | 1.1 à 1.6 |
-| 4.2 | Les fondations v2 | 3.2 |
+| 4.2 | Les fondations v2, et le skill UI UX Pro Max dans le dépôt | 3.2 |
 | 4.3 | Réglages et Mon compte | 3.3 |
 | 4.4 | Aide et contact | 3.3, 2.2 |
-| 4.5 | Abonnement et factures : encaisser | 3.3, 1.3, 2.8 a et b ; 2.5 avant le mode réel |
+| 4.5 | Mon abonnement, sans paiement | 3.3, 1.3 |
 | 4.6 | L'espace en v2 | 3.4 |
 | 4.7 | Le site public en v2 | 3.5, 4.1 |
 | 4.8 | Page de collecte, e-mails et widget en v2 | 3.6, 2.7 |
-| 4.9 | Les textes légaux complets | 2.6, 2.7 |
+| 4.9 | Les textes légaux d'un service gratuit | 1.1, 2.4, 2.6, 2.7 |
 | 4.10 | Avant le lancement | 1.6, et le plus de lots possible |
 | 4.11 | La recette de bout en bout en production | Tout le reste |
+
+L'encaissement n'est pas dans cette étape : c'est le lot 6.6, le jour où ça marche (`prompts-6-le-jour-ou-ca-marche.md`).
 
 ---
 
@@ -36,28 +38,29 @@ Lot 4.1 — Les décisions de l'étape 1 dans le dépôt.
 Lis d'abord CLAUDE.md, docs-internes/etat.md, docs-internes/fin-v0/README.md et docs-internes/fin-v0/prompts-4-construire.md (« Pour chaque lot »).
 
 Voici les comptes rendus de Claude Chat :
-[Compte rendu 1.1]
+[Compte rendu 1.1 (lancer sans entreprise)]
 [Compte rendu 1.2]
 [Compte rendu 1.3]
 [Compte rendu 1.5]
 [Compte rendu 1.6]
 
 À faire :
-1. Range les décisions dans docs-internes/decisions/, un fichier par sujet, sans aucune donnée personnelle : statut et TVA (1.1), catalogue des connecteurs (1.2), tarifs (1.3, en mettant aussi à jour decision_tarifs.md), positionnement et textes de la page d'accueil (1.5), commercialisation (1.6). Avant d'écrire, signale-moi tout ce qui contredit une règle de CLAUDE.md.
-2. Si 1.3 change des prix ou des limites : src/config/plans.ts, ses tests, et les textes qui citent un prix. Aucune limite n'est codée ailleurs.
-3. La phrase sur la TVA de /tarifs et celle des CGV, selon le régime.
-4. Le catalogue des connecteurs : chaque outil « Bientôt » dans le contenu (src/content/integrations/, src/lib/connectors/upcoming-connectors.ts), avec « Me prévenir », et une page publique pour ceux que 1.2 retient. Jusqu'à la v2, ils s'affichent dans les listes actuelles (m21-01, m5-01) ; le regroupement par familles viendra avec les maquettes v2.
-5. Les textes généraux qui supposent Systeme.io sans parler de son connecteur : liste-les dans la PR avec ta proposition neutre, puis applique ce que je valide.
-6. CLAUDE.md : la ligne des connecteurs prévus, selon 1.2.
-7. etat.md : ce que le produit doit offrir selon 1.6, par priorité, dans « À faire ».
+1. Range les décisions dans docs-internes/decisions/, un fichier par sujet, sans aucune donnée personnelle : lancement sans entreprise (1.1), catalogue des connecteurs (1.2), tarifs (1.3, en mettant aussi à jour decision_tarifs.md), positionnement et textes de la page d'accueil (1.5), commercialisation (1.6). Avant d'écrire, signale-moi tout ce qui contredit une règle de CLAUDE.md.
+2. CLAUDE.md suit la stratégie : lancement gratuit sans entreprise ; Stripe, CGV et facturation au lot 6.6 ; LEGAL_VALIDATED décrit pour des textes relus par Claude Chat.
+3. Si 1.3 change des prix ou des limites : src/config/plans.ts, ses tests, et les textes qui citent un prix. Aucune limite n'est codée ailleurs.
+4. La question « Les prix incluent-ils la TVA ? » de /tarifs : retirée tant que rien n'est vendu (elle reviendra au lot 6.6, selon le régime).
+5. Le catalogue des connecteurs : chaque outil « Bientôt » dans le contenu (src/content/integrations/, src/lib/connectors/upcoming-connectors.ts), avec « Me prévenir », et une page publique pour ceux que 1.2 retient. Jusqu'à la v2, ils s'affichent dans les listes actuelles (m21-01, m5-01) ; le regroupement par familles viendra avec les maquettes v2.
+6. Les textes généraux qui supposent Systeme.io sans parler de son connecteur : liste-les dans la PR avec ta proposition neutre, puis applique ce que je valide.
+7. CLAUDE.md : la ligne des connecteurs prévus, selon 1.2.
+8. etat.md : ce que le produit doit offrir selon 1.6, par priorité, dans « À faire ».
 ```
 
 ---
 
-## 4.2 Les fondations v2
+## 4.2 Les fondations v2, et le skill UI UX Pro Max
 
 ```
-Lot 4.2 — Les fondations v2.
+Lot 4.2 — Les fondations v2, et le skill UI UX Pro Max.
 
 Lis d'abord CLAUDE.md, docs-internes/etat.md, docs-internes/fin-v0/README.md et docs-internes/fin-v0/prompts-4-construire.md (« Pour chaque lot »). Je te joins le ZIP du prompt 3.2 de Claude Design : charte-v2.md, le logo et sa spécification, les planches de la charte et des coques.
 
@@ -68,8 +71,10 @@ Lis d'abord CLAUDE.md, docs-internes/etat.md, docs-internes/fin-v0/README.md et 
 4. Les composants de base, avec tous leurs états : boutons, champs, listes déroulantes, cases, badges, bandeaux, fenêtres de dialogue et leur voile (la question ouverte des 12 % et 48 % se règle ici), menus, onglets.
 5. Le logo, le favicon, les icônes d'application, le symbole des e-mails, « Propulsé par », les polices des images de partage (assets/og-fonts/).
 6. Les coques : en-tête, menu et pied de page du site ; navigation, onglets, menu du compte et page « Plus » de l'espace.
+7. Le skill UI UX Pro Max (github.com/nextlevelbuilder/ui-ux-pro-max-skill, licence MIT), dans .claude/skills/ui-ux-pro-max/, figé sur sa dernière version publiée, avec sa licence. Lis-le en entier avant de l'ajouter (aucun appel réseau, aucune installation). Puis, dans CLAUDE.md, la règle de son usage : il sert aux règles UX et d'accessibilité (recherches --domain ux, --stack nextjs, --stack shadcn) et à sa liste de contrôle avant livraison ; jamais son générateur (--design-system, --persist), ni ses palettes, ses polices ou ses styles. La charte v2 reste la seule source des couleurs, des polices et des espacements.
 
 Checklist :
+- la liste de contrôle de pro-rules.md passée sur les composants et les coques ;
 - chaque adresse du site et de l'espace s'affiche sans casse à 360 px et à 1440 px (balayage de captures joint à la PR) ;
 - contrastes de la charte v2 respectés ; Lighthouse ≥ 90 en performance et 100 en accessibilité sur l'accueil, les tarifs et l'accueil de l'espace ;
 - le widget et les e-mails ne changent pas dans ce lot (lot 4.8).
@@ -89,7 +94,7 @@ Lis d'abord CLAUDE.md, docs-internes/etat.md, docs-internes/fin-v0/README.md et 
 2. Mon compte, à l'adresse que donne la maquette : adresse de connexion changée par un lien de confirmation envoyé à la nouvelle adresse ; prénom ; appareils connectés, et déconnexion des autres ; export des données, sans nouvelle dépendance si c'est possible ; suppression de l'espace (confirmation, suppression en cascade, délai des CGU).
 3. Les liens « Réglages » et « Mon compte » de la navigation, du menu du compte et de « Plus ».
 4. Les colonnes et tables nouvelles restent facultatives et compatibles avec le code en ligne. CLAUDE.md (structure, modèle de données) à jour.
-5. L'arrêt de l'abonnement Stripe à la suppression viendra au lot 4.5 : prépare le point d'accroche, testé.
+5. L'arrêt de l'abonnement Stripe à la suppression viendra au lot 6.6, avec les paiements : prépare le point d'accroche, testé.
 
 Checklist :
 - chaque action vérifie la session et l'appartenance de l'espace ;
@@ -116,25 +121,24 @@ Checklist : tests du formulaire (refus, limite, envoi) ; en recette, un vrai mes
 
 ---
 
-## 4.5 Abonnement et factures : encaisser
+## 4.5 Mon abonnement, sans paiement
 
 ```
-Lot 4.5 — Abonnement et factures : encaisser.
+Lot 4.5 — Mon abonnement, sans paiement.
 
-Lis d'abord CLAUDE.md, docs-internes/etat.md, docs-internes/fin-v0/README.md et docs-internes/fin-v0/prompts-4-construire.md (« Pour chaque lot »). Je te joins le ZIP du prompt 3.3 et les comptes rendus 1.3 (prix, règle du plan inférieur) et 2.5 (régime de TVA confirmé ; à défaut, celui de 1.1, à confirmer avant le mode réel). Le compte Stripe est ouvert et réglé en mode test (prompts 2.8 a et b).
+Lis d'abord CLAUDE.md, docs-internes/etat.md, docs-internes/fin-v0/README.md et docs-internes/fin-v0/prompts-4-construire.md (« Pour chaque lot »). Je te joins le ZIP du prompt 3.3 et le compte rendu 1.3 (limites, offre aux bêta-testeurs, phrase des plans à venir). PULSACITY se lance sans entreprise : rien n'est encaissé, Stripe attend le lot 6.6.
 
-À faire, en mode test d'abord, selon les maquettes v2 et docs-internes/fin-v0/inventaire-ecrans.md (8.3) :
-1. Mes actions sur Stripe, en prompts Claude in Chrome, avec les valeurs exactes : produits et prix (TVA comprise, mêmes montants que plans.ts), portail client, relances des paiements échoués, Stripe Tax selon le régime, webhook vers l'aperçu (protégé par Vercel Authentication : prévois le contournement que Vercel propose pour l'automatisation), variables d'environnement (je copie et colle les secrets moi-même).
-2. Le paiement par Stripe Checkout, depuis /app/facturation et depuis /tarifs (inscription d'abord pour qui n'a pas d'espace), avec le retour sur chaque état de la maquette.
-3. /api/stripe/webhook : signature vérifiée, idempotence par stripe_events, plan de l'espace mis à jour. Les vrais événements du mode test sont d'abord capturés, puis transformés en fixtures, comme pour un connecteur.
-4. /app/facturation : chaque état de la maquette, le portail Stripe, le bandeau de paiement échoué dans tout l'espace, la règle du plan inférieur. Rien n'est jamais supprimé.
-5. La suppression de l'espace (lot 4.3) arrête l'abonnement.
-6. Le passage en mode réel, en prompts, à lancer seulement quand les lots 4.4 et 4.9 sont en ligne, que Vercel est en Pro et que le compte Stripe est activé (2.8 c) : produits et prix réels, webhook de production, variables de production, puis un vrai paiement de ma part, remboursé ensuite.
+À faire, selon les maquettes v2 (états de la phase gratuite) et docs-internes/fin-v0/inventaire-ecrans.md (8.3) :
+1. /app/facturation, « Mon abonnement » : le plan, la consommation sur Gratuit, les plans à venir « Bientôt ».
+2. « Me prévenir à l'ouverture » : un clic depuis l'espace (l'adresse est connue), gardé dans une table facultative, avec ses états. Le nombre d'inscrits se lit par une requête simple : c'est le signal du lot 6.6.
+3. Le plan offert : un workflow GitHub lancé à la main par moi, qui offre Essentiel à l'espace d'une adresse donnée, avec une date de fin facultative, sur la production. Garde-fous : il ne touche qu'un espace, il dit ce qu'il a changé, et rien d'autre ne lit son secret.
+4. Le libellé « Abonnement et factures » devient « Mon abonnement » ; « Voir le plan Essentiel » et « Voir les plans » mènent à cette page.
+5. Prépare le lot 6.6 sans rien en construire : une note dans docs-internes/ sur ce que Stripe changera ici.
 
 Checklist :
-- tests des événements : création, renouvellement, échec, résiliation, changement de plan, doublon ;
-- plans.ts reste la seule source des limites ; le lien entre prix Stripe et plan est testé ;
-- recette avec les cartes de test de Stripe : réussite, 3D Secure, refus.
+- plans.ts reste la seule source des limites ; un plan offert est lu comme un plan Essentiel, et redevient Gratuit à sa date de fin, sans rien supprimer ;
+- tests de « Me prévenir à l'ouverture » (doublon, désinscription) et du plan offert ;
+- aucun lien mort dans l'espace.
 ```
 
 ---
@@ -197,20 +201,20 @@ Checklist :
 
 ---
 
-## 4.9 Les textes légaux complets
+## 4.9 Les textes légaux d'un service gratuit
 
 ```
-Lot 4.9 — Les textes légaux complets.
+Lot 4.9 — Les textes légaux d'un service gratuit, édité par un particulier.
 
-Lis d'abord CLAUDE.md, docs-internes/etat.md, docs-internes/fin-v0/README.md et docs-internes/fin-v0/prompts-4-construire.md (« Pour chaque lot »). Je te joins les informations du prompt 2.6, sans mes informations personnelles, les corrections du compte rendu 2.7 et celles du juriste.
+Lis d'abord CLAUDE.md, docs-internes/etat.md, docs-internes/fin-v0/README.md et docs-internes/fin-v0/prompts-4-construire.md (« Pour chaque lot »). Je te joins le compte rendu 1.1, les textes réécrits du compte rendu 2.7 et les informations du prompt 2.6, sans mes informations personnelles.
 
 À faire :
-1. Mon nom, mon adresse, mon téléphone, le SIREN et le numéro de TVA viennent de variables d'environnement que je saisis moi-même dans Vercel, jamais du dépôt. Donne-moi le prompt Claude in Chrome pour les saisir, ajoute-les à la liste des variables de CLAUDE.md, et prévois l'affichage quand elles manquent (aperçus).
-2. Remplace chaque « [À COMPLÉTER] » des quatre textes, et applique les corrections.
-3. Ajoute ce que la relecture demande (pénalités de retard, rétractation, avis en ligne, mesure d'audience…).
-4. Quand je confirme que le juriste a validé : le prompt pour passer LEGAL_VALIDATED à true en production, puis la vérification (bandeau retiré, pages indexables, plan du site).
+1. Mes informations personnelles (celles que 1.1 impose de publier) viennent de variables d'environnement que je saisis moi-même dans Vercel, jamais du dépôt. Donne-moi le prompt Claude in Chrome pour les saisir, ajoute-les à la liste des variables de CLAUDE.md, et prévois l'affichage quand elles manquent (aperçus).
+2. Les mentions légales, les CGU avec leur annexe, et la politique de confidentialité, selon 2.7. Plus aucun « [À COMPLÉTER] ».
+3. Les CGV retirées du site jusqu'au premier abonnement : page, liens (pied de page, CGU, tarifs), plan du site. Leur fichier reste dans le dépôt pour le lot 6.6.
+4. Quand je confirme que je valide les textes : le prompt pour passer LEGAL_VALIDATED à true en production, puis la vérification (bandeau retiré, pages indexables, plan du site).
 
-Checklist : plus aucun « [À COMPLÉTER] » ; liens internes et ancres vérifiés ; aucune donnée personnelle dans le dépôt.
+Checklist : liens internes et ancres vérifiés ; aucune donnée personnelle dans le dépôt ; espaces insécables gardés par leur test.
 ```
 
 ---
@@ -223,13 +227,13 @@ Lot 4.10 — Avant le lancement.
 Lis d'abord CLAUDE.md, docs-internes/etat.md (« À faire »), docs-internes/fin-v0/README.md et docs-internes/fin-v0/prompts-4-construire.md (« Pour chaque lot »). Je te joins le compte rendu 1.6 (outil de mesure d'audience).
 
 À faire, chaque point avec ses prompts pour mes actions :
-1. Vercel Pro (je m'abonne moi-même), puis l'envoi des demandes toutes les 15 minutes par Vercel Cron, et le retrait du workflow GitHub « Send review requests ».
-2. Sentry, en région européenne : je crée le projet et colle SENTRY_DSN dans Vercel ; tu branches le suivi des erreurs.
+1. L'envoi des demandes toutes les 15 minutes, sans payer : une tâche planifiée gratuite chez Cloudflare (un petit Worker à déclencheur programmé, que je crée par prompt) appelle /api/cron/requests avec CRON_SECRET, que je colle moi-même. Le cron quotidien de Vercel reste en filet ; le workflow GitHub « Send review requests » est retiré. Vercel Pro attend le premier abonnement (lot 6.6).
+2. Sentry, sur son offre gratuite, en région européenne : je crée le projet et colle SENTRY_DSN dans Vercel ; tu branches le suivi des erreurs.
 3. Les photos servies depuis une adresse à nous plutôt que r2.dev, par une solution qui ne touche pas au DNS de la messagerie (MX, SPF).
-4. La mesure d'audience sans cookie retenue en 1.6, et la politique de confidentialité à jour.
+4. La mesure d'audience sans cookie retenue en 1.6 (gratuite si possible), et la politique de confidentialité à jour.
 5. Google Search Console : vérification par un enregistrement TXT chez OVH, sans toucher MX ni SPF ; envoi du plan du site ; suivi de l'Organization.
 6. L'effacement des données de test de la production, par une requête que je relis avant de la lancer.
-7. Les plans de Supabase et de Resend face aux volumes prévus en 1.3 ; une surveillance gratuite de la disponibilité du site.
+7. Les offres gratuites de Supabase et de Resend face aux volumes prévus en 1.3 ; une surveillance gratuite de la disponibilité du site.
 8. Les autres points ouverts de « À faire » (essais au doigt, captures de Systeme.io, « Vente annulée », dépôt public ou privé) : leur liste, avec ce que j'ai à faire pour chacun.
 ```
 
@@ -245,9 +249,9 @@ Lis d'abord CLAUDE.md, docs-internes/etat.md, docs-internes/fin-v0/README.md et 
 Prépare la recette complète sur pulsacity.com, en prompts Claude in Chrome dans l'ordre, avec mes comptes de test (je les crée moi-même) :
 1. Inscription, espace, offres.
 2. Connexion de Systeme.io, vente de test, demande partie au délai de 0 jour, avis laissé sur téléphone, validation, widget sur une vraie page Systeme.io.
-3. Passage à Essentiel avec ma carte, facture, portail, passage à l'annuel, résiliation programmée, puis remboursement.
+3. Mon abonnement : consommation, « Me prévenir à l'ouverture », plan offert par le workflow puis sa fin.
 4. Réglages, Mon compte, export, puis suppression d'un second espace de test.
-5. Aide et contact, pages légales validées, mesure d'audience, une erreur de test dans Sentry.
+5. Aide et contact, pages légales validées (CGV absentes), mesure d'audience, une erreur de test dans Sentry, envoi toutes les 15 minutes.
 6. Les mêmes parcours sur mon téléphone, pour ce qui se teste au doigt.
 
 Puis le compte rendu final : ce qui bloque le lancement, et ce qui peut attendre.
