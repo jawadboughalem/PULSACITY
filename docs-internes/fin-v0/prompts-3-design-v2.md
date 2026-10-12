@@ -13,8 +13,13 @@
    - `docs-internes/fin-v0/brief-pulsacity.md` et `docs-internes/fin-v0/inventaire-ecrans.md` ;
    - `docs-internes/charte.md`, la charte v1, comme « ce qu'on quitte » ;
    - le logo actuel : `docs-internes/identite-v2/assets/svg/pulsacity-logo.svg`, `pulsacity-symbole.svg` et `pulsacity-symbole-petit.svg` ;
-   - vos 10 à 15 captures du prompt 1.4.
+   - vos 10 à 15 captures du prompt 1.4 ;
+   - les deux fichiers de règles du skill UI UX Pro Max, `quick-reference.md` et `pro-rules.md`, envoyés par Claude Code avec le skill (prompt 0 bis).
 3. Pour 3.4 à 3.6, il faudra aussi les maquettes v1 de chaque famille d'écrans. Le plus simple : téléchargez tout le dépôt en ZIP (https://github.com/jawadboughalem/PULSACITY/archive/refs/heads/main.zip), et prenez-les dans `docs-internes/maquettes/`.
+
+## Le rôle du skill UI UX Pro Max
+
+Ses règles UX (`quick-reference.md`, `pro-rules.md`) sont une liste de contrôle : accessibilité, cibles tactiles, textes qui ne débordent pas, formulaires, mouvement. Ses propositions de styles, de palettes et de polices, rapportées par le compte rendu 1.4, sont des pistes parmi d'autres. Aucune ne s'applique telle quelle. En cas de conflit, la charte v2 et nos interdits l'emportent.
 
 ## L'ordre
 
@@ -22,7 +27,7 @@
 | --- | --- | --- |
 | 3.1 | Trois directions et trois pistes de logo ; vous choisissez | 3.2 |
 | 3.2 | La charte v2, le logo final, les coques du site et de l'espace | Lot 4.2 |
-| 3.3 | Les écrans à créer : Réglages, Mon compte, Abonnement et factures, Aide et contact, catalogue des connecteurs | Lots 4.3 à 4.5, donc l'encaissement |
+| 3.3 | Les écrans à créer : Réglages, Mon compte, Mon abonnement, Aide et contact, catalogue des connecteurs | Lots 4.3 à 4.5 |
 | 3.4 | L'espace du créateur | Lot 4.6 |
 | 3.5 | Le site public, dont la nouvelle page d'accueil | Lot 4.7 |
 | 3.6 | Page de collecte, e-mails, widget | Lot 4.8 |
@@ -41,9 +46,11 @@ Où : Claude Design, projet « PULSACITY v2 ». Après 1.4.
 ```
 Prompt 3.1 — Trois directions pour PULSACITY v2.
 
-Fichiers du projet : brief-pulsacity.md (le produit et ses contraintes), charte.md (la v1, que l'on quitte), les SVG du logo actuel, et mes captures d'inspiration.
+Fichiers du projet : brief-pulsacity.md (le produit et ses contraintes), charte.md (la v1, que l'on quitte), les SVG du logo actuel, mes captures d'inspiration, et les règles UX du skill UI UX Pro Max (quick-reference.md, pro-rules.md).
 
-[Compte rendu 1.4 : mes choix, les références retenues, trois directions décrites en mots, la piste du logo.]
+[Compte rendu 1.4 : mes choix, les références retenues, les styles d'uupm.cc retenus et écartés, trois directions décrites en mots, la piste du logo.]
+
+Les propositions du skill UI UX Pro Max rapportées par le compte rendu sont des pistes parmi d'autres : ne les applique pas telles quelles. Ses propositions brutes pour PULSACITY (violet, Inter et Space Grotesk, cartes en grille façon bento ; ou bleu marine et Garamond) sont justement ce que je veux éviter.
 
 Ce que je veux : une v2 sobre et accessible, mais pas fade ; moderne, mais pas à la mode d'une seule saison ; et qui ne ressemble pas au style des assistants d'IA (titres à empattements sur fond crème, filets fins, une seule couleur d'accent, grands blancs). Seul le visuel change : les écrans, leurs contenus, leurs états et leurs textes restent ceux d'aujourd'hui.
 
@@ -116,7 +123,7 @@ J'ai choisi : [la direction retenue, et ce que vous voulez y changer ou prendre 
 
 5. La spécification du logo, sur le modèle de la v1 : les fichiers, l'usage de chacun, les règles.
 
-Rappels : contrastes AA au moins ; cibles tactiles de 44 px au moins ; champs en 16 px au moins ; rien ne déborde à 360 px. Les interdits de 3.1 restent.
+Rappels : contrastes AA au moins ; cibles tactiles de 44 px au moins ; champs en 16 px au moins ; rien ne déborde à 360 px. Chaque composant respecte les règles de quick-reference.md et de pro-rules.md ; en cas de conflit, la charte v2 et nos interdits l'emportent. Les interdits de 3.1 restent.
 
 Exporte : les planches en PNG à l'échelle 2x, une planche par fichier, nommées « v2-<famille>-<écran>-<desktop ou mobile>-<numéro>-<état>.png » (familles : charte, logo, site, espace, collecte, email, widget) ; les fichiers du logo en SVG et en PNG ; charte-v2.md ; la spécification du logo ; un INDEX.md sur le modèle de l'index v1. Le tout dans un ZIP.
 ```
@@ -125,7 +132,7 @@ Exporte : les planches en PNG à l'échelle 2x, une planche par fichier, nommée
 
 ## 3.3 Les écrans à créer
 
-Où : Claude Design, projet « PULSACITY v2 ». Après 3.2. Ces écrans passent avant les écrans existants : ils débloquent l'encaissement.
+Où : Claude Design, projet « PULSACITY v2 ». Après 3.2. Ces écrans passent avant les écrans existants : ils remplacent les liens morts de l'espace.
 
 ```
 Prompt 3.3 — Les écrans à créer.
@@ -137,12 +144,9 @@ Fichiers du projet : inventaire-ecrans.md, partie 8.
 Avec la charte v2, dans la coque de l'espace (ou celle du site pour « Aide et contact » et les pages publiques), dessine chaque écran de la partie 8 avec chacun des états listés, à 1440 px et à 360 px :
 1. Réglages (8.1).
 2. Mon compte (8.2), avec l'export des données, et la suppression de l'espace : fenêtre de confirmation, puis page « Votre espace est supprimé ».
-3. Abonnement et factures (8.3), avec chacun de ces états :
-   - Gratuit avec sa consommation, Essentiel mensuel, Pro annuel ;
-   - retour du paiement réussi ; paiement en cours de confirmation ; paiement abandonné ;
-   - paiement échoué, et son bandeau dans le reste de l'espace ;
-   - résiliation programmée ; passage à un plan inférieur programmé ;
-   - [code promotionnel ou prix de lancement, si 1.3 en retient un].
+3. Mon abonnement (8.3) :
+   - pendant la phase gratuite, sans paiement : Gratuit loin des limites, Gratuit avec une limite atteinte, plans à venir « Bientôt » avec « Me prévenir à l'ouverture », inscrit, plan offert aux bêta-testeurs ;
+   - le jour des abonnements, à dessiner dès maintenant : changer de plan, Essentiel mensuel, Pro annuel, retour du paiement réussi, paiement en cours de confirmation, paiement abandonné, paiement échoué (et son bandeau dans le reste de l'espace), résiliation programmée, passage à un plan inférieur programmé [, code promotionnel ou prix de lancement si 1.3 en retient un].
 4. Aide et contact (8.4), avec le formulaire « Écrivez-nous » et ses états.
 5. Le catalogue des connecteurs (8.5) :
    - la page publique « Intégrations » et la page Connecteurs de l'espace, groupées par familles, avec les états disponible, bientôt, inscrit, et « Dites-nous quel outil » ;
@@ -183,13 +187,13 @@ Prompt 3.5 — Le site public en v2.
 
 Fichiers du projet : inventaire-ecrans.md (partie 1) et les maquettes v1 de ces écrans.
 
-[Comptes rendus 1.5 (positionnement et textes de la page d'accueil) et 1.2 (catalogue des connecteurs).]
+[Comptes rendus 1.5 (positionnement et textes de la page d'accueil), 1.2 (catalogue des connecteurs) et 1.3 (ce qu'affiche la page Tarifs pendant la phase gratuite).]
 
 1. La page d'accueil v2, avec les sections et les textes du compte rendu 1.5, dans leur ordre :
    - la démo en quatre temps (vente, e-mail, avis, mur) et l'exemple de widget réel restent, redessinés ;
    - le catalogue des connecteurs par familles : Systeme.io y est un outil parmi d'autres, pas le centre de la page ;
    - le bouton qui reste visible en bas de l'écran sur téléphone, si 1.5 l'a retenu.
-2. Tarifs, Intégrations (avec le catalogue de 3.3), une intégration disponible, une intégration « Bientôt », Guides, un guide, chacune des quatre pages légales avec son sommaire, page introuvable, erreur, menu du téléphone.
+2. Tarifs pendant la phase gratuite (les plans payants « Bientôt », avec « Me prévenir à l'ouverture », selon 1.3), et le jour des abonnements ; Intégrations (avec le catalogue de 3.3), une intégration disponible, une intégration « Bientôt », Guides, un guide, chacune des quatre pages légales avec son sommaire, page introuvable, erreur, menu du téléphone.
 3. Le modèle des images de partage (1200 × 630 px) : page d'accueil, une page d'intégration, un guide.
 
 Chaque écran à 1440 px et à 360 px, avec chacun des états de l'inventaire. Mêmes règles de textes et mêmes interdits qu'en 3.1. Exporte comme en 3.2, dans un ZIP.
@@ -224,7 +228,7 @@ Prompt 3.7 — Vérifier que rien ne manque, puis exporter.
 
 1. Reprends inventaire-ecrans.md ligne par ligne. Pour chaque écran et chaque état, coche sa planche v2 à 1440 px et à 360 px. Fais la liste de ce qui manque, puis dessine-le.
 2. Dans l'autre sens : fais la liste des planches v2 qui montrent un écran, un état ou un élément absent de l'inventaire et des écrans à créer. Pour chacun, dis s'il s'agit d'un ajout voulu, à me faire valider, ou d'une erreur, à retirer.
-3. Vérifie chaque planche : aucune couleur, police, taille ou espacement hors de la charte v2 ; contrastes AA ; cibles de 44 px ; aucun débordement à 360 px ; aucun des interdits.
+3. Vérifie chaque planche : aucune couleur, police, taille ou espacement hors de la charte v2 ; contrastes AA ; cibles de 44 px ; aucun débordement à 360 px ; aucun des interdits. Puis passe la liste de contrôle avant livraison de pro-rules.md, et note chaque point corrigé.
 4. Exporte tout, comme en 3.2 : PNG 2x, une planche ou un état par fichier, aux noms « v2-<famille>-<écran>-<desktop ou mobile>-<numéro>-<état>.png » ; INDEX.md complet ; charte-v2.md à jour ; logo et sa spécification. Le tout dans un seul ZIP.
 
 Donne-moi la liste des manques trouvés, et ce que tu as fait pour chacun.
