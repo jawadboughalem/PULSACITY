@@ -6,6 +6,7 @@ export const MAKE: UpcomingIntegration = {
   connector: "make",
   name: "Make",
   family: "other-tools",
+  meanwhileVia: "universal",
   summary: "Reliez des milliers d'outils, même avec le plan gratuit de Make.",
   seo: {
     title: "Témoignages automatiques pour Make, bientôt",

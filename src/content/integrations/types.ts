@@ -55,9 +55,14 @@ export type UpcomingIntegration = IntegrationBase & {
   /** Its id among the upcoming connectors of the space (« Me prévenir »). */
   connector: string;
   willDo: string[];
+  /**
+   * How its sales reach PULSACITY meanwhile: with Zapier or Make by default (decisions/connecteurs.md), the universal
+   * connector itself for Zapier, Make and n8n, Zapier alone for Podia.
+   */
+  meanwhileVia?: "zapier-or-make" | "universal" | "zapier";
 };
 
 export type Integration = AvailableIntegration | UpcomingIntegration;
 
 /** What works with any tool, while its connector is to come. */
-export type MeanwhileItem = { title: string; text: string; icon?: IconName };
+export type MeanwhileItem = { title: string; text: string; icon?: IconName; link?: { href: string; label: string } };

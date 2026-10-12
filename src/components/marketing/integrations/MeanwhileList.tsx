@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { TEXT_LINK_CLASSES } from "@/components/marketing/marketing-styles";
 import { Icon } from "@/components/ui/Icon";
 import type { MeanwhileItem } from "@/content/integrations";
 import { cn } from "@/lib/cn";
@@ -28,6 +30,11 @@ export const MeanwhileList = ({ items, layout }: MeanwhileListProps) => (
         {item.icon ? <Icon name={item.icon} size={20} className="mb-1" /> : null}
         <h3 className="font-serif text-quote font-medium">{item.title}</h3>
         <p className="max-w-text text-body text-slate-600">{item.text}</p>
+        {item.link ? (
+          <Link href={item.link.href} className={cn(TEXT_LINK_CLASSES, "self-start")}>
+            {item.link.label}
+          </Link>
+        ) : null}
       </li>
     ))}
   </ul>

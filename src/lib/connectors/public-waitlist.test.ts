@@ -24,7 +24,9 @@ describe("publicWaitlistSchema", () => {
 
   it("refuses an available or unknown connector, and an incomplete address", () => {
     expect(publicWaitlistSchema.safeParse({ connector: "systeme", email: "julie@exemple.fr" }).success).toBe(false);
-    expect(publicWaitlistSchema.safeParse({ connector: "kajabi", email: "julie@exemple.fr" }).success).toBe(false);
+    expect(publicWaitlistSchema.safeParse({ connector: "universal", email: "julie@exemple.fr" }).success).toBe(false);
+    expect(publicWaitlistSchema.safeParse({ connector: "teachable", email: "julie@exemple.fr" }).success).toBe(false);
+    expect(publicWaitlistSchema.safeParse({ connector: "kajabi", email: "julie@exemple.fr" }).success).toBe(true);
     expect(publicWaitlistSchema.safeParse({ connector: "calendly", email: "julie@exemple" }).success).toBe(false);
   });
 });

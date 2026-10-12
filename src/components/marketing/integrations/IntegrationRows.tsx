@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ConnectorLogo } from "@/components/connectors/ConnectorLogo";
 import { Icon } from "@/components/ui/Icon";
 import { ToneBadge } from "@/components/ui/ToneBadge";
-import { INTEGRATIONS, type Integration } from "@/content/integrations";
+import { INTEGRATIONS, type Integration, describeMeanwhile } from "@/content/integrations";
 import { cn } from "@/lib/cn";
 import { integrationPath } from "../marketing-paths";
 
@@ -16,6 +16,8 @@ export const IntegrationBadge = ({ integration }: { integration: Integration }) 
 type IntegrationRowsProps = {
   /** /integrations says what each connector does, with a chevron (m21); the home page names them only (m7). */
   isDetailed?: boolean;
+  /** The whole catalog by default; the home page names a few. */
+  integrations?: Integration[];
 };
 
 /** /integrations (m21): the summary under the name; on a phone, the state beside the name and the chevron at the top. */
@@ -30,6 +32,9 @@ const DetailedRow = ({ integration }: { integration: Integration }) => (
         </span>
       </span>
       <span className="text-small text-slate-600 desktop:text-body">{integration.summary}</span>
+      {integration.status === "soon" ? (
+        <span className="text-small text-slate-600">{describeMeanwhile(integration).line}</span>
+      ) : null}
     </span>
     <span className="hidden shrink-0 desktop:block">
       <IntegrationBadge integration={integration} />
@@ -39,9 +44,9 @@ const DetailedRow = ({ integration }: { integration: Integration }) => (
 );
 
 /** « Connecteurs » of maquette 7: a rule of Encre, one row per tool, its state on the right. Each row opens its page. */
-export const IntegrationRows = ({ isDetailed = false }: IntegrationRowsProps) => (
+export const IntegrationRows = ({ isDetailed = false, integrations = INTEGRATIONS }: IntegrationRowsProps) => (
   <ul className="border-t border-ink-900">
-    {INTEGRATIONS.map((integration) => (
+    {integrations.map((integration) => (
       <li key={integration.slug} className="border-b border-hairline-200">
         <Link
           href={integrationPath(integration.slug)}

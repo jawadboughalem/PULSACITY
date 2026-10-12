@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { getConnectorBySlug, listConnectors } from "@/lib/connectors/registry";
-import { CATALOG_UPCOMING_CONNECTORS, UPCOMING_CONNECTOR_IDS } from "@/lib/connectors/upcoming-connectors";
-import { INTEGRATIONS, INTEGRATION_CATALOG, INTEGRATION_FAMILIES, type Integration, findIntegration } from ".";
+import { UPCOMING_CONNECTORS, UPCOMING_CONNECTOR_IDS } from "@/lib/connectors/upcoming-connectors";
+import {
+  FEATURED_INTEGRATIONS,
+  INTEGRATIONS,
+  INTEGRATION_FAMILIES,
+  type Integration,
+  describeMeanwhile,
+  findIntegration,
+  readMeanwhileLine,
+} from ".";
 
 /** The texts as docs-internes/decisions/connecteurs.md writes them, without the no-break spaces of the site. */
 const plain = (text: string) => text.replaceAll("\u00a0", " ").replaceAll("\u2060", "");
@@ -43,6 +51,12 @@ const DECIDED_TOOLS = [
   ["Make", "other-tools", "soon", "Reliez des milliers d'outils, même avec le plan gratuit de Make."],
   ["n8n", "other-tools", "soon", "Reliez n'importe quel outil avec n8n : une demande d'avis après chaque vente."],
 ];
+
+const findIntegrationOrThrow = (slug: string) => {
+  const integration = findIntegration(slug);
+  if (integration?.status !== "soon") throw new Error(`${slug} is not a tool to come.`);
+  return integration;
+};
 
 const textsOf = (integration: Integration): string[] => [
   integration.summary,
@@ -92,50 +106,72 @@ describe("INTEGRATIONS", () => {
   });
 });
 
-describe("INTEGRATION_CATALOG", () => {
+describe("the published catalog", () => {
   it("shows the six families of connecteurs.md, in their order", () => {
     expect(INTEGRATION_FAMILIES.map((family) => [family.title, plain(family.text)])).toEqual(DECIDED_FAMILIES);
   });
 
   it("lists the 19 tools of connecteurs.md, in its order, with their family, state and sentence", () => {
     expect(
-      INTEGRATION_CATALOG.map((integration) => [integration.name, integration.family, integration.status, plain(integration.summary)]),
+      INTEGRATIONS.map((integration) => [integration.name, integration.family, integration.status, plain(integration.summary)]),
     ).toEqual(DECIDED_TOOLS);
   });
 
   it("puts the tools family by family, each family with at least one tool", () => {
     const familyIds = INTEGRATION_FAMILIES.map((family) => family.id);
-    const positions = INTEGRATION_CATALOG.map((integration) => familyIds.indexOf(integration.family));
+    const positions = INTEGRATIONS.map((integration) => familyIds.indexOf(integration.family));
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
     expect(new Set(positions)).toEqual(new Set(familyIds.map((_, index) => index)));
   });
 
   it("keeps the addresses and the waiting lists unique", () => {
-    expect(new Set(INTEGRATION_CATALOG.map((integration) => integration.slug)).size).toBe(INTEGRATION_CATALOG.length);
-    const connectors = INTEGRATION_CATALOG.flatMap((integration) => (integration.status === "soon" ? [integration.connector] : []));
+    expect(new Set(INTEGRATIONS.map((integration) => integration.slug)).size).toBe(INTEGRATIONS.length);
+    const connectors = INTEGRATIONS.flatMap((integration) => (integration.status === "soon" ? [integration.connector] : []));
     expect(new Set(connectors).size).toBe(connectors.length);
   });
 
-  it("keeps every page already published, unchanged", () => {
-    for (const integration of INTEGRATIONS) expect(INTEGRATION_CATALOG).toContain(integration);
+  it("names on the home page the tools available today, then the first to come, all of the catalog", () => {
+    expect(FEATURED_INTEGRATIONS.map((integration) => integration.name)).toEqual([
+      "Systeme.io",
+      "Connecteur universel",
+      "Stripe",
+      "Calendly",
+    ]);
+    for (const integration of FEATURED_INTEGRATIONS) expect(INTEGRATIONS).toContain(integration);
+  });
+
+  it("says how each tool to come works meanwhile: Zapier or Make, or the universal connector for the tools that are its way in", () => {
+    const lines = Object.fromEntries(
+      INTEGRATIONS.flatMap((integration) =>
+        integration.status === "soon" ? [[integration.name, plain(describeMeanwhile(integration).line)]] : [],
+      ),
+    );
+    expect(lines.Stripe).toBe("En attendant : avec Zapier ou Make");
+    expect(lines.Learnybox).toBe("En attendant : avec Zapier ou Make");
+    expect(lines.Podia).toBe("En attendant : avec Zapier");
+    expect(lines.Zapier).toBe("En attendant : avec le connecteur universel");
+    expect(lines.Make).toBe("En attendant : avec le connecteur universel");
+    expect(lines.n8n).toBe("En attendant : avec le connecteur universel");
+    expect(readMeanwhileLine("calcom")).toBe(describeMeanwhile(findIntegrationOrThrow("cal-com")).line);
+    expect(readMeanwhileLine("systeme")).toBeNull();
   });
 
   it("gives each tool to come its row on the Connecteurs page, with the same name and sentence", () => {
-    const soon = INTEGRATION_CATALOG.flatMap((integration) =>
+    const soon = INTEGRATIONS.flatMap((integration) =>
       integration.status === "soon" ? [[integration.connector, integration.name, integration.summary]] : [],
     );
-    expect(CATALOG_UPCOMING_CONNECTORS.map((connector) => [connector.id, connector.name, connector.description])).toEqual(soon);
+    expect(UPCOMING_CONNECTORS.map((connector) => [connector.id, connector.name, connector.description])).toEqual(soon);
   });
 
   it("promises no date, and no partnership (connecteurs.md, commercialisation.md)", () => {
     const dated = /\b(20\d\d|janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre|semaines?|trimestre)\b/i;
-    for (const text of INTEGRATION_CATALOG.flatMap(textsOf)) {
+    for (const text of INTEGRATIONS.flatMap(textsOf)) {
       expect(text).not.toMatch(dated);
       expect(text).not.toMatch(/partenaire/i);
     }
   });
 
   it("keeps each description short enough for search results", () => {
-    for (const integration of INTEGRATION_CATALOG) expect(integration.seo.description.length).toBeLessThanOrEqual(160);
+    for (const integration of INTEGRATIONS) expect(integration.seo.description.length).toBeLessThanOrEqual(160);
   });
 });

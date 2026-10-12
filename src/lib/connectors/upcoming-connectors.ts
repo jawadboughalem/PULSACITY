@@ -1,15 +1,9 @@
-/** Shown « Bientôt » on the Connecteurs page, with « Me prévenir ». Not in the registry: nothing receives them yet. */
-export const UPCOMING_CONNECTORS = [
-  { id: "stripe", name: "Stripe", description: "Paiements en ligne : une demande d'avis après chaque paiement réussi." },
-  { id: "calendly", name: "Calendly", description: "Rendez-vous : une demande d'avis après chaque séance réalisée." },
-] as const;
-
 /**
- * The tools to come of the catalog (docs-internes/decisions/connecteurs.md), in its order, with its sentences. Ready,
- * not shown: they take the place of UPCOMING_CONNECTORS when the catalog is published (lot 4.1 b). The universal
- * connector is in the registry.
+ * Shown « Bientôt » on the Connecteurs page, with « Me prévenir »: the tools to come of the catalog
+ * (docs-internes/decisions/connecteurs.md), in its order, with its sentences. Not in the registry: nothing receives
+ * them yet, except through the universal connector.
  */
-export const CATALOG_UPCOMING_CONNECTORS = [
+export const UPCOMING_CONNECTORS = [
   { id: "learnybox", name: "Learnybox", description: "Une demande d'avis après chaque vente ou inscription." },
   { id: "kajabi", name: "Kajabi", description: "Une demande d'avis après chaque achat d'une offre." },
   { id: "schoolmaker", name: "SchoolMaker", description: "Une demande d'avis quand un membre rejoint une offre." },

@@ -6,6 +6,7 @@ export const PODIA: UpcomingIntegration = {
   connector: "podia",
   name: "Podia",
   family: "courses",
+  meanwhileVia: "zapier",
   summary: "Une demande d'avis après chaque vente, avec Zapier.",
   seo: {
     title: "Témoignages automatiques pour Podia, bientôt",

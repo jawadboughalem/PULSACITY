@@ -6,6 +6,6 @@ export const size = SOCIAL_IMAGE_SIZE;
 
 export const contentType = SOCIAL_IMAGE_TYPE;
 
-const SocialImage = () => renderSocialImage("Intégrations : Systeme.io, Stripe, Calendly");
+const SocialImage = () => renderSocialImage("Intégrations : Systeme.io, Zapier, Make, Stripe et plus");
 
 export default SocialImage;

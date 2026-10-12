@@ -9,9 +9,9 @@ import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 export const generateMetadata = () =>
   buildPageMetadata({
-    title: "Intégrations : Systeme.io, Stripe, Calendly",
+    title: "Intégrations : Systeme.io, Zapier, Make, Stripe et plus",
     description:
-      "PULSACITY se branche sur l'outil où vous vendez. Systeme.io dès aujourd'hui, Stripe et Calendly bientôt : chaque vente devient une demande d'avis à votre nom.",
+      "Systeme.io, et tous vos outils avec Zapier, Make ou n8n : chaque vente devient une demande d'avis à votre nom. Stripe, Calendly, Learnybox et d'autres arrivent.",
     path: MARKETING_PATHS.integrations,
   });
 
@@ -37,7 +37,8 @@ const IntegrationsPage = () => (
       <div className="flex flex-col gap-4">
         <SectionTitle id="without-connector-title">Votre outil n&apos;est pas encore là ?</SectionTitle>
         <p className="max-w-text text-body text-slate-600">
-          PULSACITY fonctionne aussi sans connecteur. Vous recueillez les avis, puis vous les affichez là où vous vendez.
+          Le connecteur universel reçoit ses ventes par Zapier, Make ou n8n. Et sans rien relier, vous recueillez déjà des
+          avis.
         </p>
       </div>
       <div className="mt-6 desktop:mt-7">

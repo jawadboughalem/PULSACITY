@@ -6,12 +6,12 @@ import { SaleToWallDemo } from "@/components/marketing/home/SaleToWallDemo";
 import { WidgetShowcase } from "@/components/marketing/home/WidgetShowcase";
 import { IntegrationRows } from "@/components/marketing/integrations/IntegrationRows";
 import { JsonLd } from "@/components/marketing/JsonLd";
-import { MARKETING_PATHS, integrationPath } from "@/components/marketing/marketing-paths";
+import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { MarketingSection, SectionTitle } from "@/components/marketing/MarketingSection";
 import { LARGE_BUTTON_CLASSES, TEXT_LINK_CLASSES } from "@/components/marketing/marketing-styles";
 import { Icon } from "@/components/ui/Icon";
 import { HOME_FAQ } from "@/content/faq";
-import { SYSTEME_IO } from "@/content/integrations/systeme-io";
+import { FEATURED_INTEGRATIONS } from "@/content/integrations";
 import { cn } from "@/lib/cn";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { buildFaqPageData, buildOrganizationData } from "@/lib/seo/structured-data";
@@ -61,11 +61,11 @@ const HomePage = () => (
           Créer mon espace gratuit
         </Link>
         <Link
-          href={integrationPath(SYSTEME_IO.slug)}
+          href={MARKETING_PATHS.integrations}
           className="inline-flex min-h-[44px] items-center gap-2 text-body hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
         >
           <Icon name="valid" size={20} className="text-success" />
-          Compatible avec Systeme.io
+          Fonctionne avec Systeme.io, Zapier et Make
         </Link>
       </div>
       <div className="mt-8">
@@ -102,9 +102,17 @@ const HomePage = () => (
       <div className="grid gap-6 desktop:grid-cols-[448px_1fr]">
         <div className="flex flex-col gap-4">
           <SectionTitle id="connectors">Connecteurs</SectionTitle>
-          <p className="text-body text-slate-600">Là où vous vendez déjà. D&apos;autres outils arrivent.</p>
+          <p className="text-body text-slate-600">
+            Là où vous vendez déjà, ou n&apos;importe quel outil avec Zapier, Make ou n8n.
+          </p>
+          <Link href={MARKETING_PATHS.integrations} className={cn(TEXT_LINK_CLASSES, "hidden self-start desktop:inline-flex")}>
+            Voir toutes les intégrations
+          </Link>
         </div>
-        <IntegrationRows />
+        <IntegrationRows integrations={FEATURED_INTEGRATIONS} />
+        <Link href={MARKETING_PATHS.integrations} className={cn(TEXT_LINK_CLASSES, "self-start desktop:hidden")}>
+          Voir toutes les intégrations
+        </Link>
       </div>
     </MarketingSection>
 

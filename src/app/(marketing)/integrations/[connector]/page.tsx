@@ -18,6 +18,7 @@ import {
   type AvailableIntegration,
   INTEGRATIONS,
   type UpcomingIntegration,
+  describeMeanwhile,
   findIntegration,
 } from "@/content/integrations";
 import { MEANWHILE } from "@/content/integrations/meanwhile";
@@ -170,11 +171,13 @@ const UpcomingPage = ({ integration }: { integration: UpcomingIntegration }) => 
 
     <SplitSection
       id="meanwhile-title"
-      title="En attendant, sans connecteur"
-      text={`Vos clients ${integration.name} peuvent déjà laisser un avis. Tout ceci est inclus dans le plan Gratuit.`}
+      title="En attendant"
+      text={`${
+        integration.meanwhileVia === "universal" ? "Vos clients" : `Vos clients ${integration.name}`
+      } peuvent déjà laisser un avis. Tout ceci est inclus dans le plan Gratuit.`}
       tone="paper"
     >
-      <MeanwhileList items={MEANWHILE} layout="rows" />
+      <MeanwhileList items={[describeMeanwhile(integration).item, ...MEANWHILE]} layout="rows" />
       <Link href={MARKETING_PATHS.signUp} className={`${LARGE_BUTTON_CLASSES} mt-6 desktop:mt-6`}>
         Créer mon espace gratuit
       </Link>

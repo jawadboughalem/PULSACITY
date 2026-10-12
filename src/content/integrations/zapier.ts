@@ -6,6 +6,7 @@ export const ZAPIER: UpcomingIntegration = {
   connector: "zapier",
   name: "Zapier",
   family: "other-tools",
+  meanwhileVia: "universal",
   summary: "Reliez des milliers d'outils : une demande d'avis après chaque vente que vous choisissez.",
   seo: {
     title: "Témoignages automatiques pour Zapier, bientôt",

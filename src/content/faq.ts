@@ -33,7 +33,7 @@ export const HOME_FAQ: FaqEntry[] = [
   {
     question: "Est-ce compatible avec mon site ?",
     answer:
-      "Le widget s'affiche sur toute page qui accepte un bloc de code HTML : Systeme.io, WordPress et la plupart des outils de création de pages. Il reprend la police et la couleur de votre page, sans rien changer autour. Pour les ventes, la connexion automatique marche aujourd'hui avec Systeme.io. Stripe et Calendly arrivent.",
+      "Le widget s'affiche sur toute page qui accepte un bloc de code HTML : Systeme.io, WordPress et la plupart des outils de création de pages. Il reprend la police et la couleur de votre page, sans rien changer autour. Pour les ventes, Systeme.io se connecte directement, et vos autres outils passent par le connecteur universel, avec Zapier, Make ou n8n.",
   },
   RESIGN,
 ];
