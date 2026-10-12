@@ -72,6 +72,28 @@ Ils parlent des connecteurs disponibles : ils sont vrais aujourd'hui et changent
 
 ---
 
+## 0. Vercel — si l'aperçu est en échec : lire l'erreur et relancer une fois
+
+À lancer seulement si le commentaire de Vercel sur la PR affiche « Error » pour le dernier commit. Le 12 octobre, deux déploiements ont échoué ainsi en quelques secondes (eb0353c, 482429d), alors que la CI était verte.
+
+```
+Tu m'aides à comprendre pourquoi un aperçu Vercel de PULSACITY a échoué, puis à le relancer une fois. Tu ne changes aucun réglage.
+
+Où : https://vercel.com/jawadboughalems-projects/pulsacity/deployments, puis le dernier déploiement de la branche claude/determined-meitner-gnbd7e marqué « Error ».
+
+Étapes :
+1. Ouvre ce déploiement. Note son état, sa durée et le message d'erreur affiché.
+2. Ouvre ses journaux (« Build Logs ») et recopie les 30 dernières lignes telles quelles. Si une ligne contient une clé, un mot de passe ou une adresse de base de données, remplace la valeur par [masqué].
+3. Clique sur les trois points (…) en haut à droite, puis « Redeploy ». Laisse les options par défaut et confirme. C'est un aperçu : rien ne part en production.
+4. Attends la fin : l'état doit passer à « Ready ».
+
+Ne touche surtout pas : aux réglages du projet, aux variables d'environnement, aux domaines, au déploiement de production (ne promeus rien).
+
+Compte rendu à me donner : le message d'erreur, les 30 dernières lignes des journaux (valeurs secrètes masquées), et l'état final du nouveau déploiement.
+```
+
+---
+
 ## 1. GitHub — l'espace de démonstration de recette, depuis la branche de la PR
 
 ```
