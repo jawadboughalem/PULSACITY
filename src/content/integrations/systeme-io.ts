@@ -8,7 +8,8 @@ export const SYSTEME_IO: AvailableIntegration = {
   status: "available",
   slug: "systeme-io",
   name: "Systeme.io",
-  summary: "Formations, coachings et tunnels de vente. Chaque vente déclenche une demande d'avis.",
+  family: "courses",
+  summary: "Une demande d'avis après chaque vente ou inscription à une formation.",
   seo: {
     title: "Témoignages automatiques pour Systeme.io",
     description:
@@ -20,7 +21,7 @@ export const SYSTEME_IO: AvailableIntegration = {
   benefits: [
     {
       title: "Rien à installer",
-      text: "Une adresse et une clé à coller dans vos paramètres Systeme.io. Deux minutes, depuis votre ordinateur.",
+      text: "Une adresse et une clé à coller dans vos paramètres Systeme.io. Plus simple depuis un ordinateur.",
     },
     {
       title: "Au bon moment, pour chaque offre",

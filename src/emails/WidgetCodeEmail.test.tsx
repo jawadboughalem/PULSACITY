@@ -18,10 +18,12 @@ describe("WidgetCodeEmail", () => {
     expect(text).toContain('data-pulsacity-widget="abc"');
   });
 
-  it("carries the guide « Coller dans Systeme.io », its four steps in order", async () => {
+  it("carries the guide for Systeme.io, its four steps in order, without a duration", async () => {
     const text = await render(<WidgetCodeEmail snippet={SNIPPET} />, { plainText: true });
 
-    expect(text).toContain("Coller dans Systeme.io : 4 étapes, environ 2 minutes");
+    expect(text).toContain("Collez-le une seule fois dans un bloc de code HTML de votre page de vente.");
+    expect(text).toContain("Sur Systeme.io : 4 étapes");
+    expect(text).not.toMatch(/minute/);
     expect(text.indexOf("1. Dans l'éditeur de votre page Systeme.io")).toBeLessThan(text.indexOf("2. Cliquez sur l'élément"));
     expect(text).toContain("4. Enregistrez la page, puis ouvrez son aperçu");
   });

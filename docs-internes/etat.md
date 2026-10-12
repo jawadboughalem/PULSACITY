@@ -32,6 +32,18 @@ Stratégie du 12 octobre : encaisser dès la V0, en tant que particulier ; crée
 
 La V1 attend ; la recette de bout en bout en production devient le lot 4.11, juste avant le lancement.
 
+## Lot 4.1, les décisions appliquées (PR #33, 12 octobre)
+
+- `plans.ts` tient les prix publics (Essentiel 14,99 € et 149 €, Pro 24,99 € et 249 €) et les prix fondateur (9,99 € et 99 €, 19,99 € et 199 €), avec `FOUNDER_PRICE_SEATS = 100` et `readOpenPriceList`. Les limites ne changent pas.
+- Tarifs et accueil, dans la mise en page de m7 et m8 : le prix fondateur comme prix payé, et sous lui la ligne de l'arbitrage n° 1 (« Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois », « par an » en Annuel). Sur ordinateur, les colonnes partagent leurs rangées (sous-grille) : boutons et listes restent alignés malgré la ligne, absente du plan Gratuit.
+- Le site affiche le prix fondateur tant que personne ne paie : le lot 4.5 branche le compte des abonnés au prix fondateur (`SHOWN_PRICE_LIST`, `src/content/plan-offer.ts`), pour que le centième fasse passer les pages aux prix publics sans nouvelle livraison.
+- « TVA comprise » retiré : « Prix finaux : rien ne s'ajoute au paiement » sous le titre de Tarifs, nouvelle réponse à « Les prix incluent-ils la TVA ? ». Pour ne pas contredire `tarifs.md`, deux autres réponses de Tarifs (passage à l'annuel à la fin du mois payé ; au retour au Gratuit, un widget et 15 témoignages) et les CGV en brouillon (prix, prix de lancement, changements de plan, évolution des prix).
+- Catalogue des connecteurs prêt, pas publié : les 6 familles et un fichier par outil dans `src/content/integrations/` (`INTEGRATION_CATALOG`, 19 outils), et leurs lignes pour l'espace (`CATALOG_UPCOMING_CONNECTORS`). Un test les tient fidèles à `connecteurs.md`. Les phrases décidées remplacent déjà les lignes de Systeme.io, Stripe et Calendly sur `/integrations`.
+- Textes qui supposent Systeme.io (validés par le fondateur le 12 octobre, `recette/lot-4-1-decisions.md`) : « l'outil où vous vendez » sur l'accueil, dans les appels finaux, un guide et l'espace ; « Connecter Systeme.io » devient « Connecter mon outil », vers Connecteurs, et l'étape de démarrage se coche dès qu'un connecteur est actif. Restent nommés Systeme.io : son connecteur, ses guides, la démo de l'accueil ; la FAQ de compatibilité, le comparatif de Tarifs, le titre d'Intégrations et « Compatible avec Systeme.io » changent avec le catalogue (4.1 b).
+- Durées : plus aucune durée d'installation affichée (« Deux minutes… », « environ 2 minutes ») ni « l'avis se laisse en deux minutes » (`positionnement.md`). « Comptez moins d'une minute » (collecte) et « Donner mon avis (1 minute) » (e-mail, démo) restent jusqu'aux maquettes v2 : à mesurer d'ici là.
+- Recette sur l'aperçu, le 12 octobre (`recette/lot-4-1-decisions.md`) : prompt 1 vert au second essai (le premier a trouvé la base de recette injoignable, voir « À faire » n° 13) ; prompt 2, 20 points sur 20 ; prompt 3, 7 points sur 7. Deux déploiements d'aperçu de Vercel ont échoué en quelques secondes avant de passer au commit suivant, cause non lue (journaux de Vercel).
+- Vérification en production (prompt 4 de `recette/lot-4-1-decisions.md`) : à faire après la fusion, et à noter ici.
+
 ## Lot 7 (PR #27), site public, en ligne depuis le 4 octobre
 
 - Accueil (m7) : promesse, démo en quatre temps (vente, demande, avis, mur), comment ça marche, exemple de widget réel (le moteur de `w.js` sur la page de Julie Nutrition : badge et carrousel), connecteurs, tarifs résumés, questions, appel final.
@@ -227,18 +239,22 @@ La V1 attend ; la recette de bout en bout en production devient le lot 4.11, jus
 2. Essai au doigt, sur le téléphone du fondateur, des menus déroulants natifs : filtre « Statut » de Demandes, offre de « Demander un avis ».
 3. Captures réelles des réglages Systeme.io, par un prompt Claude in Chrome sur le compte du fondateur.
 4. Toujours en attente du lot 5 : prompt 2 de `docs-internes/recette/lot-5-widget-fin.md` (mur d'une colonne sous 340 px sur la page Systeme.io) et contrôle au doigt du carrousel sur le téléphone du fondateur.
-5. Régime de TVA de l'entité qui facture PULSACITY, à confirmer avec l'expert-comptable avant le lot Stripe (`decision_tarifs.md`).
+5. TVA : aucune n'est facturée tant que le fondateur vend en particulier (`decisions/tarifs.md`, arbitrage n° 2). Le régime de la micro-entreprise se confirme par écrit au seuil (6.4).
 6. Dépôt public ou privé : décision du fondateur (en privé, protéger `main` demande GitHub Pro).
 7. Sentry, avant le lancement.
 8. Performance de `/integrations/systeme-io` (90 sur mobile) : réduire le JavaScript inutilisé et les fichiers qui bloquent l'affichage, dans un lot suivant.
 9. Textes légaux : informations à fournir (SIREN, adresse, directeur de la publication, contact…, liste dans `recette/lot-7-site.md`), puis relecture par un juriste avant `LEGAL_VALIDATED=true`.
 10. Le site est en ligne : déclarer pulsacity.com dans Google Search Console, y envoyer le plan du site et y suivre la reconnaissance de l'Organization (prompt à écrire ; une vérification par enregistrement DNS chez OVH ne touche ni MX ni SPF).
+11. Lot 4.12, accueil et acquisition (`decisions/commercialisation.md`, arbitrage n° 11), après les maquettes 3.4 et 3.6. Avant la bêta : source d'inscription (UTM, liens courts `/go/…`, parrainage, « Comment avez-vous connu PULSACITY ? »), e-mails d'accueil J0, J1, J3 et J7, requête « tableau de bord fondateur », espace PULSACITY et son mur sur pulsacity.com, mesure d'audience Umami. Avant le lancement : parrainage, codes par partenaire, image de partage d'un témoignage, Resend Pro.
+12. Lot 4.13, avis en ligne (`decisions/positionnement.md`, points 1 à 7, arbitrage n° 6), avant la bêta, après les maquettes 3.4, 3.5 et 3.6 : provenance de chaque témoignage, date de l'avis et mois de l'achat dans le widget, page « À propos de ces avis », correction soumise à l'accord du client, note du badge sur tous les avis reçus, motif de « Masquer », contrepartie. D'ici là, aucune mention de vérification.
+13. La base de recette (Supabase, offre gratuite) se met en pause après 7 jours sans activité : le 12 octobre, « Recette demo space » a échoué pour cette raison. Avant une recette, la réveiller (prompt 0 bis de `recette/lot-4-1-decisions.md`). À régler dans le lot 4.10 : une activité régulière, ou un plan payant le moment venu.
 
 Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
 - les compteurs du haut de la liste se mettent à jour environ une seconde après « Valider » ou « Masquer » ;
 - un premier clic sur « Importez un fichier CSV » n'a rien fait une fois, le second a ouvert la page ;
-- le lien Réglages mène à une page pas encore construite (Connecteurs et Demandes existent depuis le lot 6).
+- le lien Réglages mène à une page pas encore construite (Connecteurs et Demandes existent depuis le lot 6) ;
+- éditeur de widget, encadré « Code envoyé à … » (depuis le 2 octobre) : « Ouvrez l'e-mail sur votre ordinateur… » est décalé d'environ 20 px et « Renvoyer l'e-mail » d'environ 8 px par rapport au texte du titre (recette du lot 4.1). À aligner avec la maquette v2 de l'éditeur.
 
 ## Décisions du 1er octobre (maquettes m15 à m17)
 
@@ -348,7 +364,7 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - Adresse de support : « Aide et contact » pointe vers `/aide`, qui n'existe pas, et la page du guide sur mobile (« Bloquée à une étape ? Écrivez-nous ») l'attend aussi : sa ligne n'est pas affichée en attendant. Le lien « Contact » du pied de page mène aux mentions légales, où l'adresse est encore « [À COMPLÉTER] ». Le site public l'attend aussi : « Écrivez-nous » de m21 et m22.
 - Le voile des fenêtres de dialogue de l'espace est à 12 % d'Encre ; celui du menu du site (m24) à 48 %, comme le dit Design pour les dialogues. À aligner quand on touchera les dialogues.
 - Dans ce conteneur (Node 22.22.0), `decode-csv-file.test.ts` échoue sur `main` comme sur la PR #27 : l'octet 0x9C de Windows‑1252 n'y donne pas « œ ». La CI, sur son propre Node 22, est verte. À surveiller si la CI passe à cette version.
-- Effet de 9,99 € sur le passage au payant : à vérifier avec les premiers chiffres de Stripe.
+- Effet des prix (9,99 € au prix fondateur, 14,99 € ensuite) sur le passage au payant : à la revue de `decisions/tarifs.md` (60 jours de paiements ou 300 inscrits).
 - E-mails aux clients : la loi sur la prospection demande l'adresse postale de l'expéditeur ; m3 la prévoit pour le créateur, PULSACITY ne la demande pas encore.
 - Avant le lancement : afficher le JSON brut d'un événement inconnu à Claude Code (requête SQL dans Supabase, par prompt) pour capturer « Vente annulée » le jour où un créateur en reçoit une.
 - La page de vente dessinée dans l'aperçu de l'éditeur reste générique (nom de l'espace, nom de l'offre, « Ce qu'en disent mes clients ») : m6 y montre la page de Julie Nutrition (menu, prix, « Tous les avis »). Écart gardé depuis le lot 5.

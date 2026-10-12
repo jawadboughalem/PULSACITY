@@ -15,4 +15,5 @@ export const PASTE_GUIDE_STEPS: PasteGuidePart[][] = [
   ],
 ];
 
-export const PASTE_GUIDE_DURATION = "4 étapes, environ 2 minutes";
+/** « 4 étapes »: no duration until real installations have been timed (positionnement.md, « Incitations »). */
+export const PASTE_GUIDE_SUMMARY = `${PASTE_GUIDE_STEPS.length} étapes`;

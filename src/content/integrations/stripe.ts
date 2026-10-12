@@ -5,7 +5,8 @@ export const STRIPE: UpcomingIntegration = {
   slug: "stripe",
   connector: "stripe",
   name: "Stripe",
-  summary: "Paiements en ligne. Une demande d'avis après chaque paiement réussi.",
+  family: "payments",
+  summary: "Une demande d'avis après chaque paiement réussi.",
   seo: {
     title: "Témoignages automatiques pour Stripe, bientôt",
     description:

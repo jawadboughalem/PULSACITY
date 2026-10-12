@@ -6,11 +6,15 @@ export const UNLIMITED = null;
 
 export type Limit = number | typeof UNLIMITED;
 
+export type PlanPrices = { monthly: number; yearly: number };
+
 export type Plan = {
   id: PlanId;
   name: string;
-  /** What the creator pays, VAT included (docs-internes/decision_tarifs.md). */
-  priceCents: { monthly: number; yearly: number };
+  /** The public price. Final prices: what the creator pays, nothing is added to it (docs-internes/decisions/tarifs.md). */
+  priceCents: PlanPrices;
+  /** The founder price, kept for life while the subscription lasts: the beta testers and the first paying subscribers. */
+  founderPriceCents: PlanPrices;
   limits: {
     testimonials: Limit;
     monthlyRequests: Limit;
@@ -26,24 +30,42 @@ export const PLANS = {
     id: "free",
     name: "Gratuit",
     priceCents: { monthly: 0, yearly: 0 },
+    founderPriceCents: { monthly: 0, yearly: 0 },
     limits: { testimonials: 15, monthlyRequests: 20, widgets: 1, manualRequestsPerDay: 20 },
     badgeRemovable: false,
   },
   essentiel: {
     id: "essentiel",
     name: "Essentiel",
-    priceCents: { monthly: 999, yearly: 9900 },
+    priceCents: { monthly: 1499, yearly: 14900 },
+    founderPriceCents: { monthly: 999, yearly: 9900 },
     limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED, manualRequestsPerDay: 20 },
     badgeRemovable: false,
   },
   pro: {
     id: "pro",
     name: "Pro",
-    priceCents: { monthly: 1999, yearly: 19900 },
+    priceCents: { monthly: 2499, yearly: 24900 },
+    founderPriceCents: { monthly: 1999, yearly: 19900 },
     limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED, manualRequestsPerDay: 20 },
     badgeRemovable: true,
   },
 } as const satisfies Record<PlanId, Plan>;
+
+/** The founder price goes to the beta testers and to this many first paying subscribers (arbitrages.md, n° 1). */
+export const FOUNDER_PRICE_SEATS = 100;
+
+/** « founder » while the founder price is open, « public » once it is closed. */
+export type PriceList = "founder" | "public";
+
+/** `founderSubscribers` counts the paying subscribers who got the founder price: the hundredth closes it. */
+export function readOpenPriceList(founderSubscribers: number): PriceList {
+  return founderSubscribers < FOUNDER_PRICE_SEATS ? "founder" : "public";
+}
+
+export function readPlanPrices(plan: Plan, priceList: PriceList): PlanPrices {
+  return priceList === "founder" ? plan.founderPriceCents : plan.priceCents;
+}
 
 export type SpacePlan = { plan: PlanId };
 

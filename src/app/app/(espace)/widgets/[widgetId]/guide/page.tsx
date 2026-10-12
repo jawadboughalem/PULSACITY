@@ -10,7 +10,7 @@ import { getDb } from "@/db";
 import { getAppUrl } from "@/lib/app-url";
 import { getCurrentSpace } from "@/lib/spaces/get-current-space";
 import { buildWidgetSnippet } from "@/lib/widgets/build-widget-snippet";
-import { PASTE_GUIDE_DURATION } from "@/lib/widgets/paste-guide-steps";
+import { PASTE_GUIDE_SUMMARY } from "@/lib/widgets/paste-guide-steps";
 import { findOwnedWidget } from "@/lib/widgets/space-widgets";
 
 export const metadata: Metadata = {
@@ -31,7 +31,7 @@ const WidgetGuidePage = async ({ params }: PageProps<"/app/widgets/[widgetId]/gu
       <SpacePage className="desktop:max-w-[720px]">
         <div className="flex flex-col gap-2">
           <h1 className="font-serif text-h1 font-medium">Coller dans Systeme.io</h1>
-          <p className="text-body text-slate-600">{`${PASTE_GUIDE_DURATION}. Plus simple depuis un ordinateur.`}</p>
+          <p className="text-body text-slate-600">{`${PASTE_GUIDE_SUMMARY}. Plus simple depuis un ordinateur.`}</p>
         </div>
         <PasteGuideSteps layout="column" />
         <WidgetGuideActions widgetId={widget.id} snippet={buildWidgetSnippet(getAppUrl(), widget)} />

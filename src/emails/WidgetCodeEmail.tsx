@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Section, Text } from "react-email";
-import { PASTE_GUIDE_DURATION, PASTE_GUIDE_STEPS } from "@/lib/widgets/paste-guide-steps";
+import { PASTE_GUIDE_STEPS, PASTE_GUIDE_SUMMARY } from "@/lib/widgets/paste-guide-steps";
 import { AccountEmailLayout } from "./AccountEmailLayout";
 import { EMAIL_COLORS, paragraphStyle, smallStyle } from "./email-styles";
 
@@ -17,7 +17,7 @@ export const WidgetCodeEmail = ({ snippet }: WidgetCodeEmailProps) => (
   >
     <Text style={paragraphStyle}>Bonjour,</Text>
     <Text style={paragraphStyle}>
-      Voici le code de votre widget. Collez-le une seule fois dans un bloc HTML de votre page de vente Systeme.io.
+      Voici le code de votre widget. Collez-le une seule fois dans un bloc de code HTML de votre page de vente.
     </Text>
     <Section style={{ margin: "0 0 24px", padding: "16px", backgroundColor: EMAIL_COLORS.paper100 }}>
       <Text
@@ -32,7 +32,7 @@ export const WidgetCodeEmail = ({ snippet }: WidgetCodeEmailProps) => (
         {snippet}
       </Text>
     </Section>
-    <Text style={{ ...paragraphStyle, fontWeight: 600 }}>{`Coller dans Systeme.io : ${PASTE_GUIDE_DURATION}`}</Text>
+    <Text style={{ ...paragraphStyle, fontWeight: 600 }}>{`Sur Systeme.io : ${PASTE_GUIDE_SUMMARY}`}</Text>
     {PASTE_GUIDE_STEPS.map((parts, index) => (
       <Text key={index} style={paragraphStyle}>
         {`${index + 1}. `}

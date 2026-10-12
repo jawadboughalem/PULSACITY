@@ -305,7 +305,7 @@ export const RequestReviewDialog = ({
               </button>
             </div>
             <p className="text-body text-slate-600">
-              {`Pour un client qui a acheté en dehors d'un outil connecté : virement, séance, autre plateforme. Il reçoit le même e-mail qu'après une vente Systeme.io, au nom de ${spaceName}.`}
+              {`Pour un client qui a acheté en dehors d'un outil connecté : virement, séance, autre plateforme. Il reçoit le même e-mail qu'après une vente reçue d'un outil connecté, au nom de ${spaceName}.`}
             </p>
 
             {offers.length === 0 ? (

@@ -6,7 +6,7 @@ PULSACITY transforme automatiquement les ventes des indépendants francophones (
 
 Promesse : « Vos ventes deviennent des témoignages, automatiquement. »
 
-Architecture produit : un moteur universel (collecte, gestion, widgets) + des **connecteurs** vers les outils où les indépendants encaissent. Connecteur n°1 au lancement : Systeme.io. Puis Stripe et Calendly/Cal.com (V1), Learnybox, Podia, Kajabi, Shopify, WooCommerce, Zapier/Make (V2). Systeme.io est la première porte d'entrée, jamais une dépendance du cœur du produit.
+Architecture produit : un moteur universel (collecte, gestion, widgets) + des **connecteurs** vers les outils où les indépendants encaissent. Connecteur n°1 au lancement : Systeme.io, puis le connecteur universel (lot 4.1 b) : une adresse propre à l'espace qui reçoit les ventes de n'importe quel outil, directement ou par Zapier, Make ou n8n. Catalogue décidé dans `docs-internes/decisions/connecteurs.md` : 19 outils affichés en 6 familles, « Bientôt » sans date. Vague 1 : Stripe, Calendly, et les guides Zapier, Make, n8n et Podia vers le connecteur universel ; vague 2 : Learnybox, Kajabi, SchoolMaker, Cal.com, WooCommerce ; vague 3 : PayPal, Livestorm, HelloAsso, Weezevent, Eventbrite ; plus tard : Shopify. Systeme.io est la première porte d'entrée, jamais une dépendance du cœur du produit.
 
 Parcours (avec le connecteur Systeme.io) :
 1. Le créateur crée son espace et colle une URL de webhook PULSACITY dans Systeme.io.
@@ -18,6 +18,14 @@ Parcours (avec le connecteur Systeme.io) :
 ## Point de départ
 
 Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (seuls le nom et le domaine sont gardés) : il est ignoré. Aucun code, schéma, variable ou configuration n'en est repris. Claude Code ne modifie jamais un service externe (Vercel, Supabase, DNS, Stripe) avec ses propres accès : il agit dans le navigateur du fondateur, ou lui donne un prompt (voir « Actions du fondateur »).
+
+## Stratégie (12 octobre 2026)
+
+- PULSACITY encaisse dès la V0 : le fondateur vend en tant que particulier, sans entreprise. Stripe Billing, la page « Abonnement et factures » et les CGV restent dans la V0.
+- La micro-entreprise se crée au seuil de `docs-internes/fin-v0/seuil-micro-entreprise.md` : 5 clients payants, 3 mois de suite avec des paiements, ou 500 € encaissés, le premier atteint. Ce jour-là, les prompts 6.1 à 6.7 passent avant tout le reste.
+- Textes légaux d'un vendeur particulier : son nom, son adresse et son téléphone viennent de variables Vercel, jamais du dépôt (lot 4.9). Une seule adresse : contact@pulsacity.com.
+- Aucune TVA n'est facturée : les prix sont des prix finaux, jamais « TVA comprise ».
+- Les décisions sont dans `docs-internes/decisions/` (connecteurs, tarifs, positionnement, commercialisation) ; `arbitrages.md` règle leurs contradictions et prime sur elles.
 
 ## Règles absolues
 
@@ -59,11 +67,11 @@ src/app/desinscription/       # page de confirmation de la désinscription
 widget/                       # source du widget embarquable, build → public/w.js
 src/config/plans.ts           # plans et limites
 src/db/schema.ts
-src/lib/connectors/           # types.ts (contrat), registry.ts, moteur (réception, traitement), systeme/, (V1) stripe/, calendly/
+src/lib/connectors/           # types.ts (contrat), registry.ts, moteur (réception, traitement), systeme/, (lot 4.1 b) universal/, upcoming-connectors.ts
 src/lib/purchases/            # record-purchase.ts : de NormalizedPurchase au client, à l'achat et à la demande
 src/lib/requests/             # planification et envoi des demandes
 src/emails/                   # templates React Email
-src/content/                  # textes du site : offres (depuis plans.ts), FAQ, un fichier par connecteur (integrations/), guides et textes légaux en MDX
+src/content/                  # textes du site : offres (depuis plans.ts), FAQ, un fichier par connecteur et leurs familles (integrations/), guides et textes légaux en MDX
 docs-internes/                # décisions, payloads, recette ; etat.md : où en est le projet
 scripts/seed-demo.mjs         # espace de démonstration (local, recette)
 compose.yaml                  # Postgres local
@@ -91,13 +99,15 @@ assets/og-fonts/              # polices WOFF des images de partage (next/og)
 
 ## Plans (`src/config/plans.ts`)
 
-| Plan | Prix | Témoignages | Demandes auto / mois | Widgets | Badge |
-| --- | --- | --- | --- | --- | --- |
-| free | 0 € | 15 | 20 | 1 | obligatoire |
-| essentiel | 9,99 €/mois, 99 €/an | illimité | illimité | illimité | obligatoire |
-| pro | 19,99 €/mois, 199 €/an | illimité | illimité | illimité | retirable |
+| Plan | Prix public | Prix fondateur | Témoignages | Demandes auto / mois | Widgets | Badge |
+| --- | --- | --- | --- | --- | --- | --- |
+| free | 0 € | — | 15 | 20 | 1 | obligatoire |
+| essentiel | 14,99 €/mois, 149 €/an | 9,99 €/mois, 99 €/an | illimité | illimité | illimité | obligatoire |
+| pro | 24,99 €/mois, 249 €/an | 19,99 €/mois, 199 €/an | illimité | illimité | illimité | retirable |
 
-Prix TVA comprise : le montant affiché est celui que le créateur paie (`docs-internes/decision_tarifs.md`).
+Prix finaux : rien ne s'ajoute au paiement, aucune TVA n'est facturée (`docs-internes/decisions/tarifs.md`). L'annuel vaut dix mois, arrondi à l'euro inférieur (« 2 mois offerts »).
+
+Prix fondateur : les bêta-testeurs et les 100 premiers abonnés payants (`FOUNDER_PRICE_SEATS`), gardé à vie tant que l'abonnement ne s'interrompt pas. Tant qu'il est ouvert, les pages l'affichent comme le prix payé, avec la ligne « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois » ; ni prix barré, ni compteur. Au centième, elles passent aux prix publics sans nouvelle livraison : le compte des abonnés au prix fondateur arrive avec Stripe (lot 4.5, `arbitrages.md` n° 1).
 
 Sur tous les plans : 20 demandes saisies à la main par jour (« Demander un avis », `manualRequestsPerDay`), contre les envois en masse. Elles comptent aussi dans les demandes du mois.
 

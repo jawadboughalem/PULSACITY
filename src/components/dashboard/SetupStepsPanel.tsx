@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { SYSTEME_CONNECTOR_HREF } from "@/components/space/space-sections";
+import { CONNECTORS_SECTION_HREF } from "@/components/space/space-sections";
 import { SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
@@ -36,16 +36,16 @@ const buildSteps = ({ steps, collectionUrl, widgetSnippet, approvedCount }: Setu
     ),
   },
   {
-    key: "systeme",
-    title: "Connecter Systeme.io",
-    isDone: steps.systeme === "active",
+    key: "connection",
+    title: "Connecter votre outil de vente",
+    isDone: steps.connection === "active",
     content: (
       <>
         <p className="text-small text-slate-600">
           Chaque vente déclenchera une demande d&apos;avis<span className="hidden desktop:inline">, sans rien faire</span>.
         </p>
-        <Link href={SYSTEME_CONNECTOR_HREF} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto desktop:self-start")}>
-          Connecter Systeme.io
+        <Link href={CONNECTORS_SECTION_HREF} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto desktop:self-start")}>
+          Connecter mon outil
         </Link>
       </>
     ),
@@ -76,7 +76,7 @@ const buildSteps = ({ steps, collectionUrl, widgetSnippet, approvedCount }: Setu
 ];
 
 export const countDoneSteps = (steps: SetupSteps): { done: number; total: number } => {
-  const states = [true, steps.isLinkShared, steps.systeme === "active", steps.isWidgetPasted];
+  const states = [true, steps.isLinkShared, steps.connection === "active", steps.isWidgetPasted];
   return { done: states.filter(Boolean).length, total: states.length };
 };
 

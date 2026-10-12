@@ -56,8 +56,6 @@ export const connectorHref = (slug: string) => `${CONNECTORS.href}/${slug}`;
 
 export const connectorHistoryHref = (slug: string) => `${connectorHref(slug)}/historique`;
 
-export const SYSTEME_CONNECTOR_HREF = connectorHref("systeme-io");
-
 export const CONNECTORS_SECTION_HREF = CONNECTORS.href;
 
 export const MORE_SECTION_HREF = MORE.href;

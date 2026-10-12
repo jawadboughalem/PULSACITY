@@ -4,7 +4,13 @@ import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { PlanPrice } from "@/components/marketing/PlanPrice";
 import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import type { PlanId } from "@/config/plans";
-import { type BillingPeriod, PLAN_PRESENTATIONS, describePricePeriod, readPlanPrice } from "@/content/plan-offer";
+import {
+  type BillingPeriod,
+  PLAN_PRESENTATIONS,
+  describeLaunchPrice,
+  describePricePeriod,
+  readPlanPrice,
+} from "@/content/plan-offer";
 import { cn } from "@/lib/cn";
 
 /** Inside the billing scope (group/billing): the monthly prices, or the yearly ones once « Annuel » is chosen. */
@@ -27,14 +33,18 @@ const RecommendedLabel = ({ className }: { className?: string }) => (
   <p className={cn("text-small font-semibold", className)}>Recommandé</p>
 );
 
-/** Maquette 8: three columns under a rule of Encre, Essentiel on Papier. Stacked on a phone, the list before the button. */
+/**
+ * Maquette 8: three columns under a rule of Encre, Essentiel on Papier. Stacked on a phone, the list before the button.
+ * On a computer, each column's five parts share the rows of the others: the line of the launch price, under the paid
+ * plans only, keeps the buttons and the lists aligned.
+ */
 export const PlanColumns = () => (
   <ul className="grid gap-6 desktop:grid-cols-3 desktop:gap-[0] desktop:border-t desktop:border-ink-900">
     {PLAN_PRESENTATIONS.map((plan) => (
       <li
         key={plan.id}
         className={cn(
-          "flex flex-col gap-4 border-t border-ink-900 px-5 pt-5 pb-6 desktop:gap-5 desktop:border-t-[0] desktop:px-6 desktop:pt-6",
+          "flex flex-col gap-4 border-t border-ink-900 px-5 pt-5 pb-6 desktop:row-span-5 desktop:grid desktop:grid-rows-subgrid desktop:gap-5 desktop:border-t-[0] desktop:px-6 desktop:pt-6",
           plan.isRecommended && "border-t-2 bg-paper-100 desktop:-mt-px desktop:border-t-2",
         )}
       >
@@ -50,12 +60,16 @@ export const PlanColumns = () => (
           </div>
         </div>
         <div className="flex flex-col gap-1">
-          {(["monthly", "yearly"] as const).map((period) => (
-            <div key={period} className={PERIOD_VISIBILITY[period]}>
-              <PlanPrice amountCents={readPlanPrice(plan.id, period)} size="large" />
-              <p className="text-small text-slate-600">{describePricePeriod(plan.id, period)}</p>
-            </div>
-          ))}
+          {(["monthly", "yearly"] as const).map((period) => {
+            const launchPrice = describeLaunchPrice(plan.id, period);
+            return (
+              <div key={period} className={PERIOD_VISIBILITY[period]}>
+                <PlanPrice amountCents={readPlanPrice(plan.id, period)} size="large" />
+                <p className="text-small text-slate-600">{describePricePeriod(plan.id, period)}</p>
+                {launchPrice ? <p className="mt-2 text-small text-slate-600">{launchPrice}</p> : null}
+              </div>
+            );
+          })}
         </div>
         <p className="text-body">{plan.tagline}</p>
         <Link

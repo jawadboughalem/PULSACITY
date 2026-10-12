@@ -5,6 +5,7 @@ import { SpacePage } from "@/components/space/SpacePage";
 import { describeWidget } from "@/components/widgets/describe-widget";
 import { type CreateLimit, WidgetList } from "@/components/widgets/WidgetList";
 import { canCreateWidget, getPlan } from "@/config/plans";
+import { readPlanPrice } from "@/content/plan-offer";
 import { getDb } from "@/db";
 import { formatDayMonthYear } from "@/lib/dates/format-french-date";
 import { getCurrentSpace } from "@/lib/spaces/get-current-space";
@@ -26,7 +27,7 @@ const WidgetsPage = async () => {
       : {
           planName: plan.name,
           widgetLimit: plan.limits.widgets,
-          nextPlanPrice: formatMonthlyPrice(getPlan("essentiel").priceCents.monthly),
+          nextPlanPrice: formatMonthlyPrice(readPlanPrice("essentiel", "monthly")),
         };
 
   return (

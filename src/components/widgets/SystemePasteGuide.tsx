@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from "react";
-import { PASTE_GUIDE_DURATION, PASTE_GUIDE_STEPS, type PasteGuidePart } from "@/lib/widgets/paste-guide-steps";
+import { PASTE_GUIDE_STEPS, PASTE_GUIDE_SUMMARY, type PasteGuidePart } from "@/lib/widgets/paste-guide-steps";
 import { cn } from "@/lib/cn";
 import {
   AddHtmlElementDrawing,
@@ -69,7 +69,7 @@ export const SystemePasteGuide = ({ isCodeCopied = false }: { isCodeCopied?: boo
         Coller dans Systeme.io
       </h2>
       <p className={cn("text-small", isCodeCopied ? "font-semibold text-success" : "text-slate-600")}>
-        {isCodeCopied ? "Code copié, à vous de jouer" : PASTE_GUIDE_DURATION}
+        {isCodeCopied ? "Code copié, à vous de jouer" : PASTE_GUIDE_SUMMARY}
       </p>
     </div>
     <PasteGuideSteps layout="grid" />

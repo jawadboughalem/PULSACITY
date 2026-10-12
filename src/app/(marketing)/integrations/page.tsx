@@ -50,7 +50,7 @@ const IntegrationsPage = () => (
 
     <FinalCall
       title="Vos clients ont déjà quelque chose à dire."
-      text="Deux minutes pour connecter Systeme.io, et la prochaine vente fait le reste."
+      text="Reliez l'outil où vous vendez : la prochaine vente fait le reste."
     />
   </>
 );

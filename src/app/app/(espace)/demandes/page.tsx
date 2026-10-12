@@ -19,9 +19,9 @@ import { SpacePage } from "@/components/space/SpacePage";
 import {
   ASK_FOR_REVIEW_PARAMETER,
   BILLING_HREF,
+  CONNECTORS_SECTION_HREF,
   READY_REQUEST_PARAMETER,
   REQUESTS_SECTION_HREF,
-  SYSTEME_CONNECTOR_HREF,
   TESTIMONIALS_SECTION_HREF,
 } from "@/components/space/space-sections";
 import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
@@ -33,7 +33,7 @@ import { getDb } from "@/db";
 import { buildCollectionUrl } from "@/lib/app-url";
 import { cn } from "@/lib/cn";
 import { endSentence } from "@/lib/french/typography";
-import { findConnection } from "@/lib/connectors/connections";
+import { hasActiveConnection } from "@/lib/connectors/connections";
 import { formatDayMonth } from "@/lib/dates/format-french-date";
 import { startOfNextParisMonth, toParisIsoDay } from "@/lib/dates/paris-date";
 import {
@@ -95,10 +95,10 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
   const shownCount = readShownCount(search[SHOWN_PARAMETER]);
   const database = getDb();
   const now = new Date();
-  const [counts, list, connection, offers, readyRequest] = await Promise.all([
+  const [counts, list, isConnected, offers, readyRequest] = await Promise.all([
     countSpaceRequests(database, space.id, now),
     listSpaceRequests(database, space.id, { status, limit: shownCount }),
-    findConnection(database, space.id, "systeme"),
+    hasActiveConnection(database, space.id),
     listAssociableProducts(database, space.id),
     loadReadyRequest(database, space.id, readParameter(search[READY_REQUEST_PARAMETER])),
   ]);
@@ -178,13 +178,13 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
           <section className="flex flex-col gap-4 bg-paper-100 p-5 desktop:p-7">
             <h2 className="font-serif text-quote font-medium desktop:text-h2">Aucune demande pour l&apos;instant</h2>
             <p className="max-w-text text-body">
-              Dès que Systeme.io nous envoie une vente, la demande d&apos;avis se prépare ici, avec sa date de départ. Vous
+              Dès qu&apos;une vente nous arrive de votre outil, la demande d&apos;avis se prépare ici, avec sa date de départ. Vous
               pouvez aussi envoyer votre lien de collecte vous-même.
             </p>
             <div className="flex flex-col gap-3 desktop:flex-row">
-              {connection?.status === "active" ? null : (
-                <Link href={SYSTEME_CONNECTOR_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
-                  Connecter Systeme.io
+              {isConnected ? null : (
+                <Link href={CONNECTORS_SECTION_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
+                  Connecter mon outil
                 </Link>
               )}
               <CopyCollectionLinkButton url={buildCollectionUrl(space.slug)} label="Copier mon lien" />
