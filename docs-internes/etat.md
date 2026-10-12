@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 12 octobre 2026. La V0 n'est pas terminée : la feuille de route pour la finir (design v2, écrans manquants, textes légaux d'un lancement sans entreprise, tarifs, catalogue des connecteurs, commercialisation) est dans `docs-internes/fin-v0/README.md`, avec tous ses prompts dans l'ordre. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Le lot 7, le site public (accueil, tarifs, intégrations, guides, pages légales), est en ligne depuis le 4 octobre (PR #27) et vérifié en production. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 12 octobre 2026. La V0 n'est pas terminée : la feuille de route pour la finir (design v2, écrans manquants, paiements et textes légaux d'un vendeur particulier, tarifs, catalogue des connecteurs, commercialisation) est dans `docs-internes/fin-v0/README.md`, avec tous ses prompts dans l'ordre. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Le lot 7, le site public (accueil, tarifs, intégrations, guides, pages légales), est en ligne depuis le 4 octobre (PR #27) et vérifié en production. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -20,11 +20,12 @@ Mis à jour le 12 octobre 2026. La V0 n'est pas terminée : la feuille de route 
 
 Le fondateur juge la V0 inachevée : design trop fade et trop proche du style des assistants d'IA, écrans manquants (Réglages, Mon compte, Abonnement et factures, Aide et contact), textes légaux à compléter, tarifs à confirmer, Systeme.io trop au centre, commercialisation à préparer. `docs-internes/fin-v0/` donne l'ordre de toutes les actions et leurs prompts : Claude Chat (projet « PULSACITY — Stratégie »), Claude in Chrome, Claude Design (nouveau projet « PULSACITY v2 », l'actuel gardé comme référence de la v1), Claude Code (lots 4.1 à 4.11).
 
-Stratégie du 12 octobre : lancer gratuitement, sans entreprise, et faire ses preuves.
-- Rien n'est encaissé avant l'entreprise ; Stripe, les CGV et la facturation attendent le lot 6.6, déclenché par le seuil fixé en 1.3.
-- Les textes légaux deviennent ceux d'un service gratuit édité par un particulier. Les CGV sont retirées du site jusqu'au premier abonnement.
-- Les plans payants sont « Bientôt », avec « Me prévenir à l'ouverture ».
-- La domiciliation Kandbaz est résiliée (prompt K).
+Stratégie du 12 octobre : encaisser dès la V0, en tant que particulier ; créer la micro-entreprise au seuil.
+- Les paiements restent dans la V0 : Stripe Billing (lot 4.5), CGV publiées, textes légaux d'un vendeur particulier (lot 4.9), vos informations par des variables Vercel.
+- Le seuil (`docs-internes/fin-v0/seuil-micro-entreprise.md`) : 5 clients payants, 3 mois de suite avec des paiements, ou 500 € encaissés, le premier atteint. Ce jour-là, les prompts 6.1 à 6.7 passent avant tout le reste.
+- Une seule adresse : contact@pulsacity.com, redirection OVH déjà en place.
+- La domiciliation Kandbaz : garder ou résilier, après lecture de leurs conditions (prompt K).
+- Le catalogue des connecteurs est décidé (`docs-internes/decisions/connecteurs.md`) : 6 familles, 19 outils affichés ; le connecteur universel (lot 4.1 b) sort avant le catalogue.
 - Le skill UI UX Pro Max (uupm.cc, licence MIT) sert à l'exploration (1.4), de liste de contrôle UX pour Claude Design, et de règles UX pour Claude Code à partir du lot 4.2. Ni son générateur, ni ses palettes, polices ou styles : la charte v2 reste la seule source.
 
 La V1 attend ; la recette de bout en bout en production devient le lot 4.11, juste avant le lancement.

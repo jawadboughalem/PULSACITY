@@ -1,110 +1,77 @@
-# Étape 2 : le légal, sans entreprise
+# Étape 2 : le légal et Stripe, sans entreprise
 
-Stratégie du 12 octobre : PULSACITY se lance gratuitement, édité par un particulier. L'immatriculation, la banque, la TVA et Stripe attendent le jour où des créateurs veulent payer (`prompts-6-le-jour-ou-ca-marche.md`).
+Stratégie du 12 octobre : PULSACITY encaisse dès la V0, en tant que particulier. La micro-entreprise se crée au seuil de `seuil-micro-entreprise.md` (prompts 6.1 à 6.7).
 
 | N° | Quoi | Qui | Quand |
 | --- | --- | --- | --- |
-| K | Résilier la domiciliation Kandbaz | Claude in Chrome | En premier |
-| 2.2 | Trois adresses e-mail professionnelles | Claude in Chrome, chez OVH | Cette semaine |
+| K | La domiciliation Kandbaz : la garder ou la résilier | Claude in Chrome | En premier |
+| 2.2 | L'adresse e-mail | Fait : contact@pulsacity.com, redirection OVH | — |
 | 2.4 | Les contrats de traitement des prestataires | Claude in Chrome | Avant le lot 4.9 |
 | 2.7 | La relecture des textes légaux | Claude Chat | Après 1.1 et 2.4 |
 | 2.6 | Les informations des textes légaux | Vous, vers Claude Code | Au début du lot 4.9 |
+| 2.8 | Le compte Stripe : ouverture, réglages, activation | Vous, puis Claude in Chrome | Ouverture et réglages après 1.1 ; activation après les lots 4.4 et 4.9 |
 
 Les prompts Claude Chat se lancent dans le projet « PULSACITY — Stratégie » (prompt 0). Les prompts Claude in Chrome, dans le groupe d'onglets « PULSACITY », après vous être connecté vous-même au service.
 
-Ce que deviennent les textes légaux, d'ici au premier abonnement :
+Une seule adresse sert à tout : contact@pulsacity.com (contact, aide, données personnelles, facturation).
+
+Ce que deviennent les textes légaux :
 
 | Texte | Sort |
 | --- | --- |
-| Mentions légales | Gardées : l'éditeur est un particulier, à titre non professionnel, avec l'hébergeur et l'adresse de contact |
+| Mentions légales | Celles d'un vendeur particulier : nom, adresse, téléphone, e-mail (à confirmer par 1.1), et l'hébergeur |
+| CGV | Gardées et publiées : celles d'un vendeur particulier, sans TVA |
+| CGU, avec l'annexe de sous-traitance RGPD | Gardées |
 | Politique de confidentialité, cookies compris | Gardée : le RGPD s'applique aussi à un particulier |
-| CGU, avec l'annexe de sous-traitance RGPD | Gardées : celles d'un service gratuit, en phase de lancement |
-| CGV | Retirées du site jusqu'au premier abonnement ; leur fichier est gardé dans le dépôt |
-| Contact | `/aide` (lot 4.4) et contact@pulsacity.com dans les mentions légales |
+| Contact | `/aide` (lot 4.4), et contact@pulsacity.com |
 
 1.1 confirme ou corrige ce tableau ; 2.7 relit les textes ; le lot 4.9 les met en ligne.
 
 ---
 
-## K. Résilier la domiciliation Kandbaz
+## K. La domiciliation Kandbaz : la garder ou la résilier
 
-Où : Claude in Chrome. Avant ce prompt :
-- connectez-vous vous-même à votre espace client Kandbaz ;
-- si vous avez commencé un dossier d'immatriculation sur le guichet unique avec cette adresse, ne l'envoyez pas. S'il est déjà parti, dites-le à Claude Code avant tout : la suite change.
+Où : Claude in Chrome. Avant ce prompt : connectez-vous vous-même à votre espace client Kandbaz.
+
+Comme vous vendez, les mentions légales doivent donner une adresse. Sans domiciliation, ce sera la vôtre. Mais une domiciliation suppose en général une entreprise immatriculée. Le prompt vérifie d'abord ce que Kandbaz permet sans entreprise ; vous décidez ensuite.
 
 ```
-Tu m'aides à mettre fin à mon contrat de domiciliation chez Kandbaz, que j'ai payé pour une entreprise que je ne crée plus. Je suis connecté à mon espace client. Tu ne paies rien, tu n'acceptes aucune nouvelle offre, et tu n'envoies rien sans mon accord.
+Tu m'aides à décider du sort de mon contrat de domiciliation chez Kandbaz, souscrit pour une entreprise que je ne crée pas tout de suite : je vends d'abord en tant que particulier. Je suis connecté à mon espace client. Tu ne paies rien, tu n'acceptes aucune nouvelle offre, et tu n'envoies rien sans mon accord.
 
 Où : mon espace client Kandbaz, ouvert dans ce groupe d'onglets.
 
 1. L'état des lieux, sans rien changer : l'offre souscrite, la date de souscription, la date et le montant de chaque paiement, la durée d'engagement, la date de fin prévue, le renouvellement automatique ou non, et l'état du dossier (contrat signé ou non, adresse déjà attribuée, courrier déjà reçu).
-2. Les règles : trouve les conditions générales de vente de Kandbaz (dans l'espace client ou sur kandbaz.com), et relève ce qu'elles disent de la rétractation, de la résiliation, du préavis et du remboursement. Cite les articles.
-3. Ce que j'ai le droit de demander. Si le paiement date de moins de 14 jours, le droit de rétractation d'un contrat conclu à distance peut s'appliquer : vérifie s'il est prévu ou exclu par leurs conditions. Sinon, la résiliation selon leurs conditions, et le remboursement de la période non utilisée si elles le permettent. Dis-moi ce que tu proposes de demander, et attends mon accord.
-4. La demande, une fois mon accord donné :
+2. Les règles : trouve les conditions générales de vente de Kandbaz (dans l'espace client ou sur kandbaz.com), et relève :
+   - si la domiciliation peut servir à un particulier sans entreprise immatriculée, et dans quel délai ils exigent un justificatif d'immatriculation ;
+   - si l'adresse peut être publiée dans les mentions légales d'un site ;
+   - ce qu'elles disent de la rétractation, de la résiliation, du préavis et du remboursement.
+   Cite les articles.
+3. Dis-moi ce que tu en conclus, puis attends ma décision : garder, ou résilier.
+4. Si je résilie :
+   - si le paiement date de moins de 14 jours, le droit de rétractation d'un contrat conclu à distance peut s'appliquer : vérifie s'il est prévu ou exclu par leurs conditions ; sinon, la résiliation selon leurs conditions, et le remboursement de la période non utilisée si elles le permettent. Dis-moi ce que tu proposes de demander, et attends mon accord ;
    - si l'espace client a un bouton ou un formulaire de résiliation, remplis-le, montre-le-moi, et attends mon OK avant d'envoyer ;
-   - sinon, rédige le message pour le service client, court et poli : mon contrat (numéro de client ou de contrat seulement), la demande (rétractation ou résiliation), la date d'effet, le remboursement demandé et son fondement, et une demande de confirmation écrite. Je l'enverrai moi-même.
-5. Si l'espace le permet, vérifie que le renouvellement automatique est arrêté.
+   - sinon, rédige le message pour le service client, court et poli : mon contrat (numéro de client ou de contrat seulement), la demande, la date d'effet, le remboursement demandé et son fondement, et une demande de confirmation écrite. Je l'enverrai moi-même ;
+   - si l'espace le permet, vérifie que le renouvellement automatique est arrêté.
 
 Ne modifie ni mes coordonnées ni mon moyen de paiement, et ne supprime pas le compte avant la confirmation de la résiliation.
 
-Compte rendu à me donner : l'offre, les dates (souscription, paiements, fin), ce que disent leurs conditions, ce qui a été demandé, la réponse ou le délai de réponse annoncé, et le remboursement attendu. Ni mes coordonnées, ni mon numéro de contrat.
-```
-
-Après le prompt : gardez la confirmation écrite de Kandbaz. Le remboursement, s'il est accordé, revient sur le moyen de paiement utilisé.
-
----
-
-## 2.2 Les adresses e-mail professionnelles, chez OVH
-
-Où : Claude in Chrome. Avant ce prompt :
-- connectez-vous vous-même à votre espace client OVHcloud ;
-- gardez votre boîte de réception ouverte dans un autre onglet.
-
-Trois adresses gratuites, sans toucher à la configuration du domaine (vos e-mails actuels continuent comme avant) :
-- contact@ pour les mentions légales ;
-- support@ pour l'aide aux créateurs et « Écrivez-nous » ;
-- rgpd@ pour les données personnelles.
-
-facturation@ viendra avec les abonnements (6.5).
-
-```
-Tu m'aides à créer des adresses e-mail professionnelles sur le domaine pulsacity.com, chez OVHcloud, sans rien payer et sans toucher à la configuration du domaine.
-
-Où : https://www.ovh.com/manager/ (je suis connecté), partie « Web Cloud », domaine pulsacity.com, rubrique des e-mails.
-
-Ce qu'il ne faut surtout pas toucher :
-- la zone DNS du domaine : enregistrements MX, SPF (TXT), DKIM, DMARC, et tous les autres ;
-- les boîtes e-mail existantes, leurs mots de passe et leurs réglages ;
-- toute commande, option ou offre payante. Si une étape demande un paiement, arrête-toi et dis-le-moi.
-
-Étapes :
-1. Fais l'inventaire, sans rien changer : les boîtes e-mail qui existent sur pulsacity.com (adresse et offre), les redirections et les alias existants. Donne-moi la liste.
-2. Dis-moi ce qu'OVH permet gratuitement ici : des alias sur ma boîte existante, ou des redirections vers une adresse de mon choix. Si les deux sont possibles, préfère l'alias : il permet aussi de répondre depuis l'adresse professionnelle. Attends mon accord avant de créer quoi que ce soit.
-3. Demande-moi l'adresse de destination, celle où je veux recevoir ces e-mails. Puis crée ces trois adresses, toutes vers cette destination :
-   - contact@pulsacity.com ;
-   - support@pulsacity.com ;
-   - rgpd@pulsacity.com.
-   Si OVH propose de « conserver une copie », laisse le réglage par défaut.
-4. Vérifie que chaque adresse apparaît dans la liste, vers la bonne destination.
-5. Dis-moi : « Envoyez un e-mail de test à chacune des trois adresses depuis une autre boîte, puis dites-moi OK. » Attends mon OK, puis demande-moi si chacun est bien arrivé.
-
-Compte rendu à me donner : la méthode (alias ou redirection), les trois adresses créées, le résultat de chaque test, et ce qui était déjà en place (le nombre de boîtes, sans leurs adresses). Ni l'adresse de destination, ni aucun mot de passe.
+Compte rendu à me donner : l'offre, les dates (souscription, paiements, fin), ce que disent leurs conditions sur l'usage sans entreprise et sur la résiliation, la décision prise, ce qui a été demandé, et le remboursement attendu. Ni mes coordonnées, ni mon numéro de contrat, ni l'adresse de domiciliation.
 ```
 
 ---
 
 ## 2.4 Les contrats de traitement des prestataires
 
-Où : Claude in Chrome. Avant ce prompt : connectez-vous vous-même à Vercel, Supabase, Resend et Cloudflare.
+Où : Claude in Chrome. Avant ce prompt : connectez-vous vous-même à Vercel, Supabase, Resend et Cloudflare (et à Stripe s'il existe déjà).
 
-Ce compte rendu complète les « [À COMPLÉTER : garantie retenue pour chaque prestataire] » de la politique de confidentialité et des CGU. Stripe viendra avec les abonnements.
+Ce compte rendu complète les « [À COMPLÉTER : garantie retenue pour chaque prestataire] » de la politique de confidentialité et des CGU.
 
 ```
 Tu m'aides à vérifier les contrats de traitement des données (DPA) des prestataires de PULSACITY, et les garanties de leurs transferts hors de l'Union européenne. Tu lis : tu ne changes aucun réglage, sauf l'acceptation d'un DPA quand je te la confirme.
 
-Je suis connecté à Vercel, Supabase, Resend et Cloudflare dans ce groupe d'onglets.
+Je suis connecté à Vercel, Supabase, Resend et Cloudflare dans ce groupe d'onglets, et à Stripe s'il existe déjà.
 
-Pour chaque prestataire, dans cet ordre : Vercel (hébergement), Supabase (base de données), Resend (envoi des e-mails), Cloudflare (stockage des photos, R2), OVHcloud (domaine et e-mails du fondateur) :
+Pour chaque prestataire, dans cet ordre : Vercel (hébergement), Supabase (base de données), Resend (envoi des e-mails), Cloudflare (stockage des photos, R2), Stripe (paiements), OVHcloud (domaine et e-mails du fondateur) :
 1. Trouve sa page officielle de DPA (« Data Processing Addendum », dans ses pages légales ou dans les réglages du compte). Dis-moi s'il s'applique de lui-même avec les conditions d'utilisation, ou s'il faut l'accepter ou le signer dans le compte. S'il faut l'accepter, montre-moi la page et attends mon accord : c'est moi qui décide.
 2. Trouve sa garantie de transfert hors de l'Union : certification au Data Privacy Framework (vérifie l'inscription sur https://www.dataprivacyframework.gov/list, avec le nom exact de la société et la date de ta vérification), clauses contractuelles types de la Commission européenne, ou les deux.
 3. Note où sont stockées les données de PULSACITY chez lui, d'après le tableau de bord, sans rien changer. Attendu : Francfort pour Vercel et Supabase, Europe de l'Ouest pour Cloudflare R2, Irlande (eu-west-1) pour Resend.
@@ -119,32 +86,29 @@ Compte rendu à me donner : un tableau avec, pour chaque prestataire, le nom exa
 
 ## 2.7 La relecture des textes légaux
 
-Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation. Remplacez la ligne entre crochets par les textes : copiez-les depuis les pages du site (`/mentions-legales`, `/cgu`, `/confidentialite`).
+Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation. Remplacez la ligne entre crochets par les quatre textes : copiez-les depuis les pages du site (`/mentions-legales`, `/cgu`, `/cgv`, `/confidentialite`).
 
-Pour un service gratuit, une relecture par Claude Chat, appuyée sur les sources officielles et les modèles de la CNIL, suffit à mon avis pour le lancement. La relecture par un juriste devient conseillée le jour des abonnements, avec les CGV (6.7).
+Claude Chat réécrit les textes ; une relecture par un juriste reste conseillée, au plus tard le jour du seuil (6.7).
 
 ```
-Prompt 2.7 — Relire les textes légaux d'un service gratuit, édité par un particulier.
+Prompt 2.7 — Relire les textes légaux d'un vendeur particulier.
 
-Contexte : compte rendu 1.1 (le cadre sans entreprise) et compte rendu 2.4 (les prestataires). Voici trois textes de PULSACITY, écrits pour une entreprise et encore en brouillon. Les passages « [À COMPLÉTER : …] » attendent une information ou une décision. Les CGV seront retirées du site jusqu'au premier abonnement.
+Contexte : compte rendu 1.1 (encaisser sans entreprise) et compte rendu 2.4 (les prestataires). Voici les quatre textes de PULSACITY, écrits pour une entreprise et encore en brouillon. Les passages « [À COMPLÉTER : …] » attendent une information ou une décision. Je vends des abonnements en tant que particulier, sans TVA, jusqu'au seuil où je créerai une micro-entreprise.
 
-[Les trois textes : mentions légales, CGU avec leur annexe de sous-traitance, politique de confidentialité.]
+[Les quatre textes : mentions légales, CGU avec leur annexe de sous-traitance, CGV, politique de confidentialité.]
 
-Réécris-les pour un service gratuit, en phase de lancement, édité par un particulier à titre non professionnel, au regard du droit français et européen en vigueur en octobre 2026. Pour chaque point : ce qui va, ce qui manque, ce qui est risqué, et la rédaction que tu proposes.
+Réécris-les pour un vendeur particulier, au regard du droit français et européen en vigueur en octobre 2026. Pour chaque point : ce qui va, ce qui manque, ce qui est risqué, et la rédaction que tu proposes.
 
-1. Les mentions légales d'un éditeur non professionnel (LCEN) : ce qui est publié, ce qui est gardé pour l'hébergeur.
-2. La politique de confidentialité : l'identité du responsable du traitement, les finalités, les bases légales, les durées de conservation, les destinataires et les transferts hors de l'Union (compte rendu 2.4), les droits, les deux cookies nécessaires.
-3. Les CGU : objet, gratuité et phase de lancement, ce qui se passera quand les abonnements ouvriront (prévenir, ne jamais faire payer sans accord, rien de supprimé), engagements du créateur, contenus, disponibilité, responsabilité d'un particulier, fin du service et suppression des données, modification des conditions, droit applicable et tribunal compétent.
-4. L'annexe de sous-traitance (article 28 du RGPD) : ce qu'elle doit contenir, quand le sous-traitant est un particulier.
-5. Les avis en ligne. Les créateurs publient les avis de leurs clients avec nos widgets. Que demandent le Code de la consommation (article L111-7-2 et articles D111-16 et suivants) et la directive Omnibus à celui qui publie des avis : informations sur leur collecte et leur vérification, date de l'avis, traitement des avis négatifs ? Notre badge « 4,9/5 · 87 avis » est calculé sur les témoignages que le créateur a validés : est-ce un risque de pratique commerciale trompeuse, et que faut-il afficher ou changer ? Qui en porte la responsabilité, le créateur ou PULSACITY ?
-6. Le droit à l'image et le consentement : photo et texte du client, retrait du consentement, ce que dit notre case de consentement.
-7. Les e-mails de demande d'avis aux clients des créateurs : base légale, information, désinscription, adresse postale de l'expéditeur.
-8. La page Tarifs pendant la phase gratuite : la formulation des plans « Bientôt ».
-9. Les CGV : ce qu'il faudra y revoir le jour des abonnements, pour que ce jour-là soit court.
+1. Les mentions légales d'un particulier qui vend en ligne (LCEN).
+2. Les CGV : vendeur particulier, prix TVA non applicable, commande et paiement, renouvellement, résiliation, changement de plan (dont le passage à un plan inférieur décidé en 1.3), défaut de paiement, évolution des prix, rétractation des professionnels de cinq salariés au plus (article L221-3 du Code de la consommation) et médiateur, ce qui se passera quand une micro-entreprise reprendra les abonnements.
+3. Les CGU : objet, engagements du créateur, contenus, disponibilité, responsabilité d'un particulier et son plafond, fin du service et suppression des données, modification des conditions, droit applicable et tribunal compétent face à des clients qui ne sont pas commerçants.
+4. L'annexe de sous-traitance (article 28 du RGPD), quand le sous-traitant est un particulier.
+5. La politique de confidentialité : l'identité du responsable du traitement, les finalités, les bases légales, les durées de conservation, les destinataires et les transferts hors de l'Union (compte rendu 2.4), les droits, les deux cookies nécessaires.
+6. Les avis en ligne. Les créateurs publient les avis de leurs clients avec nos widgets. Que demandent le Code de la consommation (article L111-7-2 et articles D111-16 et suivants) et la directive Omnibus à celui qui publie des avis : informations sur leur collecte et leur vérification, date de l'avis, traitement des avis négatifs ? Notre badge « 4,9/5 · 87 avis » est calculé sur les témoignages que le créateur a validés : est-ce un risque de pratique commerciale trompeuse, et que faut-il afficher ou changer ? Qui en porte la responsabilité, le créateur ou PULSACITY ?
+7. Le droit à l'image et le consentement : photo et texte du client, retrait du consentement, ce que dit notre case de consentement.
+8. Les e-mails de demande d'avis aux clients des créateurs : base légale, information, désinscription, adresse postale de l'expéditeur.
 
-Puis :
-- dis si une relecture par un juriste est utile dès maintenant, ou seulement le jour des abonnements, et pourquoi ;
-- le « Compte rendu pour Claude Code » : les trois textes réécrits en entier, prêts à intégrer, avec des marques [INFO : …] là où une de mes informations personnelles doit apparaître, et la liste de ce qui attend le jour des abonnements.
+Puis le « Compte rendu pour Claude Code » : les quatre textes réécrits en entier, prêts à intégrer, avec des marques [INFO : …] là où une de mes informations personnelles doit apparaître, et la liste de ce qui changera le jour de la micro-entreprise.
 ```
 
 ---
@@ -153,34 +117,70 @@ Puis :
 
 Où : vous, vers Claude Code, au début du lot 4.9.
 
-Le dépôt est public et garde tout son historique. Vos informations personnelles (votre nom, et ce que 1.1 exige de publier) apparaîtront sur le site, mais viendront de variables d'environnement que vous saisissez vous-même dans Vercel : le lot 4.9 vous donne le prompt. Elles ne s'envoient pas à Claude Code.
+Le dépôt est public et garde tout son historique. Vos informations personnelles (nom, adresse, téléphone) apparaîtront sur le site, comme la loi l'impose à un vendeur, mais viendront de variables d'environnement que vous saisissez vous-même dans Vercel : le lot 4.9 vous donne le prompt. Elles ne s'envoient pas à Claude Code.
 
 Remplissez ce modèle et envoyez-le à Claude Code, avec le compte rendu de 2.7 :
 
 ```
 Informations pour les textes légaux (lot 4.9)
 
-Éditeur
-- Qualité : particulier, à titre non professionnel (d'après 1.1)
+Vendeur et éditeur
+- Qualité : particulier (d'après 1.1)
 - Nom commercial du service : PULSACITY
-- Ce qui est publié : [d'après 1.1 : nom seul, ou nom et adresse…] (les valeurs : Vercel)
-- E-mail de contact : contact@pulsacity.com
+- Ce qui est publié : [d'après 1.1 : nom, adresse, téléphone…] (les valeurs : Vercel)
+- E-mail, pour tout : contact@pulsacity.com
+- TVA : [mention d'après 1.1]
 
 Confidentialité
-- E-mail pour les données personnelles : rgpd@pulsacity.com
 - Délai de suppression après la fermeture d'un espace : [par exemple 30 jours]
 - Durée maximale des adresses « Me prévenir » : [par exemple 12 mois]
 - Garanties des prestataires : [tableau du compte rendu 2.4]
 - Mesure d'audience : [outil retenu en 1.6, ou aucune]
 
 CGU
-- Responsabilité : [d'après 2.7]
+- Plafond de responsabilité : [d'après 2.7]
 - Tribunal compétent : [d'après 2.7]
 - Durée de conservation des notifications des outils connectés : [par exemple 90 jours]
 
 CGV
-- Retirées du site jusqu'au premier abonnement.
-
-Tarifs
-- Phrase des plans à venir : [d'après 1.3 et 2.7]
+- Passage à un plan inférieur : [compte rendu 1.3]
+- Professionnels de cinq salariés au plus (article L221-3) : [d'après 2.7]
 ```
+
+---
+
+## 2.8 Le compte Stripe, en particulier
+
+En trois temps. 1.1 dit d'abord ce que Stripe accepte d'un particulier en France.
+
+### 2.8 a — Ouvrir le compte (vous)
+
+Sur https://dashboard.stripe.com/register, avec l'adresse contact@pulsacity.com. Activez vous-même la double authentification. Le mode test est utilisable tout de suite : c'est lui que le lot 4.5 utilise.
+
+### 2.8 b — Régler le compte, en mode test (Claude in Chrome)
+
+Avant ce prompt :
+- connectez-vous à Stripe ;
+- téléchargez depuis le dépôt l'icône `public/icon-512.png` et le logo `docs-internes/identite-v2/assets/svg/pulsacity-logo.svg` (ou ceux de la charte v2 s'ils existent déjà) ;
+- préparez le pied de page des reçus et des factures : les mentions de 1.1 (vendeur particulier, TVA non applicable), avec vos informations. Vous le collez vous-même dans Stripe, et il n'apparaît pas dans le compte rendu.
+
+```
+Tu m'aides à régler le compte Stripe de PULSACITY, en mode test. Je suis connecté. Tu ne crées ni produit, ni prix, ni webhook, ni clé : ce sera le lot suivant.
+
+Où : https://dashboard.stripe.com/ . Vérifie d'abord que le mode test (environnement de test) est actif.
+
+Ce qu'il ne faut surtout pas toucher : les clés API, les webhooks, les comptes bancaires, les informations d'identité et d'activation du compte, l'abonnement de Stripe lui-même.
+
+1. Image de marque (Paramètres, « Image de marque ») : icône et logo avec les fichiers que je te donne ; couleur de marque et couleur d'accent : demande-les-moi (celles de la charte v2, ou Encre #16213E et Carmin #A3243B).
+2. Informations publiques : nom public « PULSACITY », site https://pulsacity.com, e-mail d'assistance contact@pulsacity.com, libellé sur les relevés bancaires « PULSACITY ». Laisse vides les champs que je ne t'ai pas donnés.
+3. Liens légaux, là où Stripe les demande (portail client, pages de paiement) : conditions https://pulsacity.com/cgv, confidentialité https://pulsacity.com/confidentialite.
+4. E-mails aux clients : reçus des paiements réussis et des remboursements activés ; langue française si le réglage existe.
+5. Factures (Paramètres de Billing, « Factures ») : numérotation séquentielle à l'échelle du compte. Pour le pied de page, ouvre le champ et dis-moi : « Collez votre pied de page, puis dites-moi OK. » Attends mon OK, puis enregistre.
+6. Vérifie : un aperçu de facture et de reçu montre le logo, les couleurs, le nom public et le pied de page.
+
+Compte rendu à me donner : chaque réglage fait, et ce que tu n'as pas trouvé. Ni le pied de page, ni aucune clé, ni aucun identifiant de compte.
+```
+
+### 2.8 c — Activer le compte (vous), plus tard
+
+L'activation demande vos informations et votre IBAN, et Stripe vérifie le site : mentions légales, CGV, contact et prix doivent y être complets. Faites-la après les lots 4.4 (aide et contact) et 4.9 (légal), juste avant le passage en mode réel du lot 4.5.

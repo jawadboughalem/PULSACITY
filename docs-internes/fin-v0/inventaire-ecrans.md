@@ -1,6 +1,6 @@
 # Inventaire des écrans
 
-Établi le 5 octobre 2026, revu le 12 octobre (lancement sans entreprise), à partir du code en ligne (`main`) et de `docs-internes/maquettes/INDEX.md`. C'est la liste de contrôle des maquettes v2 :
+Établi le 5 octobre 2026, revu le 12 octobre, à partir du code en ligne (`main`) et de `docs-internes/maquettes/INDEX.md`. C'est la liste de contrôle des maquettes v2 :
 - Claude Design dessine chaque ligne, avec chacun de ses états, à 1440 px et à 360 px ;
 - le prompt 3.7 vérifie qu'il ne manque rien, dans les deux sens : aucun écran ni état en ligne sans maquette v2, aucune maquette v2 d'un écran ou d'un état qui n'existe pas (sauf les écrans à créer, partie 8).
 
@@ -17,7 +17,7 @@ La logique ne change pas : les états, les textes et les parcours décrits ici r
 | Intégration « Bientôt » | `/integrations/stripe`, `/integrations/calendly` | « Me prévenir » : vide, adresse incomplète, trop de demandes, inscrit. « En attendant ». | m21-03 à 06 |
 | Guides | `/guides` | Deux groupes, « Démarrer » et « Aller plus loin ». | m22-01 |
 | Un guide | `/guides/[slug]` | Sommaire à droite sur ordinateur, replié sur téléphone, titre en cours marqué. | m22-02 |
-| Pages légales | `/mentions-legales`, `/cgu`, `/cgv`, `/confidentialite` | Bandeau « Brouillon », sommaire « Sur cette page », champs « [À COMPLÉTER] ». Les CGV seront retirées du site jusqu'au premier abonnement (lot 4.9). | m23 : confidentialité seulement, les trois autres suivent sa mise en page |
+| Pages légales | `/mentions-legales`, `/cgu`, `/cgv`, `/confidentialite` | Bandeau « Brouillon », sommaire « Sur cette page », champs « [À COMPLÉTER] ». Elles deviennent celles d'un vendeur particulier (lot 4.9). | m23 : confidentialité seulement, les trois autres suivent sa mise en page |
 | En-tête, pied de page, menu du téléphone | — | Menu ouvert sous un voile. | m7, m24 |
 | Page introuvable, erreur | — | Introuvable, affichage impossible. | m14 |
 | Images de partage | une par page | Titre de la page, logo. | **aucune** |
@@ -88,7 +88,7 @@ La logique ne change pas : les états, les textes et les parcours décrits ici r
 
 ## 8. Écrans à créer
 
-Ils sont dessinés en premier (prompt 3.3) : ils remplacent les liens morts de l'espace (lots 4.3 à 4.5). Les tables et colonnes nouvelles restent facultatives, compatibles avec le code en ligne.
+Ils sont dessinés en premier (prompt 3.3) : ils remplacent les liens morts de l'espace et permettent d'encaisser (lots 4.3 à 4.5). Les tables et colonnes nouvelles restent facultatives, compatibles avec le code en ligne.
 
 ### 8.1 Réglages — `/app/reglages`
 
@@ -117,34 +117,32 @@ Lien « Mon compte » du menu du compte et de « Plus », qui mène aujourd'hui 
 - **Exporter mes données** : un fichier avec l'espace, les offres, les clients, les ventes, les demandes, et les témoignages avec la preuve de leur consentement. États : préparation, prêt, échec.
 - **Supprimer mon espace** :
   - ce qui disparaît : les témoignages, et les widgets des pages de vente ;
-  - l'abonnement s'arrête, quand il y en aura un ;
+  - l'abonnement s'arrête ;
   - le délai de suppression est celui des CGU ; les factures sont gardées, comme la loi l'impose ;
   - confirmation en tapant le nom de l'espace.
   - États : fenêtre de confirmation, puis page « Votre espace est supprimé » après déconnexion.
 
-### 8.3 Mon abonnement — `/app/facturation`
+### 8.3 Abonnement et factures — `/app/facturation`
 
-Lien « Abonnement et factures » du menu du compte (qui devient « Mon abonnement »), et destination de chaque « Voir le plan Essentiel » et « Voir les plans ».
+Lien « Abonnement et factures » du menu du compte, et destination de chaque « Voir le plan Essentiel » et « Voir les plans ». Les paiements sont dans la V0 : le fondateur encaisse en tant que particulier (stratégie du 12 octobre).
 
-Pendant la phase de lancement, gratuite, la page n'encaisse rien (stratégie du 12 octobre) :
-- **Votre plan** : son nom ; sur Gratuit, la consommation : témoignages validés (12/15), demandes du mois (18/20), widgets (1/1).
-- **Les plans à venir** :
-  - Essentiel et Pro, plus compacts qu'en m8, avec leurs prix et Mensuel ou Annuel, marqués « Bientôt » ;
-  - « Me prévenir à l'ouverture », un clic, puisque l'adresse de l'espace est connue ;
-  - une phrase qui dit que les abonnements ouvrent bientôt, et que rien n'est perdu au-delà des limites.
+- **Votre plan** : nom, prix, mensuel ou annuel, prochaine échéance. Sur Gratuit, la consommation : témoignages validés (12/15), demandes du mois (18/20), widgets (1/1).
+- **Changer de plan** :
+  - les trois plans, plus compacts qu'en m8, avec Mensuel et Annuel ;
+  - le plan actuel marqué ;
+  - « Passer au plan Essentiel », « Passer au plan Pro », « Passer à l'annuel », vers le paiement Stripe.
+- **Paiement et factures** : un bouton vers le portail Stripe (carte, adresse de facturation, factures en PDF, résiliation). À décider : une liste des dernières factures dans la page, ou le portail seul.
 - **États** :
-  - Gratuit, loin des limites ; Gratuit, une limite atteinte ;
-  - inscrit à « Me prévenir à l'ouverture » ;
-  - plan offert : Essentiel, offert aux bêta-testeurs, avec sa date de fin s'il en a une.
-
-Plus tard, le jour où les abonnements ouvrent (lot 6.6), avec Stripe :
-- changer de plan (« Passer au plan Essentiel », « Passer au plan Pro », « Passer à l'annuel ») ;
-- paiement et factures par le portail Stripe ;
-- états : retour du paiement réussi, paiement en cours de confirmation, paiement abandonné, paiement échoué (et son bandeau dans tout l'espace), résiliation programmée, passage à un plan inférieur programmé, code promotionnel ou prix de lancement ;
-- règle du passage à un plan inférieur (1.3) : rien n'est jamais supprimé ;
-- e-mails de facturation : ceux de Stripe, à ses couleurs.
-
-Ces états « plus tard » se dessinent avec le reste (3.3), pour ne pas rouvrir Claude Design ce jour-là.
+  - Gratuit, Essentiel mensuel, Pro annuel ;
+  - retour du paiement réussi (« Bienvenue dans Essentiel ») ;
+  - paiement en cours de confirmation ;
+  - paiement abandonné ;
+  - paiement échoué : bandeau dans tout l'espace, et ici ;
+  - résiliation programmée (« Votre plan Essentiel s'arrête le 12 novembre », « Reprendre mon abonnement ») ;
+  - passage à un plan inférieur programmé ;
+  - code promotionnel, dont Essentiel offert aux bêta-testeurs.
+- **Passage à un plan inférieur** : règle à fixer en 1.3. Rien n'est jamais supprimé, mais il faut dire ce qui s'affiche au-delà des limites : widgets en trop, témoignages au-delà de 15, retour du badge.
+- **E-mails de facturation** (reçu, paiement échoué, fin de période) : ceux de Stripe, aux couleurs de PULSACITY (prompt 2.8 b). Pas de maquette.
 
 ### 8.4 Aide et contact — `/aide`
 
@@ -161,12 +159,17 @@ Lien « Aide et contact » du menu du compte. Page publique, dans la coque du si
   - « Écrivez-nous » de m21 et m22 ;
   - « Bloquée à une étape ? Écrivez-nous » du guide sur téléphone.
 
-### 8.5 Le catalogue des connecteurs (décidé en 1.2)
+### 8.5 Le catalogue des connecteurs (décidé le 10 octobre)
 
-- `/integrations` et `/app/connecteurs`, groupés par familles : disponibles d'abord, puis « Bientôt » avec « Me prévenir ».
-- Une page publique par outil, comme `/integrations/stripe`.
-- À décider par Design : un filtre par famille si la liste est longue ; les noms seuls, ou les logos des outils dans le respect des règles de chaque marque.
-- **États** : disponible, bientôt, inscrit, « Dites-nous quel outil ».
+Décision dans `docs-internes/decisions/connecteurs.md`.
+
+- `/integrations` et `/app/connecteurs`, en six familles, dans cet ordre : formations et tunnels de vente ; rendez-vous et séances ; paiements en ligne ; événements et webinaires ; boutiques en ligne ; tous vos autres outils. Les familles « Facturation » et « Communautés et abonnements » restent masquées.
+- Dix-neuf outils affichés. Systeme.io et le connecteur universel sont disponibles, les autres « Bientôt ».
+- Une page publique par outil affiché, comme `/integrations/stripe`. Chaque fiche « Bientôt » montre « En attendant : avec Zapier ou Make ».
+- Le connecteur universel : sa page de connexion dans l'espace (adresse propre à l'espace, comme Systeme.io), et ses guides Zapier, Make, n8n et Podia.
+- La liste « Compatible avec votre site » : les constructeurs de pages où le widget se colle, distincte des connecteurs.
+- À décider par Design : un filtre par famille ; les noms seuls, ou les logos des outils dans le respect des règles de chaque marque.
+- **États** : disponible, bientôt, inscrit, « En attendant », « Dites-nous quel outil ».
 
 ### 8.6 La page d'accueil v2 (décidée en 1.5)
 

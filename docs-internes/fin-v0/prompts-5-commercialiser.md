@@ -6,11 +6,10 @@
 | 5.2 | Le studio : vidéos en motion design et visuels en série | Claude Code, dépôt privé à part | Après 5.1 |
 | 5.3 | La production en série, une vague par mois | Claude Chat, un projet par réseau, puis le studio | Après 5.2 ; la première vague avant la bêta |
 | 5.4 | La bêta privée, puis le lancement | Claude Chat, projet « PULSACITY — Stratégie » | Quand le lot 4.11 donne le feu vert |
-| 5.5 | La publicité payante | Claude Chat, projet « PULSACITY — Stratégie » | Quand les premiers abonnements rentrent (après le lot 6.6) |
+| 5.5 | La publicité payante | Claude Chat, projet « PULSACITY — Stratégie » | Quelques semaines après le lancement, avec des chiffres |
 
-Trois règles pour toute la communication :
-- PULSACITY est gratuit pendant la phase de lancement, et le dit honnêtement : aucune promesse de prix qui ne serait pas tenue ;
-- les adresses laissées sur « Me prévenir » servent seulement à annoncer la sortie de leur connecteur, et celles de « Me prévenir à l'ouverture », l'ouverture des abonnements : jamais au lancement ni à une campagne ;
+Deux règles pour toute la communication :
+- les adresses laissées sur « Me prévenir » servent seulement à annoncer la sortie de leur connecteur, jamais au lancement ni à une campagne ;
 - aucun faux client, aucun avis inventé, aucun chiffre sans source. Les avis des bêta-testeurs ne sont publiés qu'avec leur accord, recueilli par notre propre page de collecte.
 
 ---
@@ -126,13 +125,12 @@ Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation.
 ```
 Prompt 5.4 — La bêta privée, puis le lancement.
 
-Contexte : comptes rendus 1.3, 1.5 et 1.6. La V0 est complète : réglages, aide et contact, v2, textes légaux validés. PULSACITY est gratuit pendant la phase de lancement, sans entreprise ; les abonnements ouvriront quand des créateurs voudront payer.
+Contexte : comptes rendus 1.3, 1.5 et 1.6. La V0 est complète : paiements, réglages, aide et contact, v2, textes légaux validés.
 
-1. La bêta : le message d'invitation (LinkedIn, Instagram, groupes, e-mail), les endroits où le publier, l'offre aux bêta-testeurs (Essentiel offert, décidé en 1.3), le déroulé pour chacun (installation accompagnée, points d'étape), le questionnaire de retour, et la demande de témoignage sur PULSACITY, faite avec notre propre lien de collecte.
+1. La bêta : le message d'invitation (LinkedIn, Instagram, groupes, e-mail), les endroits où le publier, l'offre aux bêta-testeurs (Essentiel offert par un code promotionnel, décidé en 1.3), le déroulé pour chacun (installation accompagnée, points d'étape), le questionnaire de retour, et la demande de témoignage sur PULSACITY, faite avec notre propre lien de collecte.
 2. Une grille pour trier leurs retours avant le lancement : bloquant, gênant, idée.
 3. La semaine de lancement, jour par jour : publications de chaque réseau, messages aux bêta-testeurs, partenaires, communautés, annuaires.
-4. Les règles : les adresses laissées sur « Me prévenir » ne servent qu'à annoncer la sortie de leur connecteur, celles de « Me prévenir à l'ouverture » qu'à annoncer l'ouverture des abonnements, jamais au lancement ; les avis des bêta-testeurs ne sont publiés qu'avec leur accord.
-5. Les signaux à suivre pendant la bêta pour décider d'ouvrir les abonnements (le seuil de 1.3).
+4. Les règles : les adresses laissées sur « Me prévenir » ne servent qu'à annoncer la sortie de leur connecteur, jamais au lancement ; les avis des bêta-testeurs ne sont publiés qu'avec leur accord.
 
 Termine par le « Compte rendu pour Claude Code » : ce que le produit doit avoir avant le lancement (par exemple le mur d'avis de PULSACITY sur pulsacity.com, avec notre propre widget), et la date visée.
 ```
@@ -141,7 +139,7 @@ Termine par le « Compte rendu pour Claude Code » : ce que le produit doit avoi
 
 ## 5.5 La publicité payante
 
-Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation, quand l'entreprise existe et que les premiers abonnements rentrent.
+Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation, quelques semaines après le lancement.
 
 ```
 Prompt 5.5 — La publicité payante.

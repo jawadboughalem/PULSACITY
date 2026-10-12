@@ -6,9 +6,9 @@ Prompts pour Claude Chat, dans le projet « PULSACITY — Stratégie ». Une con
 | --- | --- | --- |
 | 0 | Créer le projet Claude | En premier, 10 minutes |
 | 0 bis | Ajouter le skill UI UX Pro Max à Claude | Juste après, 5 minutes |
-| 1.1 | Lancer sans entreprise : ce qui est permis | Tout de suite |
-| 1.2 | Le catalogue des connecteurs | En parallèle |
-| 1.3 | Les tarifs : ouverture, phase gratuite, seuil | Après 1.1 |
+| 1.1 | Encaisser sans entreprise : ce qui est permis | Tout de suite |
+| 1.2 | Le catalogue des connecteurs | Fait le 10 octobre |
+| 1.3 | Les tarifs | Après 1.1 |
 | 1.4 | La direction visuelle de la v2, avec uupm.cc et le skill | En parallèle ; vous explorez vous-même entre les deux temps du prompt |
 | 1.5 | Le positionnement et la page d'accueil | En parallèle, mieux après 1.2 |
 | 1.6 | Commercialiser PULSACITY | Après 1.5 |
@@ -30,15 +30,17 @@ Où : claude.ai, « Projets », « Créer un projet ».
 3. Fichiers du projet. Ouvrez chacun de ces liens, cliquez sur l'icône « Download raw file » en haut à droite du fichier, puis ajoutez le fichier au projet (remplacez les anciennes versions) :
    - https://github.com/jawadboughalem/PULSACITY/blob/main/docs-internes/fin-v0/brief-pulsacity.md
    - https://github.com/jawadboughalem/PULSACITY/blob/main/docs-internes/fin-v0/inventaire-ecrans.md
+   - https://github.com/jawadboughalem/PULSACITY/blob/main/docs-internes/fin-v0/seuil-micro-entreprise.md
    - https://github.com/jawadboughalem/PULSACITY/blob/main/docs-internes/decision_tarifs.md
+   - https://github.com/jawadboughalem/PULSACITY/blob/main/docs-internes/decisions/connecteurs.md (le compte rendu 1.2)
 4. Dans chaque conversation : la recherche web activée. Pour 1.2, 1.3, 1.4 et 1.6, le mode de recherche approfondie s'il vous est proposé.
 
 ```
 Tu conseilles le fondateur de PULSACITY. Il construit ce logiciel seul, avec Claude : Claude Chat pour décider, Claude Design pour dessiner, Claude Code pour construire, Claude in Chrome pour agir sur les services en ligne.
 
-Sa stratégie : lancer PULSACITY gratuitement, sans entreprise, et faire ses preuves. L'entreprise (une micro-entreprise, a priori) se créera le jour où des créateurs voudront payer. Ne le pousse pas à créer une structure plus tôt ; dis-lui seulement, sources à l'appui, si quelque chose l'impose.
+Sa stratégie : lancer PULSACITY avec ses abonnements payants et encaisser en tant que particulier, sans entreprise, pour faire ses preuves. Il créera une micro-entreprise dès que les paiements deviendront réguliers, au seuil fixé dans seuil-micro-entreprise.md. C'est sa décision : ne la remets pas en cause à chaque réponse. Dis-lui seulement, sources à l'appui, ce qu'elle impose (déclarations, mentions, limites), et si un fait nouveau oblige à avancer le seuil.
 
-Avant chaque réponse, appuie-toi sur les fichiers du projet : brief-pulsacity.md (le produit, les prix, les coûts, les contraintes), inventaire-ecrans.md (les écrans), decision_tarifs.md (les prix TVA comprise), et les comptes rendus déjà ajoutés.
+Avant chaque réponse, appuie-toi sur les fichiers du projet : brief-pulsacity.md (le produit, les prix, les coûts, les contraintes), inventaire-ecrans.md (les écrans), seuil-micro-entreprise.md (le seuil), decision_tarifs.md (les prix TVA comprise), connecteurs.md (le catalogue des connecteurs), et les comptes rendus déjà ajoutés.
 
 Ta façon de travailler :
 - Français, vouvoiement, phrases courtes. Pas de jargon sans explication.
@@ -67,132 +69,92 @@ Si vous ne trouvez pas l'option « Skills », dites-le à Claude Code : le promp
 
 ---
 
-## 1.1 Lancer sans entreprise : ce qui est permis
+## 1.1 Encaisser sans entreprise : ce qui est permis
 
 Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation.
 
-Ce que vous en tirez : ce que vous pouvez faire sans entreprise, ce que les textes légaux doivent dire, et le seuil où créer la micro-entreprise. C'est la base des prompts 1.3, 2.6, 2.7 et du lot 4.9.
+Ce que vous en tirez : ce que vous devez déclarer, ce que les textes légaux doivent dire, ce que Stripe accepte, et le seuil confirmé ou ajusté. C'est la base des prompts 1.3, 2.6, 2.7, 2.8 et du lot 4.9.
 
 ```
-Prompt 1.1 — Lancer PULSACITY sans entreprise.
+Prompt 1.1 — Encaisser sans entreprise.
 
-Contexte : je ne crée pas d'entreprise pour l'instant. Je lance PULSACITY gratuitement, en tant que particulier, pour faire mes preuves. Je créerai une micro-entreprise le jour où des créateurs voudront payer. Les créateurs qui utilisent PULSACITY sont des professionnels ; PULSACITY traite les données de leurs clients (nom, e-mail, avis, photo).
+Contexte : je lance PULSACITY avec ses abonnements payants (brief-pulsacity.md) et j'encaisse en tant que particulier, sans entreprise, pour faire mes preuves. Je créerai une micro-entreprise dès que les paiements deviendront réguliers, au seuil de seuil-micro-entreprise.md. C'est ma décision. Les créateurs qui paient sont des professionnels ; PULSACITY traite les données de leurs clients (nom, e-mail, avis, photo).
 
 Commence par me poser, en une seule liste, les questions dont tu as besoin sur ma situation : par exemple si je suis salarié et ce que dit mon contrat (exclusivité, loyauté, non-concurrence), si j'ai déjà une activité déclarée. Attends mes réponses avant d'analyser.
 
-Ensuite, avec les règles en vigueur en octobre 2026 :
+Ensuite, avec les règles en vigueur en octobre 2026, sources officielles à l'appui :
 
-1. Le service gratuit. Puis-je, en tant que particulier, publier et faire fonctionner un logiciel en ligne gratuit utilisé par des professionnels ? À quelles conditions ? Qu'est-ce qui le ferait basculer dans une activité professionnelle (encaisser, mais aussi : afficher des prix à venir, une liste « Me prévenir à l'ouverture des abonnements », de la publicité payante pour le faire connaître, un programme d'affiliation, des dons) ?
+1. L'occasionnel et le régulier. Comment la loi distingue une activité occasionnelle d'une activité habituelle, pour des abonnements qui se renouvellent chaque mois. Le seuil de seuil-micro-entreprise.md (5 clients payants, 3 mois de suite avec des paiements, ou 500 € encaissés, le premier atteint) est-il prudent ? Ajuste-le si besoin, avec tes raisons. Ce que je risque si je le dépasse sans m'être déclaré.
 
-2. Encaisser. Confirme ou corrige : vendre des abonnements de façon régulière sans avoir déclaré d'activité, c'est du travail dissimulé, même par Stripe. Stripe accepte-t-il un particulier sans numéro d'entreprise en France, et ses conditions le permettent-elles pour des abonnements ? Quels risques, concrètement ?
+2. Déclarer. Comment déclarer ce que j'encaisse avant la micro-entreprise : quelle déclaration, quelle ligne, quels prélèvements sociaux, à quelle date.
 
-3. Les mentions légales d'un éditeur non professionnel (LCEN) : ce que je dois publier, ce que je peux garder pour l'hébergeur (adresse, téléphone), et si le fait que mes utilisateurs soient des professionnels change quelque chose.
+3. Stripe. Peut-on ouvrir un compte Stripe en France en tant que particulier, sans numéro d'entreprise, pour des abonnements ? Ce qu'il demande (identité, adresse, site, description de l'activité), ce que ses conditions disent, et si le compte pourra passer au nom de la micro-entreprise sans recréer les abonnements.
 
-4. Le RGPD sans entreprise. Je suis responsable du traitement pour les données de mes créateurs, et sous-traitant pour celles de leurs clients. Mes obligations : informations à publier (mon identité ?), registre, contrat de sous-traitance (l'annexe de nos CGU), sécurité, violations de données. Ce qui change, ou pas, parce que je suis un particulier.
+4. La TVA. En tant que particulier, je ne facture pas de TVA : confirme, et dis ce qu'il faut écrire sur les reçus et les factures de Stripe.
 
-5. Les CGU d'un service gratuit : ce qu'elles doivent dire, la responsabilité d'un particulier qui fournit un service gratuit, ce qu'une mention « service en phase de lancement, fourni gratuitement » protège ou non. Mon assurance responsabilité civile de particulier me couvre-t-elle ?
+5. Les mentions légales d'un vendeur particulier (LCEN) : ce que je dois publier (nom, adresse, téléphone, e-mail), et les options pour ne pas publier mon adresse personnelle. Une domiciliation (Kandbaz, par exemple) est-elle possible sans entreprise immatriculée ?
 
-6. Les CGV : je pense les retirer du site tant que rien n'est vendu. Confirme, ou dis ce qui doit rester.
+6. Les CGV d'un vendeur particulier à des professionnels : ce qu'elles doivent dire (prix TVA non applicable, renouvellement, résiliation, rétractation des professionnels de cinq salariés au plus, médiateur), et ce qui change par rapport à celles d'une entreprise.
 
-7. La page Tarifs. Puis-je afficher les prix des plans à venir, marqués « Bientôt », avec « Me prévenir à l'ouverture » ? Quelles précautions de formulation ?
+7. Le RGPD sans entreprise. Je suis responsable du traitement pour les données de mes créateurs, et sous-traitant pour celles de leurs clients. Mes obligations : informations à publier (mon identité), registre, contrat de sous-traitance (l'annexe de nos CGU), sécurité, violations de données.
 
-8. Vercel, l'hébergeur, réserve son offre gratuite à un usage personnel et non commercial. Un service gratuit qui annonce des abonnements à venir y entre-t-il ? À partir de quand faut-il l'offre payante ?
+8. Les CGU : la responsabilité d'un particulier qui vend un service en ligne, ce qu'un plafond de responsabilité peut couvrir, et si mon assurance responsabilité civile me couvre.
 
-9. Ma domiciliation chez Kandbaz, payée pour l'entreprise que je ne crée plus : en tant que particulier, ai-je un droit de rétractation (délai, conditions), sinon quels arguments pour une résiliation remboursée ?
+9. Vercel, l'hébergeur, réserve son offre gratuite à un usage non commercial : je passe à l'offre payante avant le premier paiement. Confirme.
 
-10. Le jour où ça marche : le seuil que tu me conseilles pour créer la micro-entreprise (par exemple un nombre de créateurs inscrits à « Me prévenir à l'ouverture »), le délai entre la déclaration et le premier paiement possible, ce que coûte une micro-entreprise sans chiffre d'affaires (cotisations, CFE), et comment la fermer si ça ne marche pas.
+10. Le jour du seuil : ce que coûte une micro-entreprise sans chiffre d'affaires (cotisations, CFE), le délai entre la déclaration et le SIREN, et comment la fermer si ça ne marche pas.
 
 Termine par :
 - ta recommandation en cinq lignes ;
 - ce qui mérite l'avis d'un professionnel, et ce que je peux faire seul ;
-- le « Compte rendu pour Claude Code » : ce qui est permis sans entreprise, ce qui est interdit, le contenu attendu des mentions légales, de la politique de confidentialité et des CGU (sans mes informations personnelles), le sort des CGV et de la page Tarifs, la position sur Vercel, et le seuil de création de l'entreprise.
+- le « Compte rendu pour Claude Code » : le seuil confirmé ou ajusté, la façon de déclarer, ce que Stripe accepte, la mention de TVA, le contenu attendu des mentions légales, des CGV, des CGU et de la politique de confidentialité (sans mes informations personnelles), et la position sur Vercel.
 ```
 
 ---
 
 ## 1.2 Le catalogue des connecteurs
 
-Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation, recherche approfondie si proposée.
-
-Ce que vous en tirez : les familles, les outils, leur ordre de construction, ce qui s'affiche en « Bientôt » dès la V0, et leurs textes.
-
-```
-Prompt 1.2 — Le catalogue des connecteurs.
-
-Contexte : PULSACITY reçoit les ventes là où les indépendants encaissent, grâce à des connecteurs. Un seul existe : Systeme.io. Stripe et Calendly sont annoncés « Bientôt ». Je ne veux plus que tout tourne autour de Systeme.io. Je veux décider dès maintenant du catalogue complet, groupé par familles, comme l'annuaire des connecteurs de Claude (par exemple « Formations : Systeme.io… », « E-commerce : Shopify… »). Tout le catalogue sera visible dès la V0, avec la mention « Bientôt » pour ce qui n'est pas encore là.
-
-Règle du produit : un connecteur n'est construit qu'après la capture de vraies notifications de l'outil. « Bientôt » ne promet donc pas de date.
-
-1. Les familles. Propose 6 à 9 familles, nommées en mots simples pour un indépendant. Par exemple : formations et tunnels de vente ; paiements ; rendez-vous et séances ; e-commerce ; facturation ; événements et billetterie ; communautés et abonnements ; e-mailing et CRM ; automatisation (Zapier, Make, n8n, et un connecteur universel).
-
-2. Les outils. Pour chaque famille, les outils les plus utilisés par les indépendants francophones (coachs, formateurs, consultants, thérapeutes, créateurs), en France, en Belgique, en Suisse et au Québec. N'oublie pas les outils français : par exemple Learnybox, Schoolmaker, Teachizy, HelloAsso, Weezevent, Livestorm, Brevo, et ceux que tu trouves. Pour chacun, vérifie et donne :
-   - l'événement qui déclencherait une demande d'avis (vente, inscription, séance réalisée, facture payée…) ;
-   - le moyen technique : notification automatique de l'outil (webhook), connexion du compte (API avec OAuth), ou seulement par Zapier ou Make ;
-   - si ce moyen demande un abonnement payant de l'outil ;
-   - les données disponibles : e-mail, prénom, nom, produit, prix, date ;
-   - sa notoriété auprès de notre cible (élevée, moyenne, faible), avec une source si possible ;
-   - l'effort de construction (petit, moyen, gros) ;
-   - une contrainte de ses conditions d'utilisation (interdiction de solliciter des avis, accès réservé aux partenaires…).
-
-3. Le raccourci universel. Évalue un connecteur universel : une adresse PULSACITY qui accepte des ventes dans un format simple, depuis Zapier, Make, n8n ou n'importe quel outil capable d'envoyer une notification. Combien d'outils couvrirait-il tout de suite ? Faut-il publier une application officielle sur Zapier et sur Make, et qu'est-ce que cela demande ?
-
-4. Les priorités. Classe les connecteurs à construire après Systeme.io en trois vagues, avec tes raisons : taille de la cible, facilité, effet sur les inscriptions. Dis si l'ordre prévu (Stripe, puis Calendly ou Cal.com) tient.
-
-5. Ce qui s'affiche en V0. Combien d'outils montrer en « Bientôt » sans perdre en crédibilité ? Lesquels ? Faut-il une page publique par outil (comme /integrations/stripe), ou seulement pour les prioritaires ? « Me prévenir » mesure déjà la demande : comment s'en servir pour décider ?
-
-6. Où s'affiche le widget. Il se colle dans toute page qui accepte du HTML. Liste les constructeurs de pages de nos créateurs (Systeme.io, WordPress, Wix, Webflow, Framer, Shopify, Kajabi, Podia, Notion, Carrd…), en notant ceux qui ne l'acceptent pas, ou seulement sur un plan payant. Ce sera une seconde liste, « Compatible avec votre site », distincte des connecteurs.
-
-7. Les textes. Pour chaque famille : un titre et une phrase. Pour chaque outil affiché : une phrase qui dit ce qui déclenche la demande, sur le modèle de « Paiements en ligne : une demande d'avis après chaque paiement réussi. » Français, vouvoiement, phrases courtes, aucun mot technique (ni « webhook », ni « API », ni « token »).
-
-Termine par le « Compte rendu pour Claude Code » :
-- les familles, dans l'ordre, avec leur titre et leur phrase ;
-- un tableau des outils : nom, famille, statut (disponible, bientôt, plus tard), vague, page publique (oui ou non), phrase affichée, événement déclencheur, moyen technique ;
-- le verdict sur le connecteur universel ;
-- la liste « Compatible avec votre site ».
-```
+Fait le 10 octobre. Le compte rendu est dans le dépôt, `docs-internes/decisions/connecteurs.md`, et s'ajoute aux fichiers du projet Claude (prompt 0).
 
 ---
 
-## 1.3 Les tarifs : ouverture, phase gratuite, seuil
+## 1.3 Les tarifs
 
 Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation, recherche approfondie si proposée. Remplacez la ligne entre crochets par le compte rendu de 1.1.
 
-Ce que vous en tirez : les prix de l'ouverture, ce que montre la phase gratuite, la règle de passage à un plan inférieur, et le seuil où ouvrir les abonnements.
+Ce que vous en tirez : garder ou changer les prix, avec les chiffres, la règle de passage à un plan inférieur (qui manque aux CGV), et l'offre aux bêta-testeurs.
 
 ```
-Prompt 1.3 — Les tarifs : ouverture, phase gratuite, seuil.
+Prompt 1.3 — Les tarifs sont-ils rentables ?
 
-Contexte : brief-pulsacity.md (plans, limites, coûts) et decision_tarifs.md (prix TVA comprise). PULSACITY se lance gratuitement, sans entreprise. Les abonnements ouvriront avec une micro-entreprise, probablement en franchise de TVA. J'avais choisi de rester sous la barre psychologique des 10 € : Essentiel à 9,99 € par mois (99 € par an), Pro à 19,99 € par mois (199 € par an). Je ne suis pas sûr de ce choix. Je dois être pragmatique : à terme, ce projet doit me rapporter un revenu.
+Contexte : brief-pulsacity.md (plans, limites, coûts) et decision_tarifs.md (prix TVA comprise). J'encaisse en tant que particulier, sans TVA, jusqu'au seuil de seuil-micro-entreprise.md ; ensuite, une micro-entreprise, probablement en franchise de TVA. J'ai voulu rester sous la barre psychologique des 10 € : Essentiel à 9,99 € par mois (99 € par an), Pro à 19,99 € par mois (199 € par an), et un plan Gratuit. Je ne suis pas sûr de ce choix. Je dois être pragmatique : ce projet doit me rapporter un revenu. Tranche : on garde, ou on change, et pour quels prix.
 
 [Compte rendu de 1.1.]
 
-1. Les coûts, vérifiés aujourd'hui. Pour chaque service du brief (Vercel, Supabase, Resend, Cloudflare R2, domaines, GitHub, et plus tard Stripe), et pour ce qui viendra (mesure d'audience, suivi des erreurs, abonnement Claude) : le prix actuel, les seuils des offres gratuites, et le moment où il faut passer au payant. Donne les coûts fixes par mois à 0, 50, 200, 500 et 1 000 créateurs actifs, pendant la phase gratuite puis après l'ouverture.
+1. Les coûts, vérifiés aujourd'hui. Pour chaque service du brief (Vercel, Supabase, Resend, Cloudflare R2, Stripe, domaines, GitHub), et pour ce qui viendra (mesure d'audience, suivi des erreurs, abonnement Claude) : le prix actuel, les seuils des offres gratuites, et le moment où il faut passer au payant. Donne les coûts fixes par mois à 0, 50, 200, 500 et 1 000 créateurs actifs.
 
-2. Les coûts variables. Un créateur qui fait 30 ventes par mois déclenche jusqu'à 60 e-mails de demande et de relance, plus les e-mails de connexion et de nouveau témoignage. Un espace Gratuit peut envoyer 20 demandes par mois, soit jusqu'à 40 e-mails. Combien de créateurs gratuits puis-je accueillir avant de payer quoi que ce soit ?
+2. Les coûts variables. Un créateur qui fait 30 ventes par mois déclenche jusqu'à 60 e-mails de demande et de relance, plus les e-mails de connexion et de nouveau témoignage. Un espace Gratuit peut envoyer 20 demandes par mois, soit jusqu'à 40 e-mails. Calcule ce que coûtent les e-mails, les photos et les fonctions par espace, et ce que coûtent les espaces gratuits à grande échelle.
 
-3. Ce qui me restera par abonné, en mensuel et en annuel, pour chaque plan, en micro-entreprise en franchise de TVA, et si je deviens redevable de la TVA : frais Stripe (paiement, Billing), puis cotisations sociales et impôt.
+3. Ce qui me reste par abonné, en mensuel et en annuel, pour chaque plan : en particulier (sans TVA, avec les prélèvements de 1.1), puis en micro-entreprise en franchise de TVA (frais Stripe, cotisations, impôt).
 
-4. Les seuils de rentabilité. Combien d'abonnés payants pour couvrir les coûts fixes ? Pour gagner, après cotisations, 1 000 €, 2 000 € et 3 500 € par mois ? Avec combien d'inscrits, selon des taux de passage au payant réalistes ?
+4. Les seuils de rentabilité. Combien d'abonnés payants pour couvrir les coûts fixes ? Pour gagner 1 000 €, 2 000 € et 3 500 € par mois ? Avec combien d'inscrits, selon des taux de passage au payant réalistes ?
 
 5. Les repères. Pour un petit logiciel vendu à des indépendants : taux de passage du gratuit au payant, part de l'annuel, taux de départ mensuel, durée de vie d'un client. Sources et dates.
 
 6. La concurrence. Les prix d'octobre 2026, en euros, mensuels et annuels, et ce que permet chaque offre gratuite : Senja, Testimonial.to, Famewall, Shapo, Trustmary, Vocal Video, EmbedSocial, Elfsight, et les acteurs français. Où se place PULSACITY ?
 
-7. La phase gratuite :
-   - les limites du plan Gratuit (15 témoignages validés, 20 demandes par mois, 1 widget) sont-elles les bonnes pour faire mes preuves, sachant que son badge fait connaître PULSACITY ?
-   - offrir Essentiel aux bêta-testeurs : combien de temps, et avec quelle promesse pour la suite (prix de lancement à vie, par exemple) ?
-   - ce que montre la page Tarifs : les prix à venir marqués « Bientôt », avec « Me prévenir à l'ouverture » ? Quelle phrase ?
-   - les signaux qui prouvent l'envie de payer, et comment les mesurer.
-
-8. Les prix de l'ouverture :
+7. Les questions à trancher :
    - 9,99 € est-il le bon prix d'Essentiel, ou laisse-t-il de l'argent sur la table ? Que se passerait-il à 12 € ou à 14,99 € ?
    - le Pro n'a qu'un avantage, retirer le badge : justifie-t-il le double ? Que devrait-il contenir plus tard, sans rien changer à la V0 ?
-   - l'annuel à deux mois offerts est-il bien réglé ? Un essai gratuit du plan payant, des codes promotionnels ?
+   - l'annuel à deux mois offerts est-il bien réglé ?
+   - le plan Gratuit (15 témoignages validés, 20 demandes par mois, 1 widget) est-il trop généreux ou trop serré, sachant que son badge fait connaître PULSACITY ?
+   - les bêta-testeurs : Essentiel offert par un code promotionnel, combien de temps, et quelle promesse pour la suite (prix de lancement à vie, par exemple) ?
    - quand un créateur passe à un plan inférieur : à quelle date, et que deviennent ses widgets en trop, ses témoignages au-delà de la limite, son badge ? Rien n'est jamais supprimé.
+   - comment changer un prix plus tard sans fâcher les abonnés déjà là ?
 
-9. Le seuil : le moment où créer l'entreprise et ouvrir les abonnements, en chiffres que je peux suivre.
+8. Le verdict. Les prix et les limites que tu recommandes, plan par plan, mensuels et annuels, TVA comprise. Si tu recommandes de garder les prix actuels, dis-le franchement. Dis quand réexaminer, et quels chiffres surveiller.
 
-Termine par le « Compte rendu pour Claude Code » : les limites de la phase gratuite, l'offre aux bêta-testeurs, ce qu'affiche la page Tarifs pendant la phase gratuite, les prix et le contenu de chaque plan à l'ouverture, la règle de passage à un plan inférieur, les seuils de rentabilité, et le seuil d'ouverture.
+Termine par le « Compte rendu pour Claude Code » : les prix et les limites retenus, ce que contient chaque plan, l'offre aux bêta-testeurs, la règle de passage à un plan inférieur, la phrase sur la TVA de la page Tarifs, et les seuils de rentabilité.
 ```
 
 ---
@@ -245,20 +207,20 @@ Termine par le « Compte rendu pour Claude Code » : les références retenues a
 
 ## 1.5 Le positionnement et une page d'accueil qui vend
 
-Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation. Remplacez la ligne entre crochets par le compte rendu de 1.2, ou supprimez-la.
+Où : Claude Chat, projet « PULSACITY — Stratégie », nouvelle conversation.
 
 Ce que vous en tirez : le texte complet de la page d'accueil v2, que Claude Design dessine (3.5) et que Claude Code intègre (4.7).
 
 ```
 Prompt 1.5 — Le positionnement et une page d'accueil qui vend.
 
-Contexte : brief-pulsacity.md. La page d'accueil actuelle explique bien, mais elle ne donne pas assez envie d'essayer. Elle tourne trop autour de Systeme.io, alors que PULSACITY est fait pour tous les outils où l'on encaisse. Je veux mieux vendre l'outil, sans être intrusif. Pendant la phase de lancement, PULSACITY est gratuit ; les abonnements ouvriront plus tard.
+Contexte : brief-pulsacity.md. La page d'accueil actuelle explique bien, mais elle ne donne pas assez envie d'essayer. Elle tourne trop autour de Systeme.io, alors que PULSACITY est fait pour tous les outils où l'on encaisse. Je veux mieux vendre l'outil, sans être intrusif.
 
-[Compte rendu de 1.2.]
+Le catalogue des connecteurs est décidé : connecteurs.md, dans les fichiers du projet.
 
 1. La cible. Décris nos trois ou quatre profils de créateurs : ce qu'ils vendent, où ils encaissent, où ils construisent leur page de vente, leur rapport aux avis, leurs mots à eux.
 
-2. Les douleurs et les objections. Pourquoi ils n'ont pas assez de témoignages, et ce qui les retiendrait d'essayer (« mes clients ne répondront pas », « j'ai déjà un formulaire », « encore un outil », « je ne suis pas technique », « ça va casser ma page », le RGPD, « et si c'est payant plus tard ? »…). Pour chaque objection, la réponse que le produit apporte vraiment.
+2. Les douleurs et les objections. Pourquoi ils n'ont pas assez de témoignages, et ce qui les retiendrait d'essayer (« mes clients ne répondront pas », « j'ai déjà un formulaire », « encore un abonnement », « je ne suis pas technique », « ça va casser ma page », le RGPD…). Pour chaque objection, la réponse que le produit apporte vraiment.
 
 3. Les alternatives : ne rien faire, un formulaire Google ou Tally avec des captures d'écran, Google Avis ou Trustpilot, les concurrents du brief. Ce que PULSACITY fait mieux, et ce qu'il fait moins bien.
 
@@ -266,7 +228,7 @@ Contexte : brief-pulsacity.md. La page d'accueil actuelle explique bien, mais el
 
 5. Les avis vérifiés. Les témoignages de PULSACITY viennent de vraies ventes. Vérifie ce que les règles françaises et européennes sur les avis en ligne demandent à ceux qui les affichent, et dis si « des avis de vrais clients » peut devenir un argument, et à quelles conditions.
 
-6. La page d'accueil v2, section par section, dans l'ordre : le rôle de chaque section, son titre, son texte, son bouton. Garde la démo en quatre temps (vente, e-mail, avis, mur) et l'exemple de widget réel. Montre tout le catalogue des connecteurs, par familles. Dis comment présenter la gratuité de la phase de lancement, honnêtement. Propose des incitations qui ne dérangent pas : bouton qui reste visible en bas de l'écran sur téléphone, « gratuit, sans carte bancaire », temps d'installation, démo à manipuler… Pas de fenêtre qui surgit, pas de compte à rebours, pas de fausse rareté.
+6. La page d'accueil v2, section par section, dans l'ordre : le rôle de chaque section, son titre, son texte, son bouton. Garde la démo en quatre temps (vente, e-mail, avis, mur) et l'exemple de widget réel. Montre tout le catalogue des connecteurs, par familles (connecteurs.md). Propose des incitations qui ne dérangent pas : bouton qui reste visible en bas de l'écran sur téléphone, « gratuit, sans carte bancaire », temps d'installation, démo à manipuler… Pas de fenêtre qui surgit, pas de compte à rebours, pas de fausse rareté.
 
 7. Les chiffres. Des statistiques sur l'effet des avis sur les ventes, seulement avec leur source et leur date, de préférence françaises ou européennes. Si une statistique très citée est fragile, dis-le.
 
@@ -288,11 +250,11 @@ Ce que vous en tirez : les canaux, les réseaux retenus, le plan à 90 jours, et
 ```
 Prompt 1.6 — Commercialiser PULSACITY.
 
-Contexte : brief-pulsacity.md. Je suis seul, sans budget et avec un temps limité. PULSACITY se lance gratuitement, sans entreprise, pour faire ses preuves ; les abonnements ouvriront quand des créateurs voudront payer. J'ai déjà des comptes LinkedIn et Instagram. Je ferai moi-même, avec Claude, les vidéos (motion design compris) et les publications. Je veux être prêt pour une grosse campagne quand la V0 sera complète.
+Contexte : brief-pulsacity.md. Je suis seul, avec peu de budget et un temps limité. J'encaisse en tant que particulier, et je créerai une micro-entreprise au seuil de seuil-micro-entreprise.md. J'ai déjà des comptes LinkedIn et Instagram. Je ferai moi-même, avec Claude, les vidéos (motion design compris) et les publications. Je veux être prêt pour une grosse campagne quand la V0 sera complète.
 
 [Compte rendu de 1.5.]
 
-1. Les canaux. Classe les canaux d'acquisition gratuits pour notre cible, selon le temps qu'ils me prennent et leur effet probable : référencement et guides, YouTube, groupes Facebook (communautés Systeme.io et d'indépendants), LinkedIn, Instagram, TikTok, partenariats (formateurs qui enseignent Systeme.io ou d'autres outils, communautés de coachs), badge « Propulsé par PULSACITY » et parrainage, annuaires de logiciels, podcasts, webinaires à deux, prospection directe. Garde les trois ou quatre meilleurs.
+1. Les canaux. Classe les canaux d'acquisition pour notre cible, selon leur coût, le temps qu'ils me prennent et leur effet probable : référencement et guides, YouTube, groupes Facebook (communautés Systeme.io et d'indépendants), LinkedIn, Instagram, TikTok, partenariats (formateurs qui enseignent Systeme.io ou d'autres outils, communautés de coachs), badge « Propulsé par PULSACITY » et parrainage, annuaires de logiciels, podcasts, webinaires à deux, prospection directe. Garde les trois ou quatre meilleurs.
 
 2. Les réseaux sociaux. Dois-je faire TikTok, YouTube, Facebook, Pinterest, Threads ou X, en plus de LinkedIn et d'Instagram ? Décide, avec tes raisons. Pour chaque réseau retenu : son rôle, ses formats, un rythme réaliste pour une personne seule, et ce qui se recycle d'un réseau à l'autre.
 
@@ -302,13 +264,13 @@ Contexte : brief-pulsacity.md. Je suis seul, sans budget et avec un temps limit�
 
 5. Le lancement. Une bêta privée de 15 à 30 créateurs : où les trouver, quoi leur offrir (Essentiel offert le temps de la bêta, par exemple), comment recueillir leurs avis sur PULSACITY avec PULSACITY lui-même. Puis la semaine de lancement, jour par jour.
 
-6. Le plan à 90 jours, semaine par semaine : ce que je fais, le temps que cela me prend, et l'objectif chiffré (visites, inscriptions, premiers widgets affichés, inscrits à « Me prévenir à l'ouverture »).
+6. Le plan à 90 jours, semaine par semaine : ce que je fais, le temps que cela me prend, et l'objectif chiffré (visites, inscriptions, premiers widgets affichés, premiers abonnés).
 
 7. La mesure. Les indicateurs à suivre, et l'outil de mesure d'audience sans cookie (donc sans bandeau de consentement) à choisir, gratuit si possible. Comment savoir quel réseau amène des inscriptions.
 
-8. Les règles. Ce que la loi encadre : communication d'un particulier sur un service gratuit, partenariats (loi sur l'influence de 2023), prospection par e-mail entre professionnels, musique dans les vidéos, citation des marques des outils (Systeme.io, Stripe…), usage des avis des bêta-testeurs dans nos publications. Ce qui attend l'entreprise (affiliation rémunérée, publicité payante).
+8. Les règles. Ce que la loi encadre : publicité et partenariats (loi sur l'influence de 2023), mention des liens d'affiliation, prospection par e-mail entre professionnels, musique dans les vidéos, citation des marques des outils (Systeme.io, Stripe…), usage des avis des bêta-testeurs dans nos publications. Ce qui change pour un vendeur particulier, avant la micro-entreprise.
 
-9. Ce que le produit doit offrir pour soutenir la commercialisation : parrainage enregistré, e-mails d'accueil des nouveaux créateurs, liens suivis, mur d'avis de PULSACITY sur pulsacity.com… Classe-les par priorité.
+9. Ce que le produit doit offrir pour soutenir la commercialisation : parrainage enregistré, programme d'affiliation, e-mails d'accueil des nouveaux créateurs, liens suivis, mur d'avis de PULSACITY sur pulsacity.com… Classe-les par priorité.
 
 10. La publicité payante, plus tard : quand la lancer, sur quel réseau, avec quel budget de test, et ce qu'un pixel publicitaire imposerait (bandeau de consentement).
 
