@@ -175,12 +175,30 @@ Décision dans `docs-internes/decisions/connecteurs.md`.
 
 Sections et textes donnés par le compte rendu de 1.5. La démo en quatre temps et l'exemple de widget réel restent, redessinés.
 
-### 8.7 Selon les décisions de 1.6, facultatif
+### 8.7 Ce que les décisions du 12 octobre ajoutent
 
-- **Parrainage** (`/app/parrainage`) : le lien de l'espace, les créateurs venus par lui, la récompense.
-- **Bandeau de consentement aux cookies** : seulement si un pixel publicitaire arrive (5.5).
-- Pages « À propos » et « Nouveautés ».
-- Plus tard : un tableau de bord d'administration pour le fondateur.
+Sources : `docs-internes/decisions/` (`positionnement.md`, `commercialisation.md`, `tarifs.md`, corrigés par `arbitrages.md`).
+
+- **Site public** :
+  - la démo « Écrire un avis de test », sans envoi au serveur ;
+  - la barre fixe sur téléphone ;
+  - la page « À propos de ces avis » ;
+  - le prix fondateur sur l'accueil et Tarifs ;
+  - le mur et le badge de PULSACITY, quand il a assez de vrais avis.
+- **Espace** :
+  - la question « Comment avez-vous connu PULSACITY ? » à l'inscription ;
+  - la provenance et la date d'achat d'un témoignage ;
+  - « Masquer » avec un motif ;
+  - « Corriger le texte affiché » avec l'accord du client ;
+  - la case « J'offre une contrepartie » dans Réglages ;
+  - le parrainage (`/app/parrainage`, ou une partie de Réglages, selon la maquette) ;
+  - les états du bêta-testeur et du retour au Gratuit dans Abonnement et factures.
+- **E-mails** :
+  - au créateur : accueil J0, J1, J3, J7 ; rappel 7 jours avant le premier prélèvement d'un bêta-testeur ;
+  - aux clients : demande d'accord pour une correction ; motif d'un avis masqué.
+- **Widget** : date de l'avis et mois de l'achat ; lien « À propos de ces avis » ; mention de la contrepartie ou du bêta-testeur.
+- **Image de partage** d'un témoignage validé.
+- **Plus tard** (après la micro-entreprise) : page publique du mur ; bandeau de consentement, seulement si un pixel publicitaire arrive.
 
 ## 9. Liens morts en production aujourd'hui
 

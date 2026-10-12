@@ -19,7 +19,7 @@ Le fondateur juge la V0 inachevée sur cinq points :
   - Vos informations viennent de variables Vercel, jamais du dépôt public.
 - **La domiciliation Kandbaz** : à peser avant de la résilier (prompt K). Si vous vendez, une adresse doit être publiée ; sans elle, c'est la vôtre. Une domiciliation suppose en général une entreprise immatriculée : K le vérifie avec leurs conditions.
 - **Une seule adresse e-mail**, contact@pulsacity.com, déjà en place (redirection OVH) : contact, aide, données personnelles, facturation.
-- **Le catalogue des connecteurs est décidé** (`docs-internes/decisions/connecteurs.md`) : 6 familles et 19 outils affichés. Le connecteur universel doit être en ligne avant la publication du catalogue : c'est le lot 4.1 b.
+- **Le catalogue des connecteurs, les tarifs, le positionnement et la commercialisation sont décidés** (`docs-internes/decisions/`). Le connecteur universel sort avant le catalogue (lot 4.1 b) ; deux lots s'ajoutent, 4.12 (accueil et acquisition) et 4.13 (avis en ligne).
 - **Le skill UI UX Pro Max** (uupm.cc) entre dans la refonte graphique, avec un rôle précis : voir l'arbitrage plus bas.
 
 La V1 (témoignages vidéo, vidéos pour les réseaux sociaux, connecteurs Stripe et Calendly/Cal.com) attend la fin de cette feuille de route. La recette de bout en bout en production devient le lot 4.11, juste avant le lancement.
@@ -36,55 +36,53 @@ La V1 (témoignages vidéo, vidéos pour les réseaux sociaux, connecteurs Strip
 
 Chaque prompt de Claude Chat finit par un « Compte rendu pour Claude Code », sans donnée personnelle ni secret. Ajoutez-le aux fichiers du projet Claude, et gardez-le pour le lot 4.1.
 
+## Où on en est (12 octobre)
+
+- **Faits** : 1.2 (connecteurs), 1.3 (tarifs), 1.5 (positionnement), 1.6 (commercialisation), l'adresse contact@ (2.2), la demande de résiliation à Kandbaz (réponse attendue).
+- **Rangés dans le dépôt** : `docs-internes/decisions/` (`connecteurs.md`, `tarifs.md`, `positionnement.md`, `commercialisation.md`), avec les arbitrages de Claude Code là où ils se contredisent (`arbitrages.md`).
+- **Non lancé** : 1.1. Ses questions passent à 2.7 et 2.8 a (arbitrage n° 9).
+
 ## Toutes les actions, dans l'ordre
 
-Dans une même phase, les actions se mènent en parallèle. Déjà faits : l'adresse contact@ (2.2) et le catalogue des connecteurs (1.2).
+Dans une même phase, les actions se mènent en parallèle. Chaque lot de Claude Code se lance dans une nouvelle session, avec son prompt court (`prompts-4-construire.md`).
 
-### Phase A — Cette semaine
+### Phase A — Votre goût (une à deux heures)
 
-1. **K** La domiciliation Kandbaz : d'abord savoir ce qu'elle permet sans entreprise, puis décider (Claude in Chrome).
-2. **0** Le projet Claude « PULSACITY — Stratégie », puis **0 bis** le skill UI UX Pro Max dans Claude (un quart d'heure en tout).
-3. **1.1** Encaisser sans entreprise : ce qui est permis, ce qu'il faut déclarer, ce que les textes légaux doivent dire.
-4. **1.4**, premier temps : les sites à explorer (uupm.cc compris), le skill lancé sur PULSACITY. Puis votre exploration, grille et captures.
-5. **1.5** Le positionnement et la page d'accueil, avec le compte rendu 1.2.
+1. **0 bis** Le skill UI UX Pro Max dans Claude, puis **1.4** la direction visuelle, en deux temps, si ce n'est pas déjà fait.
 
-### Phase B — Dès que 1.1 a répondu
+### Phase B — Dessiner, et construire ce qui n'attend pas de maquette
 
-6. **1.3** Les tarifs.
-7. **1.6** La commercialisation, avec 1.5.
-8. **1.4**, second temps, avec vos captures. Puis **3.1** (trois directions, trois logos), votre choix, **3.2** (la charte v2), et le **lot 4.2** (fondations v2, skill installé dans le dépôt).
-9. **Lot 4.1** Les décisions de l'étape 1 dans le dépôt.
-10. **Lot 4.1 b** Le connecteur universel, ses guides (Zapier, Make, n8n, Podia), puis le catalogue publié.
-11. **2.8 a et b** Le compte Stripe, ouvert en particulier et réglé en mode test.
+2. **Claude Design** : **3.1** (trois directions, trois logos), votre choix, **3.2** (la charte v2), **3.3** (les écrans à créer), puis **3.4**, **3.5**, **3.6** et **3.7**.
+3. **En même temps, Claude Code** : le **lot 4.1** (les décisions appliquées), puis le **lot 4.1 b** (le connecteur universel et le catalogue).
+4. **En même temps, le légal** : **2.4** (les prestataires, Claude in Chrome), puis **2.7** (les textes réécrits, Claude Chat).
 
-### Phase C — Les écrans manquants et les textes légaux
+### Phase C — Construire, à chaque ZIP de Claude Design
 
-12. **2.4** Les contrats de traitement des prestataires (Claude in Chrome).
-13. **3.3** Les maquettes des écrans à créer. Puis les **lots 4.3, 4.4 et 4.5** : Réglages et Mon compte, Aide et contact, Abonnement et factures (Stripe, en mode test).
-14. **2.7** La relecture des textes légaux par Claude Chat, puis **2.6** les informations à donner, puis le **lot 4.9** : les textes d'un vendeur particulier, publiés.
-15. **3.4, 3.5, 3.6** Les maquettes de l'espace, du site, de la collecte, des e-mails et du widget.
+5. Le ZIP de 3.2 : le **lot 4.2** (fondations v2, skill installé).
+6. Le ZIP de 3.3 :
+   - **2.8 a et b** (le compte Stripe, en particulier, en mode test) ;
+   - puis les **lots 4.3** (Réglages et Mon compte), **4.4** (Aide et contact) et **4.5** (Abonnement et factures, en mode test).
+7. Les ZIP de 3.4 à 3.6 : les **lots 4.12** (accueil et acquisition), **4.13** (avis en ligne), **4.6** (l'espace en v2), **4.7** (le site en v2) et **4.8** (collecte, e-mails, widget).
+8. **2.6**, puis le **lot 4.9** : les textes légaux, publiés.
 
-### Phase D — La v2 partout
+### Phase D — Avant le premier vrai paiement
 
-16. **Lots 4.6, 4.7 et 4.8**, au fil des maquettes. **3.7** Le contrôle final des maquettes.
+9. Vercel Pro (vous) ; **2.8 c** (activer Stripe, une fois 4.4 et 4.9 en ligne) ; le passage du **lot 4.5** en mode réel ; Resend Pro (lot 4.12).
 
-### Phase E — Avant le premier vrai paiement
+### Phase E — La bêta (semaine S1 du plan à 90 jours)
 
-17. Vercel Pro (vous) : l'offre gratuite de Vercel exclut un usage commercial.
-18. **2.8 c** Activer le compte Stripe, une fois les lots 4.4 et 4.9 en ligne : Stripe vérifie le site.
-19. **Lot 4.5**, dernier point : le passage en mode réel, et votre premier paiement, remboursé.
+10. Le **lot 4.10** (Sentry, photos, Search Console, données de test effacées).
+11. L'espace PULSACITY, créé par vous (lot 4.12).
+12. **5.1** (le kit des réseaux sociaux), **5.2** (le studio de vidéos), **5.3** (la première vague de publications).
+13. Le **lot 4.11** (la recette de bout en bout), puis **5.4** : la bêta s'ouvre.
 
-### Phase F — Lancer
+La bêta peut s'ouvrir dès que les lots 4.1 b, 4.3, 4.4, 4.5 (en réel), 4.9, 4.12 (sa partie « avant la bêta ») et 4.13 sont en ligne. Les lots 4.6 à 4.8 peuvent finir pendant la bêta. Le lancement public attend tout.
 
-20. **Lot 4.10** Avant le lancement : envoi des demandes toutes les 15 minutes, Sentry, adresse des photos, mesure d'audience, Search Console, données de test effacées.
-21. **5.1** Le kit des réseaux sociaux, **5.2** le studio de vidéos, **5.3** la première vague de publications.
-22. **Lot 4.11** La recette de bout en bout en production.
-23. **5.4** La bêta privée, puis le lancement.
-24. **5.5** La publicité payante, quelques semaines après, avec des chiffres.
+### Phase F — Le lancement (semaine S6), puis la suite
 
-### Au seuil : la micro-entreprise
-
-Dès que l'un des repères de `seuil-micro-entreprise.md` est atteint, les prompts 6.1 à 6.7 passent avant tout le reste.
+14. Le lancement, selon `decisions/commercialisation.md`.
+15. **Au seuil** de `seuil-micro-entreprise.md`, ou un mois avant la fin de la gratuité des bêta-testeurs si 5 cartes sont enregistrées : les prompts **6.1 à 6.7**, avant tout le reste.
+16. **5.5** La publicité payante, après la micro-entreprise et 20 abonnés.
 
 ## L'arbitrage sur UI UX Pro Max
 
@@ -120,9 +118,9 @@ Le design v2 se fait dans un **nouveau projet Claude Design**, « PULSACITY v2 �
 
 - **Le seuil, tenu.** Un abonnement mensuel est récurrent par nature : la régularité arrive vite. Déclarez ce que vous encaissez dès le premier euro (1.1 dit où), et créez la micro-entreprise au premier repère atteint : elle ne coûte rien sans chiffre d'affaires.
 - **Liens morts en production.** « Mon compte », « Réglages », « Abonnement et factures », « Aide et contact », « Voir le plan Essentiel » et « Voir les plans » mènent à des pages qui n'existent pas encore (`inventaire-ecrans.md`, partie 9). Pas de promotion du site avant les lots 4.3 à 4.5.
-- **TVA.** La réponse « Essentiel vous revient à 8,33 € HT » de `/tarifs` suppose une entreprise qui collecte la TVA. Sans entreprise, aucune TVA n'est facturée : le lot 4.1 retire cette phrase, le lot 6.6 la remet selon le régime.
+- **TVA.** Aucune TVA n'est facturée : « TVA comprise » disparaît au profit de « Prix finaux » (arbitrage n° 2, lot 4.1). Le lot 6.6 reviendra dessus selon le régime.
 - **Vos informations personnelles hors du dépôt.** Le dépôt est public et garde tout son historique. Votre nom, votre adresse et votre téléphone apparaîtront sur le site, comme la loi l'impose à un vendeur, mais viendront de variables Vercel saisies par vous (lot 4.9).
-- **Les bêta-testeurs** peuvent recevoir Essentiel, offert, par un code promotionnel Stripe à 100 % (lot 4.5) : rien à coder de plus.
+- **Les bêta-testeurs** : Essentiel offert 3 mois par un code Stripe, carte demandée, puis le prix fondateur (arbitrage n° 3, lot 4.5).
 - **Les avis en ligne : une obligation et un argument.** Le droit français encadre leur publication (date, vérification, avis négatifs). Notre badge « 4,9/5 » est calculé sur les seuls témoignages validés : 2.7 vérifie le risque. Et des avis issus de vraies ventes sont un argument fort : 1.5 dit à quelles conditions l'utiliser.
 - **Le connecteur universel d'abord.** Avec lui, chaque outil « Bientôt » marche déjà par Zapier, Make ou n8n : le catalogue promet moins et tient plus.
 - **Se servir de PULSACITY pour PULSACITY.** Recueillir les avis des créateurs de la bêta avec notre propre lien de collecte, et les afficher sur pulsacity.com avec notre widget.
@@ -143,4 +141,4 @@ Le design v2 se fait dans un **nouveau projet Claude Design**, « PULSACITY v2 �
 | `seuil-micro-entreprise.md` | Le seuil de la micro-entreprise |
 | `prompts-1-decider.md` à `prompts-6-le-jour-ou-ca-marche.md` | Les prompts, étape par étape |
 
-Les décisions déjà prises sont dans `docs-internes/decisions/` : le catalogue des connecteurs (`connecteurs.md`).
+Les décisions déjà prises sont dans `docs-internes/decisions/` : connecteurs, tarifs, positionnement, commercialisation, et les arbitrages entre elles.

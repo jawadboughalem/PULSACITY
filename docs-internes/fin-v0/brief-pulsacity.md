@@ -66,8 +66,10 @@ Autres entrées : ajout manuel d'un témoignage reçu ailleurs, import d'un fich
 | Plan | Prix | Témoignages | Demandes automatiques par mois | Widgets | Badge « Propulsé par PULSACITY » |
 | --- | --- | --- | --- | --- | --- |
 | Gratuit | 0 € | 15 validés | 20 | 1 | obligatoire |
-| Essentiel | 9,99 € par mois, 99 € par an | illimités | illimitées | illimités | obligatoire |
-| Pro | 19,99 € par mois, 199 € par an | illimités | illimitées | illimités | retirable |
+| Essentiel | 14,99 € par mois, 149 € par an (prix fondateur : 9,99 € et 99 €) | illimités | illimitées | illimités | obligatoire |
+| Pro | 24,99 € par mois, 249 € par an (prix fondateur : 19,99 € et 199 €) | illimités | illimitées | illimités | retirable |
+
+Décidé le 12 octobre (`docs-internes/decisions/tarifs.md`) : le prix fondateur, gardé à vie, vaut pour les bêta-testeurs et les 100 premiers abonnés ; les pages l'affichent tant qu'il est ouvert (`arbitrages.md`, n° 1). Prix finaux : aucune TVA n'est facturée.
 
 - Sur tous les plans : 20 demandes saisies à la main par jour, contre les envois en masse.
 - Dépasser une limite ne supprime jamais de données : on bloque l'ajout et on propose le plan supérieur. Au-delà de 15 témoignages validés, les nouveaux arrivent et attendent.

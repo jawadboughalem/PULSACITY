@@ -26,6 +26,8 @@ Stratégie du 12 octobre : encaisser dès la V0, en tant que particulier ; crée
 - Une seule adresse : contact@pulsacity.com, redirection OVH déjà en place.
 - La domiciliation Kandbaz : garder ou résilier, après lecture de leurs conditions (prompt K).
 - Le catalogue des connecteurs est décidé (`docs-internes/decisions/connecteurs.md`) : 6 familles, 19 outils affichés ; le connecteur universel (lot 4.1 b) sort avant le catalogue.
+- Décidés le 12 octobre et rangés dans `docs-internes/decisions/` : tarifs (Essentiel 14,99 €, Pro 24,99 €, prix fondateur 9,99 € et 19,99 € pour les bêta-testeurs et les 100 premiers abonnés), positionnement et page d'accueil v2, commercialisation (bêta, plan à 90 jours). `arbitrages.md` règle leurs contradictions. Deux lots s'ajoutent : 4.12 (accueil et acquisition) et 4.13 (avis en ligne).
+- La demande de résiliation de la domiciliation Kandbaz est envoyée (12 octobre) ; réponse attendue.
 - Le skill UI UX Pro Max (uupm.cc, licence MIT) sert à l'exploration (1.4), de liste de contrôle UX pour Claude Design, et de règles UX pour Claude Code à partir du lot 4.2. Ni son générateur, ni ses palettes, polices ou styles : la charte v2 reste la seule source.
 
 La V1 attend ; la recette de bout en bout en production devient le lot 4.11, juste avant le lancement.

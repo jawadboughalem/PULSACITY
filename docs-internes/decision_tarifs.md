@@ -1,5 +1,7 @@
 # Décision : des prix TVA comprise, à 9,99 € et 19,99 €
 
+> **Montants remplacés le 12 octobre 2026** par `docs-internes/decisions/tarifs.md` (Essentiel 14,99 €, Pro 24,99 €, prix fondateur 9,99 € et 19,99 €), avec les arbitrages de `docs-internes/decisions/arbitrages.md`. Les raisons des prix TVA comprise ci-dessous restent vraies pour le jour où la TVA sera collectée.
+
 Arrêtée le 2 octobre 2026, avant la page Tarifs (maquette 8) et le lot Stripe. Claude Code a proposé les prix TVA comprise ; le fondateur a fixé les montants à 9,99 € et 19,99 € pour préserver la marge.
 
 ## La décision
