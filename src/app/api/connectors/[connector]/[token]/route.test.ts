@@ -256,6 +256,38 @@ describe("POST /api/connectors/[connector]/[token]", () => {
     expect(await db().select({ id: reviewRequests.id }).from(reviewRequests)).toHaveLength(1);
   });
 
+  it("keeps the request of the sale whose offer is associated, when two connectors send the same customer", async () => {
+    const [testConnection] = await db()
+      .insert(connections)
+      .values({ spaceId, connector: "test", webhookToken: "jeton-du-connecteur-de-test-0123456789", config: { signingSecret: "cle-de-test" } })
+      .returning({ id: connections.id });
+    await db().insert(productRefs).values({ productId: programmeId, connectionId: testConnection.id, externalRef: "p-1" });
+    const sameSale = JSON.stringify({
+      kind: "paid",
+      id: "vente-1",
+      email: "utilisateurdemo+capture@example.com",
+      product: "p-1",
+      at: "2026-09-28T08:00:00Z",
+    });
+
+    await deliver("systeme", TOKEN, SALE_BODY, signedSale());
+    await deliver("test", "jeton-du-connecteur-de-test-0123456789", sameSale, { "x-test-key": "cle-de-test" });
+    await runScheduled();
+    expect(await db().select({ id: reviewRequests.id }).from(reviewRequests)).toHaveLength(1);
+
+    const [atelier] = await db()
+      .insert(products)
+      .values({ spaceId, name: "Atelier cuisine", slug: "atelier-cuisine" })
+      .returning({ id: products.id });
+    await associate("price-plan:3456303", atelier.id);
+    const outcomes = await db()
+      .select({ outcome: webhookEvents.outcome })
+      .from(webhookEvents)
+      .where(eq(webhookEvents.connectionId, connectionId));
+    expect(outcomes).toEqual([{ outcome: "request-elsewhere" }]);
+    expect(await db().select({ id: reviewRequests.id }).from(reviewRequests)).toHaveLength(1);
+  });
+
   it("keeps the sales sent to the universal connector raw, as JSON or as a form, without the bypass of the preview", async () => {
     const universalToken = "jeton-universel-de-julie-0123456789abcdef";
     await db().insert(connections).values({ spaceId, connector: "universal", webhookToken: universalToken });

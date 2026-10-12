@@ -126,3 +126,61 @@ describe("recordPurchase", () => {
     ]);
   });
 });
+
+describe("recordPurchase, across connectors", () => {
+  const HOUR_MS = 60 * 60 * 1000;
+  let universalId: string;
+
+  const recordFromUniversal = (purchase: NormalizedPurchase, productId = atelierId) =>
+    recordPurchase(database, { spaceId, connectionId: universalId, productId, purchase });
+
+  beforeEach(async () => {
+    const [universal] = await database
+      .insert(connections)
+      .values({ spaceId, connector: "universal", webhookToken: "jeton-universel-0123456789abcdefghij" })
+      .returning({ id: connections.id });
+    universalId = universal.id;
+  });
+
+  it("asks once a customer sent by two connectors within 48 hours, whatever the offer", async () => {
+    expect(await record(sale())).toMatchObject({ outcome: "request-scheduled" });
+    const soldAt = new Date(Date.parse("2026-10-01T09:12:00Z") + 47 * HOUR_MS);
+    expect(await recordFromUniversal(sale({ externalRef: "commande-1", email: "CAMILLE@exemple.fr", occurredAt: soldAt }))).toMatchObject({
+      outcome: "request-elsewhere",
+    });
+    expect(await listRequests()).toHaveLength(1);
+  });
+
+  it("looks both ways: a sale dated before the other one is the same sale too", async () => {
+    await record(sale());
+    const soldBefore = new Date(Date.parse("2026-10-01T09:12:00Z") - 30 * HOUR_MS);
+    expect(await recordFromUniversal(sale({ externalRef: "commande-2", occurredAt: soldBefore }))).toMatchObject({
+      outcome: "request-elsewhere",
+    });
+  });
+
+  it("asks again past 48 hours: another sale", async () => {
+    await record(sale());
+    const soldLater = new Date(Date.parse("2026-10-01T09:12:00Z") + 49 * HOUR_MS);
+    expect(await recordFromUniversal(sale({ externalRef: "commande-3", occurredAt: soldLater }))).toMatchObject({
+      outcome: "request-scheduled",
+    });
+    expect(await listRequests()).toHaveLength(2);
+  });
+
+  it("leaves one connector's sales of two offers each with its request", async () => {
+    expect(await recordFromUniversal(sale({ externalRef: "commande-4" }), programmeId)).toMatchObject({
+      outcome: "request-scheduled",
+    });
+    expect(await recordFromUniversal(sale({ externalRef: "commande-5" }), atelierId)).toMatchObject({
+      outcome: "request-scheduled",
+    });
+  });
+
+  it("asks nobody else: another customer of the other connector keeps their request", async () => {
+    await record(sale());
+    expect(await recordFromUniversal(sale({ externalRef: "commande-6", email: "theo@exemple.fr" }))).toMatchObject({
+      outcome: "request-scheduled",
+    });
+  });
+});
