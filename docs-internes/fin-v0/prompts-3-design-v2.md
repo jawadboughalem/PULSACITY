@@ -11,6 +11,7 @@
 1. Dans Claude Design, créez le projet « PULSACITY v2 ».
 2. Ajoutez-y ces fichiers :
    - `docs-internes/fin-v0/brief-pulsacity.md` et `docs-internes/fin-v0/inventaire-ecrans.md` ;
+   - `docs-internes/decisions/connecteurs.md`, le catalogue des connecteurs (compte rendu 1.2) ;
    - `docs-internes/charte.md`, la charte v1, comme « ce qu'on quitte » ;
    - le logo actuel : `docs-internes/identite-v2/assets/svg/pulsacity-logo.svg`, `pulsacity-symbole.svg` et `pulsacity-symbole-petit.svg` ;
    - vos 10 à 15 captures du prompt 1.4 ;
@@ -27,7 +28,7 @@ Ses règles UX (`quick-reference.md`, `pro-rules.md`) sont une liste de contrôl
 | --- | --- | --- |
 | 3.1 | Trois directions et trois pistes de logo ; vous choisissez | 3.2 |
 | 3.2 | La charte v2, le logo final, les coques du site et de l'espace | Lot 4.2 |
-| 3.3 | Les écrans à créer : Réglages, Mon compte, Mon abonnement, Aide et contact, catalogue des connecteurs | Lots 4.3 à 4.5 |
+| 3.3 | Les écrans à créer : Réglages, Mon compte, Abonnement et factures, Aide et contact, catalogue des connecteurs | Lots 4.3 à 4.5, donc l'encaissement |
 | 3.4 | L'espace du créateur | Lot 4.6 |
 | 3.5 | Le site public, dont la nouvelle page d'accueil | Lot 4.7 |
 | 3.6 | Page de collecte, e-mails, widget | Lot 4.8 |
@@ -132,25 +133,29 @@ Exporte : les planches en PNG à l'échelle 2x, une planche par fichier, nommée
 
 ## 3.3 Les écrans à créer
 
-Où : Claude Design, projet « PULSACITY v2 ». Après 3.2. Ces écrans passent avant les écrans existants : ils remplacent les liens morts de l'espace.
+Où : Claude Design, projet « PULSACITY v2 ». Après 3.2. Ces écrans passent avant les écrans existants : ils remplacent les liens morts de l'espace et permettent d'encaisser.
 
 ```
 Prompt 3.3 — Les écrans à créer.
 
 Fichiers du projet : inventaire-ecrans.md, partie 8.
 
-[Comptes rendus 1.2 (catalogue des connecteurs) et 1.3 (prix, contenu des plans, règle du plan inférieur).]
+[Compte rendu 1.3 (prix, contenu des plans, règle du plan inférieur). Le catalogue des connecteurs, connecteurs.md, est dans les fichiers du projet.]
 
 Avec la charte v2, dans la coque de l'espace (ou celle du site pour « Aide et contact » et les pages publiques), dessine chaque écran de la partie 8 avec chacun des états listés, à 1440 px et à 360 px :
 1. Réglages (8.1).
 2. Mon compte (8.2), avec l'export des données, et la suppression de l'espace : fenêtre de confirmation, puis page « Votre espace est supprimé ».
-3. Mon abonnement (8.3) :
-   - pendant la phase gratuite, sans paiement : Gratuit loin des limites, Gratuit avec une limite atteinte, plans à venir « Bientôt » avec « Me prévenir à l'ouverture », inscrit, plan offert aux bêta-testeurs ;
-   - le jour des abonnements, à dessiner dès maintenant : changer de plan, Essentiel mensuel, Pro annuel, retour du paiement réussi, paiement en cours de confirmation, paiement abandonné, paiement échoué (et son bandeau dans le reste de l'espace), résiliation programmée, passage à un plan inférieur programmé [, code promotionnel ou prix de lancement si 1.3 en retient un].
+3. Abonnement et factures (8.3), avec chacun de ces états :
+   - Gratuit avec sa consommation, Essentiel mensuel, Pro annuel ;
+   - retour du paiement réussi ; paiement en cours de confirmation ; paiement abandonné ;
+   - paiement échoué, et son bandeau dans le reste de l'espace ;
+   - résiliation programmée ; passage à un plan inférieur programmé ;
+   - code promotionnel, dont Essentiel offert aux bêta-testeurs.
 4. Aide et contact (8.4), avec le formulaire « Écrivez-nous » et ses états.
-5. Le catalogue des connecteurs (8.5) :
-   - la page publique « Intégrations » et la page Connecteurs de l'espace, groupées par familles, avec les états disponible, bientôt, inscrit, et « Dites-nous quel outil » ;
-   - la page publique d'un outil « Bientôt » ;
+5. Le catalogue des connecteurs (8.5, et connecteurs.md) :
+   - la page publique « Intégrations » et la page Connecteurs de l'espace, en six familles, avec les états disponible, bientôt, inscrit, et « Dites-nous quel outil » ;
+   - la page publique d'un outil « Bientôt », avec « En attendant : avec Zapier ou Make » ;
+   - le connecteur universel : sa page publique, sa page de connexion dans l'espace (adresse propre à l'espace, comme Systeme.io), et ses guides Zapier, Make, n8n et Podia ;
    - la liste « Compatible avec votre site ».
 6. [Si 1.6 l'a retenu : le parrainage (8.7).]
 
@@ -187,13 +192,13 @@ Prompt 3.5 — Le site public en v2.
 
 Fichiers du projet : inventaire-ecrans.md (partie 1) et les maquettes v1 de ces écrans.
 
-[Comptes rendus 1.5 (positionnement et textes de la page d'accueil), 1.2 (catalogue des connecteurs) et 1.3 (ce qu'affiche la page Tarifs pendant la phase gratuite).]
+[Comptes rendus 1.5 (positionnement et textes de la page d'accueil) et 1.3 (prix). Le catalogue des connecteurs, connecteurs.md, est dans les fichiers du projet.]
 
 1. La page d'accueil v2, avec les sections et les textes du compte rendu 1.5, dans leur ordre :
    - la démo en quatre temps (vente, e-mail, avis, mur) et l'exemple de widget réel restent, redessinés ;
-   - le catalogue des connecteurs par familles : Systeme.io y est un outil parmi d'autres, pas le centre de la page ;
+   - le catalogue des connecteurs par familles (connecteurs.md) : Systeme.io y est un outil parmi d'autres, pas le centre de la page ;
    - le bouton qui reste visible en bas de l'écran sur téléphone, si 1.5 l'a retenu.
-2. Tarifs pendant la phase gratuite (les plans payants « Bientôt », avec « Me prévenir à l'ouverture », selon 1.3), et le jour des abonnements ; Intégrations (avec le catalogue de 3.3), une intégration disponible, une intégration « Bientôt », Guides, un guide, chacune des quatre pages légales avec son sommaire, page introuvable, erreur, menu du téléphone.
+2. Tarifs (avec les prix de 1.3) ; Intégrations (avec le catalogue de 3.3), une intégration disponible, une intégration « Bientôt », Guides, un guide, chacune des quatre pages légales avec son sommaire, page introuvable, erreur, menu du téléphone.
 3. Le modèle des images de partage (1200 × 630 px) : page d'accueil, une page d'intégration, un guide.
 
 Chaque écran à 1440 px et à 360 px, avec chacun des états de l'inventaire. Mêmes règles de textes et mêmes interdits qu'en 3.1. Exporte comme en 3.2, dans un ZIP.

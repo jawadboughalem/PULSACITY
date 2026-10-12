@@ -56,8 +56,8 @@ Autres entrées : ajout manuel d'un témoignage reçu ailleurs, import d'un fich
 ## Ce qui manque
 
 - Les pages Réglages, Mon compte, Abonnement et factures, Aide et contact : les liens existent dans l'espace, les pages non.
-- Le paiement : volontairement absent. PULSACITY se lance gratuitement, sans entreprise (stratégie du 12 octobre) ; les abonnements ouvriront avec l'entreprise, quand des créateurs voudront payer. En attendant, chaque « Voir le plan Essentiel » mène à une page qui n'existe pas.
-- Les textes légaux : à réécrire pour un service gratuit édité par un particulier, puis à relire. Les CGV attendent le premier abonnement.
+- Le paiement : rien ne permet encore d'encaisser. Chaque « Voir le plan Essentiel » mène à une page qui n'existe pas. Les abonnements arrivent dans la V0 (lot 4.5) : le fondateur encaisse en tant que particulier, et crée la micro-entreprise au seuil (`seuil-micro-entreprise.md`).
+- Les textes légaux : à réécrire pour un vendeur particulier, sans entreprise, puis à relire.
 - Les connecteurs : un seul est disponible.
 - Le parrainage : le lien « Propulsé par PULSACITY » porte un code de parrainage, que rien n'enregistre encore.
 
@@ -73,15 +73,15 @@ Autres entrées : ajout manuel d'un témoignage reçu ailleurs, import d'un fich
 - Dépasser une limite ne supprime jamais de données : on bloque l'ajout et on propose le plan supérieur. Au-delà de 15 témoignages validés, les nouveaux arrivent et attendent.
 - L'annuel vaut dix mois (« 2 mois offerts »).
 - **Prix TVA comprise** : le montant affiché est celui que le créateur paie. Beaucoup d'indépendants ne récupèrent pas la TVA (franchise en base, formations exonérées) ; un prix hors taxes serait un prix qu'ils ne paient jamais.
-- Ce qui restera à PULSACITY par abonné Essentiel mensuel, une fois les abonnements ouverts, si PULSACITY collecte la TVA à 20 % : environ 7,81 € après la TVA et les frais Stripe. Sans TVA collectée (franchise en base) : environ 9,50 €. Les cotisations sociales et l'impôt viennent ensuite.
+- Ce qui reste à PULSACITY par abonné Essentiel mensuel, sans TVA facturée (vendeur particulier, puis micro-entreprise en franchise) : environ 9,50 € après les frais Stripe. Si un jour la TVA est collectée à 20 % : environ 7,81 €. Viennent ensuite l'impôt et les prélèvements sociaux, puis les cotisations avec la micro-entreprise.
 - Le Pro n'a aujourd'hui qu'un avantage : retirer le badge.
-- **Pendant la phase de lancement, gratuite**, seul le plan Gratuit est ouvert. Les plans payants sont annoncés « Bientôt », avec « Me prévenir à l'ouverture ». Les bêta-testeurs peuvent recevoir Essentiel, offert.
+- Les bêta-testeurs peuvent recevoir Essentiel, offert, par un code promotionnel Stripe.
 
 ## Coûts connus, à vérifier
 
 | Poste | Aujourd'hui | À prévoir |
 | --- | --- | --- |
-| Vercel (hébergement) | Hobby, gratuit, réservé à un usage personnel non commercial | Pro, 20 $ par mois, au premier abonnement |
+| Vercel (hébergement) | Hobby, gratuit, réservé à un usage personnel non commercial | Pro, 20 $ par mois, avant le premier paiement |
 | Supabase (base de données) | Production et recette | Plan Pro (environ 25 $ par mois) si le plan gratuit ne suffit plus |
 | Resend (e-mails) | Offre gratuite : environ 3 000 e-mails par mois, 100 par jour | Environ 20 $ par mois au-delà |
 | Cloudflare R2 (photos) | Gratuit jusqu'à 10 Go | Quelques centimes par Go ensuite |
@@ -134,4 +134,4 @@ Interdits permanents, qui restent en v2 (signatures de sites générés) :
 - Seul, avec Claude : Claude Chat pour décider, Claude Design pour dessiner, Claude Code pour construire, Claude in Chrome pour agir sur les services.
 - A déjà des comptes LinkedIn et Instagram.
 - Fera lui-même, avec Claude, les publicités, les vidéos (motion design compris) et les publications.
-- Pas d'entreprise pour l'instant : il veut d'abord faire ses preuves. La micro-entreprise se créera le jour où des créateurs voudront payer.
+- Pas d'entreprise pour l'instant : il encaisse en tant que particulier, et crée la micro-entreprise dès que les paiements deviennent réguliers (seuil dans `seuil-micro-entreprise.md`).
