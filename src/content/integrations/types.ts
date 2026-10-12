@@ -14,7 +14,8 @@ export type InstallStep = {
     | "systeme-webhook-screens"
     | "connection-success"
     | "paste-widget-screens"
-    | "systeme-enrollment-rule";
+    | "systeme-enrollment-rule"
+    | "universal-fields";
   /** A line under the illustration, in small. */
   note?: RichText;
 };
@@ -35,6 +36,12 @@ type IntegrationBase = {
 /** A connector that works today: what it does, how to install it, its own questions (m21, Systeme.io). */
 export type AvailableIntegration = IntegrationBase & {
   status: "available";
+  /** false for the universal connector: its address alone authenticates the sales, without a secret key. */
+  hasSigningKey?: boolean;
+  /** « Installer la connexion Systeme.io, pas à pas » when not given. */
+  installTitle?: string;
+  /** The sentence of the final call: « Connectez Systeme.io : la prochaine vente fait le reste. » when not given. */
+  finalCall?: string;
   benefits: Array<{ title: string; text: string }>;
   installIntro: string;
   installSteps: InstallStep[];

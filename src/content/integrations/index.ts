@@ -20,7 +20,7 @@ import { WOOCOMMERCE } from "./woocommerce";
 import { ZAPIER } from "./zapier";
 
 /** One content file per connector: the order of the lists, the available ones first. */
-export const INTEGRATIONS: Integration[] = [SYSTEME_IO, STRIPE, CALENDLY];
+export const INTEGRATIONS: Integration[] = [SYSTEME_IO, UNIVERSAL, STRIPE, CALENDLY];
 
 /**
  * The catalog of docs-internes/decisions/connecteurs.md: the 19 tools shown in V0, family by family, in its order.

@@ -128,7 +128,9 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
     <MarketingSection id="installation" labelledBy="install-title" hasTopRule>
       <div className="grid gap-6 desktop:grid-cols-[392px_minmax(0,1fr)] desktop:gap-7">
         <div className="flex flex-col gap-4">
-          <SectionTitle id="install-title">{`Installer la connexion ${integration.name}, pas à pas`}</SectionTitle>
+          <SectionTitle id="install-title">
+            {integration.installTitle ?? `Installer la connexion ${integration.name}, pas à pas`}
+          </SectionTitle>
           <p className="text-body text-slate-600">{integration.installIntro}</p>
         </div>
         <InstallGuide integration={integration} />
@@ -144,7 +146,7 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
 
     <FinalCall
       title="Vos clients ont déjà quelque chose à dire."
-      text={`Connectez ${integration.name} : la prochaine vente fait le reste.`}
+      text={integration.finalCall ?? `Connectez ${integration.name} : la prochaine vente fait le reste.`}
     />
   </>
 );

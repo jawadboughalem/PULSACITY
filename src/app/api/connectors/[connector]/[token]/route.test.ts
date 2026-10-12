@@ -256,6 +256,32 @@ describe("POST /api/connectors/[connector]/[token]", () => {
     expect(await db().select({ id: reviewRequests.id }).from(reviewRequests)).toHaveLength(1);
   });
 
+  it("keeps the sales sent to the universal connector raw, as JSON or as a form, without the bypass of the preview", async () => {
+    const universalToken = "jeton-universel-de-julie-0123456789abcdef";
+    await db().insert(connections).values({ spaceId, connector: "universal", webhookToken: universalToken });
+    const json = JSON.stringify({ email: "camille@example.com", offre: "Programme 30 jours", reference: "commande-1" });
+    const form = "email=camille%40example.com&offre=Programme+30+jours&reference=commande-2";
+
+    expect((await deliver("universal", universalToken, json, { "content-type": "application/json" })).status).toBe(200);
+    const formResponse = await deliver("universal", universalToken, form, {
+      "content-type": "application/x-www-form-urlencoded",
+      "x-vercel-protection-bypass": "secret-de-l-apercu",
+    });
+    expect(formResponse.status).toBe(200);
+    await runScheduled();
+
+    const events = await db()
+      .select({ rawBody: webhookEvents.rawBody, rawPayload: webhookEvents.rawPayload, headers: webhookEvents.headers })
+      .from(webhookEvents)
+      .orderBy(webhookEvents.receivedAt);
+    expect(events.map((event) => event.rawBody)).toEqual([json, form]);
+    expect(events[0].rawPayload).toEqual(JSON.parse(json));
+    expect(events[1].rawPayload).toBe(form);
+    expect(events[1].headers["content-type"]).toBe("application/x-www-form-urlencoded");
+    expect(events[1].headers).not.toHaveProperty("x-vercel-protection-bypass");
+    expect(await db().select().from(purchases)).toEqual([]);
+  });
+
   it("receives and processes a connector added to the registry alone, with the same engine", async () => {
     const [testConnection] = await db()
       .insert(connections)

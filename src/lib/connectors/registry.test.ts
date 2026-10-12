@@ -14,6 +14,11 @@ describe("getConnector", () => {
     expect(getConnectorBySlug("systeme")).toBeNull();
   });
 
+  it("resolves the universal connector by its id, and by its address in the space", () => {
+    expect(getConnector("universal")?.name).toBe("Connecteur universel");
+    expect(getConnectorBySlug("connecteur-universel")?.id).toBe("universal");
+  });
+
   it("keeps the registry's ids and addresses unique", () => {
     const connectors = listConnectors();
     expect(new Set(connectors.map((connector) => connector.id)).size).toBe(connectors.length);

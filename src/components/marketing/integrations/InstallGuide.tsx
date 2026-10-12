@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { ConnectionGuide, ConnectionRule } from "@/components/connectors/ConnectionGuide";
+import { UniversalFieldList } from "@/components/connectors/UniversalFieldList";
 import { RichTextLine } from "@/components/marketing/RichTextLine";
 import { Icon } from "@/components/ui/Icon";
 import { PasteGuideSteps } from "@/components/widgets/SystemePasteGuide";
@@ -12,14 +13,20 @@ const findAddressStep = (steps: InstallStep[]): number =>
   steps.findIndex((step) => step.illustration === "connection-address") + 1;
 
 /** The same drawings as in the creator's space: what the page says is what they will see. */
-const renderIllustration = (illustration: NonNullable<InstallStep["illustration"]>, addressStep: number): ReactNode => {
+const renderIllustration = (
+  illustration: NonNullable<InstallStep["illustration"]>,
+  addressStep: number,
+  integration: AvailableIntegration,
+): ReactNode => {
   switch (illustration) {
     case "connection-address":
-      return <ConnectionAddressFrame />;
+      return <ConnectionAddressFrame connectorName={integration.name} hasSigningKey={integration.hasSigningKey ?? true} />;
     case "systeme-webhook-screens":
       return <ConnectionGuide connectorId="systeme" connectorName="Systeme.io" />;
     case "connection-success":
-      return <ConnectionSuccessFrame />;
+      return <ConnectionSuccessFrame connectorName={integration.name} />;
+    case "universal-fields":
+      return <UniversalFieldList />;
     case "paste-widget-screens":
       return <PasteGuideSteps layout="pairs" />;
     case "systeme-enrollment-rule":
@@ -38,13 +45,14 @@ type StepRowProps = {
   isOptional?: boolean;
   step: InstallStep;
   addressStep: number;
+  integration: AvailableIntegration;
 };
 
 /**
  * A step of m21: its number, its title and its sentence in a column; under them, its drawing, the full width on a phone
  * and in the column of the text on a computer.
  */
-const StepRow = ({ marker, spokenPrefix, isOptional = false, step, addressStep }: StepRowProps) => (
+const StepRow = ({ marker, spokenPrefix, isOptional = false, step, addressStep, integration }: StepRowProps) => (
   <div className="grid grid-cols-[32px_minmax(0,1fr)] gap-x-4 gap-y-5 border-b border-hairline-200 py-6 desktop:grid-cols-[40px_minmax(0,1fr)] desktop:gap-x-5 desktop:py-6">
     <span
       aria-hidden="true"
@@ -68,7 +76,7 @@ const StepRow = ({ marker, spokenPrefix, isOptional = false, step, addressStep }
     </div>
     {step.illustration ? (
       <div className="col-span-2 desktop:col-span-1 desktop:col-start-2">
-        {renderIllustration(step.illustration, addressStep)}
+        {renderIllustration(step.illustration, addressStep, integration)}
       </div>
     ) : null}
     {step.note ? (
@@ -92,6 +100,7 @@ export const InstallGuide = ({ integration }: { integration: AvailableIntegratio
               spokenPrefix={`Étape ${index + 1} : `}
               step={step}
               addressStep={addressStep}
+              integration={integration}
             />
           </li>
         ))}
@@ -102,6 +111,7 @@ export const InstallGuide = ({ integration }: { integration: AvailableIntegratio
           isOptional
           step={integration.optionalStep}
           addressStep={addressStep}
+          integration={integration}
         />
       ) : null}
     </div>

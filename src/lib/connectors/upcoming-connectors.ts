@@ -6,8 +6,8 @@ export const UPCOMING_CONNECTORS = [
 
 /**
  * The tools to come of the catalog (docs-internes/decisions/connecteurs.md), in its order, with its sentences. Ready,
- * not shown: they take the place of UPCOMING_CONNECTORS with the universal connector (lot 4.1 b), which then joins
- * the registry.
+ * not shown: they take the place of UPCOMING_CONNECTORS when the catalog is published (lot 4.1 b). The universal
+ * connector is in the registry.
  */
 export const CATALOG_UPCOMING_CONNECTORS = [
   { id: "learnybox", name: "Learnybox", description: "Une demande d'avis après chaque vente ou inscription." },
@@ -32,11 +32,6 @@ export const CATALOG_UPCOMING_CONNECTORS = [
   { id: "eventbrite", name: "Eventbrite", description: "Une demande d'avis après l'événement, à chaque participant." },
   { id: "woocommerce", name: "WooCommerce", description: "Une demande d'avis après chaque commande payée." },
   { id: "shopify", name: "Shopify", description: "Une demande d'avis après chaque commande payée." },
-  {
-    id: "universal",
-    name: "Connecteur universel",
-    description: "Envoyez vos ventes depuis n'importe quel outil : une demande d'avis part pour chacune.",
-  },
   {
     id: "zapier",
     name: "Zapier",

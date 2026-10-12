@@ -1,9 +1,11 @@
 import { systemeConnector } from "./systeme/connector";
 import type { Connector } from "./types";
+import { universalConnector } from "./universal/connector";
 
 /** Adding a connector: its folder under src/lib/connectors, and one line here. */
 const CONNECTORS = {
   systeme: systemeConnector,
+  universal: universalConnector,
 } as const satisfies Record<string, Connector>;
 
 export type ConnectorId = keyof typeof CONNECTORS;

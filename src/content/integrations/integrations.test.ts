@@ -36,7 +36,7 @@ const DECIDED_TOOLS = [
   [
     "Connecteur universel",
     "other-tools",
-    "soon",
+    "available",
     "Envoyez vos ventes depuis n'importe quel outil : une demande d'avis part pour chacune.",
   ],
   ["Zapier", "other-tools", "soon", "Reliez des milliers d'outils : une demande d'avis après chaque vente que vous choisissez."],
