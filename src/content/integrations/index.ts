@@ -59,5 +59,6 @@ export const readMeanwhileLine = (connectorId: string): string | null => {
 };
 
 export { describeMeanwhile } from "./meanwhile";
+export { UNIVERSAL_GUIDE_LINKS } from "./universal";
 export { INTEGRATION_FAMILIES, type IntegrationFamilyId } from "./families";
 export type { AvailableIntegration, InstallStep, Integration, MeanwhileItem, RichText, UpcomingIntegration } from "./types";

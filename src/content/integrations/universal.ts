@@ -1,4 +1,18 @@
-import type { AvailableIntegration } from "./types";
+import { guidePath } from "@/components/marketing/marketing-paths";
+import type { AvailableIntegration, RichText } from "./types";
+
+/** The guides of the tools that send their sales to the universal connector: under its fields, here and in the space. */
+export const UNIVERSAL_GUIDE_LINKS: RichText = [
+  "Pas à pas, dans nos guides : ",
+  { link: "Make", href: guidePath("envoyer-vos-ventes-avec-make") },
+  " (même gratuit), ",
+  { link: "Zapier", href: guidePath("envoyer-vos-ventes-avec-zapier") },
+  ", ",
+  { link: "n8n", href: guidePath("envoyer-vos-ventes-avec-n8n") },
+  " et ",
+  { link: "Podia", href: guidePath("envoyer-vos-ventes-podia-avec-zapier") },
+  ".",
+];
 
 /**
  * Every other tool, maquette 21 on the model of Systeme.io: an address of the space that receives the sales of any
@@ -54,6 +68,7 @@ export const UNIVERSAL: AvailableIntegration = {
         "Dans Zapier, Make, n8n ou votre outil, ajoutez une étape qui envoie à l'adresse, pour chaque vente, ces champs. Seule l'adresse e-⁠mail du client est obligatoire.",
       ],
       illustration: "universal-fields",
+      note: UNIVERSAL_GUIDE_LINKS,
     },
     {
       title: "Envoyer une vente de test",

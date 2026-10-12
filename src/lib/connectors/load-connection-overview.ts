@@ -164,7 +164,12 @@ export const listConnectionEvents = async (
   );
 
   return rows.map((row) => {
-    const normalized = normalizeStoredEvent({ connector: connection.connector, rawPayload: row.rawPayload, headers: row.headers });
+    const normalized = normalizeStoredEvent({
+      connector: connection.connector,
+      rawPayload: row.rawPayload,
+      headers: row.headers,
+      receivedAt: row.receivedAt,
+    });
     const purchase = "purchase" in normalized ? normalized.purchase : null;
     return {
       id: row.id,

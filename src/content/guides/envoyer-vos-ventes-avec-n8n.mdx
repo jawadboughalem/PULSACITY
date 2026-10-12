@@ -1,0 +1,39 @@
+## Avant de commencer
+
+- Un espace PULSACITY. L'adresse de vos ventes est dans **Connecteurs**, puis **Connecteur universel** : copiez-la avec le bouton **Copier**.
+- n8n, sur n8n Cloud ou installé chez vous. Les noms ci-dessous sont ceux de n8n 2.
+- Un déclencheur pour votre outil de vente : un nœud comme **Stripe Trigger** ou **WooCommerce Trigger**, ou un nœud **Webhook** si votre outil sait envoyer ses ventes à une adresse.
+
+## Ajouter le nœud HTTP Request
+
+1. Après le déclencheur, cliquez sur **+**, puis choisissez **HTTP Request**.
+2. Dans **Method**, choisissez **POST**. Dans **URL**, collez l'adresse du connecteur universel.
+3. Activez **Send Body**. Dans **Body Content Type**, choisissez **Form Urlencoded**, puis **Using Fields Below**.
+4. Ajoutez un paramètre par champ : son nom dans **Name**, et dans **Value** la donnée de la vente, glissée depuis la colonne de gauche.
+
+- **email** : l'adresse e-⁠mail du client. C'est le seul champ obligatoire.
+- **prenom** et **nom** : son prénom, que reprend l'e-⁠mail de demande d'avis, et son nom.
+- **offre** : le nom de ce qu'il a acheté. Vous l'associez une fois à une offre PULSACITY.
+- **reference** : l'identifiant de la vente dans votre outil. Une vente reçue deux fois ne compte alors qu'une fois.
+- **date**, **montant** et **devise** : facultatifs. Sans date, le jour de réception compte ; sans devise, l'euro.
+
+## Tester avec une vente
+
+1. Pour ce test, mettez votre propre adresse dans le champ **email**, à la place de la donnée de la vente : vous recevrez la demande d'avis, pas votre client. Remettez la donnée ensuite.
+2. Cliquez sur **Execute step**. La sortie du nœud montre la réponse de PULSACITY : received: true.
+
+Dans votre espace, la page **Connecteur universel** passe au vert, et la vente apparaît dans **Derniers événements reçus**. Son offre attend dans **Offres à associer** : associez-la une fois, et choisissez quand demander l'avis.
+
+## Publier le workflow
+
+Cliquez sur **Publish** : le workflow tourne alors seul, à chaque nouvelle vente. Dans les versions plus anciennes de n8n, activez plutôt l'interrupteur **Active**.
+
+## Si rien n'arrive
+
+- Vérifiez l'adresse : copiez-la à nouveau depuis votre espace, sans espace avant ni après.
+- Le nœud HTTP Request est-il sur **POST**, avec **Send Body** activé ? Le workflow est-il publié ?
+- La vente arrive avec la mention « Contenu illisible » ? Le champ **email** est vide ou n'est pas une adresse. Corrigez l'envoi, puis envoyez la vente à nouveau.
+- La vente arrive mais attend ? Son offre n'est pas encore associée : ouvrez **Offres à associer**.
+- L'adresse a été vue par quelqu'un d'autre, sur une capture d'écran par exemple ? Sur la page du connecteur, **Changer d'adresse** en crée une nouvelle. Collez-la à la place de l'ancienne.
+
+Toujours rien ? [Écrivez-nous](/mentions-legales#contact) : nous le faisons avec vous, en partage d'écran.

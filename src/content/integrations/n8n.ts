@@ -7,6 +7,7 @@ export const N8N: UpcomingIntegration = {
   name: "n8n",
   family: "other-tools",
   meanwhileVia: "universal",
+  guideSlug: "envoyer-vos-ventes-avec-n8n",
   summary: "Reliez n'importe quel outil avec n8n : une demande d'avis après chaque vente.",
   seo: {
     title: "Témoignages automatiques pour n8n, bientôt",

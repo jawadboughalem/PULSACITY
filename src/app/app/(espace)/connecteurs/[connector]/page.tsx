@@ -12,9 +12,11 @@ import { readConnectorWording } from "@/components/connectors/connector-wording"
 import { ExternalProductsTable } from "@/components/connectors/ExternalProductsTable";
 import { UniversalFieldList } from "@/components/connectors/UniversalFieldList";
 import { describeExternalProduct } from "@/components/connectors/describe-external-product";
+import { RichTextLine } from "@/components/marketing/RichTextLine";
 import { BackBar, Breadcrumb } from "@/components/space/BackBar";
 import { CONNECTORS_SECTION_HREF, connectorHistoryHref } from "@/components/space/space-sections";
 import { SpacePage } from "@/components/space/SpacePage";
+import { UNIVERSAL_GUIDE_LINKS } from "@/content/integrations";
 import { getDb } from "@/db";
 import { buildWebhookUrl, findOrCreateConnection } from "@/lib/connectors/connections";
 import {
@@ -146,7 +148,12 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
               }
             >
               {connector.id === "universal" ? (
-                <UniversalFieldList />
+                <div className="flex flex-col gap-4">
+                  <UniversalFieldList />
+                  <p className="max-w-text text-small">
+                    <RichTextLine parts={UNIVERSAL_GUIDE_LINKS} />
+                  </p>
+                </div>
               ) : (
                 <ConnectionGuide connectorId={connector.id} connectorName={connector.name} />
               )}

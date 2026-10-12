@@ -71,8 +71,13 @@ const SALE_HEADERS = JSON.parse(readFixture("sale-new.headers.json")) as Record<
 const ENROLLMENT_BODY = readFixture("contact-course-enrolled.body.json").trimEnd();
 const ENROLLMENT_HEADERS = JSON.parse(readFixture("contact-course-enrolled.headers.json")) as Record<string, string>;
 
+/** The test sales captured from Make, n8n and Zapier (docs-internes/connectors/universel.md). */
+const readUniversalFixture = (name: string) =>
+  readFileSync(new URL(`../../../../../lib/connectors/universal/__fixtures__/${name}`, import.meta.url), "utf8");
+
 const SECRET = "0123456789abcdef0123456789abcdef";
 const TOKEN = "jeton-secret-de-julie-0123456789abcdefghij";
+const UNIVERSAL_TOKEN = "jeton-universel-de-julie-0123456789abcdef";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 let spaceId: string;
@@ -93,6 +98,14 @@ const signedSale = (body = SALE_BODY) => ({
   ...SALE_HEADERS,
   "x-webhook-signature": signHmacSha256Hex(SECRET, Buffer.from(body)),
 });
+
+const connectUniversal = async () => {
+  const [connection] = await db()
+    .insert(connections)
+    .values({ spaceId, connector: "universal", webhookToken: UNIVERSAL_TOKEN })
+    .returning({ id: connections.id });
+  return connection.id;
+};
 
 const runScheduled = async () => {
   const tasks = testContext.scheduled.splice(0);
@@ -288,14 +301,13 @@ describe("POST /api/connectors/[connector]/[token]", () => {
     expect(await db().select({ id: reviewRequests.id }).from(reviewRequests)).toHaveLength(1);
   });
 
-  it("keeps the sales sent to the universal connector raw, as JSON or as a form, without the bypass of the preview", async () => {
-    const universalToken = "jeton-universel-de-julie-0123456789abcdef";
-    await db().insert(connections).values({ spaceId, connector: "universal", webhookToken: universalToken });
-    const json = JSON.stringify({ email: "camille@example.com", offre: "Programme 30 jours", reference: "commande-1" });
-    const form = "email=camille%40example.com&offre=Programme+30+jours&reference=commande-2";
+  it("reads the sales sent to the universal connector, as JSON or as a form, without the bypass of the preview", async () => {
+    const universalId = await connectUniversal();
+    const json = readUniversalFixture("make-json.body.json").trimEnd();
+    const form = readUniversalFixture("n8n-form.body.txt").trimEnd();
 
-    expect((await deliver("universal", universalToken, json, { "content-type": "application/json" })).status).toBe(200);
-    const formResponse = await deliver("universal", universalToken, form, {
+    expect((await deliver("universal", UNIVERSAL_TOKEN, json, { "content-type": "application/json" })).status).toBe(200);
+    const formResponse = await deliver("universal", UNIVERSAL_TOKEN, form, {
       "content-type": "application/x-www-form-urlencoded",
       "x-vercel-protection-bypass": "secret-de-l-apercu",
     });
@@ -303,15 +315,80 @@ describe("POST /api/connectors/[connector]/[token]", () => {
     await runScheduled();
 
     const events = await db()
-      .select({ rawBody: webhookEvents.rawBody, rawPayload: webhookEvents.rawPayload, headers: webhookEvents.headers })
+      .select({
+        rawBody: webhookEvents.rawBody,
+        rawPayload: webhookEvents.rawPayload,
+        headers: webhookEvents.headers,
+        outcome: webhookEvents.outcome,
+      })
       .from(webhookEvents)
       .orderBy(webhookEvents.receivedAt);
     expect(events.map((event) => event.rawBody)).toEqual([json, form]);
     expect(events[0].rawPayload).toEqual(JSON.parse(json));
     expect(events[1].rawPayload).toBe(form);
-    expect(events[1].headers["content-type"]).toBe("application/x-www-form-urlencoded");
     expect(events[1].headers).not.toHaveProperty("x-vercel-protection-bypass");
-    expect(await db().select().from(purchases)).toEqual([]);
+    expect(events.map((event) => event.outcome)).toEqual(["awaiting-product", "awaiting-product"]);
+    expect(await db().select({ name: externalProducts.name, priceCents: externalProducts.priceCents }).from(externalProducts)).toEqual([
+      { name: "Programme 30 jours", priceCents: 9750 },
+    ]);
+
+    await db().insert(productRefs).values({ productId: programmeId, connectionId: universalId, externalRef: "offre:programme 30 jours" });
+    await processAwaitingEvents(db(), universalId, "offre:programme 30 jours");
+    const recorded = await db()
+      .select({ email: customers.email, externalRef: purchases.externalRef })
+      .from(purchases)
+      .innerJoin(customers, eq(customers.id, purchases.customerId))
+      .orderBy(purchases.externalRef);
+    expect(recorded).toEqual([
+      { email: "camille.make@example.com", externalRef: "reference:make-json-1" },
+      { email: "camille.n8n@example.com", externalRef: "reference:n8n-form-1" },
+    ]);
+    expect(await db().select({ id: reviewRequests.id }).from(reviewRequests)).toHaveLength(2);
+  });
+
+  it("records once a sale the universal connector receives twice with the same reference", async () => {
+    const universalId = await connectUniversal();
+    await db().insert(productRefs).values({ productId: programmeId, connectionId: universalId, externalRef: "offre:programme 30 jours" });
+    const json = readUniversalFixture("zapier-json.body.json").trimEnd();
+    const headers = JSON.parse(readUniversalFixture("zapier-json.headers.json")) as Record<string, string>;
+
+    await deliver("universal", UNIVERSAL_TOKEN, json, headers);
+    await deliver("universal", UNIVERSAL_TOKEN, json, headers);
+    await runScheduled();
+
+    expect(
+      await db().select({ outcome: webhookEvents.outcome }).from(webhookEvents).orderBy(webhookEvents.receivedAt),
+    ).toEqual([{ outcome: "request-scheduled" }, { outcome: "duplicate" }]);
+    expect(await db().select({ id: purchases.id }).from(purchases)).toHaveLength(1);
+    expect(await db().select({ id: reviewRequests.id }).from(reviewRequests)).toHaveLength(1);
+  });
+
+  it("asks once a customer sent by Systeme.io and by the universal connector within 48 hours", async () => {
+    const universalId = await connectUniversal();
+    await db().insert(productRefs).values({ productId: programmeId, connectionId, externalRef: "price-plan:3456303" });
+    const [atelier] = await db()
+      .insert(products)
+      .values({ spaceId, name: "Atelier cuisine", slug: "atelier-cuisine" })
+      .returning({ id: products.id });
+    await db().insert(productRefs).values({ productId: atelier.id, connectionId: universalId, externalRef: "offre:atelier cuisine" });
+    const sameCustomer = JSON.stringify({
+      email: "utilisateurdemo+capture@example.com",
+      offre: "Atelier cuisine",
+      date: "2026-09-28T09:00:00+02:00",
+      reference: "commande-77",
+    });
+
+    await deliver("systeme", TOKEN, SALE_BODY, signedSale());
+    await deliver("universal", UNIVERSAL_TOKEN, sameCustomer, { "content-type": "application/json" });
+    await runScheduled();
+
+    const outcomes = await db()
+      .select({ outcome: webhookEvents.outcome })
+      .from(webhookEvents)
+      .where(eq(webhookEvents.connectionId, universalId));
+    expect(outcomes).toEqual([{ outcome: "request-elsewhere" }]);
+    expect(await db().select({ id: purchases.id }).from(purchases)).toHaveLength(2);
+    expect(await db().select({ id: reviewRequests.id }).from(reviewRequests)).toHaveLength(1);
   });
 
   it("receives and processes a connector added to the registry alone, with the same engine", async () => {

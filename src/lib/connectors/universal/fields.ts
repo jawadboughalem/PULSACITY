@@ -20,13 +20,19 @@ export const UNIVERSAL_FIELDS: UniversalField[] = [
     description: "Le nom de ce qu'il a acheté. Vous l'associez une fois à une offre PULSACITY.",
     example: "Programme 30 jours",
   },
-  { name: "date", isRequired: false, description: "Le jour de la vente. Sans date : le jour de réception.", example: "2026-10-12" },
-  { name: "montant", isRequired: false, description: "Le prix payé.", example: "97" },
+  {
+    name: "date",
+    isRequired: false,
+    description: "Le jour de la vente, avec ou sans l'heure, ou au format 12/10/2026. Sans date : le jour de réception.",
+    example: "2026-10-12",
+  },
+  { name: "montant", isRequired: false, description: "Le prix payé, avec une virgule ou un point.", example: "97,50" },
   { name: "devise", isRequired: false, description: "EUR si rien n'est indiqué.", example: "EUR" },
   {
     name: "reference",
     isRequired: false,
-    description: "L'identifiant de la vente dans votre outil : une vente reçue deux fois ne compte qu'une fois.",
+    description:
+      "L'identifiant de la vente dans votre outil : une vente reçue deux fois ne compte qu'une fois. Sans référence : une vente par client, par offre et par jour.",
     example: "commande-1042",
   },
 ];

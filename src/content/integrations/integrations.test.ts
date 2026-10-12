@@ -156,6 +156,19 @@ describe("the published catalog", () => {
     expect(readMeanwhileLine("systeme")).toBeNull();
   });
 
+  it("sends Zapier, Make, n8n and Podia to their guide, the other tools to the universal connector", () => {
+    const links = Object.fromEntries(
+      INTEGRATIONS.flatMap((integration) =>
+        integration.status === "soon" ? [[integration.name, describeMeanwhile(integration).item.link?.href]] : [],
+      ),
+    );
+    expect(links.Make).toBe("/guides/envoyer-vos-ventes-avec-make");
+    expect(links.Zapier).toBe("/guides/envoyer-vos-ventes-avec-zapier");
+    expect(links.n8n).toBe("/guides/envoyer-vos-ventes-avec-n8n");
+    expect(links.Podia).toBe("/guides/envoyer-vos-ventes-podia-avec-zapier");
+    expect(links.Stripe).toBe("/integrations/connecteur-universel");
+  });
+
   it("gives each tool to come its row on the Connecteurs page, with the same name and sentence", () => {
     const soon = INTEGRATIONS.flatMap((integration) =>
       integration.status === "soon" ? [[integration.connector, integration.name, integration.summary]] : [],

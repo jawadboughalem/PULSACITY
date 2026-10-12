@@ -1,4 +1,4 @@
-import { integrationPath } from "@/components/marketing/marketing-paths";
+import { guidePath, integrationPath } from "@/components/marketing/marketing-paths";
 import type { MeanwhileItem, UpcomingIntegration } from "./types";
 
 const UNIVERSAL_SLUG = "connecteur-universel";
@@ -41,8 +41,13 @@ export const MEANWHILE: MeanwhileItem[] = [
   },
 ];
 
+/** Its guide step by step when it has one, the page of the universal connector otherwise. */
+const readMeanwhileLink = (integration: UpcomingIntegration): NonNullable<MeanwhileItem["link"]> =>
+  integration.guideSlug ? { href: guidePath(integration.guideSlug), label: "Lire le guide pas à pas" } : UNIVERSAL_LINK;
+
 /** « En attendant : avec Zapier ou Make » (decisions/connecteurs.md): the line under a tool to come, and its first way. */
 export const describeMeanwhile = (integration: UpcomingIntegration): { line: string; item: MeanwhileItem } => {
+  const link = readMeanwhileLink(integration);
   switch (integration.meanwhileVia ?? "zapier-or-make") {
     case "universal":
       return {
@@ -50,7 +55,7 @@ export const describeMeanwhile = (integration: UpcomingIntegration): { line: str
         item: {
           title: "Avec le connecteur universel",
           text: `${integration.name} envoie déjà vos ventes au connecteur universel : chacune déclenche une demande d'avis.`,
-          link: UNIVERSAL_LINK,
+          link,
         },
       };
     case "zapier":
@@ -59,7 +64,7 @@ export const describeMeanwhile = (integration: UpcomingIntegration): { line: str
         item: {
           title: "Avec Zapier",
           text: `Envoyez dès aujourd'hui vos ventes ${integration.name} au connecteur universel, avec Zapier : chacune déclenche une demande d'avis.`,
-          link: UNIVERSAL_LINK,
+          link,
         },
       };
     case "zapier-or-make":
@@ -68,7 +73,7 @@ export const describeMeanwhile = (integration: UpcomingIntegration): { line: str
         item: {
           title: "Avec Zapier ou Make",
           text: `Envoyez dès aujourd'hui vos ventes ${integration.name} au connecteur universel, avec Zapier ou Make : chacune déclenche une demande d'avis.`,
-          link: UNIVERSAL_LINK,
+          link,
         },
       };
   }

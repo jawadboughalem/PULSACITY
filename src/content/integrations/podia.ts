@@ -7,6 +7,7 @@ export const PODIA: UpcomingIntegration = {
   name: "Podia",
   family: "courses",
   meanwhileVia: "zapier",
+  guideSlug: "envoyer-vos-ventes-podia-avec-zapier",
   summary: "Une demande d'avis après chaque vente, avec Zapier.",
   seo: {
     title: "Témoignages automatiques pour Podia, bientôt",

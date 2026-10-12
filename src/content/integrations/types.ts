@@ -2,8 +2,8 @@ import type { IconName } from "@/components/ui/icon-paths";
 import type { FaqEntry } from "../faq";
 import type { IntegrationFamilyId } from "./families";
 
-/** A sentence of a step, in bold where it names what the creator clicks on. */
-export type RichText = Array<string | { strong: string }>;
+/** A sentence of a step, in bold where it names what the creator clicks on, with a link to a page of the site. */
+export type RichText = Array<string | { strong: string } | { link: string; href: string }>;
 
 export type InstallStep = {
   title: string;
@@ -60,6 +60,8 @@ export type UpcomingIntegration = IntegrationBase & {
    * connector itself for Zapier, Make and n8n, Zapier alone for Podia.
    */
   meanwhileVia?: "zapier-or-make" | "universal" | "zapier";
+  /** The guide that sends its sales to the universal connector today: « En attendant » links to it. */
+  guideSlug?: string;
 };
 
 export type Integration = AvailableIntegration | UpcomingIntegration;
