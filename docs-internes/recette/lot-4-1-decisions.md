@@ -195,7 +195,7 @@ Tu continues la recette de PULSACITY sur l'aperçu https://pulsacity-git-claude-
 3. https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/ : section Tarifs, les trois plans l'un sous l'autre, la ligne du prix de lancement sous Essentiel et sous Pro, rien ne dépasse.
 4. https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/cgv : la partie « 2. Prix » se lit sans défilement horizontal.
 5. https://pulsacity-git-claude-determined-1b6fa6-jawadboughalems-projects.vercel.app/app/widgets : l'encadré « Avec le plan Essentiel, à 9,99 € par mois, … » en entier, rien ne dépasse.
-6. Ouvre un widget (« Modifier »), puis l'onglet de l'installation : « Plus simple depuis un ordinateur », puis « Le code se colle dans l'éditeur de votre page, plus confortable sur grand écran. Recevez-le par e-mail et ouvrez-le sur votre ordinateur. » Touche « Copier le code » : « Collez-le dans votre page, dans un bloc de code HTML. Le guide Systeme.io vous montre où. »
+6. Ouvre un widget (« Modifier »), puis, dans l'onglet « Réglages », la rubrique « Installer le widget » : « Plus simple depuis un ordinateur », puis « Le code se colle dans l'éditeur de votre page, plus confortable sur grand écran. Recevez-le par e-mail et ouvrez-le sur votre ordinateur. » Touche « Copier le code » : « Collez-le dans votre page, dans un bloc de code HTML. Le guide Systeme.io vous montre où. »
 7. Touche « M'envoyer le code », puis dis-moi : « Ouvrez l'e-mail du code, puis dites-moi OK. » Attends mon OK. Je vérifie moi-même : « Collez-le une seule fois dans un bloc de code HTML de votre page de vente. », puis « Sur Systeme.io : 4 étapes », sans durée.
 
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu.

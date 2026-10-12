@@ -32,7 +32,7 @@ Stratégie du 12 octobre : encaisser dès la V0, en tant que particulier ; crée
 
 La V1 attend ; la recette de bout en bout en production devient le lot 4.11, juste avant le lancement.
 
-## Lot 4.1, les décisions appliquées (PR en cours, 12 octobre)
+## Lot 4.1, les décisions appliquées (PR #33, 12 octobre)
 
 - `plans.ts` tient les prix publics (Essentiel 14,99 € et 149 €, Pro 24,99 € et 249 €) et les prix fondateur (9,99 € et 99 €, 19,99 € et 199 €), avec `FOUNDER_PRICE_SEATS = 100` et `readOpenPriceList`. Les limites ne changent pas.
 - Tarifs et accueil, dans la mise en page de m7 et m8 : le prix fondateur comme prix payé, et sous lui la ligne de l'arbitrage n° 1 (« Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois », « par an » en Annuel). Sur ordinateur, les colonnes partagent leurs rangées (sous-grille) : boutons et listes restent alignés malgré la ligne, absente du plan Gratuit.
@@ -41,6 +41,8 @@ La V1 attend ; la recette de bout en bout en production devient le lot 4.11, jus
 - Catalogue des connecteurs prêt, pas publié : les 6 familles et un fichier par outil dans `src/content/integrations/` (`INTEGRATION_CATALOG`, 19 outils), et leurs lignes pour l'espace (`CATALOG_UPCOMING_CONNECTORS`). Un test les tient fidèles à `connecteurs.md`. Les phrases décidées remplacent déjà les lignes de Systeme.io, Stripe et Calendly sur `/integrations`.
 - Textes qui supposent Systeme.io (validés par le fondateur le 12 octobre, `recette/lot-4-1-decisions.md`) : « l'outil où vous vendez » sur l'accueil, dans les appels finaux, un guide et l'espace ; « Connecter Systeme.io » devient « Connecter mon outil », vers Connecteurs, et l'étape de démarrage se coche dès qu'un connecteur est actif. Restent nommés Systeme.io : son connecteur, ses guides, la démo de l'accueil ; la FAQ de compatibilité, le comparatif de Tarifs, le titre d'Intégrations et « Compatible avec Systeme.io » changent avec le catalogue (4.1 b).
 - Durées : plus aucune durée d'installation affichée (« Deux minutes… », « environ 2 minutes ») ni « l'avis se laisse en deux minutes » (`positionnement.md`). « Comptez moins d'une minute » (collecte) et « Donner mon avis (1 minute) » (e-mail, démo) restent jusqu'aux maquettes v2 : à mesurer d'ici là.
+- Recette sur l'aperçu, le 12 octobre (`recette/lot-4-1-decisions.md`) : prompt 1 vert au second essai (le premier a trouvé la base de recette injoignable, voir « À faire » n° 13) ; prompt 2, 20 points sur 20 ; prompt 3, 7 points sur 7. Deux déploiements d'aperçu de Vercel ont échoué en quelques secondes avant de passer au commit suivant, cause non lue (journaux de Vercel).
+- Vérification en production (prompt 4 de `recette/lot-4-1-decisions.md`) : à faire après la fusion, et à noter ici.
 
 ## Lot 7 (PR #27), site public, en ligne depuis le 4 octobre
 
@@ -251,7 +253,8 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
 - les compteurs du haut de la liste se mettent à jour environ une seconde après « Valider » ou « Masquer » ;
 - un premier clic sur « Importez un fichier CSV » n'a rien fait une fois, le second a ouvert la page ;
-- le lien Réglages mène à une page pas encore construite (Connecteurs et Demandes existent depuis le lot 6).
+- le lien Réglages mène à une page pas encore construite (Connecteurs et Demandes existent depuis le lot 6) ;
+- éditeur de widget, encadré « Code envoyé à … » (depuis le 2 octobre) : « Ouvrez l'e-mail sur votre ordinateur… » est décalé d'environ 20 px et « Renvoyer l'e-mail » d'environ 8 px par rapport au texte du titre (recette du lot 4.1). À aligner avec la maquette v2 de l'éditeur.
 
 ## Décisions du 1er octobre (maquettes m15 à m17)
 
