@@ -5,7 +5,8 @@ export const CALENDLY: UpcomingIntegration = {
   slug: "calendly",
   connector: "calendly",
   name: "Calendly",
-  summary: "Rendez-vous. Une demande d'avis après chaque séance réalisée.",
+  family: "appointments",
+  summary: "Une demande d'avis après chaque rendez-vous passé.",
   seo: {
     title: "Témoignages automatiques pour Calendly, bientôt",
     description:

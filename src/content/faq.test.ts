@@ -23,13 +23,22 @@ describe("HOME_FAQ", () => {
 });
 
 describe("BILLING_FAQ", () => {
-  it("computes what Essentiel costs before VAT from its price", () => {
+  it("says the price shown is the price paid, with no VAT to recover (decisions/tarifs.md)", () => {
     const answer = answerTo(BILLING_FAQ, "Les prix incluent-ils la TVA ?");
-    expect(answer).toMatch(/8,33\s€ HT par mois/);
-    expect(answer).toMatch(/vous payez 9,99\s€, sans TVA/);
+    expect(answer).toMatch(/^Le prix affiché est celui que vous payez\. PULSACITY ne facture pas de TVA aujourd'hui/);
+    expect(answer).toContain("aucune à récupérer sur nos factures");
+    expect(answer).not.toMatch(/TVA comprise|HT/);
   });
 
-  it("names the testimonials the free plan keeps showing", () => {
-    expect(answerTo(BILLING_FAQ, "Que deviennent mes témoignages si j'arrête ?")).toContain("au-delà de 15 témoignages validés");
+  it("names the widget and the testimonials the free plan keeps showing", () => {
+    const answer = answerTo(BILLING_FAQ, "Que deviennent mes témoignages si j'arrête ?");
+    expect(answer).toContain("1 widget reste sur votre page, avec 15 témoignages validés");
+    expect(answer).toContain("vos autres widgets reviennent avec Essentiel");
+  });
+
+  it("moves to the yearly plan at the end of the month paid, never pro rata", () => {
+    const answer = answerTo(BILLING_FAQ, "Puis-je passer du mensuel à l'annuel ?");
+    expect(answer).toContain("à la fin du mois déjà payé");
+    expect(answer).toMatch(/L'année coûte 10 mois\s: 2 mois sont offerts\./);
   });
 });

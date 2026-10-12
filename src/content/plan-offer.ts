@@ -1,4 +1,17 @@
-import { type Limit, PLAN_IDS, PLANS, type Plan, type PlanId, UNLIMITED } from "@/config/plans";
+import {
+  FOUNDER_PRICE_SEATS,
+  type Limit,
+  PLAN_IDS,
+  PLANS,
+  type Plan,
+  type PlanId,
+  type PlanPrices,
+  type PriceList,
+  UNLIMITED,
+  readOpenPriceList,
+  readPlanPrices,
+} from "@/config/plans";
+import { formatPrice } from "@/lib/french/format-price";
 import { NO_BREAK_SPACE, quoteInFrench } from "@/lib/french/typography";
 
 /**
@@ -12,12 +25,18 @@ export const BILLING_PERIODS: BillingPeriod[] = ["monthly", "yearly"];
 
 export const POWERED_BY_MENTION = `Mention ${quoteInFrench("Propulsé par PULSACITY")}`;
 
-/** « Annuel : 2 mois offerts »: the year of the paid plans costs ten months, rounded down (decision_tarifs.md). */
-export const countFreeMonths = (plan: Plan): number =>
-  plan.priceCents.monthly === 0 ? 0 : Math.round(12 - plan.priceCents.yearly / plan.priceCents.monthly);
+/**
+ * The prices the site shows: the founder ones while they are open (arbitrages.md, n° 1). No space pays yet: lot 4.5
+ * (Stripe) counts the founder subscribers here, so that the hundredth switches the pages without a new deployment.
+ */
+export const SHOWN_PRICE_LIST: PriceList = readOpenPriceList(0);
+
+/** « Annuel : 2 mois offerts »: the year of the paid plans costs ten months, rounded down (decisions/tarifs.md). */
+export const countFreeMonths = (prices: PlanPrices): number =>
+  prices.monthly === 0 ? 0 : Math.round(12 - prices.yearly / prices.monthly);
 
 /** The free months of the paid plans, the same for all of them. */
-export const YEARLY_FREE_MONTHS = countFreeMonths(PLANS.essentiel);
+export const YEARLY_FREE_MONTHS = countFreeMonths(readPlanPrices(PLANS.essentiel, SHOWN_PRICE_LIST));
 
 const plural = (count: number, singular: string, pluralForm: string) => (count === 1 ? singular : pluralForm);
 
@@ -80,12 +99,27 @@ export const splitPrice = (amountCents: number): PriceParts => {
   };
 };
 
-export const readPlanPrice = (id: PlanId, period: BillingPeriod): number => PLANS[id].priceCents[period];
+export const readPlanPrice = (id: PlanId, period: BillingPeriod, priceList: PriceList = SHOWN_PRICE_LIST): number =>
+  readPlanPrices(PLANS[id], priceList)[period];
+
+const PERIOD_WORDS: Record<BillingPeriod, string> = { monthly: "par mois", yearly: "par an" };
 
 /** « pour toujours », « par mois », « par an ». */
-export const describePricePeriod = (id: PlanId, period: BillingPeriod): string => {
-  if (readPlanPrice(id, period) === 0) return "pour toujours";
-  return period === "monthly" ? "par mois" : "par an";
+export const describePricePeriod = (id: PlanId, period: BillingPeriod): string =>
+  readPlanPrice(id, period) === 0 ? "pour toujours" : PERIOD_WORDS[period];
+
+/**
+ * Under a founder price, the line of arbitrage n° 1: « Prix de lancement, gardé à vie, pour les 100 premiers abonnés.
+ * Ensuite, 14,99 € par mois. » Nothing on the free plan, nor once the public prices are shown.
+ */
+export const describeLaunchPrice = (
+  id: PlanId,
+  period: BillingPeriod,
+  priceList: PriceList = SHOWN_PRICE_LIST,
+): string | null => {
+  if (priceList === "public" || readPlanPrice(id, period, "public") === 0) return null;
+  const publicPrice = formatPrice(readPlanPrice(id, period, "public"), "EUR");
+  return `Prix de lancement, gardé à vie, pour les ${FOUNDER_PRICE_SEATS} premiers abonnés. Ensuite, ${publicPrice} ${PERIOD_WORDS[period]}.`;
 };
 
 /** One value of the comparison: included, not included, to come, or a word. */

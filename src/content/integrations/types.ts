@@ -1,5 +1,6 @@
 import type { IconName } from "@/components/ui/icon-paths";
 import type { FaqEntry } from "../faq";
+import type { IntegrationFamilyId } from "./families";
 
 /** A sentence of a step, in bold where it names what the creator clicks on. */
 export type RichText = Array<string | { strong: string }>;
@@ -22,7 +23,9 @@ type IntegrationBase = {
   /** In the address: /integrations/systeme-io. The same as the connector's slug in the space. */
   slug: string;
   name: string;
-  /** One line under the name, on /integrations (m21). */
+  /** Its family in the catalog (decisions/connecteurs.md). */
+  family: IntegrationFamilyId;
+  /** One line under the name, on /integrations (m21): the sentence of decisions/connecteurs.md. */
   summary: string;
   seo: { title: string; description: string };
   heading: string;

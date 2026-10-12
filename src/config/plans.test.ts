@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  FOUNDER_PRICE_SEATS,
   PLANS,
   UNLIMITED,
   canAddTestimonial,
@@ -8,6 +9,8 @@ import {
   canRequestManually,
   canSendRequest,
   countTestimonialsLeft,
+  readOpenPriceList,
+  readPlanPrices,
 } from "./plans";
 
 const free = { plan: "free" } as const;
@@ -21,24 +24,60 @@ describe("PLANS", () => {
         id: "free",
         name: "Gratuit",
         priceCents: { monthly: 0, yearly: 0 },
+        founderPriceCents: { monthly: 0, yearly: 0 },
         limits: { testimonials: 15, monthlyRequests: 20, widgets: 1, manualRequestsPerDay: 20 },
         badgeRemovable: false,
       },
       essentiel: {
         id: "essentiel",
         name: "Essentiel",
-        priceCents: { monthly: 999, yearly: 9900 },
+        priceCents: { monthly: 1499, yearly: 14900 },
+        founderPriceCents: { monthly: 999, yearly: 9900 },
         limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED, manualRequestsPerDay: 20 },
         badgeRemovable: false,
       },
       pro: {
         id: "pro",
         name: "Pro",
-        priceCents: { monthly: 1999, yearly: 19900 },
+        priceCents: { monthly: 2499, yearly: 24900 },
+        founderPriceCents: { monthly: 1999, yearly: 19900 },
         limits: { testimonials: UNLIMITED, monthlyRequests: UNLIMITED, widgets: UNLIMITED, manualRequestsPerDay: 20 },
         badgeRemovable: true,
       },
     });
+  });
+});
+
+describe("readOpenPriceList", () => {
+  it("keeps the founder price open for the first 100 paying subscribers, then shows the public prices", () => {
+    expect(FOUNDER_PRICE_SEATS).toBe(100);
+    expect(readOpenPriceList(0)).toBe("founder");
+    expect(readOpenPriceList(99)).toBe("founder");
+    expect(readOpenPriceList(100)).toBe("public");
+    expect(readOpenPriceList(250)).toBe("public");
+  });
+});
+
+describe("readPlanPrices", () => {
+  it("reads the founder prices or the public ones of decisions/tarifs.md", () => {
+    expect(readPlanPrices(PLANS.essentiel, "founder")).toEqual({ monthly: 999, yearly: 9900 });
+    expect(readPlanPrices(PLANS.essentiel, "public")).toEqual({ monthly: 1499, yearly: 14900 });
+    expect(readPlanPrices(PLANS.pro, "founder")).toEqual({ monthly: 1999, yearly: 19900 });
+    expect(readPlanPrices(PLANS.pro, "public")).toEqual({ monthly: 2499, yearly: 24900 });
+  });
+
+  it("leaves the free plan free in both", () => {
+    expect(readPlanPrices(PLANS.free, "founder")).toEqual({ monthly: 0, yearly: 0 });
+    expect(readPlanPrices(PLANS.free, "public")).toEqual({ monthly: 0, yearly: 0 });
+  });
+
+  it("makes the year cost ten months, rounded down to the euro, in both", () => {
+    for (const plan of [PLANS.essentiel, PLANS.pro]) {
+      for (const priceList of ["founder", "public"] as const) {
+        const prices = readPlanPrices(plan, priceList);
+        expect(prices.yearly).toBe(Math.floor((prices.monthly * 10) / 100) * 100);
+      }
+    }
   });
 });
 

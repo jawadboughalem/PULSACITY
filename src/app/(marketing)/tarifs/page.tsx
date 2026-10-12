@@ -7,17 +7,17 @@ import { PlanColumns } from "@/components/marketing/pricing/PlanColumns";
 import { PlanComparison } from "@/components/marketing/pricing/PlanComparison";
 import { PLAN_IDS, PLANS } from "@/config/plans";
 import { BILLING_FAQ } from "@/content/faq";
-import { RECOMMENDED_PLAN, YEARLY_FREE_MONTHS } from "@/content/plan-offer";
+import { RECOMMENDED_PLAN, YEARLY_FREE_MONTHS, readPlanPrice } from "@/content/plan-offer";
 import { formatPrice } from "@/lib/french/format-price";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { buildFaqPageData } from "@/lib/seo/structured-data";
 
-const ESSENTIEL_PRICE = formatPrice(PLANS.essentiel.priceCents.monthly, "EUR");
+const ESSENTIEL_PRICE = formatPrice(readPlanPrice("essentiel", "monthly"), "EUR");
 
 export const generateMetadata = () =>
   buildPageMetadata({
     title: "Tarifs",
-    description: `Commencez gratuitement. Essentiel à ${ESSENTIEL_PRICE} par mois, Pro pour retirer la mention PULSACITY. Sans engagement, TVA comprise, ${YEARLY_FREE_MONTHS} mois offerts à l'année.`,
+    description: `Commencez gratuitement. Essentiel à ${ESSENTIEL_PRICE} par mois, Pro pour retirer la mention PULSACITY. Prix finaux, sans engagement, ${YEARLY_FREE_MONTHS} mois offerts à l'année.`,
     path: MARKETING_PATHS.pricing,
   });
 
@@ -41,7 +41,8 @@ const PricingPage = () => (
               Un prix simple, qui suit vos ventes.
             </h1>
             <p className="text-body text-slate-600 desktop:max-w-[680px]">
-              Commencez gratuitement. Passez à Essentiel quand les avis arrivent. Sans engagement, TVA comprise.
+              Commencez gratuitement. Passez à Essentiel quand les avis arrivent. Sans engagement. Prix finaux : rien
+              ne s&apos;ajoute au paiement.
             </p>
           </div>
           <div className="flex flex-col gap-3 desktop:mt-6 desktop:items-end">

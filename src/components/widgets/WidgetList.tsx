@@ -28,7 +28,7 @@ export type ListedWidget = {
 export type CreateLimit = {
   planName: string;
   widgetLimit: number;
-  /** « 9,99 € par mois », VAT included, the price of the plan that lifts the limit. */
+  /** « 9,99 € par mois », the price shown on the site for the plan that lifts the limit: a final price. */
   nextPlanPrice: string;
 };
 

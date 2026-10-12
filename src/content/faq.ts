@@ -1,5 +1,4 @@
 import { PLANS } from "@/config/plans";
-import { formatPrice } from "@/lib/french/format-price";
 import { DEFAULT_REQUEST_DELAY_DAYS, REMINDER_DELAY_DAYS } from "@/lib/requests/request-timing";
 import { YEARLY_FREE_MONTHS } from "./plan-offer";
 
@@ -8,11 +7,6 @@ export type FaqEntry = {
   question: string;
   answer: string;
 };
-
-const ESSENTIEL_MONTHLY = PLANS.essentiel.priceCents.monthly;
-
-/** The French rate, to show what a company that recovers VAT pays in the end (decision_tarifs.md). */
-const FRENCH_VAT_RATE = 0.2;
 
 const RESIGN: FaqEntry = {
   question: "Comment résilier ?",
@@ -44,19 +38,20 @@ export const HOME_FAQ: FaqEntry[] = [
   RESIGN,
 ];
 
-/** « Facturation », maquette 8. */
+/** « Facturation », maquette 8, with the answers of decisions/tarifs.md. */
 export const BILLING_FAQ: FaqEntry[] = [
   {
     question: "Les prix incluent-ils la TVA ?",
-    answer: `Oui. Le prix affiché est celui que vous payez, TVA comprise. Si votre entreprise récupère la TVA, la facture la détaille : Essentiel vous revient à ${formatPrice(Math.round(ESSENTIEL_MONTHLY / (1 + FRENCH_VAT_RATE)), "EUR")} HT par mois. Avec un numéro de TVA d'un autre pays de l'Union européenne, la TVA est autoliquidée : vous payez ${formatPrice(ESSENTIEL_MONTHLY, "EUR")}, sans TVA.`,
+    answer:
+      "Le prix affiché est celui que vous payez. PULSACITY ne facture pas de TVA aujourd'hui : il n'y en a donc aucune à récupérer sur nos factures.",
   },
   RESIGN,
   {
     question: "Que deviennent mes témoignages si j'arrête ?",
-    answer: `Rien n'est supprimé. Vos témoignages restent dans votre espace et sur vos pages. Au plan Gratuit, au-delà de ${PLANS.free.limits.testimonials} témoignages validés, les nouveaux attendent dans votre espace jusqu'à ce que vous repreniez un plan.`,
+    answer: `Rien n'est supprimé : vos témoignages restent dans votre espace. Au plan Gratuit, ${PLANS.free.limits.widgets} widget reste sur votre page, avec ${PLANS.free.limits.testimonials} témoignages validés, ceux mis en avant d'abord. Les nouveaux attendent dans votre espace, et vos autres widgets reviennent avec ${PLANS.essentiel.name}.`,
   },
   {
     question: "Puis-je passer du mensuel à l'annuel ?",
-    answer: `Oui, à tout moment depuis votre espace. L'année coûte ${12 - YEARLY_FREE_MONTHS} mois : ${YEARLY_FREE_MONTHS} mois sont offerts. Ce que vous avez déjà payé pour le mois en cours est déduit.`,
+    answer: `Oui, depuis votre espace. Le changement prend effet à la fin du mois déjà payé. L'année coûte ${12 - YEARLY_FREE_MONTHS} mois : ${YEARLY_FREE_MONTHS} mois sont offerts.`,
   },
 ];

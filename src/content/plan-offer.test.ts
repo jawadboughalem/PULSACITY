@@ -1,13 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { PLAN_IDS, PLANS } from "@/config/plans";
+import { PLAN_IDS, PLANS, readPlanPrices } from "@/config/plans";
 import { NO_BREAK_SPACE } from "@/lib/french/typography";
 import {
   PLAN_COMPARISON,
   PLAN_PRESENTATIONS,
   POWERED_BY_MENTION,
+  SHOWN_PRICE_LIST,
   YEARLY_FREE_MONTHS,
   countFreeMonths,
+  describeLaunchPrice,
   describePricePeriod,
+  readPlanPrice,
   splitPrice,
 } from "./plan-offer";
 
@@ -60,10 +63,44 @@ describe("describePricePeriod", () => {
 });
 
 describe("countFreeMonths", () => {
-  it("finds the two months offered by the year, on both paid plans", () => {
+  it("finds the two months offered by the year, on both paid plans, at the founder and the public prices", () => {
     expect(YEARLY_FREE_MONTHS).toBe(2);
-    expect(countFreeMonths(PLANS.pro)).toBe(2);
-    expect(countFreeMonths(PLANS.free)).toBe(0);
+    for (const plan of [PLANS.essentiel, PLANS.pro]) {
+      expect(countFreeMonths(readPlanPrices(plan, "founder"))).toBe(2);
+      expect(countFreeMonths(readPlanPrices(plan, "public"))).toBe(2);
+    }
+    expect(countFreeMonths(PLANS.free.priceCents)).toBe(0);
+  });
+});
+
+describe("readPlanPrice", () => {
+  it("shows the founder prices while no space pays (arbitrage n° 1)", () => {
+    expect(SHOWN_PRICE_LIST).toBe("founder");
+    expect(readPlanPrice("essentiel", "monthly")).toBe(999);
+    expect(readPlanPrice("pro", "yearly")).toBe(19900);
+    expect(readPlanPrice("free", "monthly")).toBe(0);
+  });
+
+  it("reads the public prices once the founder price is closed", () => {
+    expect(readPlanPrice("essentiel", "monthly", "public")).toBe(1499);
+    expect(readPlanPrice("essentiel", "yearly", "public")).toBe(14900);
+    expect(readPlanPrice("pro", "monthly", "public")).toBe(2499);
+  });
+});
+
+describe("describeLaunchPrice", () => {
+  it("says what comes after the founder price, in the period shown", () => {
+    expect(describeLaunchPrice("essentiel", "monthly")).toMatch(
+      /^Prix de lancement, gardé à vie, pour les 100 premiers abonnés\. Ensuite, 14,99\s€ par mois\.$/,
+    );
+    expect(describeLaunchPrice("pro", "monthly")).toMatch(/Ensuite, 24,99\s€ par mois\.$/);
+    expect(describeLaunchPrice("essentiel", "yearly")).toMatch(/Ensuite, 149\s€ par an\.$/);
+    expect(describeLaunchPrice("pro", "yearly")).toMatch(/Ensuite, 249\s€ par an\.$/);
+  });
+
+  it("says nothing on the free plan, nor once the public prices are shown", () => {
+    expect(describeLaunchPrice("free", "monthly")).toBeNull();
+    expect(describeLaunchPrice("essentiel", "monthly", "public")).toBeNull();
   });
 });
 

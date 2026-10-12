@@ -74,7 +74,7 @@ Décidé le 12 octobre (`docs-internes/decisions/tarifs.md`) : le prix fondateur
 - Sur tous les plans : 20 demandes saisies à la main par jour, contre les envois en masse.
 - Dépasser une limite ne supprime jamais de données : on bloque l'ajout et on propose le plan supérieur. Au-delà de 15 témoignages validés, les nouveaux arrivent et attendent.
 - L'annuel vaut dix mois (« 2 mois offerts »).
-- **Prix TVA comprise** : le montant affiché est celui que le créateur paie. Beaucoup d'indépendants ne récupèrent pas la TVA (franchise en base, formations exonérées) ; un prix hors taxes serait un prix qu'ils ne paient jamais.
+- **Prix finaux** : le montant affiché est celui que le créateur paie, rien ne s'y ajoute, et aucune TVA n'est facturée. Jamais « TVA comprise » (`arbitrages.md`, n° 2). Beaucoup d'indépendants ne récupèrent pas la TVA (franchise en base, formations exonérées) ; un prix hors taxes serait un prix qu'ils ne paient jamais.
 - Ce qui reste à PULSACITY par abonné Essentiel mensuel, sans TVA facturée (vendeur particulier, puis micro-entreprise en franchise) : environ 9,50 € après les frais Stripe. Si un jour la TVA est collectée à 20 % : environ 7,81 €. Viennent ensuite l'impôt et les prélèvements sociaux, puis les cotisations avec la micro-entreprise.
 - Le Pro n'a aujourd'hui qu'un avantage : retirer le badge.
 - Les bêta-testeurs peuvent recevoir Essentiel, offert, par un code promotionnel Stripe.
