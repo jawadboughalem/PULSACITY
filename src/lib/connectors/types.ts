@@ -5,6 +5,12 @@ export type ConnectionConfig = {
 
 export type WebhookHeaders = Record<string, string>;
 
+/** What the engine knows of a delivery besides its body and headers. */
+export type WebhookReceipt = {
+  /** When PULSACITY received it: the day of a sale sent without its date. */
+  receivedAt: Date;
+};
+
 export type PurchaseEventType = "sale" | "enrollment";
 
 /** All the core of PULSACITY knows of a sale or an enrollment, whatever the platform it comes from. */
@@ -34,6 +40,9 @@ export type Connector = {
   verify(request: Request, config: ConnectionConfig): Promise<boolean>;
   /** The platform's own name for the event, kept with the raw payload. */
   readEventType(payload: unknown, headers: WebhookHeaders): string | null;
-  /** null: an event that is not a sale or an enrollment. Throws InvalidPayloadError on a sale it cannot read. */
-  normalize(payload: unknown, headers: WebhookHeaders): NormalizedPurchase | null;
+  /**
+   * null: an event that is not a sale or an enrollment. Throws InvalidPayloadError on a sale it cannot read. The same
+   * delivery always reads the same: processed again, it finds the same sale.
+   */
+  normalize(payload: unknown, headers: WebhookHeaders, receipt: WebhookReceipt): NormalizedPurchase | null;
 };

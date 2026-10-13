@@ -1,21 +1,27 @@
-import type { MeanwhileItem } from "./types";
+import { guidePath, integrationPath } from "@/components/marketing/marketing-paths";
+import type { MeanwhileItem, UpcomingIntegration } from "./types";
 
-/** /integrations, « Votre outil n'est pas encore là ? » (m21): three columns, each under its icon. */
+const UNIVERSAL_SLUG = "connecteur-universel";
+
+const UNIVERSAL_LINK = { href: integrationPath(UNIVERSAL_SLUG), label: "Voir le connecteur universel" };
+
+/** /integrations, « Votre outil n'est pas encore là ? » (m21): three columns, each under its icon. */
 export const WITHOUT_CONNECTOR: MeanwhileItem[] = [
+  {
+    icon: "connection",
+    title: "Avec Zapier, Make ou n8n",
+    text: "Le connecteur universel reçoit les ventes de n'importe quel outil : chacune déclenche une demande d'avis, comme avec Systeme.io.",
+    link: UNIVERSAL_LINK,
+  },
   {
     icon: "email",
     title: "Demander un avis",
     text: "Depuis votre espace, envoyez une demande à un client, une à la fois. Son nom et son adresse e-⁠mail suffisent.",
   },
   {
-    icon: "connection",
+    icon: "share",
     title: "Votre lien de collecte",
     text: "Un lien à votre nom, à partager où vous voulez : e-⁠mail, message, groupe de clients. L'avis se laisse depuis un téléphone.",
-  },
-  {
-    icon: "grid",
-    title: "Le widget",
-    text: "Il se colle sur toute page qui accepte un code HTML, et reprend votre police et votre couleur.",
   },
 ];
 
@@ -34,3 +40,41 @@ export const MEANWHILE: MeanwhileItem[] = [
     text: "Importez-les d'un fichier CSV, ou ajoutez à la main ceux reçus par message. Ils rejoignent les autres.",
   },
 ];
+
+/** Its guide step by step when it has one, the page of the universal connector otherwise. */
+const readMeanwhileLink = (integration: UpcomingIntegration): NonNullable<MeanwhileItem["link"]> =>
+  integration.guideSlug ? { href: guidePath(integration.guideSlug), label: "Lire le guide pas à pas" } : UNIVERSAL_LINK;
+
+/** « En attendant : avec Zapier ou Make » (decisions/connecteurs.md): the line under a tool to come, and its first way. */
+export const describeMeanwhile = (integration: UpcomingIntegration): { line: string; item: MeanwhileItem } => {
+  const link = readMeanwhileLink(integration);
+  switch (integration.meanwhileVia ?? "zapier-or-make") {
+    case "universal":
+      return {
+        line: "En attendant : avec le connecteur universel",
+        item: {
+          title: "Avec le connecteur universel",
+          text: `${integration.name} envoie déjà vos ventes au connecteur universel : chacune déclenche une demande d'avis.`,
+          link,
+        },
+      };
+    case "zapier":
+      return {
+        line: "En attendant : avec Zapier",
+        item: {
+          title: "Avec Zapier",
+          text: `Envoyez dès aujourd'hui vos ventes ${integration.name} au connecteur universel, avec Zapier : chacune déclenche une demande d'avis.`,
+          link,
+        },
+      };
+    case "zapier-or-make":
+      return {
+        line: "En attendant : avec Zapier ou Make",
+        item: {
+          title: "Avec Zapier ou Make",
+          text: `Envoyez dès aujourd'hui vos ventes ${integration.name} au connecteur universel, avec Zapier ou Make : chacune déclenche une demande d'avis.`,
+          link,
+        },
+      };
+  }
+};

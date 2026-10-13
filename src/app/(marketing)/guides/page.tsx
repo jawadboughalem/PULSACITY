@@ -9,7 +9,7 @@ export const generateMetadata = () =>
   buildPageMetadata({
     title: "Guides : récolter et afficher les témoignages de vos clients",
     description:
-      "Des guides concrets pour les formateurs, coachs et consultants : récolter des témoignages, les afficher sur Systeme.io, respecter le RGPD.",
+      "Des guides concrets pour les formateurs, coachs et consultants : récolter des témoignages, relier Zapier, Make ou n8n, les afficher, respecter le RGPD.",
     path: MARKETING_PATHS.guides,
   });
 

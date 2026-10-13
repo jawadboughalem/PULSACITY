@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { InvalidPayloadError } from "../invalid-payload-error";
+import { readCustomerEmail } from "../read-customer-email";
 import type { NormalizedPurchase, WebhookHeaders } from "../types";
 
 /**
@@ -38,15 +39,6 @@ const enrollmentSchema = z.object({
 
 const readText = (value: unknown): string | null => (typeof value === "string" && value.trim() ? value.trim() : null);
 
-const readEmail = (value: string): string => {
-  const email = value.trim().toLowerCase();
-  // Systeme.io accepts accented addresses: so does PULSACITY.
-  if (!z.email({ pattern: z.regexes.unicodeEmail }).safeParse(email).success) {
-    throw new InvalidPayloadError("The e-mail address is not valid.");
-  }
-  return email;
-};
-
 const readDate = (value: string): Date => {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) throw new InvalidPayloadError(`The date « ${value} » is not valid.`);
@@ -76,7 +68,7 @@ const normalizeSale = (payload: unknown): NormalizedPurchase => {
   return {
     eventType: "sale",
     externalRef: `order-item:${sale.orderItem.id}`,
-    email: readEmail(sale.customer.email),
+    email: readCustomerEmail(sale.customer.email),
     firstName: readText(sale.customer.fields?.first_name),
     lastName: readText(sale.customer.fields?.surname),
     productRef: `price-plan:${sale.pricePlan.id}`,
@@ -92,7 +84,7 @@ const normalizeEnrollment = (payload: unknown): NormalizedPurchase => {
     eventType: "enrollment",
     // Enrolled twice in the same course: the same enrollment.
     externalRef: `enrollment:${data.contact.id}:${data.course.id}`,
-    email: readEmail(data.contact.email),
+    email: readCustomerEmail(data.contact.email),
     firstName: readText(data.contact.fields?.first_name),
     lastName: readText(data.contact.fields?.surname),
     productRef: `course:${data.course.id}`,

@@ -14,6 +14,7 @@ import { findConnection } from "@/lib/connectors/connections";
 import { loadConnectionOverview } from "@/lib/connectors/load-connection-overview";
 import { listWaitlistedConnectors } from "@/lib/connectors/manage-connection";
 import { listConnectors } from "@/lib/connectors/registry";
+import { readMeanwhileLine } from "@/content/integrations";
 import { UPCOMING_CONNECTORS } from "@/lib/connectors/upcoming-connectors";
 import { cn } from "@/lib/cn";
 import { formatSince } from "@/lib/dates/format-relative-time";
@@ -87,7 +88,9 @@ const ConnectorsPage = async () => {
                       <h2 className="font-serif text-quote font-medium">{connector.name}</h2>
                       <ToneBadge {...COMING_SOON_BADGE} />
                     </div>
-                    <p className="text-small text-slate-600">{connector.description}</p>
+                    <p className="text-small text-slate-600">
+                      {[connector.description, readMeanwhileLine(connector.id)].filter(Boolean).join(" ")}
+                    </p>
                   </div>
                 </div>
                 <WaitlistButton

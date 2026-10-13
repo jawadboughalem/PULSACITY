@@ -1,0 +1,48 @@
+## Avant de commencer
+
+- Un espace PULSACITY. L'adresse de vos ventes est dans **Connecteurs**, puis **Connecteur universel** : copiez-la avec le bouton **Copier**.
+- Un compte Zapier sur un plan payant : l'étape d'envoi, **Webhooks by Zapier**, en a besoin. L'essai gratuit de Zapier suffit pour tout installer.
+- Votre outil de vente dans Zapier, avec un événement de nouvelle vente.
+- Un ordinateur : l'éditeur de Zapier se manie mieux sur grand écran.
+
+Zapier s'affiche en anglais : les noms ci-dessous sont les siens.
+
+## Choisir le déclencheur
+
+1. Dans Zapier, cliquez sur **Create**, puis **Zaps**.
+2. Dans **Trigger**, choisissez l'app de votre outil de vente, puis l'événement d'une nouvelle vente, par exemple **New Order** ou **New Sale**.
+3. Connectez votre compte, puis cliquez sur **Test trigger** : Zapier récupère une vente récente, qui servira d'exemple.
+
+## Envoyer la vente à PULSACITY
+
+1. Dans **Action**, choisissez **Webhooks by Zapier**, puis l'événement **POST**.
+2. Dans **URL**, collez l'adresse du connecteur universel.
+3. Dans **Payload Type**, choisissez **Form**.
+4. Dans **Data**, ajoutez une ligne par champ : son nom à gauche, sa valeur à droite, choisie parmi les données de la vente. Laissez les autres réglages tels quels.
+
+- **email** : l'adresse e-⁠mail du client. C'est le seul champ obligatoire.
+- **prenom** et **nom** : son prénom, que reprend l'e-⁠mail de demande d'avis, et son nom.
+- **offre** : le nom de ce qu'il a acheté. Vous l'associez une fois à une offre PULSACITY.
+- **reference** : l'identifiant de la vente dans votre outil. Une vente reçue deux fois ne compte alors qu'une fois.
+- **date**, **montant** et **devise** : facultatifs. Sans date, le jour de réception compte ; sans devise, l'euro.
+
+## Tester avec une vente
+
+1. Pour ce test, mettez votre propre adresse dans le champ **email**, à la place de la donnée de la vente : vous recevrez la demande d'avis, pas votre client. Remettez la donnée ensuite.
+2. Cliquez sur **Test step**. Dans **Data out**, la réponse de PULSACITY indique received: true.
+
+Dans votre espace, la page **Connecteur universel** passe au vert, et la vente apparaît dans **Derniers événements reçus**. Son offre attend dans **Offres à associer** : associez-la une fois, et choisissez quand demander l'avis.
+
+## Publier le Zap
+
+Cliquez sur **Publish**. Le Zap tourne alors seul : chaque nouvelle vente part vers PULSACITY, quelques minutes après avoir eu lieu.
+
+## Si rien n'arrive
+
+- Vérifiez l'adresse : copiez-la à nouveau depuis votre espace, sans espace avant ni après.
+- Zapier signale une erreur à l'étape **POST** ? Ouvrez-la : son message dit ce qui manque, le plus souvent l'adresse.
+- La vente arrive avec la mention « Contenu illisible » ? Le champ **email** est vide ou n'est pas une adresse. Corrigez l'envoi, puis envoyez la vente à nouveau.
+- La vente arrive mais attend ? Son offre n'est pas encore associée : ouvrez **Offres à associer**.
+- L'adresse a été vue par quelqu'un d'autre, sur une capture d'écran par exemple ? Sur la page du connecteur, **Changer d'adresse** en crée une nouvelle. Collez-la à la place de l'ancienne.
+
+Toujours rien ? [Écrivez-nous](/mentions-legales#contact) : nous le faisons avec vous, en partage d'écran.

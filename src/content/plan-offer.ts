@@ -188,8 +188,8 @@ export const PLAN_COMPARISON: ComparisonGroup[] = [
   {
     title: "Connecteurs",
     rows: [
-      { label: "Systeme.io", values: allIncluded },
-      { label: "Stripe et Calendly, dès leur sortie", values: allIncluded },
+      { label: "Systeme.io et le connecteur universel", values: allIncluded },
+      { label: "Les autres connecteurs, dès leur sortie", values: allIncluded },
     ],
   },
   {

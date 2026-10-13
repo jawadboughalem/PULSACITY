@@ -1,0 +1,50 @@
+## Avant de commencer
+
+- Un espace PULSACITY. L'adresse de vos ventes est dans **Connecteurs**, puis **Connecteur universel** : copiez-la avec le bouton **Copier**.
+- Un compte Make. Le plan gratuit suffit.
+- Votre outil de vente dans Make : Stripe, WooCommerce, Calendly, Learnybox ou l'un des milliers d'autres. Make propose une app pour chacun.
+- Un ordinateur : l'éditeur de Make se manie mieux sur grand écran.
+
+Make s'affiche en anglais : les noms ci-dessous sont les siens.
+
+## Choisir le déclencheur
+
+1. Dans Make, cliquez sur **Create scenario**.
+2. Choisissez l'app de votre outil de vente, puis le module qui surveille les nouvelles ventes, par exemple **Watch Orders** ou **Watch Events**. Make vous demande de connecter votre compte.
+3. Préférez un module marqué **Instant** quand votre outil en propose un : il ne consomme rien tant qu'aucune vente n'arrive.
+
+## Envoyer la vente à PULSACITY
+
+1. Cliquez sur le **+** à droite du premier module, cherchez **HTTP**, puis choisissez **Make a request**.
+2. Dans **URL**, collez l'adresse du connecteur universel. Dans **Method**, choisissez **POST**.
+3. Dans **Body content type**, choisissez **application/x-www-form-urlencoded**. Ce format accepte tous les caractères, apostrophes et guillemets compris.
+4. Sous **Body content**, cliquez sur **Add a field** pour chaque champ : son nom dans **Name**, et dans **Value** la donnée du premier module.
+
+- **email** : l'adresse e-⁠mail du client. C'est le seul champ obligatoire.
+- **prenom** et **nom** : son prénom, que reprend l'e-⁠mail de demande d'avis, et son nom.
+- **offre** : le nom de ce qu'il a acheté. Vous l'associez une fois à une offre PULSACITY.
+- **reference** : l'identifiant de la vente dans votre outil. Une vente reçue deux fois ne compte alors qu'une fois.
+- **date**, **montant** et **devise** : facultatifs. Sans date, le jour de réception compte ; sans devise, l'euro.
+
+## Tester avec une vente
+
+1. Pour ce test, mettez votre propre adresse dans le champ **email**, à la place de la donnée de la vente : vous recevrez la demande d'avis, pas votre client. Remettez la donnée ensuite.
+2. Cliquez sur **Run once**. Si Make ne trouve aucune vente, faites-en une dans votre outil, avec un code promo à 100 % par exemple, puis relancez.
+3. Sur le module HTTP, la bulle de résultat montre la réponse de PULSACITY : received: true. Ce panneau affiche aussi votre adresse en entier : ne le partagez pas en capture d'écran.
+
+Dans votre espace, la page **Connecteur universel** passe au vert, et la vente apparaît dans **Derniers événements reçus**. Son offre attend dans **Offres à associer** : associez-la une fois, et choisissez quand demander l'avis.
+
+## Activer le scénario
+
+1. Enregistrez le scénario, puis activez-le avec l'interrupteur en haut à droite : il passe de **Inactive** à **Active**.
+2. Sans module **Instant**, Make vérifie vos ventes à intervalle régulier, et chaque vérification consomme une opération, même sans vente. Sur le plan gratuit, cliquez sur la fréquence affichée à côté de l'interrupteur, **Every 15 minutes**, et choisissez une vérification par jour : la demande d'avis part de toute façon des jours après la vente, et votre quota tient tout le mois.
+
+## Si rien n'arrive
+
+- Vérifiez l'adresse : copiez-la à nouveau depuis votre espace, sans espace avant ni après.
+- Dans le module HTTP, **Method** est-il sur **POST** ? Le scénario est-il bien **Active** ?
+- La vente arrive avec la mention « Contenu illisible » ? Le champ **email** est vide ou n'est pas une adresse. Corrigez l'envoi, puis envoyez la vente à nouveau.
+- La vente arrive mais attend ? Son offre n'est pas encore associée : ouvrez **Offres à associer**.
+- L'adresse a été vue par quelqu'un d'autre, sur une capture d'écran par exemple ? Sur la page du connecteur, **Changer d'adresse** en crée une nouvelle. Collez-la à la place de l'ancienne.
+
+Toujours rien ? [Écrivez-nous](/mentions-legales#contact) : nous le faisons avec vous, en partage d'écran.

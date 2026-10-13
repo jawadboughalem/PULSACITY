@@ -2,6 +2,7 @@
 export const WEBHOOK_EVENT_OUTCOMES = [
   "request-scheduled",
   "request-exists",
+  "request-elsewhere",
   "unsubscribed",
   "requests-disabled",
   "awaiting-product",

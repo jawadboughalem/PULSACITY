@@ -23,6 +23,7 @@ type StoredEvent = {
   connector: string;
   rawPayload: unknown;
   headers: WebhookHeaders;
+  receivedAt: Date;
 };
 
 const markProcessed = async (database: Database, eventId: string, outcome: WebhookEventOutcome, purchaseId?: string) => {
@@ -40,12 +41,12 @@ const markFailed = async (database: Database, eventId: string, error: WebhookEve
 
 /** What the connector reads in the event, or why it cannot: never throws. */
 export const normalizeStoredEvent = (
-  event: Pick<StoredEvent, "connector" | "rawPayload" | "headers">,
+  event: Pick<StoredEvent, "connector" | "rawPayload" | "headers" | "receivedAt">,
 ): { purchase: NormalizedPurchase | null } | { error: WebhookEventError } => {
   const connector = getConnector(event.connector);
   if (!connector) return { error: "processing-failed" };
   try {
-    return { purchase: connector.normalize(event.rawPayload, event.headers) };
+    return { purchase: connector.normalize(event.rawPayload, event.headers, { receivedAt: event.receivedAt }) };
   } catch (error) {
     if (error instanceof InvalidPayloadError) return { error: "invalid-payload" };
     Sentry.captureException(error);
@@ -81,6 +82,7 @@ const findEvent = async (database: Database, eventId: string) => {
       connector: connections.connector,
       rawPayload: webhookEvents.rawPayload,
       headers: webhookEvents.headers,
+      receivedAt: webhookEvents.receivedAt,
       processedAt: webhookEvents.processedAt,
       error: webhookEvents.error,
     })
@@ -123,6 +125,7 @@ export const processAwaitingEvents = async (database: Database, connectionId: st
       connector: connections.connector,
       rawPayload: webhookEvents.rawPayload,
       headers: webhookEvents.headers,
+      receivedAt: webhookEvents.receivedAt,
     })
     .from(webhookEvents)
     .innerJoin(connections, eq(connections.id, webhookEvents.connectionId))

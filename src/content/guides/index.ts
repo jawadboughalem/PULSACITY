@@ -1,7 +1,7 @@
 import type { MDXContent } from "mdx/types";
 
-/** The two groups of /guides (m22). */
-export type GuideGroup = "start" | "further";
+/** The groups of /guides (m22), and the tools that send their sales to the universal connector. */
+export type GuideGroup = "start" | "connect" | "further";
 
 export type Guide = {
   /** In the address: /guides/<slug>. */
@@ -20,6 +20,7 @@ export type Guide = {
 
 export const GUIDE_GROUPS: Array<{ id: GuideGroup; title: string; text: string }> = [
   { id: "start", title: "Démarrer", text: "Pour vos premiers avis, dans l'ordre." },
+  { id: "connect", title: "Relier vos outils", text: "Quand votre outil n'a pas encore son connecteur : avec Zapier, Make ou n8n." },
   { id: "further", title: "Aller plus loin", text: "Quand votre espace tourne déjà." },
 ];
 
@@ -46,6 +47,50 @@ export const GUIDES: Guide[] = [
     updatedAt: "2026-10-04",
     readingMinutes: 6,
     load: () => import("./ajouter-des-temoignages-sur-une-page-systeme-io.mdx"),
+  },
+  {
+    slug: "envoyer-vos-ventes-avec-make",
+    group: "connect",
+    title: "Envoyer vos ventes avec Make",
+    summary: "Un scénario Make, même avec le plan gratuit, envoie chaque vente au connecteur universel.",
+    description:
+      "Votre outil n'a pas encore son connecteur ? Avec Make, même gratuit, chaque vente part vers PULSACITY et déclenche une demande d'avis à votre nom.",
+    updatedAt: "2026-10-13",
+    readingMinutes: 4,
+    load: () => import("./envoyer-vos-ventes-avec-make.mdx"),
+  },
+  {
+    slug: "envoyer-vos-ventes-avec-zapier",
+    group: "connect",
+    title: "Envoyer vos ventes avec Zapier",
+    summary: "Un Zap et son étape Webhooks by Zapier envoient chaque vente au connecteur universel.",
+    description:
+      "Votre outil n'a pas encore son connecteur ? Avec un Zap, chaque vente part vers PULSACITY et déclenche une demande d'avis à votre nom.",
+    updatedAt: "2026-10-12",
+    readingMinutes: 3,
+    load: () => import("./envoyer-vos-ventes-avec-zapier.mdx"),
+  },
+  {
+    slug: "envoyer-vos-ventes-avec-n8n",
+    group: "connect",
+    title: "Envoyer vos ventes avec n8n",
+    summary: "Un nœud HTTP Request envoie chaque vente au connecteur universel, sur n8n Cloud ou chez vous.",
+    description:
+      "Votre outil n'a pas encore son connecteur ? Avec un workflow n8n, chaque vente part vers PULSACITY et déclenche une demande d'avis à votre nom.",
+    updatedAt: "2026-10-13",
+    readingMinutes: 3,
+    load: () => import("./envoyer-vos-ventes-avec-n8n.mdx"),
+  },
+  {
+    slug: "envoyer-vos-ventes-podia-avec-zapier",
+    group: "connect",
+    title: "Envoyer vos ventes Podia avec Zapier",
+    summary: "Un Zap envoie chaque inscription à un produit Podia au connecteur universel.",
+    description:
+      "Podia n'a pas encore son connecteur. Avec un Zap, chaque inscription à un produit Podia déclenche dès aujourd'hui une demande d'avis à votre nom.",
+    updatedAt: "2026-10-12",
+    readingMinutes: 3,
+    load: () => import("./envoyer-vos-ventes-podia-avec-zapier.mdx"),
   },
   {
     slug: "temoignages-clients-rgpd-formateur",

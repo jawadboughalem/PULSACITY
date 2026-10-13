@@ -22,7 +22,7 @@ type ConnectionAddressFieldsProps = {
   signingSecret: string | null;
 };
 
-/** Step 1 of maquette 5: the address and the secret, each copied in one click. */
+/** Step 1 of maquette 5: the address and the secret, each copied in one click. Without a key, the address alone. */
 export const ConnectionAddressFields = ({
   connectorSlug,
   connectorName,
@@ -37,6 +37,7 @@ export const ConnectionAddressFields = ({
   const [hasFailed, setHasFailed] = useState(false);
   const [isRenewed, setIsRenewed] = useState(false);
   const [isRenewing, startRenewing] = useTransition();
+  const hasSecret = signingSecret !== null;
 
   const handleRenew = () => {
     setIsConfirming(false);
@@ -109,7 +110,11 @@ export const ConnectionAddressFields = ({
       </p>
       <div aria-live="polite" className="empty:hidden">
         {isRenewed ? (
-          <p className="text-small text-success">{`Nouvelle adresse et nouvelle clé créées. Collez-les dans ${connectorName}.`}</p>
+          <p className="text-small text-success">
+            {hasSecret
+              ? `Nouvelle adresse et nouvelle clé créées. Collez-les dans ${connectorName}.`
+              : `Nouvelle adresse créée. Collez-la dans ${connectorName}.`}
+          </p>
         ) : null}
         {hasFailed ? (
           <FieldError
@@ -126,17 +131,24 @@ export const ConnectionAddressFields = ({
           onClick={() => setIsConfirming(true)}
           className="font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:cursor-not-allowed"
         >
-          Changer d&apos;adresse et de clé
+          {hasSecret ? "Changer d'adresse et de clé" : "Changer d'adresse"}
         </button>
       </p>
       <ConfirmDialog
         isOpen={isConfirming}
-        title="Changer d'adresse et de clé ?"
-        message={[
-          "Une nouvelle adresse et une nouvelle clé secrète remplacent les anciennes, qui cessent de fonctionner tout de suite.",
-          `Juste après, collez-les dans ${connectorName}, dans le webhook ${quoteInFrench("PULSACITY")}. Une vente envoyée entre-temps à l'ancienne adresse ne nous parviendra pas.`,
-        ]}
-        confirmLabel="Changer l'adresse et la clé"
+        title={hasSecret ? "Changer d'adresse et de clé ?" : "Changer d'adresse ?"}
+        message={
+          hasSecret
+            ? [
+                "Une nouvelle adresse et une nouvelle clé secrète remplacent les anciennes, qui cessent de fonctionner tout de suite.",
+                `Juste après, collez-les dans ${connectorName}, dans le webhook ${quoteInFrench("PULSACITY")}. Une vente envoyée entre-temps à l'ancienne adresse ne nous parviendra pas.`,
+              ]
+            : [
+                "Une nouvelle adresse remplace l'ancienne, qui cesse de fonctionner tout de suite.",
+                `Juste après, collez-la dans ${connectorName}, à la place de l'ancienne. Une vente envoyée entre-temps à l'ancienne adresse ne nous parviendra pas.`,
+              ]
+        }
+        confirmLabel={hasSecret ? "Changer l'adresse et la clé" : "Changer l'adresse"}
         isCancelDiscreet
         onConfirm={handleRenew}
         onCancel={() => setIsConfirming(false)}

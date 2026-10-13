@@ -3,7 +3,8 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { MARKETING_PATHS, guidePath, integrationPath } from "@/components/marketing/marketing-paths";
 import { GUIDES } from "./guides";
-import { INTEGRATIONS } from "./integrations";
+import { INTEGRATIONS, type RichText, describeMeanwhile } from "./integrations";
+import { WITHOUT_CONNECTOR } from "./integrations/meanwhile";
 
 const ROOT = process.cwd();
 
@@ -58,6 +59,21 @@ describe("internal links of the public site", () => {
       const text = readFileSync(join(ROOT, file), "utf8");
       for (const [, link] of text.matchAll(/\]\((\/[^)\s]*)\)/g)) assertLinkWorks(link);
     }
+  });
+
+  it("lead every link of the connector pages to an existing page", () => {
+    const readLinks = (parts: RichText = []) => parts.flatMap((part) => (typeof part === "object" && "link" in part ? [part.href] : []));
+    const links = INTEGRATIONS.flatMap((integration) =>
+      integration.status === "available"
+        ? [...integration.installSteps, ...(integration.optionalStep ? [integration.optionalStep] : [])].flatMap((step) => [
+            ...readLinks(step.text),
+            ...readLinks(step.note),
+          ])
+        : [describeMeanwhile(integration).item.link?.href ?? ""],
+    );
+    const withoutConnector = WITHOUT_CONNECTOR.flatMap((item) => (item.link ? [item.link.href] : []));
+    expect(links.length).toBeGreaterThanOrEqual(21);
+    for (const link of [...links, ...withoutConnector]) assertLinkWorks(link);
   });
 
   it("finds the text of every guide", () => {

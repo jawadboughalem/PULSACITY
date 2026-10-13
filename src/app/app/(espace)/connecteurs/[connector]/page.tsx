@@ -8,11 +8,15 @@ import { ConnectionEventList } from "@/components/connectors/ConnectionEventList
 import { ConnectionGuide, ConnectionOptionalStep } from "@/components/connectors/ConnectionGuide";
 import { ConnectionStatusBanner } from "@/components/connectors/ConnectionStatusBanner";
 import { ConnectorLogo } from "@/components/connectors/ConnectorLogo";
+import { readConnectorWording } from "@/components/connectors/connector-wording";
 import { ExternalProductsTable } from "@/components/connectors/ExternalProductsTable";
+import { UniversalFieldList } from "@/components/connectors/UniversalFieldList";
 import { describeExternalProduct } from "@/components/connectors/describe-external-product";
+import { RichTextLine } from "@/components/marketing/RichTextLine";
 import { BackBar, Breadcrumb } from "@/components/space/BackBar";
 import { CONNECTORS_SECTION_HREF, connectorHistoryHref } from "@/components/space/space-sections";
 import { SpacePage } from "@/components/space/SpacePage";
+import { UNIVERSAL_GUIDE_LINKS } from "@/content/integrations";
 import { getDb } from "@/db";
 import { buildWebhookUrl, findOrCreateConnection } from "@/lib/connectors/connections";
 import {
@@ -26,8 +30,8 @@ import { getCurrentSpace } from "@/lib/spaces/get-current-space";
 import { listAssociableProducts } from "@/lib/spaces/list-space-products";
 
 export const generateMetadata = async ({ params }: PageProps<"/app/connecteurs/[connector]">): Promise<Metadata> => {
-  const { connector } = await params;
-  return { title: `Connecter ${getConnectorBySlug(connector)?.name ?? "un outil"} · PULSACITY` };
+  const connector = getConnectorBySlug((await params).connector);
+  return { title: `${connector ? readConnectorWording(connector).title : "Connecter un outil"} · PULSACITY` };
 };
 
 const STEP_TWO_ID = "etape-2";
@@ -64,7 +68,10 @@ const Step = ({ number, id, title, description, children }: StepProps) => (
   </li>
 );
 
-/** Maquette 5, « Connecter Systeme.io »: the light, the three steps, the products to associate, the latest events. */
+/**
+ * Maquette 5, « Connecter Systeme.io »: the light, the three steps, the products to associate, the latest events. The
+ * universal connector follows it, its fields in place of the screens of a tool.
+ */
 const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]">) => {
   const { connector: slug } = await params;
   const connector = getConnectorBySlug(slug);
@@ -85,6 +92,7 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
     ...latestEvents.filter((event) => !setAsideEvents.some((setAside) => setAside.id === event.id)),
   ].slice(0, Math.max(OVERVIEW_EVENT_COUNT, setAsideEvents.length));
   const signingSecret = connection.config.signingSecret ?? null;
+  const wording = readConnectorWording(connector);
   const showsFirstEvent = overview.eventCount <= OVERVIEW_EVENT_COUNT;
 
   return (
@@ -95,16 +103,14 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
         <div className="flex flex-col items-start gap-4 desktop:flex-row desktop:items-center desktop:gap-5">
           <ConnectorLogo name={connector.name} />
           <div className="flex flex-col gap-2">
-            <h1 className="font-serif text-h1 font-medium">{`Connecter ${connector.name}`}</h1>
-            <p className="max-w-text text-body">
-              {`Chaque vente sur ${connector.name} déclenche une demande d'avis, au bon moment, sans rien faire de plus.`}
-            </p>
+            <h1 className="font-serif text-h1 font-medium">{wording.title}</h1>
+            <p className="max-w-text text-body">{wording.intro}</p>
           </div>
         </div>
 
         <ConnectionStatusBanner
           status={overview.status}
-          connectorName={connector.name}
+          connectorName={wording.toolName}
           lastEventSince={overview.lastEventAt ? formatSince(overview.lastEventAt, now) : null}
           problemSince={overview.problemSince ? formatMoment(overview.problemSince, now) : null}
           signingSecret={signingSecret}
@@ -120,11 +126,11 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
             <Step
               number={1}
               title="Copier votre adresse de connexion"
-              description={`C'est par cette adresse que ${connector.name} nous prévient de chaque vente. Elle vous est propre : ne la partagez pas.`}
+              description={wording.addressDescription}
             >
               <ConnectionAddressFields
                 connectorSlug={connector.slug}
-                connectorName={connector.name}
+                connectorName={wording.toolName}
                 connectionId={connection.id}
                 webhookUrl={buildWebhookUrl(connector.id, connection.webhookToken)}
                 signingSecret={signingSecret}
@@ -133,20 +139,29 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
             <Step
               number={2}
               id={STEP_TWO_ID}
-              title={`La coller dans ${connector.name}`}
+              title={wording.pasteTitle}
               description={
                 <>
-                  <span className="desktop:hidden">Plus simple depuis un ordinateur.</span>
-                  <span className="hidden desktop:inline">{`Ouvrez ${connector.name} dans un autre onglet et suivez ces trois écrans.`}</span>
+                  <span className="desktop:hidden">{wording.pasteDescription.phone}</span>
+                  <span className="hidden desktop:inline">{wording.pasteDescription.computer}</span>
                 </>
               }
             >
-              <ConnectionGuide connectorId={connector.id} connectorName={connector.name} />
+              {connector.id === "universal" ? (
+                <div className="flex flex-col gap-4">
+                  <UniversalFieldList />
+                  <p className="max-w-text text-small">
+                    <RichTextLine parts={UNIVERSAL_GUIDE_LINKS} />
+                  </p>
+                </div>
+              ) : (
+                <ConnectionGuide connectorId={connector.id} connectorName={connector.name} />
+              )}
             </Step>
             <Step
               number={3}
-              title="Faire une vente test, ou attendre la prochaine"
-              description="Le voyant en haut de la page passe au vert dès la première vente reçue. Pour tester sans payer, achetez votre offre avec un code promo à 100 %."
+              title={wording.testTitle}
+              description={wording.testDescription}
             >
               <CheckConnectionButton isWaiting={overview.status === "pending"} />
             </Step>
@@ -166,7 +181,7 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
           </div>
           {overview.externalProducts.length > 0 ? (
             <ExternalProductsTable
-              connectorName={connector.name}
+              connectorName={wording.toolName}
               offers={offers}
               products={overview.externalProducts.map((product) => ({
                 id: product.id,
@@ -202,7 +217,7 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
             />
           ) : (
             <p className="border-t border-ink-900 pt-4 text-body">
-              {`Rien reçu pour l'instant. Chaque vente de ${connector.name} s'affichera ici.`}
+              {`Rien reçu pour l'instant. Chaque vente de ${wording.toolName} s'affichera ici.`}
             </p>
           )}
           {overview.eventCount > OVERVIEW_EVENT_COUNT ? (

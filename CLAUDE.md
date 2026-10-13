@@ -6,7 +6,7 @@ PULSACITY transforme automatiquement les ventes des indépendants francophones (
 
 Promesse : « Vos ventes deviennent des témoignages, automatiquement. »
 
-Architecture produit : un moteur universel (collecte, gestion, widgets) + des **connecteurs** vers les outils où les indépendants encaissent. Connecteur n°1 au lancement : Systeme.io, puis le connecteur universel (lot 4.1 b) : une adresse propre à l'espace qui reçoit les ventes de n'importe quel outil, directement ou par Zapier, Make ou n8n. Catalogue décidé dans `docs-internes/decisions/connecteurs.md` : 19 outils affichés en 6 familles, « Bientôt » sans date. Vague 1 : Stripe, Calendly, et les guides Zapier, Make, n8n et Podia vers le connecteur universel ; vague 2 : Learnybox, Kajabi, SchoolMaker, Cal.com, WooCommerce ; vague 3 : PayPal, Livestorm, HelloAsso, Weezevent, Eventbrite ; plus tard : Shopify. Systeme.io est la première porte d'entrée, jamais une dépendance du cœur du produit.
+Architecture produit : un moteur universel (collecte, gestion, widgets) + des **connecteurs** vers les outils où les indépendants encaissent. Connecteur n°1 au lancement : Systeme.io, puis le connecteur universel (lot 4.1 b) : une adresse propre à l'espace qui reçoit les ventes de n'importe quel outil, directement ou par Zapier, Make ou n8n, en JSON ou en formulaire (format et captures : `docs-internes/connectors/universel.md`). Catalogue décidé dans `docs-internes/decisions/connecteurs.md` : 19 outils affichés en 6 familles, « Bientôt » sans date. Vague 1 : Stripe, Calendly, et les guides Zapier, Make, n8n et Podia vers le connecteur universel ; vague 2 : Learnybox, Kajabi, SchoolMaker, Cal.com, WooCommerce ; vague 3 : PayPal, Livestorm, HelloAsso, Weezevent, Eventbrite ; plus tard : Shopify. Systeme.io est la première porte d'entrée, jamais une dépendance du cœur du produit.
 
 Parcours (avec le connecteur Systeme.io) :
 1. Le créateur crée son espace et colle une URL de webhook PULSACITY dans Systeme.io.
@@ -29,7 +29,7 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 
 ## Règles absolues
 
-1. Chaque connecteur implémente le même contrat `Connector` (`src/lib/connectors/types.ts`) : `verify(request, config)`, `normalize(payload, headers) → NormalizedPurchase | null` (type d'événement, identifiant de la vente, e-mail, prénom, nom, référence, nom et prix du produit, date). Le cœur du produit ne connaît que `NormalizedPurchase`, jamais un format propre à une plateforme. Aucun connecteur n'est codé avant que ses payloads réels aient été capturés dans `docs-internes/connectors/<nom>.md` et transformés en fixtures de test.
+1. Chaque connecteur implémente le même contrat `Connector` (`src/lib/connectors/types.ts`) : `verify(request, config)`, `normalize(payload, headers, { receivedAt }) → NormalizedPurchase | null` (type d'événement, identifiant de la vente, e-mail, prénom, nom, référence, nom et prix du produit, date). Le cœur du produit ne connaît que `NormalizedPurchase`, jamais un format propre à une plateforme. Aucun connecteur n'est codé avant que ses payloads réels aient été capturés dans `docs-internes/connectors/<nom>.md` et transformés en fixtures de test.
 2. Le widget est un produit à part entière : un seul script, < 30 Ko gzip, zéro dépendance, aucun impact sur la mise en page de la page hôte, polices et couleurs héritées de la page hôte par défaut.
 3. Le badge « Propulsé par PULSACITY » est visible sur les plans Gratuit et Essentiel. Il n'est retirable que sur le plan Pro. Il pointe vers pulsacity.com avec un paramètre de parrainage de l'espace.
 4. Les e-mails envoyés aux clients du créateur : nom d'expéditeur = nom de l'espace du créateur, adresse technique PULSACITY, réponse vers l'e-mail du créateur, lien de désinscription dans chaque e-mail, jamais plus de 2 envois par client et par formation.
@@ -67,7 +67,7 @@ src/app/desinscription/       # page de confirmation de la désinscription
 widget/                       # source du widget embarquable, build → public/w.js
 src/config/plans.ts           # plans et limites
 src/db/schema.ts
-src/lib/connectors/           # types.ts (contrat), registry.ts, moteur (réception, traitement), systeme/, (lot 4.1 b) universal/, upcoming-connectors.ts
+src/lib/connectors/           # types.ts (contrat), registry.ts, moteur (réception, traitement), systeme/, universal/ (connecteur universel), upcoming-connectors.ts
 src/lib/purchases/            # record-purchase.ts : de NormalizedPurchase au client, à l'achat et à la demande
 src/lib/requests/             # planification et envoi des demandes
 src/emails/                   # templates React Email
@@ -170,6 +170,7 @@ LEGAL_VALIDATED                # false tant que les textes ne sont pas relus
 - Toute action de l'espace vérifie la session ET l'appartenance de l'espace.
 - Webhooks : on enregistre d'abord le payload brut dans `webhook_events`, on répond 200 vite, on traite ensuite. Un payload inconnu n'est jamais perdu.
 - Envois d'e-mails idempotents : un `review_request` n'est envoyé qu'une fois (verrou sur `sentAt`).
+- Une demande par client et par offre. Un même client (même e-mail) reçu par deux connecteurs dans les 48 heures ne reçoit qu'une demande : la vente dont l'offre est associée la garde (`src/lib/requests/schedule-review-request.ts`).
 - Tests Vitest obligatoires : normalisation de chaque connecteur (à partir des payloads réels), planification des demandes, calcul des limites de plan, rendu du widget (jsdom).
 
 ## Actions du fondateur

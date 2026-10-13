@@ -18,6 +18,7 @@ import {
   type AvailableIntegration,
   INTEGRATIONS,
   type UpcomingIntegration,
+  describeMeanwhile,
   findIntegration,
 } from "@/content/integrations";
 import { MEANWHILE } from "@/content/integrations/meanwhile";
@@ -128,7 +129,9 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
     <MarketingSection id="installation" labelledBy="install-title" hasTopRule>
       <div className="grid gap-6 desktop:grid-cols-[392px_minmax(0,1fr)] desktop:gap-7">
         <div className="flex flex-col gap-4">
-          <SectionTitle id="install-title">{`Installer la connexion ${integration.name}, pas à pas`}</SectionTitle>
+          <SectionTitle id="install-title">
+            {integration.installTitle ?? `Installer la connexion ${integration.name}, pas à pas`}
+          </SectionTitle>
           <p className="text-body text-slate-600">{integration.installIntro}</p>
         </div>
         <InstallGuide integration={integration} />
@@ -144,7 +147,7 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
 
     <FinalCall
       title="Vos clients ont déjà quelque chose à dire."
-      text={`Connectez ${integration.name} : la prochaine vente fait le reste.`}
+      text={integration.finalCall ?? `Connectez ${integration.name} : la prochaine vente fait le reste.`}
     />
   </>
 );
@@ -168,11 +171,13 @@ const UpcomingPage = ({ integration }: { integration: UpcomingIntegration }) => 
 
     <SplitSection
       id="meanwhile-title"
-      title="En attendant, sans connecteur"
-      text={`Vos clients ${integration.name} peuvent déjà laisser un avis. Tout ceci est inclus dans le plan Gratuit.`}
+      title="En attendant"
+      text={`${
+        integration.meanwhileVia === "universal" ? "Vos clients" : `Vos clients ${integration.name}`
+      } peuvent déjà laisser un avis. Tout ceci est inclus dans le plan Gratuit.`}
       tone="paper"
     >
-      <MeanwhileList items={MEANWHILE} layout="rows" />
+      <MeanwhileList items={[describeMeanwhile(integration).item, ...MEANWHILE]} layout="rows" />
       <Link href={MARKETING_PATHS.signUp} className={`${LARGE_BUTTON_CLASSES} mt-6 desktop:mt-6`}>
         Créer mon espace gratuit
       </Link>

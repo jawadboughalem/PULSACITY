@@ -60,6 +60,12 @@ const describeState = (event: ConnectionEvent, connectorName: string): State => 
       return { detail: "En attente : associez ce produit à une offre", tone: "attention", icon: "clock" };
     case "request-exists":
       return { detail: "Ce client a déjà une demande pour cette offre", tone: "neutral", icon: "valid" };
+    case "request-elsewhere":
+      return {
+        detail: "Déjà reçu d'un autre outil : une seule demande pour ce client",
+        tone: "neutral",
+        icon: "valid",
+      };
     case "unsubscribed":
       return { detail: "Pas de demande : ce client s'est désinscrit", tone: "neutral", icon: "cancelled" };
     case "requests-disabled":

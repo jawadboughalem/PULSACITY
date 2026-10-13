@@ -72,6 +72,7 @@ export const recordPurchase = (
       purchaseId: created.id,
       customerId,
       productId,
+      connectionId,
       occurredAt: purchase.occurredAt,
     });
     return { purchaseId: created.id, outcome };
