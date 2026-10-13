@@ -12,13 +12,13 @@ export const PODIA: UpcomingIntegration = {
   seo: {
     title: "Témoignages automatiques pour Podia, bientôt",
     description:
-      "Bientôt, chaque vente Podia déclenchera une demande d'avis à votre nom, grâce à Zapier. Laissez votre adresse pour être prévenu le jour de sa sortie.",
+      "Bientôt, l'app PULSACITY de Zapier pour vos ventes Podia : une demande d'avis à votre nom, sans réglage technique. Aujourd'hui, suivez le guide.",
   },
   heading: "Témoignages automatiques pour Podia",
-  intro: "Bientôt, chaque vente Podia déclenchera une demande d'avis à votre nom, grâce à Zapier.",
+  intro: "Bientôt, avec l'app PULSACITY de Zapier, chaque vente Podia déclenchera une demande d'avis à votre nom, sans réglage technique. Le guide fait déjà la même chose aujourd'hui.",
   willDo: [
-    "Un Zap envoie chaque nouvelle vente Podia à PULSACITY : une demande d'avis part au délai choisi pour l'offre.",
-    "Il demande un plan payant de Zapier. Un guide montre chaque écran.",
+    "Chaque vente Podia déclenche une demande d'avis, au délai choisi pour l'offre.",
+    "L'app PULSACITY de Zapier remplace l'étape Webhooks by Zapier du guide.",
     "Vos produits Podia s'associent à vos offres PULSACITY, comme les produits Systeme.io.",
   ],
 };

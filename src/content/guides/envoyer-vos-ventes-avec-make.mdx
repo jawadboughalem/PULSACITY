@@ -9,7 +9,7 @@ Make s'affiche en anglais : les noms ci-dessous sont les siens.
 
 ## Choisir le déclencheur
 
-1. Dans Make, cliquez sur **Create a new scenario**.
+1. Dans Make, cliquez sur **Create scenario**.
 2. Choisissez l'app de votre outil de vente, puis le module qui surveille les nouvelles ventes, par exemple **Watch Orders** ou **Watch Events**. Make vous demande de connecter votre compte.
 3. Préférez un module marqué **Instant** quand votre outil en propose un : il ne consomme rien tant qu'aucune vente n'arrive.
 
@@ -18,7 +18,7 @@ Make s'affiche en anglais : les noms ci-dessous sont les siens.
 1. Cliquez sur le **+** à droite du premier module, cherchez **HTTP**, puis choisissez **Make a request**.
 2. Dans **URL**, collez l'adresse du connecteur universel. Dans **Method**, choisissez **POST**.
 3. Dans **Body content type**, choisissez **application/x-www-form-urlencoded**. Ce format accepte tous les caractères, apostrophes et guillemets compris.
-4. Ajoutez une ligne par champ : son nom à gauche, sa valeur à droite, choisie parmi les données du premier module.
+4. Sous **Body content**, cliquez sur **Add a field** pour chaque champ : son nom dans **Name**, et dans **Value** la donnée du premier module.
 
 - **email** : l'adresse e-⁠mail du client. C'est le seul champ obligatoire.
 - **prenom** et **nom** : son prénom, que reprend l'e-⁠mail de demande d'avis, et son nom.
@@ -36,8 +36,8 @@ Dans votre espace, la page **Connecteur universel** passe au vert, et la vente a
 
 ## Activer le scénario
 
-1. Enregistrez le scénario, puis activez-le : il passe de **Inactive** à **Active**.
-2. Sans module **Instant**, Make vérifie vos ventes à intervalle régulier, et chaque vérification consomme une opération, même sans vente. Sur le plan gratuit, choisissez une vérification par jour : la demande d'avis part de toute façon des jours après la vente, et votre quota tient tout le mois.
+1. Enregistrez le scénario, puis activez-le avec l'interrupteur en haut à droite : il passe de **Inactive** à **Active**.
+2. Sans module **Instant**, Make vérifie vos ventes à intervalle régulier, et chaque vérification consomme une opération, même sans vente. Sur le plan gratuit, cliquez sur la fréquence affichée à côté de l'interrupteur, **Every 15 minutes**, et choisissez une vérification par jour : la demande d'avis part de toute façon des jours après la vente, et votre quota tient tout le mois.
 
 ## Si rien n'arrive
 

@@ -39,8 +39,8 @@ Deux envois de test par outil vers l'aperçu de la PR du lot 4.1 b, l'un en JSON
 | Zapier | formulaire | `application/x-www-form-urlencoded` | `Zapier` | `date=Oct+12%2C+2026&devise=EUR&email=camille.zapier%40example.com&montant=97%2C50&nom=Martin&offre=Programme+30+jours&prenom=Camille&reference=zapier-form-1` |
 
 Ce que les outils montrent en route :
-- **Make** : le module HTTP récent n'a plus d'option « Raw ». En JSON : type de corps `application/json`, puis « JSON string ». En formulaire : `application/x-www-form-urlencoded`, un champ par ligne. Après « Run once », le panneau de résultat affiche l'adresse appelée en entier, paramètres compris.
-- **n8n** : « Send Body », puis `JSON` ou `Form Urlencoded`. La réponse s'affiche dans la sortie du nœud.
+- **Make** : le module HTTP récent n'a plus d'option « Raw ». En JSON : type de corps `application/json`, puis « JSON string ». En formulaire : `application/x-www-form-urlencoded`, puis « Add a field » pour chaque champ (« Name » au-dessus de « Value »). Le scénario se crée par « Create scenario » et s'active par l'interrupteur en haut à droite, à côté de sa fréquence. Après « Run once », le panneau de résultat affiche l'adresse appelée en entier, paramètres compris.
+- **n8n** : « Send Body », puis `JSON` ou « Form URL Encoded », « Using Fields Below » et « Add Field ». La réponse s'affiche dans la sortie du nœud. Le canevas affiche l'adresse sous le nœud.
 - **Zapier** : « Webhooks by Zapier », action POST, « Payload Type » `json` ou `form`. Réservé aux plans payants (l'essai Professional suffit). « Data out » montre le corps de la réponse, pas son code ; « Data in » et « Troubleshoot » montrent l'adresse.
 
 ## 4. Ce que la normalisation en retient

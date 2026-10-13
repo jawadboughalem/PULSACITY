@@ -442,3 +442,18 @@ Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu
 ```
 
 Puis, vous-même, dans votre espace sur pulsacity.com : Connecteurs, puis Connecteur universel. L'adresse s'affiche seule, sans clé, avec « Changer d'adresse ».
+
+---
+
+## Résultats des prompts 7 à 12 (13 octobre 2026)
+
+- Prompt 7 : 13 points sur 13. Vente lue (« 97,50 € »), associée, « Demande d'avis prévue le 27 oct. » ; reçue deux fois, « Déjà reçue : rien de nouveau », une seule demande ; Léa M. par Systeme.io puis par le connecteur universel, « Déjà reçu d'un autre outil : une seule demande pour ce client », une seule demande ; sans e-mail, « Contenu illisible : gardé de côté ». Remarques, sans correction :
+  - Systeme.io affiche « Léa », le connecteur universel « Léa M. » : la vente de démonstration de Systeme.io n'a pas de nom de famille ; le connecteur universel en avait un.
+  - « première vente hier à 14:00 » pour une date sans heure : un jour seul vaut midi UTC, 14:00 à Paris, comme « Demander un avis ».
+  - « Ses ventes gardées de côté sont traitées » vaut pour les ventes en attente de leur offre ; les six de la capture, reçues avant la lecture, restent sans demande. Aucune n'existe en production.
+  - Make affiche le début de l'adresse sous le module : le prompt 13 remplace le secret et l'adresse.
+- Prompt 8 : 8 points sur 8, aucune erreur dans la console, 360 px sans débordement. Corrigé ensuite : les accroches de n8n et Podia disent maintenant, comme Make et Zapier, ce qui viendra et « Le guide fait déjà la même chose aujourd'hui. ». Les mentions légales affichent encore « À COMPLÉTER » dans Contact : textes légaux du lot 4.9.
+- Prompt 9 : Zapier conforme. Corrigé dans les guides : Make « Create scenario », « Add a field » (Name au-dessus de Value), l'interrupteur en haut à droite à côté de « Every 15 minutes » ; n8n « Form URL Encoded », « Specify Body », « Add Field ».
+- Prompt 10 : app « PULSACITY » créée dans Make, privée, module « Envoyer une vente », sans erreur. Make a ajouté un suffixe à son nom technique.
+- Prompt 11 : vente envoyée par l'app, lue, demande prévue le 27 oct. Make a demandé d'installer l'app dans l'organisation ; un premier essai sans le paramètre de contournement a reçu 401, le second est passé.
+- Prompt 12 : seul bouton, « Publish ». Selon Make, publier est définitif : l'app ne peut plus redevenir privée ni être supprimée, ses modules ne peuvent plus être supprimés. Décision du fondateur : on ne publie pas maintenant. L'app reste une app de test privée ; une version propre sera publiée le jour où elle est proposée aux créateurs, et son lien entrera alors dans le guide Make.

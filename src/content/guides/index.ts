@@ -55,7 +55,7 @@ export const GUIDES: Guide[] = [
     summary: "Un scénario Make, même avec le plan gratuit, envoie chaque vente au connecteur universel.",
     description:
       "Votre outil n'a pas encore son connecteur ? Avec Make, même gratuit, chaque vente part vers PULSACITY et déclenche une demande d'avis à votre nom.",
-    updatedAt: "2026-10-12",
+    updatedAt: "2026-10-13",
     readingMinutes: 4,
     load: () => import("./envoyer-vos-ventes-avec-make.mdx"),
   },
@@ -77,7 +77,7 @@ export const GUIDES: Guide[] = [
     summary: "Un nœud HTTP Request envoie chaque vente au connecteur universel, sur n8n Cloud ou chez vous.",
     description:
       "Votre outil n'a pas encore son connecteur ? Avec un workflow n8n, chaque vente part vers PULSACITY et déclenche une demande d'avis à votre nom.",
-    updatedAt: "2026-10-12",
+    updatedAt: "2026-10-13",
     readingMinutes: 3,
     load: () => import("./envoyer-vos-ventes-avec-n8n.mdx"),
   },
