@@ -3,6 +3,7 @@ import type { PurchaseEventType } from "@/lib/connectors/types";
 import { formatDayMonthYear } from "@/lib/dates/format-french-date";
 import { NO_BREAK_SPACE } from "@/lib/french/typography";
 import { getInitials } from "@/lib/spaces/get-initials";
+import { formatPostalAddressLine } from "@/lib/spaces/space-settings-schema";
 import { EmailButton } from "./EmailButton";
 import {
   EMAIL_COLORS,
@@ -29,6 +30,8 @@ type ReviewRequestEmailProps = {
   purchasedAt: Date;
   reviewUrl: string;
   unsubscribeUrl: string;
+  /** Réglages, the sender's postal address: one line at the bottom, « Julie Martin · 12 rue des Lilas · 69003 Lyon ». */
+  senderPostalAddress: string | null;
 };
 
 const AVATAR_SIZE = 44;
@@ -89,6 +92,7 @@ export const ReviewRequestEmail = ({
   purchasedAt,
   reviewUrl,
   unsubscribeUrl,
+  senderPostalAddress,
 }: ReviewRequestEmailProps) => {
   const reason = buildReason(spaceName, productName, eventType, purchasedAt);
   const preview =
@@ -145,6 +149,11 @@ export const ReviewRequestEmail = ({
               ? `Vous recevez cet e-mail parce que ${reason}`
               : `C'est le dernier message à ce sujet. Vous le recevez parce que ${reason}`}
           </Text>
+          {senderPostalAddress ? (
+            <Text style={{ margin: "0 0 12px", font: "inherit", color: "inherit" }}>
+              {formatPostalAddressLine(senderPostalAddress)}
+            </Text>
+          ) : null}
           <Text style={{ margin: "0 0 12px", font: "inherit" }}>
             <Link href={unsubscribeUrl} style={{ ...linkStyle, textDecoration: "underline" }}>
               Ne plus recevoir ces e-mails

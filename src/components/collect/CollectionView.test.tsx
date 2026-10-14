@@ -16,6 +16,7 @@ const JULIE_NUTRITION: ComponentProps<typeof CollectionView> = {
   prefilledName: "",
   spaceName: "Julie Nutrition",
   logoUrl: null,
+  accentColor: null,
   replyToEmail: "julie@exemple.fr",
   referralCode: "k7m2xq9p",
   homeUrl: "https://pulsacity.com",
@@ -77,6 +78,17 @@ afterEach(async () => {
 });
 
 describe("CollectionView", () => {
+  it("paints the button in the creator's accent, with a readable text, or in Soleil without one", async () => {
+    await renderCollection({ accentColor: "#4F6F52" });
+    const button = find<HTMLButtonElement>('button[type="submit"]');
+    expect(button.style.getPropertyValue("--accent")).toBe("#4F6F52");
+    expect(button.style.getPropertyValue("--accent-text")).toBe("#FFFFFF");
+    expect(button.className).toContain("bg-(--accent)");
+
+    await renderCollection({ accentColor: null });
+    expect(find<HTMLButtonElement>('button[type="submit"]').className).toContain("bg-sun");
+  });
+
   it("arrives with the space, the question and nothing chosen", async () => {
     await renderCollection();
 

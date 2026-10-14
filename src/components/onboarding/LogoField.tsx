@@ -8,7 +8,7 @@ import type { ImageUpload } from "@/components/uploads/useImageUpload";
 import { cn } from "@/lib/cn";
 import type { ImageUploadError } from "@/lib/uploads/upload-image";
 
-const LOGO_ERROR_MESSAGES: Record<ImageUploadError, string> = {
+export const LOGO_ERROR_MESSAGES: Record<ImageUploadError, string> = {
   "too-large": "Ce logo dépasse 10 Mo. Choisissez une image plus légère.",
   "not-an-image": "Ce fichier n'est pas une image lisible. Choisissez un logo au format JPEG ou PNG.",
   "upload-failed": "Le logo n'a pas pu être envoyé. Vérifiez votre connexion, puis choisissez-le à nouveau.",

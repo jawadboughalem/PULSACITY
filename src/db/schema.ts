@@ -151,6 +151,12 @@ export const spaces = pgTable(
     collectionLinkSharedAt: timestamptz("collection_link_shared_at"),
     firstDayCelebratedAt: timestamptz("first_day_celebrated_at"),
     firstApprovalCelebratedAt: timestamptz("first_approval_celebrated_at"),
+    /** Réglages: the sender's postal address, in small at the bottom of the e-mails to customers. Lines kept. */
+    senderPostalAddress: text("sender_postal_address"),
+    /** Réglages: the creator gets « Nouveau témoignage » at each testimonial received. */
+    newTestimonialEmailEnabled: boolean("new_testimonial_email_enabled").notNull().default(true),
+    /** Réglages, « J'offre une contrepartie à mes clients »: since when it is declared. Null: no counterpart. */
+    incentiveDeclaredAt: timestamptz("incentive_declared_at"),
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
   (table) => [index("spaces_user_id_idx").on(table.userId)],

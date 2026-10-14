@@ -51,6 +51,7 @@ export const CollectionPageContent = async ({ spaceSlug, productSlug, requestTok
             prefilledName={page.request?.prefilledName ?? ""}
             spaceName={space.name}
             logoUrl={space.logoUrl}
+            accentColor={space.accentColor}
             replyToEmail={space.replyToEmail}
             referralCode={space.referralCode}
             homeUrl={homeUrl}

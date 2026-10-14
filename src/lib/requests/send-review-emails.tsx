@@ -64,6 +64,7 @@ const requestColumns = {
   spaceSlug: spaces.slug,
   logoUrl: spaces.logoUrl,
   replyToEmail: spaces.replyToEmail,
+  senderPostalAddress: spaces.senderPostalAddress,
   plan: spaces.plan,
 };
 
@@ -112,6 +113,7 @@ const buildEmail = (request: RequestToSend, kind: ReviewEmailKind): CustomerEmai
         purchasedAt={request.purchasedAt}
         reviewUrl={buildReviewUrl(request)}
         unsubscribeUrl={unsubscribeUrl}
+        senderPostalAddress={request.senderPostalAddress}
       />
     ),
     spaceName: request.spaceName,

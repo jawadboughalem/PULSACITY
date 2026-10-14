@@ -1,5 +1,5 @@
 export type SpaceAccount = {
-  /** The creator's name when known, otherwise the space's. */
+  /** The space's name. */
   name: string;
   email: string;
   planName: string;

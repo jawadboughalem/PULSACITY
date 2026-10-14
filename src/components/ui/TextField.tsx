@@ -9,7 +9,10 @@ type TextFieldProps = Omit<ComponentPropsWithoutRef<"input">, "id" | "className"
   error?: string;
 };
 
-/** Charte v2, Champ de texte: the label 8 px above, the help or the error below, tied by aria-describedby. */
+/**
+ * Charte v2, Champ de texte: the label 8 px above; below, the error right under the field, then the help (Réglages,
+ * 3.3), both tied by aria-describedby.
+ */
 export const TextField = ({ id, label, hint, error, ...inputProps }: TextFieldProps) => {
   const hintId = `${id}-hint`;
   const errorId = `${id}-error`;
@@ -27,12 +30,12 @@ export const TextField = ({ id, label, hint, error, ...inputProps }: TextFieldPr
         className={FIELD_CLASSES}
         {...inputProps}
       />
+      {error ? <FieldError id={errorId} message={error} /> : null}
       {hint ? (
         <p id={hintId} className={FIELD_HINT_CLASSES}>
           {hint}
         </p>
       ) : null}
-      {error ? <FieldError id={errorId} message={error} /> : null}
     </div>
   );
 };

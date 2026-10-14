@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 14 octobre 2026 (lot 4.2 fusionné, sa vérification en production à noter). La V0 n'est pas terminée : la feuille de route pour la finir (design v2, écrans manquants, paiements et textes légaux d'un vendeur particulier, tarifs, catalogue des connecteurs, commercialisation) est dans `docs-internes/fin-v0/README.md`, avec tous ses prompts dans l'ordre. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Le lot 7, le site public (accueil, tarifs, intégrations, guides, pages légales), est en ligne depuis le 4 octobre (PR #27) et vérifié en production. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 14 octobre 2026 (lot 4.2 fusionné, sa vérification en production à noter ; lot 4.3, Réglages et Mon compte, en recette sur la PR #36). La V0 n'est pas terminée : la feuille de route pour la finir (design v2, écrans manquants, paiements et textes légaux d'un vendeur particulier, tarifs, catalogue des connecteurs, commercialisation) est dans `docs-internes/fin-v0/README.md`, avec tous ses prompts dans l'ordre. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Le lot 7, le site public (accueil, tarifs, intégrations, guides, pages légales), est en ligne depuis le 4 octobre (PR #27) et vérifié en production. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -74,6 +74,36 @@ La V1 attend ; la recette de bout en bout en production devient le lot 4.11, jus
 - Recette sur l'aperçu : `docs-internes/recette/lot-4-2-fondations-v2.md`.
 - Recette du 14 octobre (prompts 1 à 4) : corrigés le menu « … » des témoignages (flotte au-dessus du tableau, s'ouvre vers le haut près du bas, options sur une ligne, focus rendu au « … »), le décalage de la page à l'ouverture d'une fenêtre, la case en erreur qui repassait en bleu marine sous la souris, la barre de défilement de « Demander un avis » qui coupait ses coins, le survol des cartes d'outils qui cachait « Bientôt », l'anneau du focus collé au « ? » de la connexion, la promesse répétée dans l'image de partage de l'accueil, « e-mail » coupé au trait d'union dans Demandes. Expliqués sans changement : hauteurs des boutons des tarifs (56 et 52, charte), textes « En attendant » (lot 4.1 b), carmin proposé pour le widget (lot 4.8), mises en page v1 au téléphone (lots 4.4 et 4.6), Réglages (lot 4.3). Contre-recette (prompt 4 bis) : 8 points OK ; le focus de la connexion, non testable connecté, est vérifié dans le conteneur et revu par le prompt 5. Recette validée le 14 octobre.
 - Vérification en production : prompt 5 de `recette/lot-4-2-fondations-v2.md` (polices au premier chargement, focus de la connexion, PageSpeed, images de partage), à faire après la mise en ligne et à noter ici.
+
+## Lot 4.3, Réglages et Mon compte (PR #36, en recette)
+
+- Le ZIP du prompt 3.3 est rangé dans `docs-internes/design-v2/` : ses PNG à côté de ceux de 3.2, sa charte (jauge, question dépliable, carte d'outil, monogramme, badges, étapes ; icônes gift, pause, external, file, monitor, phone) à la place de `charte.md`, son index à la suite de `INDEX.md`. Il sert aussi aux lots 4.4, 4.5, 4.12 et au catalogue.
+- Réglages (`/app/reglages`, 8.1) : nom, logo, couleur d'accent et son alerte, adresse de la page de collecte modifiable (une adresse prise en propose une libre), e-mail de réponse, adresse postale de l'expéditeur, aperçu du vrai e-mail de demande, interrupteur « Nouveau témoignage », case « J'offre une contrepartie à mes clients ». Un aperçu de la page de collecte suit la saisie. Un seul bouton enregistre ; tous les points à corriger d'un coup, l'adresse prise comprise.
+- Les réglages agissent : l'adresse postale s'écrit en bas des e-mails de demande et de relance ; « Nouveau témoignage » ne part plus quand il est coupé ; le bouton de la page de collecte prend la couleur d'accent (texte blanc ou Encre selon le contraste, comme la charte v2), ce qui ferme l'écart « accent du créateur sur la page de collecte » du lot 4.2.
+- Mon compte (`/app/compte`, 8.2) : adresse de connexion changée par un lien envoyé à la nouvelle adresse (Better Auth, 24 heures, 5 liens par heure et par compte), prénom (« Bonjour Julie »), appareils connectés et « Se déconnecter partout ailleurs », export JSON préparé à la demande et jamais gardé, suppression de l'espace en écrivant son nom. La suppression arrête d'abord l'abonnement (`src/lib/billing/stop-space-subscription.ts`, point d'accroche du lot 4.5, testé), puis efface le compte et, en cascade, tout l'espace ; les fichiers (logo, photos) suivent ; page publique « Votre espace est supprimé » (`/espace-supprime`).
+- Liens : « Réglages » (navigation, « Plus ») et « Mon compte » (menu du compte, « Plus ») mènent à leurs pages.
+- Migration 0011 : `spaces.sender_postal_address`, `spaces.new_testimonial_email_enabled` (vrai par défaut), `spaces.incentive_declared_at`. Le prénom est `user.name`, déjà là.
+- Au passage : la règle « téléphone » des e-mails visait le tableau de la carte, alors que react-email met la marge sur sa cellule ; les e-mails gardaient 48 px de marge de chaque côté sur téléphone. Corrigé et testé.
+- Vérifié dans le conteneur : 360, 375, 768, 1024, 1440 px et 667 × 375 sans débordement ; parcours joués dans Chromium (erreurs, adresse prise, enregistrement, aperçu de l'e-mail, changement d'adresse par le lien, lien réutilisé, prénom, deux appareils, export, suppression d'un second espace).
+- Recette sur l'aperçu : `docs-internes/recette/lot-4-3-reglages-compte.md`. Prompts 1 à 6 passés le 14 octobre. Deux corrections : le menu du compte se ferme quand on suit un de ses liens ; à 360 px, l'adresse d'un aperçu, trop longue, laissait 98 px à la partie modifiable (elle est coupée par son début, la partie modifiable garde 45 % du champ). Contre-recette (prompts 7 et 8) validée le 14 octobre : les deux corrections tiennent ; les 503 relevées par Claude in Chrome venaient de son outil de surveillance du réseau, les journaux de Vercel n'en montrent aucune. Puis vérification en production (prompt 9).
+
+## Décisions du 14 octobre (lot 4.3), à valider par le fondateur
+
+- Choix de Design appliqués : Mon compte à part (`/app/compte`) ; adresse de la page de collecte modifiable, l'ancienne cesse de marcher ; interrupteur « Nouveau témoignage », allumé par défaut.
+- Suppression immédiate et définitive (« rien ne reste », checklist du lot) : « au terme du délai prévu par nos CGU » devient « L'effacement est immédiat et définitif. » ; « Une erreur ? Écrivez-nous au plus vite » est retiré, il n'y aurait rien à rendre. Le compte part avec l'espace. Le délai des CGU (lot 4.9) ne couvre plus que les sauvegardes de Supabase.
+- Textes neutres : « Vous restez connectée » devient « Cet appareil reste connecté. », « Vous êtes déconnectée » devient « Votre session est fermée. ».
+- Export : préparé pendant que la page attend, ni fichier gardé ni e-mail ; « Restez sur cette page le temps de le préparer. » remplace « nous vous écrivons quand il est prêt ». Format JSON, clés en français sans accent ; ni clés de connexion ni liens des demandes.
+- Aperçu de l'e-mail : l'e-mail réel (v1 jusqu'au lot 4.8), dessiné à la largeur d'un téléphone puis réduit ; l'expéditeur réel est « … via PULSACITY » ; la légende cite le nom, le logo et l'adresse postale (la couleur n'entre dans les e-mails qu'au lot 4.8).
+- Avatar sans logo : initiales sur Ciel (charte, « Avatar »), pas sur la couleur d'accent comme dans les maquettes.
+- Adresse postale : facultative, sans « (facultatif) » comme la maquette. La rendre obligatoire bloquerait l'envoi des demandes : question pour la relecture juridique (6.7).
+- Contrepartie : la case et sa date sont gardées ; la mention sous les widgets et sur « À propos de ces avis » arrive avec le lot 4.13, avant la bêta.
+- « Parrainage » (menu du compte et « Plus » de 3.3) : pas encore dans les menus, sa page arrive avec le lot 4.12.
+- Réglages en erreur à 360 px : la maquette écrase le champ d'adresse à côté de « Prendre … » ; le champ garde sa largeur, l'erreur suit, puis le bouton. Sur ordinateur, l'aperçu passe sous « Votre espace » tant que les deux colonnes n'ont pas la place (fenêtre de moins de 1340 px de large environ) ; au-delà, la colonne de 712 px peut se resserrer, pour qu'une fenêtre de 1440 px avec une barre de défilement classique (Windows) garde les deux colonnes.
+- Erreur d'un champ : juste sous le champ, puis l'aide (maquettes 3.3), dans tout l'espace.
+- Logo remplacé ou retiré : l'ancien fichier est gardé, pour les e-mails déjà envoyés ; tous les fichiers partent à la suppression de l'espace.
+- « Écrivez-nous » (page de suppression) : `mailto:contact@pulsacity.com` jusqu'à `/aide#contact` (lot 4.4).
+- Bouton du compte : il montre l'espace (nom et logo), même une fois le prénom donné, comme les maquettes.
+- Le titre de l'aperçu de la page de collecte est en h3 (24 px) : la maquette le montre plus petit, une taille absente de l'échelle.
 
 ## Lot 7 (PR #27), site public, en ligne depuis le 4 octobre
 
@@ -205,7 +235,7 @@ La V1 attend ; la recette de bout en bout en production devient le lot 4.11, jus
 ## Pas encore construit
 
 - « Vente annulée » de Systeme.io : son payload n'a jamais été capturé (un remboursement de paiement à la livraison n'émet rien). Les événements reçus sont gardés sans être lus ; une demande d'une vente remboursée part donc quand même, sauf si le créateur l'annule dans Demandes. À capturer avec une vente Stripe en mode test, puis à traiter.
-- Pages Réglages et Facturation de l'espace.
+- Page Facturation de l'espace (lot 4.5). Réglages et Mon compte : lot 4.3.
 - Stripe (abonnements, Checkout, portail) : la page Tarifs existe (lot 7), ses boutons mènent à l'inscription.
 - Le paramètre de parrainage `?ref=` des mentions « Propulsé par » arrive sur l'accueil, mais rien ne l'enregistre encore.
 
@@ -286,7 +316,6 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
 - les compteurs du haut de la liste se mettent à jour environ une seconde après « Valider » ou « Masquer » ;
 - un premier clic sur « Importez un fichier CSV » n'a rien fait une fois, le second a ouvert la page ;
-- le lien Réglages mène à une page pas encore construite (Connecteurs et Demandes existent depuis le lot 6) ;
 - éditeur de widget, encadré « Code envoyé à … » (depuis le 2 octobre) : « Ouvrez l'e-mail sur votre ordinateur… » est décalé d'environ 20 px et « Renvoyer l'e-mail » d'environ 8 px par rapport au texte du titre (recette du lot 4.1). À aligner avec la maquette v2 de l'éditeur.
 
 ## Décisions du 1er octobre (maquettes m15 à m17)
@@ -393,7 +422,7 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 
 
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
-- Prénom du créateur : il n'est pas demandé à l'inscription, donc l'accueil dit « Bonjour » sans prénom.
+- Prénom du créateur : pas demandé à l'inscription ; il se donne dans Mon compte (lot 4.3), et l'accueil dit alors « Bonjour Julie ».
 - Adresse de support : « Aide et contact » pointe vers `/aide`, qui n'existe pas, et la page du guide sur mobile (« Bloquée à une étape ? Écrivez-nous ») l'attend aussi : sa ligne n'est pas affichée en attendant. Le lien « Contact » du pied de page mène aux mentions légales, où l'adresse est encore « [À COMPLÉTER] ». Le site public l'attend aussi : « Écrivez-nous » de m21 et m22.
 - Questions pour Design (lot 4.2) :
   - l'icône « alerte » : l'annexe de la charte la dessine en triangle, les planches montrent un rond avec « ! » (bandeaux, champs, badge « Problème », « alerte cerclée ») ; le code suit le texte, comme le veut l'INDEX ;
@@ -404,6 +433,7 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
   - le grand titre v1 de l'accueil, « … automatiquement. », déborde à 360 px en taille display (42 px) : il est en h1 sur téléphone jusqu'à l'accueil v2 (lot 4.7).
 - Dans ce conteneur (Node 22.22.0), `decode-csv-file.test.ts` échoue sur `main` comme sur la PR #27 : l'octet 0x9C de Windows‑1252 n'y donne pas « œ ». La CI, sur son propre Node 22, est verte. À surveiller si la CI passe à cette version.
 - Effet des prix (9,99 € au prix fondateur, 14,99 € ensuite) sur le passage au payant : à la revue de `decisions/tarifs.md` (60 jours de paiements ou 300 inscrits).
-- E-mails aux clients : la loi sur la prospection demande l'adresse postale de l'expéditeur ; m3 la prévoit pour le créateur, PULSACITY ne la demande pas encore.
+- E-mails aux clients : la loi sur la prospection demande l'adresse postale de l'expéditeur. Réglages la demande depuis le lot 4.3, facultative ; faut-il la rendre obligatoire avant tout envoi ? Question pour la relecture juridique (6.7).
+- Questions pour Design (lot 4.3) : l'avatar sans logo sur la couleur d'accent (maquettes) ou sur Ciel (charte) ; la taille du titre de l'aperçu de la page de collecte ; la place de « Prendre … » à 360 px ; un e-mail à l'ancienne adresse quand l'adresse de connexion change (non dessiné, non construit).
 - Avant le lancement : afficher le JSON brut d'un événement inconnu à Claude Code (requête SQL dans Supabase, par prompt) pour capturer « Vente annulée » le jour où un créateur en reçoit une.
 - La page de vente dessinée dans l'aperçu de l'éditeur reste générique (nom de l'espace, nom de l'offre, « Ce qu'en disent mes clients ») : m6 y montre la page de Julie Nutrition (menu, prix, « Tous les avis »). Écart gardé depuis le lot 5.

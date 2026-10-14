@@ -15,6 +15,9 @@ export const MARKETING_PATHS = {
   contact: "/mentions-legales#contact",
 } as const;
 
+/** « Écrivez-nous »: the one address (CLAUDE.md), until the form of /aide (lot 4.4). */
+export const WRITE_TO_US_HREF = "mailto:contact@pulsacity.com";
+
 export const integrationPath = (slug: string) => `${MARKETING_PATHS.integrations}/${slug}`;
 
 export const guidePath = (slug: string) => `${MARKETING_PATHS.guides}/${slug}`;

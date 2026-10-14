@@ -78,6 +78,13 @@
       "when": 1791114053299,
       "tag": "0010_public_tool_suggestions",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1791980464880,
+      "tag": "0011_space_settings",
+      "breakpoints": true
     }
   ]
 }

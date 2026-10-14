@@ -65,6 +65,9 @@ const deliver = async ({ senderName, senderLocalPart, to, subject, body, replyTo
   if (error) throw new EmailNotSentError(error.name, error.message);
 };
 
+/** « Julie Nutrition via PULSACITY »: the name the customer sees as the sender of a request. */
+export const buildCustomerSenderName = (spaceName: string): string => `${spaceName} via PULSACITY`;
+
 export const sendAccountEmail = ({ to, subject, body }: AccountEmail): Promise<void> =>
   deliver({ senderName: ACCOUNT_SENDER_NAME, senderLocalPart: ACCOUNT_SENDER_LOCAL_PART, to, subject, body });
 
@@ -78,7 +81,7 @@ export const sendCustomerEmail = ({
   idempotencyKey,
 }: CustomerEmail): Promise<void> =>
   deliver({
-    senderName: `${spaceName} via PULSACITY`,
+    senderName: buildCustomerSenderName(spaceName),
     senderLocalPart: CUSTOMER_SENDER_LOCAL_PART,
     to,
     subject,

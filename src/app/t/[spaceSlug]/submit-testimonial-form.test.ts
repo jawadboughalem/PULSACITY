@@ -80,6 +80,16 @@ describe("submitTestimonialForm", () => {
     );
   });
 
+  it("tells nobody when the creator turned off « Nouveau témoignage »", async () => {
+    await testContext.database?.update(spaces).set({ newTestimonialEmailEnabled: false });
+
+    expect(await submitTestimonialForm(CAMILLE)).toEqual({ ok: true, data: null });
+    await runScheduledWork();
+
+    expect(await countTestimonials()).toBe(1);
+    expect(notifyCreatorOfTestimonial).not.toHaveBeenCalled();
+  });
+
   it("keeps the testimonial even when the notification cannot leave", async () => {
     vi.mocked(notifyCreatorOfTestimonial).mockRejectedValue(new EmailNotSentError("internal_server_error", "Resend is down"));
 

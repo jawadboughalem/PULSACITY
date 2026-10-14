@@ -9,6 +9,8 @@ export type CollectionSpace = {
   name: string;
   slug: string;
   logoUrl: string | null;
+  /** The creator's accent, on the button of the page (charte v2). Null: Soleil. */
+  accentColor: string | null;
   replyToEmail: string;
   referralCode: string;
 };
@@ -34,6 +36,7 @@ const findCollectionSpace = async (database: Database, spaceSlug: string): Promi
       name: spaces.name,
       slug: spaces.slug,
       logoUrl: spaces.logoUrl,
+      accentColor: spaces.accentColor,
       replyToEmail: spaces.replyToEmail,
       referralCode: spaces.referralCode,
     })

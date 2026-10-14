@@ -12,6 +12,7 @@ const PROPS = {
   purchasedAt: new Date("2026-08-28T10:00:00Z"),
   reviewUrl: "https://pulsacity.com/t/julie-nutrition/programme-30-jours?r=abc",
   unsubscribeUrl: "https://pulsacity.com/api/unsubscribe?token=def",
+  senderPostalAddress: null,
 };
 
 beforeEach(() => {
@@ -55,6 +56,16 @@ describe("ReviewRequestEmail", () => {
     expect(text).toContain("Je reviens vers vous une seule fois, sans insister.");
     expect(text).toContain("Belle journée,");
     expect(text).toContain("C'est le dernier message à ce sujet. Vous le recevez parce que vous avez rejoint Programme 30 jours");
+  });
+
+  it("writes the sender's postal address on one line at the bottom, when the creator gave it", async () => {
+    const address = "Julie Martin\n12 rue des Lilas\n69003 Lyon";
+    const text = await render(<ReviewRequestEmail kind="request" {...PROPS} senderPostalAddress={address} />, {
+      plainText: true,
+    });
+
+    expect(text).toContain("Julie Martin · 12 rue des Lilas · 69003 Lyon");
+    expect(await render(<ReviewRequestEmail kind="request" {...PROPS} />, { plainText: true })).not.toContain("Lilas");
   });
 
   it("shows the creator's logo when the space has one", async () => {

@@ -8,6 +8,7 @@ import { type CollectionContext, useTestimonialForm } from "./useTestimonialForm
 type CollectionViewProps = CollectionContext & {
   spaceName: string;
   logoUrl: string | null;
+  accentColor: string | null;
   replyToEmail: string;
   referralCode: string;
   homeUrl: string;
@@ -22,6 +23,7 @@ export const CollectionView = ({
   prefilledName,
   spaceName,
   logoUrl,
+  accentColor,
   replyToEmail,
   referralCode,
   homeUrl,
@@ -33,5 +35,7 @@ export const CollectionView = ({
 
   if (form.sentTestimonial) return <ThankYouScreen testimonial={form.sentTestimonial} {...space} />;
   if (form.isLinkInactive) return <InactiveLinkScreen replyToEmail={replyToEmail} {...space} />;
-  return <TestimonialFormScreen form={form} title={title} consentText={consentText} {...space} />;
+  return (
+    <TestimonialFormScreen form={form} title={title} consentText={consentText} accentColor={accentColor} {...space} />
+  );
 };

@@ -8,6 +8,7 @@ import { readDeploymentOrigins, readDeploymentUrl } from "@/lib/environment/read
 import { readRequiredEnvironmentVariable } from "@/lib/environment/read-required-environment-variable";
 import { MAGIC_LINK_LIFETIME_SECONDS } from "./magic-link-lifetime";
 import { sendMagicLink } from "./send-magic-link";
+import { NEW_LOGIN_ADDRESS_LINK_LIFETIME_SECONDS, sendNewLoginAddressLink } from "./send-new-login-address-link";
 
 const createAuth = () => {
   const database = getDb();
@@ -21,6 +22,12 @@ const createAuth = () => {
       schema: { user, session, account, verification },
     }),
     telemetry: { enabled: false },
+    /** Mon compte, « Changer d'adresse »: a link goes to the new address, which replaces the old one once clicked. */
+    user: { changeEmail: { enabled: true } },
+    emailVerification: {
+      expiresIn: NEW_LOGIN_ADDRESS_LINK_LIFETIME_SECONDS,
+      sendVerificationEmail: (request) => sendNewLoginAddressLink(database, request),
+    },
     plugins: [
       magicLink({
         expiresIn: MAGIC_LINK_LIFETIME_SECONDS,

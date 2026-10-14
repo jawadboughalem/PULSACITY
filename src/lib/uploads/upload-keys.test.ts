@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { buildLogoKey, buildTestimonialPhotoKey, isLogoKeyOf, isTestimonialPhotoKeyOf } from "./upload-keys";
+import {
+  buildLogoKey,
+  buildTestimonialPhotoKey,
+  isLogoKeyOf,
+  isTestimonialPhotoKeyOf,
+  logoFolderOf,
+  testimonialPhotoFolderOf,
+} from "./upload-keys";
 
 const SPACE_ID = "8f14e45f-ceea-467a-9575-5f0e3a1b2c3d";
 
@@ -26,5 +33,11 @@ describe("upload keys", () => {
 
     expect(isLogoKeyOf("user_Ab.1", key)).toBe(true);
     expect(isLogoKeyOf("user_AbX1", key)).toBe(false);
+  });
+
+  it("gathers every file of an owner in a folder that holds nobody else's", () => {
+    expect(buildTestimonialPhotoKey(SPACE_ID, "image/png").startsWith(testimonialPhotoFolderOf(SPACE_ID))).toBe(true);
+    expect(buildLogoKey("user_1", "image/png").startsWith(logoFolderOf("user_1"))).toBe(true);
+    expect(buildLogoKey("user_10", "image/png").startsWith(logoFolderOf("user_1"))).toBe(false);
   });
 });

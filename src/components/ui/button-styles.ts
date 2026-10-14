@@ -34,3 +34,12 @@ export const ICON_BUTTON_CLASSES = `pz-couleur inline-flex size-[44px] shrink-0 
 
 /** A link inside a sentence: Encre, underlined, Encre 800 when hovered. */
 export const INLINE_LINK_CLASSES = `pz-couleur font-semibold text-ink underline decoration-2 underline-offset-4 hover:text-ink-800 hover:decoration-[3px] ${FOCUS_RING}`;
+
+/**
+ * 3.3, « Supprimer mon espace »: the compact secondary button in Erreur, outside a window. The danger button itself
+ * stays inside the confirmation window.
+ */
+export const DANGER_OUTLINE_BUTTON_CLASSES = cn(
+  SECONDARY_COMPACT_BUTTON_CLASSES,
+  "border-error text-error hover:bg-error-surface active:bg-error-surface",
+);

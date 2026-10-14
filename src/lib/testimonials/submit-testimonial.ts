@@ -35,7 +35,8 @@ export type NewTestimonialNotification = {
 };
 
 export type SubmitTestimonialResult =
-  | { status: "received"; notification: NewTestimonialNotification }
+  /** notification is null when the creator turned off « Nouveau témoignage » (Réglages). */
+  | { status: "received"; notification: NewTestimonialNotification | null }
   | { status: "page-not-found" }
   | { status: "link-inactive" }
   | { status: "invalid-photo" };
@@ -45,7 +46,13 @@ export const submitTestimonial = async (
   submission: TestimonialSubmission,
 ): Promise<SubmitTestimonialResult> => {
   const [space] = await database
-    .select({ id: spaces.id, name: spaces.name, plan: spaces.plan, creatorEmail: user.email })
+    .select({
+      id: spaces.id,
+      name: spaces.name,
+      plan: spaces.plan,
+      creatorEmail: user.email,
+      notifiesCreator: spaces.newTestimonialEmailEnabled,
+    })
     .from(spaces)
     .innerJoin(user, eq(user.id, spaces.userId))
     .where(eq(spaces.slug, submission.spaceSlug))
@@ -109,6 +116,7 @@ export const submitTestimonial = async (
     });
 
     const plan = getPlan(space.plan);
+    if (!space.notifiesCreator) return { status: "received", notification: null };
     return {
       status: "received",
       notification: {

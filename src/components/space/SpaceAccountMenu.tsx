@@ -19,13 +19,13 @@ type SpaceAccountMenuProps = {
 /**
  * Charte v2, Navigation de l'espace: the account button at the bottom (64 high, a pill on Nuage, Ciel once open), and
  * its menu above it, 296 wide: name, address, plan, then Mon compte, Abonnement et factures, Aide et contact, Se
- * déconnecter.
+ * déconnecter. The menu lives in the layout, which stays from page to page: following one of its links closes it.
  */
 export const SpaceAccountMenu = ({ account }: SpaceAccountMenuProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { isOpen, menuId, toggle, moveWithArrows, openWithArrow } = useMenu({ containerRef, triggerRef, menuRef });
+  const { isOpen, menuId, toggle, close, moveWithArrows, openWithArrow } = useMenu({ containerRef, triggerRef, menuRef });
 
   return (
     <div ref={containerRef} className="relative mt-auto">
@@ -43,7 +43,12 @@ export const SpaceAccountMenu = ({ account }: SpaceAccountMenuProps) => {
             <span className="text-legal text-gray">{`Plan ${account.planName}`}</span>
           </div>
           {ACCOUNT_SECTIONS.map((section) => (
-            <Link key={section.label} href={section.href} className={ACCOUNT_MENU_ITEM_CLASSES}>
+            <Link
+              key={section.label}
+              href={section.href}
+              onClick={() => close(false)}
+              className={ACCOUNT_MENU_ITEM_CLASSES}
+            >
               <Icon name={section.icon} size={20} />
               {section.label}
             </Link>
