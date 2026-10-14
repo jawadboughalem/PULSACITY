@@ -1,6 +1,6 @@
 # État du projet
 
-Mis à jour le 14 octobre 2026 (lots 4.2 et 4.3 fusionnés ; leurs vérifications en production, comme celles des lots 4.1 et 4.1 b, se feront à la toute fin, décision du fondateur : voir « À faire »). La V0 n'est pas terminée : la feuille de route pour la finir (design v2, écrans manquants, paiements et textes légaux d'un vendeur particulier, tarifs, catalogue des connecteurs, commercialisation) est dans `docs-internes/fin-v0/README.md`, avec tous ses prompts dans l'ordre. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Le lot 7, le site public (accueil, tarifs, intégrations, guides, pages légales), est en ligne depuis le 4 octobre (PR #27) et vérifié en production. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
+Mis à jour le 14 octobre 2026 (lots 4.2 et 4.3 fusionnés ; lot 4.4, Aide et contact, en recette sur la PR #38 ; les vérifications en production des lots 4.1 à 4.4 se feront à la toute fin, décision du fondateur : voir « À faire »). La V0 n'est pas terminée : la feuille de route pour la finir (design v2, écrans manquants, paiements et textes légaux d'un vendeur particulier, tarifs, catalogue des connecteurs, commercialisation) est dans `docs-internes/fin-v0/README.md`, avec tous ses prompts dans l'ordre. Le lot 6 est en ligne en entier et vérifié en production : moteur de connecteurs, Systeme.io, demandes d'avis et désinscription (PR #23), Demandes, Connecteurs et désinscription selon les maquettes du 3 octobre (PR #24), « Demander un avis » (PR #25). Un point reste à régler avant le lancement : GitHub ne lance l'envoi planifié que toutes les 3 à 6 heures (voir « À faire »). Le lot 7, le site public (accueil, tarifs, intégrations, guides, pages légales), est en ligne depuis le 4 octobre (PR #27) et vérifié en production. À lire au début de chaque session, et à mettre à jour à chaque fusion sur `main`.
 
 ## En ligne sur pulsacity.com
 
@@ -88,6 +88,29 @@ La V1 attend ; la recette de bout en bout en production devient le lot 4.11, jus
 - Vérifié dans le conteneur : 360, 375, 768, 1024, 1440 px et 667 × 375 sans débordement ; parcours joués dans Chromium (erreurs, adresse prise, enregistrement, aperçu de l'e-mail, changement d'adresse par le lien, lien réutilisé, prénom, deux appareils, export, suppression d'un second espace).
 - Recette sur l'aperçu : `docs-internes/recette/lot-4-3-reglages-compte.md`. Prompts 1 à 6 passés le 14 octobre. Deux corrections : le menu du compte se ferme quand on suit un de ses liens ; à 360 px, l'adresse d'un aperçu, trop longue, laissait 98 px à la partie modifiable (elle est coupée par son début, la partie modifiable garde 45 % du champ). Contre-recette (prompts 7 et 8) validée le 14 octobre : les deux corrections tiennent ; les 503 relevées par Claude in Chrome venaient de son outil de surveillance du réseau, les journaux de Vercel n'en montrent aucune. PR fusionnée le 14 octobre ; « CI » et « Database migration » verts sur `main`. La vérification en production (prompt 9) se fera à la toute fin.
 
+## Lot 4.4, Aide et contact (PR #38, en recette)
+
+- `/aide`, page publique dans la coque du site, selon les maquettes 8.4 (`v2-site-aide-*`) : fond Nuage ; à gauche, les pastilles des six thèmes (Démarrer, Connecteurs, Demandes, Widgets, Abonnement, Données personnelles), leurs questions dépliables et le guide de quatre d'entre eux ; à droite, « Écrivez-nous ». Au téléphone, le formulaire suit les questions. Contenu dans `src/content/help.ts` : les réponses communes avec l'accueil et les tarifs sont les mêmes (`faq.ts`), les limites viennent de `plans.ts`.
+- « Écrivez-nous » : adresse (déjà remplie quand on est connecté), sujet, message. Envoi par Resend à contact@pulsacity.com, réponse vers l'expéditeur, sous le sujet tapé ; l'e-mail dit si l'on écrit depuis un espace (nom et plan). Champ piège, 3 messages par quart d'heure et par adresse IP, 30 par jour pour tous (`src/lib/support/contact-message.ts`). Rien n'est gardé en base, en dehors des compteurs ; la politique de confidentialité le dit.
+- Les liens : « Contact » du pied de page vers `/aide#contact` ; « Aide et contact » du menu du compte et de « Plus » vers `/aide` ; « Écrivez-nous » des guides et la bande « Une question sans réponse ici ? » de `/guides` (m22) ; « Un souci à une étape ? » des pas à pas de Systeme.io et du connecteur universel (m21) et du guide du widget au téléphone (m6) ; « Écrivez-nous » de `/espace-supprime` et de l'échec de l'export. `/aide` dans le plan du site. La section 10 de l'accueil v2 se branchera sur `MARKETING_PATHS.contact` au lot 4.7.
+- contact@pulsacity.com remplace « [À COMPLÉTER] » dans les mentions légales (Contact) et la confidentialité (Qui sommes-nous).
+- Vérifié dans le conteneur : `/aide` à 1440 et 360 px, mesurée au pixel à côté des cinq maquettes (2 à 4 px d'écart au plus) ; les cinq états joués dans Chromium, connecté et non ; liens ; Lighthouse mobile sur `/aide` : accessibilité, bonnes pratiques, SEO 100, performance 90 à 97.
+- Recette sur l'aperçu : `docs-internes/recette/lot-4-4-aide-contact.md` (un vrai message reçu dans la boîte du fondateur, prompts 1 à 6). Vérification en production (prompt 7) à la toute fin.
+
+## Décisions du 14 octobre (lot 4.4), à valider par le fondateur
+
+- Textes neutres : « Vous êtes connectée : nous répondrons à cette adresse. » devient « Adresse de votre compte : nous répondrons à cette adresse. », affiché tant que l'adresse est celle du compte. « Bloquée à une étape ? » (m6) devient « Un souci à une étape ? » (m21).
+- « Chaque étape a son guide, avec des images » (`positionnement.md`, maquette) devient « … pas à pas » : les guides Zapier, Make, n8n et Podia n'ont pas d'images.
+- Limites : 3 messages par quart d'heure et par adresse IP, pour que « Patientez quelques minutes » reste vrai ; 30 par jour pour tous, car les 100 e-mails par jour de Resend gratuit servent aussi aux demandes d'avis des créateurs (à relever avec Resend Pro, lot 4.12). Au-delà, ou si Resend refuse le message : « Votre message n'est pas parti. », avec contact@pulsacity.com en lien (état non dessiné, texte gardé).
+- L'e-mail reçu : de « Aide et contact PULSACITY » (adresse technique d'envois.pulsacity.com), objet = le sujet tapé, « Répondre » écrit à l'expéditeur. Aucun accusé de réception n'est envoyé à l'adresse tapée : le formulaire ne peut pas servir à écrire à quelqu'un d'autre.
+- Confidentialité : une rubrique « Écrivez-nous ». La durée de conservation des échanges dans la boîte de contact@ (« le temps nécessaire pour vous répondre et suivre votre demande ») est à préciser à la relecture juridique (2.7).
+- contact@pulsacity.com renseignée dans les mentions légales et la confidentialité, l'adresse étant décidée (2.2) ; le téléphone et le reste attendent le lot 4.9.
+- Questions : plusieurs peuvent être ouvertes à la fois, seule la première de la page l'est au chargement. Pas de données structurées FAQPage : Google ne les affiche plus.
+- Guide du thème Connecteurs : celui de Zapier, comme la maquette, sous son vrai titre « Envoyer vos ventes avec Zapier ».
+- Valeurs de la charte quand la maquette s'en écarte : lien de guide en 17 px (bouton discret ; la maquette, environ 16) ; 12 px entre deux questions (la maquette, 10) ; 20 px entre les champs (la maquette, 18). Zone du message : 180 px de haut, comme la maquette (charte : 160 au moins).
+- La page lit la session pour remplir l'adresse : elle est rendue à chaque visite, plus statique.
+- « Un souci à une étape ? » de m21 : dans un cadre Ciel sous le texte de gauche des pas à pas (Systeme.io, connecteur universel). La bande de m22 sur `/guides` est Ciel (Papier en v1). La ligne « Bloquée à une étape ? » de m5 (Connecteurs › Systeme.io dans l'espace) n'est pas dans les maquettes v2 du connecteur universel : pas construite, à revoir avec le lot 4.6.
+
 ## Décisions du 14 octobre (lot 4.3), à valider par le fondateur
 
 - Choix de Design appliqués : Mon compte à part (`/app/compte`) ; adresse de la page de collecte modifiable, l'ancienne cesse de marcher ; interrupteur « Nouveau témoignage », allumé par défaut.
@@ -102,7 +125,7 @@ La V1 attend ; la recette de bout en bout en production devient le lot 4.11, jus
 - Réglages en erreur à 360 px : la maquette écrase le champ d'adresse à côté de « Prendre … » ; le champ garde sa largeur, l'erreur suit, puis le bouton. Sur ordinateur, l'aperçu passe sous « Votre espace » tant que les deux colonnes n'ont pas la place (fenêtre de moins de 1340 px de large environ) ; au-delà, la colonne de 712 px peut se resserrer, pour qu'une fenêtre de 1440 px avec une barre de défilement classique (Windows) garde les deux colonnes.
 - Erreur d'un champ : juste sous le champ, puis l'aide (maquettes 3.3), dans tout l'espace.
 - Logo remplacé ou retiré : l'ancien fichier est gardé, pour les e-mails déjà envoyés ; tous les fichiers partent à la suppression de l'espace.
-- « Écrivez-nous » (page de suppression) : `mailto:contact@pulsacity.com` jusqu'à `/aide#contact` (lot 4.4).
+- « Écrivez-nous » (page de suppression) : `mailto:contact@pulsacity.com` jusqu'à `/aide#contact` (lot 4.4, fait : PR #38).
 - Bouton du compte : il montre l'espace (nom et logo), même une fois le prénom donné, comme les maquettes.
 - Le titre de l'aperçu de la page de collecte est en h3 (24 px) : la maquette le montre plus petit, une taille absente de l'échelle.
 
@@ -312,7 +335,7 @@ La V1 attend ; la recette de bout en bout en production devient le lot 4.11, jus
 13. La base de recette (Supabase, offre gratuite) se met en pause après 7 jours sans activité : le 12 octobre, « Recette demo space » a échoué pour cette raison. Avant une recette, la réveiller (prompt 0 bis de `recette/lot-4-1-decisions.md`). À régler dans le lot 4.10 : une activité régulière, ou un plan payant le moment venu.
 
 14. App PULSACITY pour Make : publier une version propre (icône, textes relus) le jour où elle est proposée aux créateurs, puis mettre son lien dans le guide Make et sur la fiche Make. Publier est définitif chez Make.
-15. Vérifications en production, toutes à la toute fin (décision du fondateur, 14 octobre) : lot 4.1 (prompt 4 de `recette/lot-4-1-decisions.md`), lot 4.1 b (prompt 14 de `recette/lot-4-1-b-universel.md`), lot 4.2 (prompt 5 de `recette/lot-4-2-fondations-v2.md`), lot 4.3 (prompt 9 de `recette/lot-4-3-reglages-compte.md`), puis celles des lots suivants. Chaque lot se fusionne après sa recette sur l'aperçu.
+15. Vérifications en production, toutes à la toute fin (décision du fondateur, 14 octobre) : lot 4.1 (prompt 4 de `recette/lot-4-1-decisions.md`), lot 4.1 b (prompt 14 de `recette/lot-4-1-b-universel.md`), lot 4.2 (prompt 5 de `recette/lot-4-2-fondations-v2.md`), lot 4.3 (prompt 9 de `recette/lot-4-3-reglages-compte.md`), lot 4.4 (prompt 7 de `recette/lot-4-4-aide-contact.md`), puis celles des lots suivants. Chaque lot se fusionne après sa recette sur l'aperçu.
 
 Remarques de la recette, à reprendre quand on touchera ces écrans :
 - la photo met 3 à 5 secondes à s'afficher (adresse r2.dev, déjà prévue avant le lancement) et le récapitulatif après l'envoi ne la montre pas ;
@@ -425,7 +448,6 @@ Remarques de la recette, à reprendre quand on touchera ces écrans :
 
 - Noms de colonnes de m16 en police à chasse fixe : la charte n'en a pas, ils sont en gras dans la police du texte. À confirmer par Design.
 - Prénom du créateur : pas demandé à l'inscription ; il se donne dans Mon compte (lot 4.3), et l'accueil dit alors « Bonjour Julie ».
-- Adresse de support : « Aide et contact » pointe vers `/aide`, qui n'existe pas, et la page du guide sur mobile (« Bloquée à une étape ? Écrivez-nous ») l'attend aussi : sa ligne n'est pas affichée en attendant. Le lien « Contact » du pied de page mène aux mentions légales, où l'adresse est encore « [À COMPLÉTER] ». Le site public l'attend aussi : « Écrivez-nous » de m21 et m22.
 - Questions pour Design (lot 4.2) :
   - l'icône « alerte » : l'annexe de la charte la dessine en triangle, les planches montrent un rond avec « ! » (bandeaux, champs, badge « Problème », « alerte cerclée ») ; le code suit le texte, comme le veut l'INDEX ;
   - les badges de Demandes (Planifiée, Envoyée, Relancée, Annulée, m19) n'existent pas dans la charte v2 : gardés en jetons v2 (Ciel, bord Encre, tirets Gris) jusqu'à la maquette v2 de Demandes ;
