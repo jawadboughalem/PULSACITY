@@ -1,0 +1,64 @@
+/* PULSACITY — mouvement (charte v2, logo Galet). Ne rien ajouter sans validation Design. */
+:root {
+  --motion-couleur: 120ms;   /* survol, focus : couleur seulement */
+  --motion-ressort: 240ms;   /* étoile choisie, interrupteur, case, coche du badge Validé, appui */
+  --motion-entree: 320ms;    /* menus, listes, fenêtres, message flottant */
+  --motion-sortie: 200ms;    /* fermeture des mêmes, sans translation */
+  --motion-marque: 640ms;    /* décollage */
+  --motion-attente: 1400ms;  /* boucle d'attente du chargement de marque */
+  --motion-squelette: 1200ms;
+  --ease-couleur: ease-out;
+  --ease-ressort: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-decollage: cubic-bezier(0.6, 0, 0.2, 1);
+  --ease-souffle: cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Parties du symbole (classes présentes dans les SVG fournis, grille 64) */
+.pz-fusee, .pz-etoile { transform-box: fill-box; }
+.pz-fusee { transform-origin: 50% 100%; }
+.pz-etoile { transform-origin: 50% 0%; }
+
+/* 1. Étoile choisie — sélecteur de note de la page de collecte */
+@keyframes pz-etoile-choisie { 0% { transform: scale(1); } 45% { transform: scale(1.18); } 100% { transform: scale(1); } }
+.pz-note-etoile.is-choisie svg { animation: pz-etoile-choisie var(--motion-ressort) var(--ease-ressort); }
+
+/* 2. Attente — composant ChargementMarque, uniquement après 1 s d'attente */
+@keyframes pz-attente { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.9); } }
+.pz-chargement .pz-etoile { animation: pz-attente var(--motion-attente) var(--ease-souffle) infinite; }
+
+/* 3. Décollage — une seule fois par compte et par moment (valeurs en unités de la grille 64 du SVG) */
+@keyframes pz-decollage-fusee { 0% { transform: translateY(0); } 18% { transform: translateY(1.2px); } 60% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+@keyframes pz-decollage-etoile { 0% { transform: scale(1); } 18% { transform: scale(.9); } 45% { transform: scale(1.14); } 100% { transform: scale(1); } }
+.pz-decollage .pz-fusee { animation: pz-decollage-fusee var(--motion-marque) var(--ease-decollage) 1; }
+.pz-decollage .pz-etoile { animation: pz-decollage-etoile var(--motion-marque) var(--ease-decollage) 1; }
+
+/* 4. Témoignage validé — badge de statut */
+@keyframes pz-coche { from { stroke-dashoffset: 12; } to { stroke-dashoffset: 0; } }
+.pz-badge-valide .pz-coche { stroke-dasharray: 12; animation: pz-coche var(--motion-ressort) var(--ease-standard) both; }
+.pz-badge { transition: background-color var(--motion-ressort) var(--ease-standard), color var(--motion-ressort) var(--ease-standard); }
+
+/* 5. Ouverture des éléments flottants (menus, listes, fenêtres, message flottant) */
+@keyframes pz-entree { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.pz-flottant[data-ouvert="true"] { animation: pz-entree var(--motion-entree) var(--ease-standard) both; }
+
+/* 6. Squelettes */
+@keyframes pz-squelette { 0%, 100% { opacity: 1; } 50% { opacity: .6; } }
+.pz-squelette { animation: pz-squelette var(--motion-squelette) var(--ease-souffle) infinite; }
+
+/* 7. Interrupteur et appui */
+.pz-interrupteur-pouce { transition: transform var(--motion-ressort) var(--ease-ressort); }
+.pz-appui:active { transform: translateY(1px); }
+
+/* Survol et focus : couleur seulement */
+.pz-couleur { transition: background-color var(--motion-couleur) var(--ease-couleur), color var(--motion-couleur) var(--ease-couleur), border-color var(--motion-couleur) var(--ease-couleur); }
+
+/* Réduire les animations : toujours respecté */
+@media (prefers-reduced-motion: reduce) {
+  .pz-note-etoile svg, .pz-chargement .pz-etoile, .pz-decollage .pz-fusee, .pz-decollage .pz-etoile,
+  .pz-badge-valide .pz-coche, .pz-flottant[data-ouvert="true"], .pz-squelette {
+    animation: none !important;
+  }
+  .pz-badge, .pz-interrupteur-pouce { transition: none !important; }
+  .pz-appui:active { transform: none; }
+}

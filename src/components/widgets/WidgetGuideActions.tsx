@@ -4,6 +4,7 @@ import { useCopyLink } from "@/components/space/useCopyLink";
 import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
+import { Spinner } from "@/components/ui/Spinner";
 import { cn } from "@/lib/cn";
 import { useSendWidgetCode } from "./WidgetInstallPanel";
 
@@ -16,8 +17,14 @@ export const WidgetGuideActions = ({ widgetId, snippet }: WidgetGuideActionsProp
 
   return (
     <div className="flex flex-col gap-3">
-      <button type="button" onClick={send} disabled={isSending} className={cn(SECONDARY_BUTTON_CLASSES, "w-full")}>
-        <Icon name="mail" size={20} />
+      <button
+        type="button"
+        onClick={send}
+        disabled={isSending}
+        aria-busy={isSending || undefined}
+        className={cn(SECONDARY_BUTTON_CLASSES, "w-full")}
+      >
+        {isSending ? <Spinner size={18} /> : <Icon name="mail" size={20} />}
         {isSending ? "Envoi…" : "M'envoyer le code"}
       </button>
       <div aria-live="polite">

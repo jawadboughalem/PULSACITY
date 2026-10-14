@@ -5,11 +5,13 @@ import { cn } from "@/lib/cn";
 export type StarFill = "full" | "half" | "empty";
 
 type StarIconProps = {
-  size: 16 | 20 | 36;
+  /** Charte v2: 16 in badges and lists, 18 in tables, 20 in cards, 46 in a 56 target (collect page). */
+  size: 16 | 18 | 20 | 36 | 46;
   isFilled?: boolean;
   fill?: StarFill;
 };
 
+/** Charte v2, Étoiles de note: full in Soleil with a 1.3 Encre outline, empty a 1.5 Gris outline, half for averages. */
 export const StarIcon = ({ size, isFilled = false, fill = isFilled ? "full" : "empty" }: StarIconProps) => {
   const halfId = `star-half-${useId().replace(/[^a-zA-Z0-9-]/g, "")}`;
   return (
@@ -23,17 +25,17 @@ export const StarIcon = ({ size, isFilled = false, fill = isFilled ? "full" : "e
       ) : null}
       <path
         d={STAR_PATH}
-        strokeWidth={1.5}
+        strokeWidth={fill === "full" ? 1.3 : 1.5}
         strokeLinejoin="round"
-        className={cn(fill === "full" ? "fill-carmine stroke-carmine" : "fill-none stroke-gray-400")}
+        className={cn(fill === "full" ? "fill-sun stroke-ink" : "fill-none stroke-gray")}
       />
       {fill === "half" ? (
         <path
           d={STAR_PATH}
-          strokeWidth={1.5}
+          strokeWidth={1.3}
           strokeLinejoin="round"
           clipPath={`url(#${halfId})`}
-          className="fill-carmine stroke-carmine"
+          className="fill-sun stroke-ink"
         />
       ) : null}
     </svg>

@@ -1,24 +1,22 @@
 import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { INLINE_LINK_CLASSES } from "@/components/ui/button-styles";
 import { readNodeText, slugifyHeading } from "@/lib/content/text-headings";
-
-const LINK_CLASSES =
-  "font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
 
 /** A link of the site goes through next/link; another site's opens as a plain link. */
 const ProseLink = ({ href = "", children }: ComponentPropsWithoutRef<"a">) =>
   href.startsWith("/") || href.startsWith("#") ? (
-    <Link href={href} className={LINK_CLASSES}>
+    <Link href={href} className={INLINE_LINK_CLASSES}>
       {children}
     </Link>
   ) : (
-    <a href={href} className={LINK_CLASSES} rel="noopener">
+    <a href={href} className={INLINE_LINK_CLASSES} rel="noopener">
       {children}
     </a>
   );
 
-const TITLE_CLASSES = "mt-6 scroll-mt-5 font-serif text-quote font-medium desktop:text-h2";
+const TITLE_CLASSES = "mt-8 scroll-mt-6 font-display text-h2";
 
 /** A title of the text, anchored for the table of contents (m22, m23): « #qui-traite-vos-donnees ». */
 const ProseTitle = ({ children }: { children?: ReactNode }) => (
@@ -36,9 +34,9 @@ const AnchoredHeading = ({ id, children }: AnchoredHeadingProps) => (
   </h2>
 );
 
-/** What the company still has to provide, highlighted in Attention while a draft (m23): <ToComplete>SIREN</ToComplete>. */
+/** What the company still has to provide, highlighted in Attente while a draft (m23): <ToComplete>SIREN</ToComplete>. */
 const ToComplete = ({ children }: { children: ReactNode }) => (
-  <mark className="box-decoration-clone bg-attention-surface px-1 font-semibold text-attention">
+  <mark className="box-decoration-clone bg-waiting-surface px-1 font-bold text-waiting">
     [À COMPLÉTER : {children}]
   </mark>
 );
@@ -49,16 +47,16 @@ const ToComplete = ({ children }: { children: ReactNode }) => (
  */
 const components = {
   h2: ProseTitle,
-  h3: ({ children }) => <h3 className="mt-3 font-serif text-quote font-medium">{children}</h3>,
+  h3: ({ children }) => <h3 className="mt-3 font-display text-h3">{children}</h3>,
   p: ({ children }) => <p className="max-w-text text-body">{children}</p>,
-  ul: ({ children }) => <ul className="flex max-w-text list-disc flex-col gap-2 pl-5 text-body">{children}</ul>,
-  ol: ({ children }) => <ol className="flex max-w-text list-decimal flex-col gap-2 pl-5 text-body">{children}</ol>,
-  strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+  ul: ({ children }) => <ul className="flex max-w-text list-disc flex-col gap-2 pl-6 text-body">{children}</ul>,
+  ol: ({ children }) => <ol className="flex max-w-text list-decimal flex-col gap-2 pl-6 text-body">{children}</ol>,
+  strong: ({ children }) => <strong className="font-bold">{children}</strong>,
   a: ProseLink,
   AnchoredHeading,
   ToComplete,
   blockquote: ({ children }) => (
-    <blockquote className="max-w-quote border-l-2 border-ink-900 pl-5 font-serif text-quote">{children}</blockquote>
+    <blockquote className="max-w-quote border-l-2 border-ink pl-6 text-quote">{children}</blockquote>
   ),
 } satisfies MDXComponents;
 

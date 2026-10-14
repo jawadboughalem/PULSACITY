@@ -1,3 +1,5 @@
+import { ICON_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 
 type FeatureToggleProps = {
@@ -7,6 +9,7 @@ type FeatureToggleProps = {
   className?: string;
 };
 
+/** Charte v2, « En avant »: an icon button with the bookmark (aria-pressed), on Soleil once the testimonial is put first. */
 export const FeatureToggle = ({ isFeatured, authorName, onToggle, className }: FeatureToggleProps) => (
   <button
     type="button"
@@ -14,22 +17,12 @@ export const FeatureToggle = ({ isFeatured, authorName, onToggle, className }: F
     aria-label={`Mettre en avant l'avis de ${authorName}`}
     onClick={onToggle}
     className={cn(
-      "relative flex size-[44px] shrink-0 items-center justify-center rounded-sm hover:bg-paper-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900",
-      isFeatured ? "text-carmine" : "text-ink-900",
+      ICON_BUTTON_CLASSES,
+      "relative",
+      isFeatured && "bg-sun hover:bg-sun-hover active:bg-sun-pressed",
       className,
     )}
   >
-    <svg
-      width={20}
-      height={20}
-      viewBox="0 0 24 24"
-      fill={isFeatured ? "currentColor" : "none"}
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M6 3h12v18l-6-5-6 5z" />
-    </svg>
+    <Icon name="bookmark" size={20} />
   </button>
 );

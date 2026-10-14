@@ -25,7 +25,7 @@ type PublicWaitlistFormProps = {
 };
 
 /**
- * Maquette 21, « Être prévenu à la sortie de Stripe »: an address on Papier, kept only until the connector is out. The
+ * Maquette 21, « Être prévenu à la sortie de Stripe »: an address on a Ciel panel, kept only until the connector is out. The
  * confirmation replaces the form in the same box.
  */
 export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistFormProps) => {
@@ -38,8 +38,11 @@ export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistF
   const isInvalid = result?.ok === false && result.error === "invalid-email";
 
   return (
-    <section aria-labelledby="waitlist-title" className="flex flex-col gap-5 bg-paper-100 p-5 desktop:max-w-[704px] desktop:p-6">
-      <h2 id="waitlist-title" className="font-serif text-quote font-medium desktop:text-h2">
+    <section
+      aria-labelledby="waitlist-title"
+      className="flex flex-col gap-6 rounded-panel bg-sky p-6 desktop:max-w-[704px] desktop:p-8"
+    >
+      <h2 id="waitlist-title" className="font-display text-h3">
         {`Être prévenu à la sortie de ${connectorName}`}
       </h2>
       {result?.ok ? (
@@ -82,13 +85,13 @@ export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistF
               type="submit"
               disabled={isPending}
               aria-label={`Me prévenir à la sortie de ${connectorName}`}
-              className={cn(PRIMARY_BUTTON_CLASSES, "w-full shrink-0 desktop:mt-[28px] desktop:w-auto")}
+              className={cn(PRIMARY_BUTTON_CLASSES, "w-full shrink-0 desktop:mt-[30px] desktop:w-auto")}
             >
               Me prévenir
             </button>
           </div>
           {isInvalid ? null : (
-            <p className="text-small text-slate-600">Un seul e-⁠mail, le jour de la sortie. Votre adresse ne sert qu&apos;à cela.</p>
+            <p className="text-small text-gray">Un seul e-⁠mail, le jour de la sortie. Votre adresse ne sert qu&apos;à cela.</p>
           )}
         </form>
       )}

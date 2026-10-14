@@ -16,6 +16,7 @@ import { RichTextLine } from "@/components/marketing/RichTextLine";
 import { BackBar, Breadcrumb } from "@/components/space/BackBar";
 import { CONNECTORS_SECTION_HREF, connectorHistoryHref } from "@/components/space/space-sections";
 import { SpacePage } from "@/components/space/SpacePage";
+import { DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { UNIVERSAL_GUIDE_LINKS } from "@/content/integrations";
 import { getDb } from "@/db";
 import { buildWebhookUrl, findOrCreateConnection } from "@/lib/connectors/connections";
@@ -25,6 +26,7 @@ import {
   loadConnectionOverview,
 } from "@/lib/connectors/load-connection-overview";
 import { getConnectorBySlug } from "@/lib/connectors/registry";
+import { cn } from "@/lib/cn";
 import { formatMoment, formatSince } from "@/lib/dates/format-relative-time";
 import { getCurrentSpace } from "@/lib/spaces/get-current-space";
 import { listAssociableProducts } from "@/lib/spaces/list-space-products";
@@ -36,9 +38,6 @@ export const generateMetadata = async ({ params }: PageProps<"/app/connecteurs/[
 
 const STEP_TWO_ID = "etape-2";
 
-const LINK_CLASSES =
-  "text-small font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
-
 type StepProps = {
   number: number;
   id?: string;
@@ -48,20 +47,20 @@ type StepProps = {
 };
 
 const Step = ({ number, id, title, description, children }: StepProps) => (
-  <li id={id} className="flex scroll-mt-5 gap-4 border-b border-hairline-200 py-6 desktop:gap-5 desktop:py-7">
+  <li id={id} className="flex scroll-mt-6 gap-4 py-8 desktop:gap-6 desktop:py-10">
     <span
       aria-hidden="true"
-      className="flex size-[32px] shrink-0 items-center justify-center rounded-full bg-ink-900 font-serif text-body font-semibold text-white desktop:size-[40px] desktop:text-quote"
+      className="flex size-[32px] shrink-0 items-center justify-center rounded-full bg-ink text-body font-bold text-white desktop:size-[40px]"
     >
       {number}
     </span>
-    <div className="flex min-w-[0] flex-1 flex-col gap-5">
+    <div className="flex min-w-[0] flex-1 flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h3 className="font-serif text-quote font-medium">
+        <h3 className="font-display text-h3">
           <span className="sr-only">{`Étape ${number} : `}</span>
           {title}
         </h3>
-        <p className="max-w-text text-body text-slate-600">{description}</p>
+        <p className="max-w-text text-body text-gray">{description}</p>
       </div>
       {children}
     </div>
@@ -100,10 +99,10 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
       <BackBar href={CONNECTORS_SECTION_HREF} label="Connecteurs" />
       <SpacePage className="desktop:max-w-[1128px]">
         <Breadcrumb parentHref={CONNECTORS_SECTION_HREF} parentLabel="Connecteurs" current={connector.name} />
-        <div className="flex flex-col items-start gap-4 desktop:flex-row desktop:items-center desktop:gap-5">
+        <div className="flex flex-col items-start gap-4 desktop:flex-row desktop:items-center desktop:gap-6">
           <ConnectorLogo name={connector.name} />
           <div className="flex flex-col gap-2">
-            <h1 className="font-serif text-h1 font-medium">{wording.title}</h1>
+            <h1 className="font-display text-h1">{wording.title}</h1>
             <p className="max-w-text text-body">{wording.intro}</p>
           </div>
         </div>
@@ -119,7 +118,7 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
         />
 
         <section aria-labelledby="connection-steps" className="flex flex-col">
-          <h2 id="connection-steps" className="border-b border-ink-900 pb-4 font-serif text-quote font-medium desktop:text-h2">
+          <h2 id="connection-steps" className="font-display text-h2">
             La connexion en 3 étapes
           </h2>
           <ol className="flex flex-col">
@@ -169,12 +168,12 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
           <ConnectionOptionalStep connectorId={connector.id} />
         </section>
 
-        <section id="offres-a-associer" aria-labelledby="external-products" className="flex scroll-mt-5 flex-col gap-4">
+        <section id="offres-a-associer" aria-labelledby="external-products" className="flex scroll-mt-6 flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <h2 id="external-products" className="font-serif text-quote font-medium desktop:text-h2">
+            <h2 id="external-products" className="font-display text-h2">
               Offres à associer
             </h2>
-            <p className="max-w-text text-body text-slate-600">
+            <p className="max-w-text text-body text-gray">
               Ces produits sont arrivés avec vos ventes. Dites-nous à quelle offre ils correspondent, et quand demander
               l&apos;avis.
             </p>
@@ -191,7 +190,7 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
               }))}
             />
           ) : (
-            <p className="border-t border-ink-900 pt-4 text-body">
+            <p className="text-body">
               Aucun produit reçu pour l&apos;instant. Ils apparaîtront ici avec votre première vente.
             </p>
           )}
@@ -199,11 +198,11 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
 
         <section aria-labelledby="latest-events" className="flex flex-col gap-4">
           <div className="flex items-baseline justify-between gap-4">
-            <h2 id="latest-events" className="font-serif text-quote font-medium desktop:text-h2">
+            <h2 id="latest-events" className="font-display text-h2">
               Derniers événements reçus
             </h2>
             {overview.eventCount > OVERVIEW_EVENT_COUNT ? (
-              <Link href={connectorHistoryHref(connector.slug)} className={`${LINK_CLASSES} hidden shrink-0 desktop:inline`}>
+              <Link href={connectorHistoryHref(connector.slug)} className={cn(DISCREET_BUTTON_CLASSES, "hidden shrink-0 desktop:inline-flex")}>
                 Voir tout l&apos;historique
               </Link>
             ) : null}
@@ -216,12 +215,12 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
               now={now}
             />
           ) : (
-            <p className="border-t border-ink-900 pt-4 text-body">
+            <p className="text-body">
               {`Rien reçu pour l'instant. Chaque vente de ${wording.toolName} s'affichera ici.`}
             </p>
           )}
           {overview.eventCount > OVERVIEW_EVENT_COUNT ? (
-            <Link href={connectorHistoryHref(connector.slug)} className={`${LINK_CLASSES} self-start desktop:hidden`}>
+            <Link href={connectorHistoryHref(connector.slug)} className={cn(DISCREET_BUTTON_CLASSES, "self-start desktop:hidden")}>
               Voir tout l&apos;historique
             </Link>
           ) : null}

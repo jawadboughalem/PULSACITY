@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DISCREET_BUTTON_CLASSES, FOCUS_RING, SECONDARY_COMPACT_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { FieldError } from "@/components/ui/FieldError";
 import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
@@ -34,27 +34,27 @@ export const TestimonialCard = ({ testimonial, variant, detailHref, isApprovalAl
   return (
     <article
       className={cn(
-        "relative grid grid-cols-[44px_1fr] gap-x-4 gap-y-3 border-b border-hairline-200 py-5",
-        isDashboard && "desktop:gap-y-2 desktop:py-6",
+        "relative grid grid-cols-[44px_1fr] gap-x-4 gap-y-3 rounded-card bg-white p-4",
+        isDashboard && "desktop:gap-y-2 desktop:p-6",
       )}
     >
       <span className={cn("flex", isDashboard && "desktop:row-span-2")}>
-        <SpaceAvatar name={testimonial.authorName} logoUrl={testimonial.authorPhotoUrl} size={44} background="paper" />
+        <SpaceAvatar name={testimonial.authorName} logoUrl={testimonial.authorPhotoUrl} size={44} background="sky" />
       </span>
       <div className="flex min-w-[0] items-start justify-between gap-3">
         <div className="flex min-w-[0] flex-col">
           <h3 className="text-body">
             <Link
               href={detailHref}
-              className="font-semibold after:absolute after:inset-[0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+              className={cn("font-bold after:absolute after:inset-[0]", FOCUS_RING)}
             >
               {testimonial.authorName}
             </Link>
             {isDashboard && testimonial.authorTitle ? (
-              <span className="hidden text-slate-600 desktop:inline">{` · ${testimonial.authorTitle}`}</span>
+              <span className="hidden text-gray desktop:inline">{` · ${testimonial.authorTitle}`}</span>
             ) : null}
           </h3>
-          <p className={cn("text-small text-slate-600", isDashboard && "desktop:hidden")}>
+          <p className={cn("text-small text-gray", isDashboard && "desktop:hidden")}>
             {describeReception(testimonial, "")}
           </p>
         </div>
@@ -74,9 +74,9 @@ export const TestimonialCard = ({ testimonial, variant, detailHref, isApprovalAl
       <div className="col-span-2 flex flex-col gap-3 desktop:col-span-1 desktop:col-start-2">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <RatingStars rating={testimonial.rating} size={16} />
+            <RatingStars rating={testimonial.rating} size={isDashboard ? 16 : 18} />
             {isDashboard ? (
-              <span className="hidden text-small text-slate-600 desktop:inline">
+              <span className="hidden text-small text-gray desktop:inline">
                 {describeReception(testimonial, "reçu le ")}
               </span>
             ) : null}
@@ -123,7 +123,7 @@ const ReviewActions = ({ className, review, testimonial, detailHref, isDashboard
       {showsActions ? (
         <div
           className={cn(
-            "flex items-center gap-5",
+            "flex items-center gap-6",
             !isDashboard && "grid grid-cols-2",
             isDashboard && "max-desktop:grid max-desktop:grid-cols-2",
             isDashboard && !canApprove && "max-desktop:hidden",
@@ -135,7 +135,7 @@ const ReviewActions = ({ className, review, testimonial, detailHref, isDashboard
               onClick={review.approve}
               disabled={review.isOverPlanLimit}
               aria-describedby={review.isOverPlanLimit ? `${errorId}-limit` : undefined}
-              className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto desktop:min-w-[144px]")}
+              className={cn(SECONDARY_COMPACT_BUTTON_CLASSES, "w-full desktop:w-auto desktop:min-w-[144px]")}
             >
               Valider
             </button>
@@ -152,7 +152,7 @@ const ReviewActions = ({ className, review, testimonial, detailHref, isDashboard
           {isDashboard ? (
             <Link
               href={detailHref}
-              className="ml-auto hidden text-small font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 desktop:inline"
+              className={cn(DISCREET_BUTTON_CLASSES, "ml-auto hidden desktop:inline-flex")}
             >
               Ouvrir
             </Link>
@@ -160,7 +160,7 @@ const ReviewActions = ({ className, review, testimonial, detailHref, isDashboard
         </div>
       ) : null}
       {review.isOverPlanLimit ? (
-        <p id={`${errorId}-limit`} className="text-small text-slate-600">
+        <p id={`${errorId}-limit`} className="text-small text-gray">
           {PLAN_LIMIT_MESSAGE}
         </p>
       ) : null}

@@ -29,8 +29,8 @@ export const PhotoPicker = ({ upload }: PhotoPickerProps) => {
       <div className="flex items-center gap-4">
         <label
           className={cn(
-            "flex h-[116px] w-[104px] shrink-0 -rotate-3 cursor-pointer rounded-sm border-2 border-ink-900 bg-white p-2 pb-5",
-            "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink-900",
+            "flex h-[116px] w-[104px] shrink-0 -rotate-2 cursor-pointer rounded-field border-2 border-ink bg-white p-2 pb-6",
+            "has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink",
           )}
         >
           <input
@@ -41,7 +41,7 @@ export const PhotoPicker = ({ upload }: PhotoPickerProps) => {
             className="sr-only"
             onChange={(event) => handleSelectFile(event.target.files?.[0])}
           />
-          <span className="flex flex-1 items-center justify-center overflow-hidden bg-paper-100 text-ink-900">
+          <span className="flex flex-1 items-center justify-center overflow-hidden bg-sky text-ink">
             {isUploaded ? (
               <Image
                 src={state.image.previewUrl}
@@ -57,8 +57,8 @@ export const PhotoPicker = ({ upload }: PhotoPickerProps) => {
           </span>
         </label>
         <div className="flex flex-col gap-1">
-          <p className="text-body font-semibold">Une photo de vous ?</p>
-          <p id="photo-hint" className="text-small text-slate-600">
+          <p className="text-body font-bold">Une photo de vous ?</p>
+          <p id="photo-hint" className="text-small text-gray">
             Facultatif. Un visage rend votre témoignage plus parlant.
           </p>
           {isUploaded ? (
@@ -69,7 +69,7 @@ export const PhotoPicker = ({ upload }: PhotoPickerProps) => {
         </div>
       </div>
       {state.status === "uploading" ? (
-        <p role="status" className="text-small text-slate-600">
+        <p role="status" className="text-small text-gray">
           Envoi de la photo…
         </p>
       ) : null}

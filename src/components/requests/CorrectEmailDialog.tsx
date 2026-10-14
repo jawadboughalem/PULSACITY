@@ -3,6 +3,8 @@
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { correctRequestEmail } from "@/app/app/(espace)/demandes/request-actions";
 import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DialogCloseButton } from "@/components/ui/DialogCloseButton";
+import { DIALOG_ACTIONS_CLASSES, DIALOG_CLASSES, DIALOG_TITLE_CLASSES, isClickOnVeil } from "@/components/ui/dialog-styles";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
 
@@ -54,13 +56,17 @@ export const CorrectEmailDialog = ({
   return (
     <dialog
       ref={dialogRef}
+      data-ouvert={isOpen}
       onCancel={(event) => {
         event.preventDefault();
         close();
       }}
+      onClick={(event) => {
+        if (!isSaving && isClickOnVeil(event)) close();
+      }}
       aria-labelledby={titleId}
       aria-describedby={messageId}
-      className="m-auto w-[calc(100%-48px)] max-w-[480px] border border-hairline-200 bg-white p-5 text-ink-900 shadow-float backdrop:bg-[rgba(22,33,62,0.12)]"
+      className={DIALOG_CLASSES}
     >
       <form
         onSubmit={(event) => {
@@ -77,13 +83,16 @@ export const CorrectEmailDialog = ({
             }
           });
         }}
-        className="flex flex-col gap-5"
+        className="flex flex-col gap-6"
       >
-        <div className="flex flex-col gap-2">
-          <h2 id={titleId} className="text-body font-semibold">
-            {`Corriger l'adresse de ${customerName}`}
-          </h2>
-          <p id={messageId} className="text-small text-slate-600">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-start justify-between gap-4">
+            <h2 id={titleId} className={DIALOG_TITLE_CLASSES}>
+              {`Corriger l'adresse de ${customerName}`}
+            </h2>
+            <DialogCloseButton onClick={close} />
+          </div>
+          <p id={messageId} className="text-body">
             La demande repartira au prochain envoi, à cette adresse.
           </p>
         </div>
@@ -97,7 +106,7 @@ export const CorrectEmailDialog = ({
           required
           error={error ? ERRORS[error] : undefined}
         />
-        <div className="flex flex-col-reverse gap-3 desktop:flex-row desktop:justify-end">
+        <div className={DIALOG_ACTIONS_CLASSES}>
           <button type="button" onClick={close} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
             Annuler
           </button>

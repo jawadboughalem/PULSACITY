@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { ConnectorLogo } from "@/components/connectors/ConnectorLogo";
-import { RuledCheckList } from "@/components/marketing/CheckList";
+import { CheckList } from "@/components/marketing/CheckList";
 import { FaqList } from "@/components/marketing/FaqList";
 import { FinalCall } from "@/components/marketing/FinalCall";
 import { InstallGuide } from "@/components/marketing/integrations/InstallGuide";
@@ -12,7 +12,11 @@ import { PublicWaitlistForm } from "@/components/marketing/integrations/PublicWa
 import { JsonLd } from "@/components/marketing/JsonLd";
 import { MARKETING_PATHS, integrationPath } from "@/components/marketing/marketing-paths";
 import { MarketingSection, SectionTitle } from "@/components/marketing/MarketingSection";
-import { LARGE_BUTTON_CLASSES, TEXT_LINK_CLASSES } from "@/components/marketing/marketing-styles";
+import {
+  BREADCRUMB_LINK_CLASSES,
+  LARGE_BUTTON_CLASSES,
+  TEXT_LINK_CLASSES,
+} from "@/components/marketing/marketing-styles";
 import { Icon } from "@/components/ui/Icon";
 import {
   type AvailableIntegration,
@@ -22,6 +26,7 @@ import {
   findIntegration,
 } from "@/content/integrations";
 import { MEANWHILE } from "@/content/integrations/meanwhile";
+import { cn } from "@/lib/cn";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { buildFaqPageData } from "@/lib/seo/structured-data";
 
@@ -46,14 +51,14 @@ const Breadcrumb = ({ name }: { name: string }) => (
   <nav aria-label="Fil d'Ariane" className="text-small">
     <ol className="flex items-center gap-3">
       <li>
-        <Link href={MARKETING_PATHS.integrations} className={TEXT_LINK_CLASSES}>
+        <Link href={MARKETING_PATHS.integrations} className={BREADCRUMB_LINK_CLASSES}>
           Intégrations
         </Link>
       </li>
-      <li aria-hidden="true" className="flex text-slate-600">
+      <li aria-hidden="true" className="flex text-gray">
         <Icon name="chevronRight" size={16} />
       </li>
-      <li aria-current="page" className="text-slate-600">
+      <li aria-current="page" className="text-gray">
         {name}
       </li>
     </ol>
@@ -61,17 +66,17 @@ const Breadcrumb = ({ name }: { name: string }) => (
 );
 
 const Hero = ({ integration, children }: { integration: AvailableIntegration | UpcomingIntegration; children: ReactNode }) => (
-  <MarketingSection labelledBy="integration-title" className="desktop:pt-7">
+  <MarketingSection labelledBy="integration-title" className="desktop:pt-10">
     <Breadcrumb name={integration.name} />
-    <div className="mt-4 flex flex-col gap-5 desktop:max-w-[760px]">
+    <div className="mt-4 flex flex-col gap-6 desktop:max-w-[760px]">
       <div className="flex items-center gap-4">
         <ConnectorLogo name={integration.name} />
         <IntegrationBadge integration={integration} />
       </div>
-      <h1 id="integration-title" className="font-serif text-display font-medium tracking-title">
+      <h1 id="integration-title" className="font-display text-h1">
         {integration.heading}
       </h1>
-      <p className="max-w-[656px] font-serif text-quote">{integration.intro}</p>
+      <p className="max-w-[656px] text-lead">{integration.intro}</p>
     </div>
     {children}
   </MarketingSection>
@@ -83,21 +88,19 @@ const SplitSection = ({
   title,
   text,
   tone,
-  hasTopRule,
   children,
 }: {
   id: string;
   title: string;
   text: string;
   tone?: "white" | "paper";
-  hasTopRule?: boolean;
   children: ReactNode;
 }) => (
-  <MarketingSection labelledBy={id} tone={tone} hasTopRule={hasTopRule}>
-    <div className="grid gap-6 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-6">
-      <div className="flex flex-col gap-4 desktop:pr-7">
+  <MarketingSection labelledBy={id} tone={tone}>
+    <div className="grid gap-8 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-8">
+      <div className="flex flex-col gap-4 desktop:pr-10">
         <SectionTitle id={id}>{title}</SectionTitle>
-        <p className="text-body text-slate-600">{text}</p>
+        <p className="text-body text-gray">{text}</p>
       </div>
       <div>{children}</div>
     </div>
@@ -108,7 +111,7 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
   <>
     <JsonLd data={buildFaqPageData(integration.faq)} />
     <Hero integration={integration}>
-      <div className="mt-6 flex flex-col items-center gap-4 desktop:flex-row desktop:gap-6">
+      <div className="mt-8 flex flex-col items-center gap-4 desktop:flex-row desktop:gap-8">
         <Link href={MARKETING_PATHS.signUp} className={LARGE_BUTTON_CLASSES}>
           Créer mon espace gratuit
         </Link>
@@ -116,32 +119,32 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
           Voir le guide d&apos;installation
         </a>
       </div>
-      <ul className="mt-8 grid gap-6 desktop:grid-cols-3 desktop:gap-7">
+      <ul className="mt-12 grid gap-8 desktop:grid-cols-3 desktop:gap-10">
         {integration.benefits.map((benefit) => (
-          <li key={benefit.title} className="flex flex-col gap-3 border-t border-ink-900 pt-5 desktop:pt-6">
-            <h2 className="font-serif text-quote font-medium">{benefit.title}</h2>
-            <p className="text-body text-slate-600">{benefit.text}</p>
+          <li key={benefit.title} className="flex flex-col gap-3">
+            <h2 className="font-display text-h3">{benefit.title}</h2>
+            <p className="text-body text-gray">{benefit.text}</p>
           </li>
         ))}
       </ul>
     </Hero>
 
-    <MarketingSection id="installation" labelledBy="install-title" hasTopRule>
-      <div className="grid gap-6 desktop:grid-cols-[392px_minmax(0,1fr)] desktop:gap-7">
+    <MarketingSection id="installation" labelledBy="install-title">
+      <div className="grid gap-8 desktop:grid-cols-[392px_minmax(0,1fr)] desktop:gap-10">
         <div className="flex flex-col gap-4">
           <SectionTitle id="install-title">
             {integration.installTitle ?? `Installer la connexion ${integration.name}, pas à pas`}
           </SectionTitle>
-          <p className="text-body text-slate-600">{integration.installIntro}</p>
+          <p className="text-body text-gray">{integration.installIntro}</p>
         </div>
         <InstallGuide integration={integration} />
       </div>
     </MarketingSection>
 
     <MarketingSection labelledBy="integration-questions" tone="paper">
-      <div className="grid gap-6 desktop:grid-cols-[448px_minmax(0,1fr)]">
+      <div className="grid gap-8 desktop:grid-cols-[448px_minmax(0,1fr)]">
         <SectionTitle id="integration-questions">Vos questions</SectionTitle>
-        <FaqList name="integration-faq" entries={integration.faq} />
+        <FaqList name="integration-faq" entries={integration.faq} surface="white" />
       </div>
     </MarketingSection>
 
@@ -155,7 +158,7 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
 const UpcomingPage = ({ integration }: { integration: UpcomingIntegration }) => (
   <>
     <Hero integration={integration}>
-      <div className="mt-6 desktop:mt-7">
+      <div className="mt-8 desktop:mt-10">
         <PublicWaitlistForm connector={integration.connector} connectorName={integration.name} />
       </div>
     </Hero>
@@ -164,9 +167,8 @@ const UpcomingPage = ({ integration }: { integration: UpcomingIntegration }) => 
       id="will-do-title"
       title="Ce que fera la connexion"
       text={`Elle fonctionnera comme celle de ${AVAILABLE_NAME} : rien à faire après l'installation.`}
-      hasTopRule
     >
-      <RuledCheckList items={integration.willDo} />
+      <CheckList items={integration.willDo} className="gap-4" />
     </SplitSection>
 
     <SplitSection
@@ -178,7 +180,7 @@ const UpcomingPage = ({ integration }: { integration: UpcomingIntegration }) => 
       tone="paper"
     >
       <MeanwhileList items={[describeMeanwhile(integration).item, ...MEANWHILE]} layout="rows" />
-      <Link href={MARKETING_PATHS.signUp} className={`${LARGE_BUTTON_CLASSES} mt-6 desktop:mt-6`}>
+      <Link href={MARKETING_PATHS.signUp} className={cn(LARGE_BUTTON_CLASSES, "mt-8")}>
         Créer mon espace gratuit
       </Link>
     </SplitSection>

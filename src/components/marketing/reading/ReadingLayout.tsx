@@ -21,10 +21,10 @@ type ReadingLayoutProps = {
  * introduction on a phone.
  */
 export const ReadingLayout = ({ labelledBy, breadcrumb, header, contentsTitle, headings, children }: ReadingLayoutProps) => (
-  <MarketingSection labelledBy={labelledBy} className={breadcrumb ? "desktop:pt-7" : "desktop:pt-8"}>
-    {breadcrumb ? <div className="mb-4 desktop:mb-5">{breadcrumb}</div> : null}
-    <div className="grid desktop:grid-cols-[680px_minmax(0,1fr)] desktop:gap-x-9">
-      <article className="flex min-w-[0] flex-col gap-6 desktop:gap-7">
+  <MarketingSection labelledBy={labelledBy} className={breadcrumb ? "desktop:pt-10" : "desktop:pt-12"}>
+    {breadcrumb ? <div className="mb-4 desktop:mb-6">{breadcrumb}</div> : null}
+    <div className="grid desktop:grid-cols-[680px_minmax(0,1fr)] desktop:gap-x-14">
+      <article className="flex min-w-[0] flex-col gap-8 desktop:gap-10">
         <header className="flex flex-col gap-4">{header}</header>
         {headings.length > 1 ? (
           <div className="desktop:hidden">

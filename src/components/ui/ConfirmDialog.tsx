@@ -2,11 +2,13 @@
 
 import { useEffect, useId, useRef } from "react";
 import { cn } from "@/lib/cn";
-import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "./button-styles";
+import { DANGER_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "./button-styles";
+import { DialogCloseButton } from "./DialogCloseButton";
+import { DIALOG_ACTIONS_CLASSES, DIALOG_CLASSES, DIALOG_TITLE_CLASSES, isClickOnVeil } from "./dialog-styles";
 
-/** m5: on a desktop, « Annuler » can be a red link beside the main button; a full button on a phone. */
-const DISCREET_CANCEL_CLASSES =
-  "desktop:h-auto desktop:min-h-[48px] desktop:border-transparent desktop:bg-transparent desktop:px-3 desktop:text-carmine desktop:hover:bg-transparent desktop:hover:text-carmine-dark desktop:hover:underline";
+/** m5: on a computer, « Annuler » becomes the charter's discreet button: no border, underlined. */
+const DISCREET_ON_DESKTOP =
+  "desktop:h-auto desktop:min-h-[44px] desktop:border-transparent desktop:bg-transparent desktop:px-[10px] desktop:underline desktop:decoration-2 desktop:underline-offset-4 desktop:hover:bg-transparent desktop:hover:text-ink-800 desktop:hover:decoration-[3px] desktop:active:bg-sky";
 
 type ConfirmDialogProps = {
   isOpen: boolean;
@@ -16,17 +18,25 @@ type ConfirmDialogProps = {
   confirmLabel: string;
   /** « Annuler » unless the confirmation itself cancels something. */
   cancelLabel?: string;
+  /** Something that cannot be undone: the danger button. */
+  isDestructive?: boolean;
+  /** m5: on a computer, « Annuler » as a discreet button beside the action; a full button on a phone. */
   isCancelDiscreet?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 };
 
+/**
+ * Charte v2, Fenêtre de dialogue. A native modal dialog: the focus stays inside, Échap closes, the focus goes back to
+ * the button that opened it. It starts on « Annuler », so that Entrée never confirms by accident.
+ */
 export const ConfirmDialog = ({
   isOpen,
   title,
   message,
   confirmLabel,
   cancelLabel = "Annuler",
+  isDestructive = false,
   isCancelDiscreet = false,
   onConfirm,
   onCancel,
@@ -45,34 +55,46 @@ export const ConfirmDialog = ({
   return (
     <dialog
       ref={dialogRef}
+      data-ouvert={isOpen}
       onCancel={(event) => {
         event.preventDefault();
         onCancel();
       }}
+      onClick={(event) => {
+        if (isClickOnVeil(event)) onCancel();
+      }}
       aria-labelledby={titleId}
       aria-describedby={messageId}
-      className="m-auto w-[calc(100%-48px)] max-w-[480px] border border-hairline-200 bg-white p-5 text-ink-900 shadow-float backdrop:bg-[rgba(22,33,62,0.12)]"
+      className={DIALOG_CLASSES}
     >
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <h2 id={titleId} className="text-body font-semibold">
-            {title}
-          </h2>
-          <div id={messageId} className="flex flex-col gap-2 text-small text-slate-600">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-start justify-between gap-4">
+            <h2 id={titleId} className={DIALOG_TITLE_CLASSES}>
+              {title}
+            </h2>
+            <DialogCloseButton onClick={onCancel} />
+          </div>
+          <div id={messageId} className="flex flex-col gap-2 text-body">
             {(Array.isArray(message) ? message : [message]).map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
         </div>
-        <div className="flex flex-col-reverse gap-3 desktop:flex-row desktop:justify-end">
+        <div className={DIALOG_ACTIONS_CLASSES}>
           <button
             type="button"
+            autoFocus
             onClick={onCancel}
-            className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto", isCancelDiscreet && DISCREET_CANCEL_CLASSES)}
+            className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto", isCancelDiscreet && DISCREET_ON_DESKTOP)}
           >
             {cancelLabel}
           </button>
-          <button type="button" onClick={onConfirm} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className={cn(isDestructive ? DANGER_BUTTON_CLASSES : PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}
+          >
             {confirmLabel}
           </button>
         </div>

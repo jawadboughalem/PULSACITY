@@ -13,10 +13,14 @@ import {
   REQUESTS_SECTION_HREF,
 } from "@/components/space/space-sections";
 import { useCopyLink } from "@/components/space/useCopyLink";
-import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DISCREET_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Checkbox } from "@/components/ui/Checkbox";
+import { DialogCloseButton } from "@/components/ui/DialogCloseButton";
+import { DIALOG_TITLE_CLASSES } from "@/components/ui/dialog-styles";
 import { FieldError } from "@/components/ui/FieldError";
+import { FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES, OPTIONAL_MARK_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
+import { SelectControl } from "@/components/ui/SelectControl";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
 import { formatDayMonth } from "@/lib/dates/format-french-date";
@@ -28,11 +32,8 @@ import {
   describeInvalidEmail,
 } from "./describe-manual-request";
 
-const LINK_CLASSES =
-  "inline-flex min-h-[44px] items-center gap-2 text-body font-semibold text-carmine hover:text-carmine-dark hover:underline underline-offset-[3px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
-
-const SELECT_CLASSES =
-  "h-[48px] w-full appearance-none rounded-sm border border-gray-400 bg-white pr-7 pl-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:pl-[15px] focus:outline-none";
+/** Charte v2, Bandeau: radius-card, padding 20 24 (16 20 on a phone), the icon 24 at 14 px, the text in Encre. */
+const BANNER_CLASSES = "flex items-start gap-[14px] rounded-card px-5 py-4 text-ink desktop:px-6 desktop:py-5";
 
 /** Looks like an address before it goes to the server, which checks it for good. */
 const LOOKS_LIKE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -56,10 +57,10 @@ type RequestReviewDialogProps = {
 type Refusal = Extract<RequestReviewResult, { ok: false }> | { ok: false; error: "network" };
 
 const RefusalBox = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div role="alert" className="flex items-start gap-3 border-2 border-error bg-error-surface p-4 desktop:p-5">
-    <Icon name="alert" size={20} className="mt-[2px] shrink-0 text-error" />
-    <div className="flex min-w-[0] flex-col gap-2 text-small">
-      <p className="text-body font-semibold text-error">{title}</p>
+  <div role="alert" className={cn(BANNER_CLASSES, "border-2 border-error bg-error-surface")}>
+    <Icon name="alert" size={24} className="mt-[1px] shrink-0 text-error" />
+    <div className="flex min-w-[0] flex-col gap-2 text-small break-words">
+      <p className="text-body font-bold">{title}</p>
       {children}
     </div>
   </div>
@@ -67,14 +68,14 @@ const RefusalBox = ({ title, children }: { title: string; children: ReactNode })
 
 const ToDo = ({ children }: { children: ReactNode }) => (
   <p>
-    <strong className="font-semibold">À faire :</strong> {children}
+    <strong className="font-bold">À faire :</strong> {children}
   </p>
 );
 
 const CopyCollectionLink = ({ url }: { url: string }) => {
   const { isCopied, handleCopy } = useCopyLink(url, markLinkShared);
   return (
-    <button type="button" onClick={handleCopy} className={LINK_CLASSES}>
+    <button type="button" onClick={handleCopy} className={DISCREET_BUTTON_CLASSES}>
       <Icon name={isCopied ? "valid" : "copy"} size={20} />
       {isCopied ? "Lien copié" : "Copier mon lien de collecte"}
     </button>
@@ -189,12 +190,12 @@ export const RequestReviewDialog = ({
           <RefusalBox title={`${refusal.customerName} a déjà une demande pour ${offer?.name ?? "cette offre"}.`}>
             <p>{detail}</p>
             <ToDo>{todo}</ToDo>
-            <div className="flex flex-wrap gap-x-6">
+            <div className="flex flex-wrap gap-x-3">
               <CopyCollectionLink url={offerUrl} />
               <Link
                 href={`${REQUESTS_SECTION_HREF}${filter ? `?${REQUEST_STATUS_PARAMETER}=${filter.value}` : ""}`}
                 onClick={close}
-                className={LINK_CLASSES}
+                className={DISCREET_BUTTON_CLASSES}
               >
                 Voir sa demande
               </Link>
@@ -264,62 +265,58 @@ export const RequestReviewDialog = ({
       </button>
       <dialog
         ref={dialogRef}
+        data-ouvert={isOpen}
         onCancel={(event) => {
           event.preventDefault();
           close();
         }}
         aria-labelledby={titleId}
         className={cn(
-          "overflow-y-auto bg-white text-ink-900 backdrop:bg-[rgba(22,33,62,0.12)]",
+          "pz-flottant overflow-hidden bg-white text-ink backdrop:bg-veil",
           "max-desktop:m-[0] max-desktop:h-dvh max-desktop:max-h-none max-desktop:w-full max-desktop:max-w-none",
-          "desktop:m-auto desktop:max-h-[calc(100dvh-48px)] desktop:w-[600px] desktop:border desktop:border-hairline-200 desktop:shadow-float",
+          "desktop:m-auto desktop:max-h-[calc(100dvh-48px)] desktop:w-[600px] desktop:rounded-panel desktop:py-6 desktop:shadow-float",
         )}
       >
-        {/* Focus starts on the window itself, not on its close button: nothing looks selected when it opens. */}
-        <div autoFocus tabIndex={-1} className="outline-none">
-          <div className="sticky top-[0] z-10 flex items-center gap-3 border-b border-hairline-200 bg-white px-5 py-3 desktop:hidden">
-            <button
-              type="button"
-              onClick={close}
-              aria-label="Fermer"
-              className="flex size-[44px] items-center justify-center focus-visible:outline-2 focus-visible:outline-ink-900"
-            >
-              <Icon name="close" size={24} />
-            </button>
-            <h2 id={titleId} className="text-body font-semibold">
+        {/*
+          Focus starts on the window itself, not on its close button: nothing looks selected when it opens. On a
+          computer, the content scrolls between the window's rounded corners (radius-panel, 24 above and below), so its
+          scrollbar never cuts them; the content's own padding makes up the 32 of the charter.
+        */}
+        <div
+          autoFocus
+          tabIndex={-1}
+          className="h-full overflow-y-auto outline-none desktop:max-h-[calc(100dvh-96px)]"
+        >
+          <div className="sticky top-[0] z-10 flex h-[64px] items-center gap-3 bg-white px-5 desktop:hidden">
+            {/* The cross's icon lines up with the page's gutter. */}
+            <DialogCloseButton onClick={close} className="m-[0] -ml-[10px]" />
+            <h2 id={titleId} className="text-body font-bold">
               Demander un avis
             </h2>
           </div>
-          <div className="flex flex-col gap-5 px-5 py-5 desktop:p-7">
+          <div className="flex flex-col gap-6 px-5 pt-6 pb-7 desktop:px-8 desktop:py-2">
             <div className="hidden items-start justify-between gap-4 desktop:flex">
-              <p aria-hidden="true" className="font-serif text-h2 font-medium">
+              <p aria-hidden="true" className={DIALOG_TITLE_CLASSES}>
                 Demander un avis
               </p>
-              <button
-                type="button"
-                onClick={close}
-                aria-label="Fermer"
-                className="-mt-2 -mr-2 flex size-[44px] items-center justify-center focus-visible:outline-2 focus-visible:outline-ink-900"
-              >
-                <Icon name="close" size={24} />
-              </button>
+              <DialogCloseButton onClick={close} />
             </div>
-            <p className="text-body text-slate-600">
+            <p className="text-body text-gray">
               {`Pour un client qui a acheté en dehors d'un outil connecté : virement, séance, autre plateforme. Il reçoit le même e-mail qu'après une vente reçue d'un outil connecté, au nom de ${spaceName}.`}
             </p>
 
             {offers.length === 0 ? (
-              <div className="flex flex-col gap-3 bg-paper-100 p-5">
-                <p className="text-body font-semibold">Ajoutez d&apos;abord une offre.</p>
+              <div className="flex flex-col gap-3 rounded-card bg-sky p-6">
+                <p className="text-body font-bold">Ajoutez d&apos;abord une offre.</p>
                 <p className="text-small">
                   Une demande d&apos;avis porte toujours sur une offre : c&apos;est elle que l&apos;e-mail nomme, et c&apos;est
                   sur elle que l&apos;avis s&apos;affichera. Votre espace n&apos;en a pas encore.
                 </p>
-                <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-5">
+                <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-6">
                   <Link href={OFFERS_SECTION_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
                     Aller à Offres
                   </Link>
-                  <button type="button" onClick={close} className={cn(LINK_CLASSES, "self-center desktop:self-auto")}>
+                  <button type="button" onClick={close} className={cn(DISCREET_BUTTON_CLASSES, "self-center desktop:self-auto")}>
                     Fermer
                   </button>
                 </div>
@@ -332,18 +329,18 @@ export const RequestReviewDialog = ({
                   event.preventDefault();
                   handleSubmit(event.currentTarget);
                 }}
-                className="flex flex-col gap-5"
+                className="flex flex-col gap-6"
               >
                 {renderRefusal()}
                 <div className="flex flex-col gap-2">
-                  <div className="flex flex-col gap-5 desktop:flex-row desktop:gap-4">
+                  <div className="flex flex-col gap-6 desktop:flex-row desktop:gap-4">
                     <div className="flex-1">
                       <TextField
                         id={`${titleId}-first-name`}
                         name="firstName"
                         label={
                           <>
-                            Prénom <span className="font-normal text-slate-600">(facultatif)</span>
+                            Prénom <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
                           </>
                         }
                         placeholder="Par exemple : Élodie"
@@ -359,7 +356,7 @@ export const RequestReviewDialog = ({
                         name="lastName"
                         label={
                           <>
-                            Nom <span className="font-normal text-slate-600">(facultatif)</span>
+                            Nom <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
                           </>
                         }
                         placeholder="Par exemple : V."
@@ -368,7 +365,7 @@ export const RequestReviewDialog = ({
                       />
                     </div>
                   </div>
-                  <p className="text-small text-slate-600">{describeEmailGreeting(firstName)}</p>
+                  <p className={FIELD_HINT_CLASSES}>{describeEmailGreeting(firstName)}</p>
                 </div>
                 <TextField
                   id={`${titleId}-email`}
@@ -382,38 +379,32 @@ export const RequestReviewDialog = ({
                   onChange={() => setEmailError(null)}
                 />
                 <div className="flex flex-col gap-2">
-                  <label htmlFor={`${titleId}-offer`} className="text-small font-semibold">
+                  <label htmlFor={`${titleId}-offer`} className={FIELD_LABEL_CLASSES}>
                     Offre
                   </label>
-                  <span className="relative flex">
-                    <select
-                      id={`${titleId}-offer`}
-                      name="productId"
-                      required
-                      value={productId}
-                      aria-invalid={offerError ? true : undefined}
-                      aria-describedby={offerError ? `${titleId}-offer-error` : undefined}
-                      onChange={(event) => {
-                        setProductId(event.target.value);
-                        setOfferError(null);
-                      }}
-                      className={cn(SELECT_CLASSES, offerError && "border-2 border-error pl-[15px]")}
-                    >
-                      <option value="" disabled>
-                        Choisir une offre
+                  <SelectControl
+                    id={`${titleId}-offer`}
+                    name="productId"
+                    required
+                    value={productId}
+                    aria-invalid={offerError ? true : undefined}
+                    aria-describedby={offerError ? `${titleId}-offer-error` : undefined}
+                    onChange={(event) => {
+                      setProductId(event.target.value);
+                      setOfferError(null);
+                    }}
+                    // « Choisir une offre » is an invitation, in Gris; the offers in the list stay in Encre.
+                    className={cn(productId === "" && "text-gray [&_option]:text-ink")}
+                  >
+                    <option value="" disabled>
+                      Choisir une offre
+                    </option>
+                    {offers.map((candidate) => (
+                      <option key={candidate.id} value={candidate.id}>
+                        {candidate.name}
                       </option>
-                      {offers.map((candidate) => (
-                        <option key={candidate.id} value={candidate.id}>
-                          {candidate.name}
-                        </option>
-                      ))}
-                    </select>
-                    <Icon
-                      name="chevronDown"
-                      size={20}
-                      className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
-                    />
-                  </span>
+                    ))}
+                  </SelectControl>
                   {offerError ? <FieldError id={`${titleId}-offer-error`} message={offerError} /> : null}
                 </div>
                 <div className="flex flex-col gap-2">
@@ -433,9 +424,9 @@ export const RequestReviewDialog = ({
                       }}
                     />
                   </div>
-                  <p className="text-small text-slate-600">{describeEmailReason(offer?.name ?? null, spaceName, purchaseDay)}</p>
+                  <p className={FIELD_HINT_CLASSES}>{describeEmailReason(offer?.name ?? null, spaceName, purchaseDay)}</p>
                 </div>
-                <div className="flex flex-col gap-2 border-t border-hairline-200 pt-5">
+                <div className="flex flex-col gap-2 pt-2">
                   <label className="flex cursor-pointer items-start gap-3 text-body">
                     <Checkbox
                       name="isAttested"
@@ -448,24 +439,21 @@ export const RequestReviewDialog = ({
                   {attestationError ? <FieldError id={`${titleId}-attestation-error`} message={attestationError} /> : null}
                 </div>
                 {monthlyLimit ? (
-                  <div role="status" className="flex items-start gap-3 bg-paper-100 p-4 desktop:p-5">
-                    <Icon name="info" size={20} className="mt-[2px] shrink-0" />
-                    <div className="flex flex-col gap-2 text-small">
-                      <p className="text-body font-semibold">{`Les ${monthlyLimit.count} demandes ${monthlyLimit.month} sont parties.`}</p>
+                  <div role="status" className={cn(BANNER_CLASSES, "bg-sky")}>
+                    <Icon name="info" size={24} className="mt-[1px] shrink-0 text-ink" />
+                    <div className="flex min-w-[0] flex-col gap-1 text-small">
+                      <p className="text-body font-bold">{`Les ${monthlyLimit.count} demandes ${monthlyLimit.month} sont parties.`}</p>
                       <p>
                         {`Celle-ci est gardée et partira le 1er ${monthlyLimit.nextMonth} : rien n'est perdu. Avec le plan Essentiel, elle part tout de suite.`}
                       </p>
-                      <Link
-                        href={BILLING_HREF}
-                        className="self-start font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark"
-                      >
+                      <Link href={BILLING_HREF} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
                         Voir le plan Essentiel
                       </Link>
                     </div>
                   </div>
                 ) : null}
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-5">
+                  <div className="flex items-center gap-6">
                     <button
                       type="submit"
                       disabled={isSending || isAtDailyLimit}
@@ -473,11 +461,11 @@ export const RequestReviewDialog = ({
                     >
                       Envoyer la demande
                     </button>
-                    <button type="button" onClick={close} className={cn(LINK_CLASSES, "hidden desktop:inline-flex")}>
+                    <button type="button" onClick={close} className={cn(DISCREET_BUTTON_CLASSES, "hidden desktop:inline-flex")}>
                       Annuler
                     </button>
                   </div>
-                  <p className="text-small text-slate-600">
+                  <p className={FIELD_HINT_CLASSES}>
                     {monthlyLimit
                       ? `Elle partira le 1er ${monthlyLimit.nextMonth}, au premier envoi du mois. Sans réponse, une seule relance part quatre jours plus tard.`
                       : "Elle part au prochain envoi, dans les minutes qui suivent. Sans réponse, une seule relance part quatre jours plus tard."}

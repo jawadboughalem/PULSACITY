@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { FILTER_CHIP_CHOSEN_CLASSES, FILTER_CHIP_CLASSES } from "@/components/ui/chip-styles";
 import { Icon } from "@/components/ui/Icon";
+import { ToneBadge } from "@/components/ui/ToneBadge";
 import { cn } from "@/lib/cn";
 import { quoteInFrench } from "@/lib/french/typography";
 import { type PreviewItem, groupPreviewRows } from "@/lib/testimonials/csv/group-preview-rows";
@@ -11,6 +13,9 @@ import { formatExcerpt } from "@/lib/testimonials/format-excerpt";
 import { RatingStars } from "../RatingStars";
 
 type Filter = "all" | "ready" | "toFix";
+
+/** Charte v2, Tableau: the header row on Ciel, 48 high, 15/22 700. */
+const HEADER_CELL_CLASSES = "h-[48px] bg-sky pr-3 font-bold";
 
 const SHOWN_FIRST_ON_DESKTOP = 4;
 const SHOWN_FIRST_ON_MOBILE = 3;
@@ -25,14 +30,9 @@ const describeRun = (item: Extract<PreviewItem, { kind: "ready-run" }>) =>
 
 const RowBadge = ({ isReady }: { isReady: boolean }) =>
   isReady ? (
-    <span className="inline-flex h-[28px] shrink-0 items-center gap-2 rounded-full bg-success-surface pr-3 pl-2 text-small font-medium whitespace-nowrap text-success">
-      <Icon name="valid" size={16} />
-      Prête
-    </span>
+    <ToneBadge tone="success" icon="valid" label="Prête" />
   ) : (
-    <span className="inline-flex h-[28px] shrink-0 items-center gap-2 text-small font-medium whitespace-nowrap text-error">
-      <Icon name="alert" size={16} />À revoir
-    </span>
+    <ToneBadge tone="error" icon="alert" label="À revoir" />
   );
 
 const FilterChip = ({ label, isSelected, onSelect }: { label: string; isSelected: boolean; onSelect: () => void }) => (
@@ -40,11 +40,9 @@ const FilterChip = ({ label, isSelected, onSelect }: { label: string; isSelected
     type="button"
     aria-pressed={isSelected}
     onClick={onSelect}
-    className={cn(
-      "h-[40px] rounded-full border px-4 text-small whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900",
-      isSelected ? "border-ink-900 bg-paper-100 font-semibold" : "border-hairline-200 bg-white hover:border-gray-400",
-    )}
+    className={cn(FILTER_CHIP_CLASSES, isSelected && FILTER_CHIP_CHOSEN_CLASSES)}
   >
+    {isSelected ? <Icon name="check" size={16} /> : null}
     {label}
   </button>
 );
@@ -69,8 +67,8 @@ export const CsvPreviewList = ({ rows }: CsvPreviewListProps) => {
 
   return (
     <section aria-labelledby="csv-preview" className="flex flex-col gap-4">
-      <div className="flex flex-col gap-3 border-b border-ink-900 pb-3 desktop:flex-row desktop:items-center desktop:justify-between desktop:border-b-0 desktop:pb-0">
-        <h2 id="csv-preview" className="font-serif text-quote font-medium">
+      <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:justify-between">
+        <h2 id="csv-preview" className="font-display text-h3">
           <span className="desktop:hidden">Aperçu</span>
           <span className="max-desktop:hidden">Aperçu ligne par ligne</span>
         </h2>
@@ -81,55 +79,60 @@ export const CsvPreviewList = ({ rows }: CsvPreviewListProps) => {
         </div>
       </div>
 
-      <table className="hidden w-full table-fixed border-collapse text-left text-small desktop:table">
-        <thead>
-          <tr className="border-b border-ink-900">
-            <th scope="col" className="w-[56px] pr-3 pb-3 font-semibold">Ligne</th>
-            <th scope="col" className="w-[112px] pr-3 pb-3 font-semibold">Nom</th>
-            <th scope="col" className="w-[112px] pr-3 pb-3 font-semibold">Titre</th>
-            <th scope="col" className="w-[104px] pr-3 pb-3 font-semibold">Note</th>
-            <th scope="col" className="pr-3 pb-3 font-semibold">Texte</th>
-            <th scope="col" className="w-[112px] pr-3 pb-3 font-semibold">Formation</th>
-            <th scope="col" className="w-[104px] pr-3 pb-3 font-semibold">Date</th>
-            <th scope="col" className="w-[112px] pb-3 font-semibold">État</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) =>
-            item.kind === "ready-run" ? (
-              <tr key={`run-${item.fromLine}`} className="border-b border-hairline-200">
-                <td colSpan={8} className="py-3 text-slate-600">
-                  {describeRun(item)}
-                </td>
-              </tr>
-            ) : (
-              <tr
-                key={item.row.line}
-                className={cn("border-b border-hairline-200 align-top", item.row.status !== "ready" && "bg-error-surface")}
-              >
-                <td className={cn("py-4 pr-3 pl-2", item.row.status === "ready" ? "text-slate-600" : "text-error")}>
-                  {item.row.line}
-                </td>
-                <td className="py-4 pr-3 font-semibold break-words">{item.row.authorName || "—"}</td>
-                <td className="py-4 pr-3 break-words">{item.row.authorTitle ?? ""}</td>
-                <td className="py-4 pr-3">
-                  {item.row.rating === null ? (
-                    <span className="text-error">{item.row.cells.note || "—"}</span>
-                  ) : (
-                    <RatingStars rating={item.row.rating} size={16} />
+      <div className="hidden rounded-card bg-white p-2 desktop:block">
+        <table className="w-full table-fixed border-separate border-spacing-[0] text-left text-small">
+          <thead>
+            <tr>
+              <th scope="col" className={cn(HEADER_CELL_CLASSES, "w-[72px] rounded-l-field pl-4")}>Ligne</th>
+              <th scope="col" className={cn(HEADER_CELL_CLASSES, "w-[112px]")}>Nom</th>
+              <th scope="col" className={cn(HEADER_CELL_CLASSES, "w-[112px]")}>Titre</th>
+              <th scope="col" className={cn(HEADER_CELL_CLASSES, "w-[108px]")}>Note</th>
+              <th scope="col" className={HEADER_CELL_CLASSES}>Texte</th>
+              <th scope="col" className={cn(HEADER_CELL_CLASSES, "w-[112px]")}>Formation</th>
+              <th scope="col" className={cn(HEADER_CELL_CLASSES, "w-[104px]")}>Date</th>
+              <th scope="col" className={cn(HEADER_CELL_CLASSES, "w-[128px] rounded-r-field")}>État</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item) =>
+              item.kind === "ready-run" ? (
+                <tr key={`run-${item.fromLine}`}>
+                  <td colSpan={8} className="py-3 pl-4 text-gray">
+                    {describeRun(item)}
+                  </td>
+                </tr>
+              ) : (
+                <tr
+                  key={item.row.line}
+                  className={cn(
+                    "align-top [&>td:first-child]:rounded-l-field [&>td:last-child]:rounded-r-field",
+                    item.row.status !== "ready" && "[&>td]:bg-error-surface",
                   )}
-                </td>
-                <td className="py-4 pr-3">{formatExcerpt(item.row.body, 90)}</td>
-                <td className="py-4 pr-3 break-words">{item.row.productName ?? "Sans offre"}</td>
-                <td className="py-4 pr-3">{dateOf(item.row)}</td>
-                <td className="py-4">
-                  <RowBadge isReady={item.row.status === "ready"} />
-                </td>
-              </tr>
-            ),
-          )}
-        </tbody>
-      </table>
+                >
+                  <td className={cn("py-4 pr-3 pl-4", item.row.status === "ready" ? "text-gray" : "text-error")}>
+                    {item.row.line}
+                  </td>
+                  <td className="py-4 pr-3 font-bold break-words">{item.row.authorName || "—"}</td>
+                  <td className="py-4 pr-3 break-words">{item.row.authorTitle ?? ""}</td>
+                  <td className="py-4 pr-3">
+                    {item.row.rating === null ? (
+                      <span className="text-error">{item.row.cells.note || "—"}</span>
+                    ) : (
+                      <RatingStars rating={item.row.rating} size={18} />
+                    )}
+                  </td>
+                  <td className="py-4 pr-3">{formatExcerpt(item.row.body, 90)}</td>
+                  <td className="py-4 pr-3 break-words">{item.row.productName ?? "Sans offre"}</td>
+                  <td className="py-4 pr-3">{dateOf(item.row)}</td>
+                  <td className="py-4 pr-4">
+                    <RowBadge isReady={item.row.status === "ready"} />
+                  </td>
+                </tr>
+              ),
+            )}
+          </tbody>
+        </table>
+      </div>
       {isFolded ? (
         <button
           type="button"
@@ -140,28 +143,28 @@ export const CsvPreviewList = ({ rows }: CsvPreviewListProps) => {
         </button>
       ) : null}
 
-      <ul className="flex flex-col desktop:hidden">
+      <ul className="flex flex-col gap-3 desktop:hidden">
         {mobileRows.map((row) => (
-          <li key={row.line} className="flex flex-col gap-2 border-b border-hairline-200 py-4">
+          <li key={row.line} className="flex flex-col gap-2 rounded-card bg-white p-4">
             <span className="flex items-center justify-between gap-3">
-              <span className="text-small text-slate-600">{`Ligne ${row.line}`}</span>
+              <span className="text-small text-gray">{`Ligne ${row.line}`}</span>
               <RowBadge isReady />
             </span>
             <span className="text-body">
-              <span className="font-semibold">{row.authorName}</span>
-              {row.authorTitle ? <span className="text-slate-600">{` · ${row.authorTitle}`}</span> : null}
+              <span className="font-bold">{row.authorName}</span>
+              {row.authorTitle ? <span className="text-gray">{` · ${row.authorTitle}`}</span> : null}
             </span>
             <span className="flex items-start gap-3">
               {row.rating === null ? null : <RatingStars rating={row.rating} size={16} />}
-              <span className="text-small text-slate-600">{`${row.productName ?? "Sans offre"} · ${dateOf(row)}`}</span>
+              <span className="text-small text-gray">{`${row.productName ?? "Sans offre"} · ${dateOf(row)}`}</span>
             </span>
-            <span className="font-serif text-body">{quoteInFrench(formatExcerpt(row.body, 90))}</span>
+            <span className="text-body">{quoteInFrench(formatExcerpt(row.body, 90))}</span>
           </li>
         ))}
       </ul>
       {hiddenOnMobile > 0 ? (
         <div className="flex flex-col gap-1 desktop:hidden">
-          <p className="text-small text-slate-600">
+          <p className="text-small text-gray">
             {hiddenOnMobile === 1 ? "Et 1 autre ligne prête." : `Et ${hiddenOnMobile} autres lignes prêtes.`}
           </p>
           <button type="button" onClick={() => setIsExpanded(true)} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>

@@ -9,16 +9,16 @@ import { ReplayEventButton } from "./ReplayEventButton";
 
 const TONE_CLASSES = {
   success: "bg-success-surface text-success",
-  attention: "bg-attention-surface text-attention",
-  neutral: "bg-paper-100 text-slate-600",
+  waiting: "bg-waiting-surface text-waiting",
+  neutral: "bg-gray-light text-gray",
   error: "bg-error-surface text-error",
 } as const satisfies Record<EventTone, string>;
 
 /** m5: what went wrong in red, a sale put aside to replay in amber, the rest quiet. */
 const DETAIL_CLASSES = {
   error: "text-error",
-  "set-aside": "font-medium text-attention",
-  quiet: "text-slate-600",
+  "set-aside": "font-semibold text-waiting",
+  quiet: "text-gray",
 } as const;
 
 type RowProps = {
@@ -33,21 +33,21 @@ type RowProps = {
 };
 
 const EventRow = ({ icon, tone, detailTone, label, subject, detail, time, action }: RowProps) => (
-  <li className="flex items-start gap-4 border-b border-hairline-200 py-4 desktop:items-center">
+  <li className="flex items-start gap-4 rounded-card bg-white p-4 desktop:items-center desktop:px-6">
     <span className={cn("flex size-[40px] shrink-0 items-center justify-center rounded-full", TONE_CLASSES[tone])}>
       <Icon name={icon} size={20} />
     </span>
-    <div className="flex min-w-[0] flex-1 flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-5">
+    <div className="flex min-w-[0] flex-1 flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-6">
       <div className="flex min-w-[0] flex-1 flex-col gap-1">
         <p className="text-body">
-          <strong className="font-semibold">{label}</strong>
+          <strong className="font-bold">{label}</strong>
           {subject ? ` · ${subject}` : ""}
         </p>
         <p className={cn("text-small", DETAIL_CLASSES[detailTone])}>{detail}</p>
-        <p className="text-small text-slate-600 desktop:hidden">{time}</p>
+        <p className="text-small text-gray desktop:hidden">{time}</p>
       </div>
       {action}
-      <p className="hidden shrink-0 text-small text-slate-600 desktop:block">{time}</p>
+      <p className="hidden shrink-0 text-small text-gray desktop:block">{time}</p>
     </div>
   </li>
 );
@@ -60,9 +60,12 @@ type ConnectionEventListProps = {
   now: Date;
 };
 
-/** Maquette 5, « Derniers événements reçus »: readable lines, « Rejouer » where an event was put aside. */
+/**
+ * Maquette 5, « Derniers événements reçus »: readable lines, « Rejouer » where an event was put aside. Charte v2: no
+ * rule between the lines, each a white card on the space's Nuage.
+ */
 export const ConnectionEventList = ({ events, connectorName, firstEventAt, now }: ConnectionEventListProps) => (
-  <ul className="flex flex-col border-t border-ink-900">
+  <ul className="flex flex-col gap-3">
     {events.map((event) => {
       const described = describeConnectionEvent(event, connectorName);
       return (
@@ -71,7 +74,7 @@ export const ConnectionEventList = ({ events, connectorName, firstEventAt, now }
           icon={described.icon}
           tone={described.tone}
           detailTone={
-            described.tone === "error" ? "error" : described.tone === "attention" && described.canReplay ? "set-aside" : "quiet"
+            described.tone === "error" ? "error" : described.tone === "waiting" && described.canReplay ? "set-aside" : "quiet"
           }
           label={described.label}
           subject={described.subject}

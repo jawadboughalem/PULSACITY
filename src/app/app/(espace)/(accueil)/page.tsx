@@ -13,7 +13,7 @@ import { SpaceMobileHeader } from "@/components/space/SpaceMobileHeader";
 import { SpacePage } from "@/components/space/SpacePage";
 import { FirstApprovalCelebration } from "@/components/testimonials/FirstApprovalCelebration";
 import { TestimonialCard } from "@/components/testimonials/TestimonialCard";
-import { PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DISCREET_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { canAddTestimonial, getPlan } from "@/config/plans";
 import { getDb } from "@/db";
 import { buildCollectionUrl, getAppUrl } from "@/lib/app-url";
@@ -31,9 +31,6 @@ import { findDefaultWidget } from "@/lib/widgets/find-default-widget";
 export const metadata: Metadata = {
   title: "Accueil · PULSACITY",
 };
-
-const LINK_CLASSES =
-  "text-small font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
 
 const ASK_FOR_REVIEW = "Demander un avis";
 
@@ -87,11 +84,11 @@ const SpaceHomePage = async () => {
       {mobileHeader}
       <SpacePage>
       <FirstApprovalCelebration>
-        <div className="flex flex-col gap-5 desktop:gap-7">
-          <header className="flex items-start justify-between gap-5">
+        <div className="flex flex-col gap-6 desktop:gap-10">
+          <header className="flex items-start justify-between gap-6">
             <div className="flex flex-col gap-2">
-              <h1 className="font-serif text-h1 font-medium">{firstName ? `Bonjour ${firstName}` : "Bonjour"}</h1>
-              <p className="text-body text-slate-600">Voici où en sont vos témoignages ce mois-ci.</p>
+              <h1 className="font-display text-h1">{firstName ? `Bonjour ${firstName}` : "Bonjour"}</h1>
+              <p className="text-body text-gray">Voici où en sont vos témoignages ce mois-ci.</p>
             </div>
             <Link href={ASK_FOR_REVIEW_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "hidden shrink-0 desktop:inline-flex")}>
               {ASK_FOR_REVIEW}
@@ -106,9 +103,14 @@ const SpaceHomePage = async () => {
             pendingHref={`${TESTIMONIALS_SECTION_HREF}?statut=${STATUS_SEARCH_VALUES.pending}`}
           />
           {showsPlanLimit ? null : askForReviewLink}
-          <div className={cn("grid gap-7", hasAside && "desktop:grid-cols-[1fr_360px] desktop:gap-x-7 desktop:gap-y-6")}>
+          <div
+            className={cn(
+              "grid gap-10",
+              hasAside && "desktop:grid-cols-[1fr_360px] desktop:grid-rows-[auto_1fr] desktop:gap-x-10 desktop:gap-y-8",
+            )}
+          >
             {showsSteps ? (
-              <div className="desktop:col-start-2 desktop:row-start-1">
+              <div className="desktop:col-start-2 desktop:row-start-1 desktop:self-start">
                 <SetupStepsPanel
                   steps={steps}
                   collectionUrl={collectionUrl}
@@ -121,16 +123,16 @@ const SpaceHomePage = async () => {
               aria-labelledby="latest-testimonials"
               className={cn("flex min-w-[0] flex-col", hasAside && "desktop:col-start-1 desktop:row-span-2 desktop:row-start-1")}
             >
-              <div className="flex items-baseline justify-between gap-4 border-b border-hairline-200 pb-3 desktop:border-b-0 desktop:pb-[0]">
-                <h2 id="latest-testimonials" className="font-serif text-quote font-medium desktop:text-h2">
+              <div className="flex items-center justify-between gap-4">
+                <h2 id="latest-testimonials" className="font-display text-h3 desktop:text-h2">
                   <span className="desktop:hidden">Derniers reçus</span>
                   <span className="hidden desktop:inline">Derniers témoignages reçus</span>
                 </h2>
-                <Link href={TESTIMONIALS_SECTION_HREF} className={LINK_CLASSES}>
+                <Link href={TESTIMONIALS_SECTION_HREF} className={cn(DISCREET_BUTTON_CLASSES, "shrink-0")}>
                   Tout voir
                 </Link>
               </div>
-              <div className="flex flex-col desktop:pt-3">
+              <div className="flex flex-col gap-3 pt-3">
                 {latest.map((testimonial) => (
                   <TestimonialCard
                     key={testimonial.id}
@@ -143,7 +145,7 @@ const SpaceHomePage = async () => {
               </div>
             </section>
             {showsRequests ? (
-              <div className={cn(showsSteps ? "desktop:row-start-2" : "desktop:row-start-1", "desktop:col-start-2")}>
+              <div className={cn(showsSteps ? "desktop:row-start-2" : "desktop:row-start-1", "desktop:col-start-2 desktop:self-start")}>
                 <RequestsSummary figures={figures} requestsHref={REQUESTS_SECTION_HREF} />
               </div>
             ) : null}

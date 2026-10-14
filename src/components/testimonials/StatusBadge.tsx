@@ -9,9 +9,9 @@ export const STATUS_LABELS = {
 } as const satisfies Record<TestimonialStatus, string>;
 
 const STATUS_STYLES = {
-  pending: { icon: "clock", classes: "bg-attention-surface text-attention" },
+  pending: { icon: "clock", classes: "bg-waiting-surface text-waiting" },
   approved: { icon: "valid", classes: "bg-success-surface text-success" },
-  hidden: { icon: "hidden", classes: "bg-paper-100 text-slate-600" },
+  hidden: { icon: "hidden", classes: "bg-gray-light text-gray" },
 } as const satisfies Record<TestimonialStatus, { icon: keyof typeof ICON_PATHS; classes: string }>;
 
 type StatusBadgeProps = {
@@ -20,12 +20,13 @@ type StatusBadgeProps = {
   isJustApproved?: boolean;
 };
 
+/** Charte v2, Badge de statut: the same pill as ToneBadge, its check drawn in 240 ms once « Valider » is clicked. */
 export const StatusBadge = ({ status, isJustApproved = false }: StatusBadgeProps) => {
   const { icon, classes } = STATUS_STYLES[status];
   return (
     <span
       className={cn(
-        "pz-badge inline-flex h-[28px] shrink-0 items-center gap-2 rounded-full pr-3 pl-2 text-small font-medium whitespace-nowrap",
+        "pz-badge inline-flex h-[32px] shrink-0 items-center gap-[6px] rounded-full px-3 text-badge font-bold whitespace-nowrap",
         classes,
         isJustApproved && status === "approved" && "pz-badge-valide",
       )}
@@ -36,7 +37,7 @@ export const StatusBadge = ({ status, isJustApproved = false }: StatusBadgeProps
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth={1.5}
+        strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
         aria-hidden="true"

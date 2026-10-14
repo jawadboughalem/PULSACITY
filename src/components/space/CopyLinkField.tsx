@@ -1,7 +1,9 @@
 "use client";
 
 import { PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { FIELD_LABEL_CLASSES, READ_ONLY_FIELD_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
+import { cn } from "@/lib/cn";
 import { markLinkShared } from "./mark-link-shared";
 import { useCopyLink } from "./useCopyLink";
 
@@ -13,8 +15,8 @@ export const CopyLinkField = ({ url }: CopyLinkFieldProps) => {
   const { isCopied, handleCopy } = useCopyLink(url, markLinkShared);
 
   return (
-    <div className="flex max-w-text flex-col gap-3">
-      <label htmlFor="collection-link" className="text-small font-semibold">
+    <div className="flex max-w-text flex-col gap-2">
+      <label htmlFor="collection-link" className={FIELD_LABEL_CLASSES}>
         Votre lien de collecte
       </label>
       <div className="flex gap-3">
@@ -24,7 +26,7 @@ export const CopyLinkField = ({ url }: CopyLinkFieldProps) => {
           readOnly
           value={url}
           onFocus={(event) => event.target.select()}
-          className="h-[48px] min-w-[0] flex-1 rounded-sm border border-gray-400 bg-paper-100 px-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none"
+          className={cn(READ_ONLY_FIELD_CLASSES, "flex-1")}
         />
         <button type="button" onClick={handleCopy} className={PRIMARY_BUTTON_CLASSES}>
           <Icon name={isCopied ? "valid" : "copy"} size={20} />

@@ -1,4 +1,5 @@
-import { BrandSymbol } from "@/components/brand/BrandSymbol";
+import { BrandMention } from "@/components/brand/BrandMention";
+import { FOCUS_RING } from "@/components/ui/button-styles";
 import { cn } from "@/lib/cn";
 
 type PoweredByPulsacityProps = {
@@ -7,17 +8,16 @@ type PoweredByPulsacityProps = {
   className?: string;
 };
 
+/** Identity v2: « Propulsé par » 12/16 in the secondary colour, then the drawn mention, 14 high, 6 px further. */
 export const PoweredByPulsacity = ({ homeUrl, referralCode, className }: PoweredByPulsacityProps) => (
   <p className={cn("flex justify-center", className)}>
     <a
       href={`${homeUrl}/?ref=${encodeURIComponent(referralCode)}`}
-      className="inline-flex items-center gap-1 text-legal text-slate-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+      className={cn("inline-flex min-h-[44px] items-center gap-[6px] text-mention text-gray hover:underline", FOCUS_RING)}
     >
       Propulsé par
-      <span className="inline-flex items-center gap-1 font-serif text-small font-semibold text-ink-900">
-        <BrandSymbol variant="small" size={14} isMonochrome />
-        Pulsacity
-      </span>
+      <BrandMention />
+      <span className="sr-only">Pulsacity</span>
     </a>
   </p>
 );

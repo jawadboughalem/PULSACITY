@@ -25,7 +25,7 @@ describe("describeConnectionEvent", () => {
     });
     expect(describeConnectionEvent({ ...EVENT, outcome: "awaiting-product", request: null }, "Systeme.io")).toMatchObject({
       detail: "En attente : associez ce produit à une offre",
-      tone: "attention",
+      tone: "waiting",
     });
     expect(
       describeConnectionEvent({ ...EVENT, request: { ...EVENT.request!, status: "cancelled" } }, "Systeme.io"),
@@ -35,7 +35,7 @@ describe("describeConnectionEvent", () => {
   it("offers « Rejouer » on an event put aside, and only there", () => {
     expect(describeConnectionEvent({ ...EVENT, outcome: null, error: "invalid-signature" }, "Systeme.io")).toMatchObject({
       detail: "Clé secrète différente : gardée de côté. Corrigez la clé dans Systeme.io, puis rejouez la vente.",
-      tone: "attention",
+      tone: "waiting",
       canReplay: true,
     });
     expect(describeConnectionEvent({ ...EVENT, outcome: "duplicate" }, "Systeme.io").canReplay).toBe(false);

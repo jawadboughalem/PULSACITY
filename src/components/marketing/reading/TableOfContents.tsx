@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FOCUS_RING } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { pickCurrentHeading } from "@/lib/content/pick-current-heading";
 import type { TextHeading } from "@/lib/content/text-headings";
@@ -49,19 +50,18 @@ type TableOfContentsProps = {
   headings: TextHeading[];
 };
 
-const LINK_CLASSES =
-  "block py-1 text-small hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+const LINK_CLASSES = cn("pz-couleur block py-1 text-small decoration-2 underline-offset-4 hover:underline", FOCUS_RING);
 
 /**
- * m22 and m23 on a computer: the titles of the text beside it, the one being read marked by a rule of Encre. Stays in
- * view while the text scrolls.
+ * m22 and m23 on a computer: the titles of the text beside it, the one being read marked on its left by 3 px of Encre,
+ * like the current page of the navigation (charte v2). Stays in view below the sticky header (88) while the text scrolls.
  */
 export const TableOfContents = ({ title, headings }: TableOfContentsProps) => {
   const currentId = useCurrentHeading(headings);
   return (
-    <nav aria-label={title} className="sticky top-5 flex flex-col gap-4">
-      <p className="text-small font-semibold">{title}</p>
-      <ul className="flex flex-col gap-1 border-l border-hairline-200">
+    <nav aria-label={title} className="sticky top-[112px] flex flex-col gap-4">
+      <p className="text-small font-bold">{title}</p>
+      <ul className="flex flex-col gap-1">
         {headings.map((heading) => {
           const isCurrent = heading.id === currentId;
           return (
@@ -71,8 +71,8 @@ export const TableOfContents = ({ title, headings }: TableOfContentsProps) => {
                 aria-current={isCurrent ? "location" : undefined}
                 className={cn(
                   LINK_CLASSES,
-                  "-ml-px border-l-2 pl-4",
-                  isCurrent ? "border-ink-900 font-semibold" : "border-transparent",
+                  "pl-4",
+                  isCurrent && "font-bold shadow-[inset_3px_0_0_var(--color-ink)]",
                 )}
               >
                 {heading.title}
@@ -85,10 +85,15 @@ export const TableOfContents = ({ title, headings }: TableOfContentsProps) => {
   );
 };
 
-/** m22 and m23 on a phone: the same titles, folded under the introduction. */
+/** m22 and m23 on a phone: the same titles, folded under the introduction, in a card on Nuage (charte v2: no rules). */
 export const FoldedTableOfContents = ({ title, headings }: TableOfContentsProps) => (
-  <details className="group border-y border-hairline-200 border-t-ink-900">
-    <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 text-body font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 [&::-webkit-details-marker]:hidden">
+  <details className="group rounded-card bg-cloud px-4">
+    <summary
+      className={cn(
+        "flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 text-body font-bold [&::-webkit-details-marker]:hidden",
+        FOCUS_RING,
+      )}
+    >
       {title}
       <Icon name="chevronDown" size={20} className="shrink-0 group-open:rotate-180" />
     </summary>

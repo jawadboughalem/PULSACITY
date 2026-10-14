@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { CollectHeader } from "@/components/collect/CollectHeader";
 import { PoweredByPulsacity } from "@/components/collect/PoweredByPulsacity";
+import { FOCUS_RING } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { getDb } from "@/db";
 import { getAppUrl } from "@/lib/app-url";
+import { cn } from "@/lib/cn";
 import { loadUnsubscribedCustomer } from "@/lib/requests/unsubscribe-customer";
 import {
   UNSUBSCRIBE_STATE_PARAMETER,
@@ -18,17 +20,17 @@ export const metadata: Metadata = {
 
 const readParameter = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) ?? null;
 
-const PAGE_CLASSES = "min-h-dvh bg-paper-100 px-page-gutter py-5 text-ink-900";
-const MAIN_CLASSES = "mx-auto flex min-h-[calc(100dvh-48px)] w-full max-w-text flex-col gap-5";
+const PAGE_CLASSES = "min-h-dvh bg-white px-page-gutter py-6 text-ink";
+const MAIN_CLASSES = "mx-auto flex min-h-[calc(100dvh-48px)] w-full max-w-text flex-col gap-6";
 
 const Problem = ({ title, detail }: { title: string; detail: string }) => (
   <div className={PAGE_CLASSES}>
     <main className={MAIN_CLASSES}>
-      <div className="mt-7 flex flex-col gap-4">
-        <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink-900 bg-white">
+      <div className="mt-10 flex flex-col gap-4">
+        <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink bg-white">
           <Icon name="alert" size={32} />
         </span>
-        <h1 className="font-serif text-h2 font-medium">{title}</h1>
+        <h1 className="font-display text-h2">{title}</h1>
         <p className="text-body">{detail}</p>
       </div>
     </main>
@@ -62,17 +64,20 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
     <div className={PAGE_CLASSES}>
       <main className={MAIN_CLASSES}>
         <CollectHeader spaceName={customer.spaceName} logoUrl={customer.logoUrl} />
-        <div className="mt-7 flex flex-col gap-4">
-          <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink-900 bg-white">
+        <div className="mt-10 flex flex-col gap-4">
+          <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink bg-white">
             <Icon name="valid" size={32} />
           </span>
-          <h1 className="font-serif text-h2 font-medium">Désinscription confirmée</h1>
+          <h1 className="font-display text-h2">Désinscription confirmée</h1>
           <p className="text-body">{`Vous ne recevrez plus de demande d'avis de ${customer.spaceName}.`}</p>
-          <p className="text-body text-slate-600">Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.</p>
+          <p className="text-body text-gray">Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.</p>
         </div>
         <a
           href={`mailto:${customer.replyToEmail}`}
-          className="mb-1 flex h-[56px] w-full items-center justify-center gap-2 rounded-lg border-2 border-ink-900 bg-carmine text-body font-semibold text-white shadow-relief hover:bg-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 active:translate-y-1 active:shadow-none"
+          className={cn(
+            "pz-couleur pz-appui mb-1 flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-sun text-[18px] font-bold text-ink hover:bg-sun-hover active:bg-sun-pressed",
+            FOCUS_RING,
+          )}
         >
           <Icon name="email" size={20} />
           {`Écrire à ${customer.spaceName}`}

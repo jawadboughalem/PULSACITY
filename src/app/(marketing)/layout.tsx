@@ -8,7 +8,7 @@ const MarketingLayout = ({ children }: LayoutProps<"/">) => (
   <div className="flex min-h-dvh flex-col">
     <a
       href={`#${MAIN_ID}`}
-      className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-30 focus:bg-white focus:px-4 focus:py-3 focus:text-body focus:font-semibold focus:outline-2 focus:outline-ink-900"
+      className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-40 focus:rounded-full focus:bg-white focus:px-4 focus:py-3 focus:text-body focus:font-bold focus:outline-2 focus:outline-offset-3 focus:outline-ink"
     >
       Aller au contenu
     </a>

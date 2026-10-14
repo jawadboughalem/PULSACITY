@@ -9,7 +9,7 @@ import { TestimonialFiltersForm } from "@/components/testimonials/TestimonialFil
 import { TestimonialPagination } from "@/components/testimonials/TestimonialPagination";
 import { TestimonialsEmptyState } from "@/components/testimonials/TestimonialsEmptyState";
 import { TestimonialTableRow } from "@/components/testimonials/TestimonialTableRow";
-import { DISCREET_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DISCREET_BUTTON_CLASSES, ICON_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { canAddTestimonial } from "@/config/plans";
 import { getDb } from "@/db";
@@ -33,10 +33,11 @@ export const metadata: Metadata = {
   title: "Témoignages · PULSACITY",
 };
 
+/** Charte v2, Tableau: the widths of the v1 columns, widened where the v2 controls need room (stars 18, badge). */
 const TABLE_COLUMNS = [
-  { heading: "Client", width: "w-[200px]" },
+  { heading: "Client", width: "w-[208px]" },
   { heading: "Témoignage", width: "" },
-  { heading: "Note", width: "w-[96px]" },
+  { heading: "Note", width: "w-[106px]" },
   { heading: "Offre", width: "w-[128px]" },
   { heading: "Statut", width: "w-[128px]" },
   { heading: "En avant", width: "w-[80px]" },
@@ -73,7 +74,7 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
           <Link
             href={ADD_TESTIMONIAL_HREF}
             aria-label="Ajouter un témoignage"
-            className="flex size-[48px] items-center justify-center rounded-sm border border-ink-900 bg-white hover:bg-paper-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+            className={cn(ICON_BUTTON_CLASSES, "border-2 border-ink bg-white")}
           >
             <Icon name="plus" size={24} />
           </Link>
@@ -81,11 +82,11 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
       />
       <SpacePage>
         <FirstApprovalCelebration>
-          <div className="flex flex-col gap-5 desktop:gap-6">
-            <header className="flex items-start justify-between gap-5">
+          <div className="flex flex-col gap-6 desktop:gap-8">
+            <header className="flex items-start justify-between gap-6">
               <div className="flex flex-col gap-2">
-                <h1 className="hidden font-serif text-h1 font-medium desktop:block">Témoignages</h1>
-                <p className="text-small text-slate-600 desktop:text-body">{describeCounts(counts)}</p>
+                <h1 className="hidden font-display text-h1 desktop:block">Témoignages</h1>
+                <p className="text-small text-gray desktop:text-body">{describeCounts(counts)}</p>
               </div>
               <Link href={ADD_TESTIMONIAL_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "hidden shrink-0 desktop:inline-flex")}>
                 Ajouter un témoignage
@@ -102,7 +103,7 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
                   products={products}
                 />
                 {list.total === 0 ? (
-                  <div className="flex flex-col items-start gap-2 border-t border-ink-900 pt-5">
+                  <div className="flex flex-col items-start gap-2">
                     <p className="text-body">Aucun témoignage ne correspond à ces filtres.</p>
                     {hasTestimonialFilter(filters) ? (
                       <Link href={TESTIMONIALS_SECTION_HREF} className={DISCREET_BUTTON_CLASSES}>
@@ -112,20 +113,23 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
                   </div>
                 ) : (
                   <>
-                    <div className="hidden overflow-x-auto desktop:block">
-                      <table className="w-full min-w-[1000px] table-fixed border-collapse text-left">
+                    <div className="hidden overflow-x-auto rounded-card bg-white p-2 desktop:block">
+                      <table className="w-full min-w-[1000px] table-fixed border-separate border-spacing-[0] text-left">
                         <thead>
-                          <tr className="border-b border-ink-900">
+                          <tr>
                             {TABLE_COLUMNS.map((column) => (
                               <th
                                 key={column.heading}
                                 scope="col"
-                                className={cn("pr-4 pb-3 text-small font-semibold whitespace-nowrap", column.width)}
+                                className={cn(
+                                  "h-[48px] bg-sky pr-4 text-small font-bold whitespace-nowrap first:rounded-l-field first:pl-4",
+                                  column.width,
+                                )}
                               >
                                 {column.heading}
                               </th>
                             ))}
-                            <th scope="col" className="w-[232px] pb-3">
+                            <th scope="col" className="h-[48px] w-[252px] rounded-r-field bg-sky">
                               <span className="sr-only">Actions</span>
                             </th>
                           </tr>
@@ -142,7 +146,7 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
                         </tbody>
                       </table>
                     </div>
-                    <div className="flex flex-col border-t border-hairline-200 desktop:hidden">
+                    <div className="flex flex-col gap-3 desktop:hidden">
                       {list.testimonials.map((testimonial) => (
                         <TestimonialCard
                           key={testimonial.id}

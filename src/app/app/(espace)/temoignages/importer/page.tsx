@@ -18,8 +18,8 @@ const ImportTestimonialsPage = async () => {
       <SpacePage className="desktop:max-w-[1088px]">
         <Breadcrumb parentHref={TESTIMONIALS_SECTION_HREF} parentLabel="Témoignages" current="Importer un fichier CSV" />
         <div className="flex flex-col gap-2">
-          <h1 className="font-serif text-h1 font-medium">Importer des témoignages</h1>
-          <p className="max-w-text text-body text-slate-600">
+          <h1 className="font-display text-h1">Importer des témoignages</h1>
+          <p className="max-w-text text-body text-gray">
             Vous avez déjà des avis dans un tableur ? Importez-les en une fois, depuis un fichier CSV.
           </p>
         </div>

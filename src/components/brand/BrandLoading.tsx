@@ -10,7 +10,7 @@ type BrandLoadingProps = {
   detail: string;
 };
 
-/** ChargementMarque of the identity v2: nothing before 1 s, then the breathing star. */
+/** ChargementMarque (charte v2): nothing before 1 s, then the symbol 48 whose star breathes, on Nuage. */
 export const BrandLoading = ({ title, detail }: BrandLoadingProps) => {
   const [isShown, setIsShown] = useState(false);
 
@@ -20,13 +20,13 @@ export const BrandLoading = ({ title, detail }: BrandLoadingProps) => {
   }, []);
 
   return (
-    <div role="status" className="pz-chargement flex flex-1 flex-col items-center justify-center gap-4 px-5 py-9 text-center">
+    <div role="status" className="pz-chargement flex flex-1 flex-col items-center justify-center gap-4 bg-cloud px-6 py-14 text-center">
       {isShown ? (
         <>
           <BrandSymbol variant="regular" size={48} />
           <div className="flex flex-col gap-1">
             <p className="text-body font-semibold">{title}</p>
-            <p className="text-small text-slate-600">{detail}</p>
+            <p className="text-small text-gray">{detail}</p>
           </div>
         </>
       ) : null}

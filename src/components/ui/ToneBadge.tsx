@@ -2,19 +2,26 @@ import { cn } from "@/lib/cn";
 import { Icon } from "./Icon";
 import type { IconName } from "./icon-paths";
 
-export type BadgeTone = "success" | "attention" | "neutral" | "error" | "paper" | "outline" | "dashed";
+export type BadgeTone = "success" | "waiting" | "neutral" | "error" | "soon" | "paper" | "outline" | "dashed";
 
+/** Charte v2, Badge de statut. The colour is never alone: the icon and the word carry the state. */
 const TONE_CLASSES = {
+  /** Validé, Connecté, Disponible. */
   success: "bg-success-surface text-success",
-  attention: "bg-attention-surface text-attention",
-  neutral: "bg-paper-100 text-slate-600",
+  /** En attente, À associer. */
+  waiting: "bg-waiting-surface text-waiting",
+  /** Masqué, and what simply happened. */
+  neutral: "bg-gray-light text-gray",
+  /** Problème. */
   error: "bg-error-surface text-error",
-  /** m19: nothing has left yet. */
-  paper: "bg-paper-100 text-ink-900",
+  /** Bientôt, without a date. */
+  soon: "bg-sky text-ink",
+  /** m19, not yet in the charter v2: nothing has left yet. */
+  paper: "bg-sky text-ink",
   /** m19: waiting for an answer. */
-  outline: "border border-ink-900 bg-white text-ink-900",
+  outline: "border-2 border-ink bg-white text-ink",
   /** m19: will never leave. */
-  dashed: "border border-dashed border-gray-400 bg-white text-slate-600",
+  dashed: "border-2 border-dashed border-gray bg-white text-gray",
 } as const satisfies Record<BadgeTone, string>;
 
 type ToneBadgeProps = {
@@ -23,12 +30,11 @@ type ToneBadgeProps = {
   icon?: IconName;
 };
 
-/** The charter's status badge: 28 high, its icon 8 px from the text. Without an icon, « Bientôt ». */
+/** 32 high, a pill, 14/20 700, its icon 16 at 6 px from the word. */
 export const ToneBadge = ({ tone, label, icon }: ToneBadgeProps) => (
   <span
     className={cn(
-      "inline-flex h-[28px] shrink-0 items-center gap-2 rounded-full text-small font-medium whitespace-nowrap",
-      icon ? "pr-3 pl-2" : "px-3",
+      "inline-flex h-[32px] shrink-0 items-center gap-[6px] rounded-full px-3 text-badge font-bold whitespace-nowrap",
       TONE_CLASSES[tone],
     )}
   >

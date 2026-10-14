@@ -7,8 +7,8 @@ const NotFoundPage = () => (
   <TextColumnPage>
     <title>Page introuvable · PULSACITY</title>
     <div className="flex flex-col gap-2">
-      <h1 className="font-serif text-h1 font-medium">Cette page n&apos;existe pas</h1>
-      <p className="text-body text-slate-600">
+      <h1 className="font-display text-h1">Cette page n&apos;existe pas</h1>
+      <p className="text-body text-gray">
         L&apos;adresse est peut-être incomplète. Vérifiez le lien que vous avez reçu, puis ouvrez-le à nouveau.
       </p>
     </div>

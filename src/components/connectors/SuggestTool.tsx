@@ -2,13 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { suggestTool } from "@/app/app/(espace)/connecteurs/connector-actions";
-import { SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { INLINE_LINK_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
-
-const LINK_CLASSES =
-  "font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
 
 const ERRORS = {
   "invalid-name": "Indiquez le nom de l'outil, en 2 caractères au moins.",
@@ -39,15 +36,15 @@ export const SuggestTool = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="max-w-text text-body text-slate-600">
+      <p className="max-w-text text-body text-gray">
         Vous vendez ailleurs ?{" "}
-        <button type="button" onClick={() => setIsOpen(true)} className={LINK_CLASSES} aria-expanded={isOpen}>
+        <button type="button" onClick={() => setIsOpen(true)} className={cn(INLINE_LINK_CLASSES, "cursor-pointer")} aria-expanded={isOpen}>
           Dites-nous quel outil
         </button>
         . En attendant, votre lien de collecte fonctionne partout.
       </p>
       {isSent ? (
-        <p role="status" className="flex items-center gap-2 text-small font-medium text-success">
+        <p role="status" className="flex items-center gap-2 text-small font-semibold text-success">
           <Icon name="valid" size={20} />
           Merci, c&apos;est noté. Nous vous préviendrons s&apos;il arrive.
         </p>

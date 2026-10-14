@@ -7,7 +7,7 @@ type CollectHeaderProps = {
 
 export const CollectHeader = ({ spaceName, logoUrl }: CollectHeaderProps) => (
   <header className="flex items-center gap-3">
-    <SpaceAvatar name={spaceName} logoUrl={logoUrl} size={44} background="white" />
-    <p className="text-body font-semibold">{spaceName}</p>
+    <SpaceAvatar name={spaceName} logoUrl={logoUrl} size={44} background="sky" />
+    <p className="text-body font-bold">{spaceName}</p>
   </header>
 );

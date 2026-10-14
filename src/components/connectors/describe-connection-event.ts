@@ -2,7 +2,7 @@ import type { IconName } from "@/components/ui/icon-paths";
 import type { ConnectionEvent } from "@/lib/connectors/load-connection-overview";
 import { formatDayMonth } from "@/lib/dates/format-french-date";
 
-export type EventTone = "success" | "attention" | "neutral" | "error";
+export type EventTone = "success" | "waiting" | "neutral" | "error";
 
 export type DescribedEvent = {
   label: string;
@@ -40,7 +40,7 @@ const describeState = (event: ConnectionEvent, connectorName: string): State => 
   if (event.error === "invalid-signature") {
     return {
       detail: `Clé secrète différente : gardée de côté. Corrigez la clé dans ${connectorName}, puis rejouez la vente.`,
-      tone: "attention",
+      tone: "waiting",
       icon: "alert",
       canReplay: true,
     };
@@ -57,7 +57,7 @@ const describeState = (event: ConnectionEvent, connectorName: string): State => 
     case "request-scheduled":
       return event.request ? describeRequest(event.request) : { detail: "Demande d'avis prévue", tone: "success", icon: "valid" };
     case "awaiting-product":
-      return { detail: "En attente : associez ce produit à une offre", tone: "attention", icon: "clock" };
+      return { detail: "En attente : associez ce produit à une offre", tone: "waiting", icon: "clock" };
     case "request-exists":
       return { detail: "Ce client a déjà une demande pour cette offre", tone: "neutral", icon: "valid" };
     case "request-elsewhere":

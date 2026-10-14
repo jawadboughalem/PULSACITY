@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { CONNECTORS_SECTION_HREF } from "@/components/space/space-sections";
-import { PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { INLINE_LINK_CLASSES, PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { cn } from "@/lib/cn";
 import type { SpaceOffer } from "@/lib/spaces/list-space-offers";
 import { AddOfferForm } from "./AddOfferForm";
@@ -32,40 +32,30 @@ export const OffersBoard = ({ offers, connectors, today }: OffersBoardProps) => 
   );
 
   return (
-    <div className="flex flex-col gap-6">
-      <div
-        className={cn(
-          "flex flex-col gap-5 desktop:flex-row desktop:items-end desktop:justify-between",
-          !isEmpty && !isAdding && "border-b border-ink-900 pb-5 desktop:pb-6",
-        )}
-      >
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6 desktop:flex-row desktop:items-end desktop:justify-between">
         <div className="flex flex-col gap-2">
-          <h1 className="font-serif text-h1 font-medium">Offres</h1>
-          <p className="max-w-text text-body text-slate-600">
+          <h1 className="font-display text-h1">Offres</h1>
+          <p className="max-w-text text-body text-gray">
             Chaque offre a son lien de collecte et ses réglages de demande d&apos;avis.
           </p>
         </div>
         {isEmpty || isAdding ? null : addButton}
       </div>
       {isAdding ? (
-        <div className={cn(!isEmpty && "border-b border-ink-900 pb-6")}>
-          <AddOfferForm onDone={() => setIsAdding(false)} />
-        </div>
+        <AddOfferForm onDone={() => setIsAdding(false)} />
       ) : null}
       {isEmpty && !isAdding ? (
-        <section className="flex flex-col gap-4 bg-paper-100 p-5 desktop:p-7">
-          <h2 className="font-serif text-h2 font-medium">Aucune offre pour l&apos;instant</h2>
+        <section className="flex flex-col gap-4 rounded-panel bg-sky p-6 desktop:p-10">
+          <h2 className="font-display text-h2">Aucune offre pour l&apos;instant</h2>
           <p className="max-w-text text-body">
             Ajoutez la formation ou le service que vous vendez. Chaque offre reçoit son lien de collecte, à envoyer à vos
             clients.
           </p>
           <div className="pt-2">{addButton}</div>
-          <p className="border-t border-hairline-200 pt-4 text-small text-slate-600">
+          <p className="pt-2 text-small text-gray">
             Vous vendez en ligne ?{" "}
-            <Link
-              href={CONNECTORS_SECTION_HREF}
-              className="font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
-            >
+            <Link href={CONNECTORS_SECTION_HREF} className={INLINE_LINK_CLASSES}>
               Connectez votre outil
             </Link>{" "}
             : vos produits arriveront tout seuls.
@@ -73,7 +63,7 @@ export const OffersBoard = ({ offers, connectors, today }: OffersBoardProps) => 
         </section>
       ) : null}
       {isEmpty ? null : (
-        <ul className="flex flex-col">
+        <ul className="flex flex-col gap-4">
           {offers.map(({ offer, collectionUrl, collectionAddress }) => (
             <OfferRow
               key={offer.id}

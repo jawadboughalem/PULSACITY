@@ -1,6 +1,12 @@
 "use client";
 
 import { type ReactNode, createContext, useContext, useState } from "react";
+import {
+  SEGMENTED_CLASSES,
+  SEGMENTED_OPTION_CHOSEN_CLASSES,
+  SEGMENTED_OPTION_CLASSES,
+  SEGMENTED_OPTION_IDLE_CLASSES,
+} from "@/components/ui/segmented-styles";
 import { cn } from "@/lib/cn";
 
 type ChoiceState = { value: string; choose: (value: string) => void };
@@ -37,7 +43,7 @@ type ChoiceToggleProps = {
   className?: string;
 };
 
-/** The charter's segmented selector: 48 high, a rule of Encre, the active option in Encre. aria-pressed. */
+/** Charte v2, Bascule à deux choix (Mensuel / Annuel): the chosen option in Encre. aria-pressed. */
 export const ChoiceToggle = ({ label, options, announcements, className }: ChoiceToggleProps) => {
   const state = useContext(ChoiceContext);
   const [announcement, setAnnouncement] = useState("");
@@ -45,7 +51,7 @@ export const ChoiceToggle = ({ label, options, announcements, className }: Choic
 
   return (
     <div className={className}>
-      <div role="group" aria-label={label} className="flex h-[48px] rounded-sm border border-ink-900">
+      <div role="group" aria-label={label} className={SEGMENTED_CLASSES}>
         {options.map((option) => {
           const isActive = option.value === state.value;
           return (
@@ -58,8 +64,8 @@ export const ChoiceToggle = ({ label, options, announcements, className }: Choic
                 setAnnouncement(announcements[option.value] ?? "");
               }}
               className={cn(
-                "flex-1 px-5 text-body font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900",
-                isActive ? "bg-ink-900 text-white" : "bg-white text-ink-900 hover:bg-paper-100",
+                SEGMENTED_OPTION_CLASSES,
+                isActive ? SEGMENTED_OPTION_CHOSEN_CLASSES : SEGMENTED_OPTION_IDLE_CLASSES,
               )}
             >
               {option.label}

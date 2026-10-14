@@ -21,7 +21,8 @@ const ERRORS = {
   network: "La demande n'a pas abouti. Vérifiez votre connexion, puis réessayez.",
 } as const;
 
-const ACTION_CLASSES = cn(DISCREET_BUTTON_CLASSES, "min-h-[44px] px-[0]");
+/** m19: the links line up with the request's text above them, as in v1, so they keep no side padding. */
+const ACTION_CLASSES = cn(DISCREET_BUTTON_CLASSES, "px-[0]");
 
 type RequestActionsProps = {
   requestId: string;

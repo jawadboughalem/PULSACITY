@@ -2,7 +2,9 @@
 
 import Form from "next/form";
 import { useRef } from "react";
+import { FIELD_CLASSES, FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
+import { cn } from "@/lib/cn";
 import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
 import {
   MAX_SEARCH_LENGTH,
@@ -67,16 +69,16 @@ export const TestimonialFiltersForm = ({ action, filters, products }: Testimonia
       className="flex flex-col gap-3 desktop:grid desktop:grid-cols-[minmax(0,1fr)_auto_auto_auto] desktop:items-end desktop:gap-4"
     >
       <label className="flex flex-col gap-2">
-        <span className="text-small font-semibold max-desktop:sr-only">Rechercher</span>
+        <span className={cn(FIELD_LABEL_CLASSES, "max-desktop:sr-only")}>Rechercher</span>
         <span className="relative flex">
-          <Icon name="search" size={20} className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2" />
+          <Icon name="search" size={20} className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-ink" />
           <input
             type="search"
             name={TESTIMONIAL_SEARCH_PARAMS.query}
             defaultValue={filters.query ?? ""}
             maxLength={MAX_SEARCH_LENGTH}
             placeholder="Un prénom, un mot…"
-            className="h-[48px] w-full rounded-sm border border-gray-400 bg-white pr-4 pl-7 text-body text-ink-900 placeholder:text-slate-600 focus:border-2 focus:border-ink-900 focus:pl-[47px] focus:outline-none"
+            className={cn(FIELD_CLASSES, "pl-10")}
           />
         </span>
       </label>

@@ -28,7 +28,7 @@ const FormationsStepPage = async () => {
       />
       <AddFormationForm key={formations.length} />
       {formations.length > 0 ? (
-        <ul className="border-t border-ink-900">
+        <ul className="flex flex-col gap-3">
           {formations.map((formation) => (
             <FormationRow
               key={formation.id}
@@ -39,7 +39,7 @@ const FormationsStepPage = async () => {
           ))}
         </ul>
       ) : (
-        <p className="text-body text-slate-600">
+        <p className="text-body text-gray">
           Aucune formation pour l&apos;instant. Ajoutez la première, ou passez cette étape.
         </p>
       )}

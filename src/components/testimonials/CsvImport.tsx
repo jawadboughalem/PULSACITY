@@ -7,6 +7,7 @@ import { DISCREET_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASS
 import { Checkbox } from "@/components/ui/Checkbox";
 import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
+import { Spinner } from "@/components/ui/Spinner";
 import { cn } from "@/lib/cn";
 import { buildRejectedLinesCsv } from "@/lib/testimonials/csv/build-rejected-lines-csv";
 import { decodeCsvFile } from "@/lib/testimonials/csv/decode-csv-file";
@@ -121,13 +122,13 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
     const { report } = step;
     const publishedCount = report.importedCount - report.pendingCount;
     return (
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         <ImportStepper current={2} />
         {report.isFirstApproval ? <FirstApprovalBanner /> : null}
-        <section role="status" className="flex items-start gap-3 bg-success-surface p-5 desktop:gap-4 desktop:p-6">
+        <section role="status" className="flex items-start gap-3 rounded-card bg-success-surface p-6 desktop:gap-4 desktop:p-8">
           <Icon name="valid" size={24} className="mt-1 text-success" />
           <div className="flex flex-col gap-2">
-            <h2 className="font-serif text-h2 font-medium">
+            <h2 className="font-display text-h2">
               {`${count(report.importedCount, "témoignage importé", "témoignages importés")}.`}
             </h2>
             {report.importedCount > 0 ? <p className="text-body">{describeImported(report)}</p> : null}
@@ -164,7 +165,7 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
             </a>
           </CsvProblems>
         ) : null}
-        <div className="flex flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-5">
+        <div className="flex flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-6">
           <Link href={testimonialsHref} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
             Voir mes témoignages
           </Link>
@@ -182,14 +183,14 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
     const toFix = preview.rows.filter((row) => row.status !== "ready");
     const pendingCount = ready.filter((row) => row.isPending).length;
     return (
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         <ImportStepper current={1} />
-        <div className="flex flex-col gap-4 border border-hairline-200 p-4 desktop:flex-row desktop:items-center desktop:justify-between desktop:p-5">
+        <div className="flex flex-col gap-4 rounded-card bg-white p-4 desktop:flex-row desktop:items-center desktop:justify-between desktop:p-6">
           <div className="flex flex-col gap-3 desktop:flex-row desktop:items-start desktop:gap-4">
             <Icon name="copy" size={20} className="mt-[2px]" />
             <div className="flex min-w-[0] flex-col">
-              <span className="text-body font-semibold break-all">{step.fileName}</span>
-              <span className="text-small text-slate-600">
+              <span className="text-body font-bold break-all">{step.fileName}</span>
+              <span className="text-small text-gray">
                 {`${count(preview.rows.length, "ligne", "lignes")}, sans compter les titres de colonnes`}
               </span>
             </div>
@@ -198,7 +199,7 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
             Changer de fichier
           </button>
         </div>
-        <h2 className="border-b border-hairline-200 pb-5 font-serif text-h2 font-medium">
+        <h2 className="font-display text-h2">
           {`${count(ready.length, "témoignage prêt", "témoignages prêts")}${
             toFix.length > 0 ? `, ${count(toFix.length, "ligne à revoir", "lignes à revoir")}` : ""
           }`}
@@ -221,7 +222,7 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
           />
         ) : null}
         {ready.length > 0 ? (
-          <div className="flex flex-col gap-5 border-t border-hairline-200 pt-5">
+          <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-body">
                 <Checkbox
@@ -243,17 +244,19 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
               ) : null}
             </div>
             {importError ? <FieldError id="csv-import-error" message={importError} /> : null}
-            <div className="flex flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-5">
+            <div className="flex flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-6">
               <button
                 type="button"
                 onClick={() => handleImport(step.text)}
                 disabled={isWorking}
+                aria-busy={isWorking || undefined}
                 className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}
               >
+                {isWorking ? <Spinner size={20} /> : null}
                 {isWorking ? "Import en cours…" : `Importer ${count(ready.length, "témoignage", "témoignages")}`}
               </button>
               {isWorking ? (
-                <p className="text-small text-slate-600">Ne fermez pas la page.</p>
+                <p className="text-small text-gray">Ne fermez pas la page.</p>
               ) : (
                 <Link href={testimonialsHref} className={cn(DISCREET_BUTTON_CLASSES, "self-start desktop:self-auto")}>
                   Annuler
@@ -267,8 +270,8 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-7">
-      <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-8">
         <ImportStepper current={0} />
         <div
           onDragOver={(event) => {
@@ -282,14 +285,14 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
             handleFile(event.dataTransfer.files[0]);
           }}
           className={cn(
-            "flex flex-col items-center gap-4 border border-dashed bg-paper-100 px-5 py-7 text-center desktop:py-8",
-            isDragging ? "border-ink-900" : "border-gray-400",
+            "pz-couleur flex flex-col items-center gap-4 rounded-panel border-2 border-dashed bg-sky px-6 py-10 text-center desktop:py-12",
+            isDragging ? "border-ink" : "border-gray",
           )}
         >
-          <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink-900">
+          <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink">
             <Icon name="upload" size={24} />
           </span>
-          <p className="text-body font-semibold max-desktop:hidden">Déposez votre fichier ici</p>
+          <p className="text-body font-bold max-desktop:hidden">Déposez votre fichier ici</p>
           <input
             ref={inputRef}
             id={inputId}
@@ -303,13 +306,13 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
             aria-disabled={isWorking}
             className={cn(
               SECONDARY_BUTTON_CLASSES,
-              "w-full cursor-pointer peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink-900 desktop:w-auto",
+              "w-full cursor-pointer peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-ink desktop:w-auto",
             )}
           >
-            <Icon name="upload" size={20} />
+            {isWorking ? <Spinner size={18} /> : <Icon name="upload" size={20} />}
             {isWorking ? "Lecture du fichier…" : "Choisir un fichier"}
           </label>
-          <p className="text-small text-slate-600">
+          <p className="text-small text-gray">
             {`Fichier CSV, ${ROWS_LIMIT} lignes au plus. Virgules ou points-virgules acceptés.`}
           </p>
         </div>

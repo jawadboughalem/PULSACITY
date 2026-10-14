@@ -11,7 +11,7 @@ type TestimonialQuoteProps = {
 export const TestimonialQuote = ({ text, size, isClamped = false, className }: TestimonialQuoteProps) => (
   <blockquote
     className={cn(
-      "max-w-quote font-serif whitespace-pre-line",
+      "max-w-quote whitespace-pre-line text-ink",
       size === "quote" ? "text-quote" : "text-body",
       isClamped && "line-clamp-2",
       className,

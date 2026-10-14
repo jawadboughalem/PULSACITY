@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { suggestPublicTool } from "@/app/(marketing)/integrations/public-tool-actions";
 import { HoneypotField } from "@/components/collect/HoneypotField";
-import { SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { INLINE_LINK_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
@@ -26,21 +26,21 @@ export const PublicSuggestTool = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="max-w-text text-body text-slate-600">
+      <p className="max-w-text text-body text-gray">
         Vous vendez ailleurs ?{" "}
         <button
           type="button"
           onClick={() => setIsOpen(true)}
           aria-expanded={isOpen}
           aria-controls="suggested-tool-form"
-          className="font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+          className={cn(INLINE_LINK_CLASSES, "cursor-pointer")}
         >
           Dites-nous quel outil
         </button>
         {" : c'est ainsi que nous choisissons les prochains."}
       </p>
       {result?.ok ? (
-        <p role="status" className="flex items-center gap-2 text-small font-medium text-success">
+        <p role="status" className="flex items-center gap-2 text-small font-semibold text-success">
           <Icon name="valid" size={20} />
           Merci, c&apos;est noté.
         </p>

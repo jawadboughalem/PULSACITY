@@ -8,10 +8,11 @@ type SpaceNavigationProps = {
   pendingTestimonials: number;
 };
 
+/** Charte v2, Navigation de l'espace: a 264 column, white on the Nuage page, without rule; the small logo at 27. */
 export const SpaceNavigation = ({ account, pendingTestimonials }: SpaceNavigationProps) => (
   <nav
     aria-label="Navigation principale"
-    className="sticky top-[0] flex h-dvh w-[248px] shrink-0 flex-col gap-6 border-r border-hairline-200 bg-white px-4 pt-6 pb-5"
+    className="sticky top-[0] flex h-dvh w-space-nav shrink-0 flex-col gap-7 bg-white px-4 pt-7 pb-5"
   >
     <BrandLogo variant="small" height={27} alt="Pulsacity" className="mx-3" />
     <SpaceNavigationLinks pendingTestimonials={pendingTestimonials} />

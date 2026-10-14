@@ -29,23 +29,24 @@ const CALLS_TO_ACTION: Record<PlanId, string> = {
   pro: "Choisir Pro",
 };
 
+/** Charte v2, Colonnes de prix: « Recommandé » 15/20 700, its 20 px kept above every name on a computer. */
 const RecommendedLabel = ({ className }: { className?: string }) => (
-  <p className={cn("text-small font-semibold", className)}>Recommandé</p>
+  <p className={cn("text-small leading-[20px] font-bold", className)}>Recommandé</p>
 );
 
 /**
- * Maquette 8: three columns under a rule of Encre, Essentiel on Papier. Stacked on a phone, the list before the button.
- * On a computer, each column's five parts share the rows of the others: the line of the launch price, under the paid
- * plans only, keeps the buttons and the lists aligned.
+ * Maquette 8 with the charter v2's « Colonnes de prix »: three panels, Essentiel on Ciel with the main button, the
+ * others on Nuage. Stacked on a phone, the list before the button. On a computer, each column's five parts share the
+ * rows of the others: the line of the launch price, under the paid plans only, keeps the buttons and the lists aligned.
  */
 export const PlanColumns = () => (
-  <ul className="grid gap-6 desktop:grid-cols-3 desktop:gap-[0] desktop:border-t desktop:border-ink-900">
+  <ul className="grid gap-5 desktop:grid-cols-3">
     {PLAN_PRESENTATIONS.map((plan) => (
       <li
         key={plan.id}
         className={cn(
-          "flex flex-col gap-4 border-t border-ink-900 px-5 pt-5 pb-6 desktop:row-span-5 desktop:grid desktop:grid-rows-subgrid desktop:gap-5 desktop:border-t-[0] desktop:px-6 desktop:pt-6",
-          plan.isRecommended && "border-t-2 bg-paper-100 desktop:-mt-px desktop:border-t-2",
+          "flex flex-col gap-4 rounded-panel px-7 py-8 desktop:row-span-5 desktop:grid desktop:grid-rows-subgrid desktop:gap-6",
+          plan.isRecommended ? "bg-sky" : "bg-cloud",
         )}
       >
         <div className="flex flex-col gap-1">
@@ -55,7 +56,7 @@ export const PlanColumns = () => (
             <span aria-hidden="true" className="hidden h-[20px] desktop:block" />
           )}
           <div className="flex items-baseline justify-between gap-4 desktop:mt-4">
-            <h2 className="font-serif text-h2 font-medium">{plan.name}</h2>
+            <h2 className="font-display text-h2">{plan.name}</h2>
             {plan.isRecommended ? <RecommendedLabel className="desktop:hidden" /> : null}
           </div>
         </div>
@@ -64,9 +65,9 @@ export const PlanColumns = () => (
             const launchPrice = describeLaunchPrice(plan.id, period);
             return (
               <div key={period} className={PERIOD_VISIBILITY[period]}>
-                <PlanPrice amountCents={readPlanPrice(plan.id, period)} size="large" />
-                <p className="text-small text-slate-600">{describePricePeriod(plan.id, period)}</p>
-                {launchPrice ? <p className="mt-2 text-small text-slate-600">{launchPrice}</p> : null}
+                <PlanPrice amountCents={readPlanPrice(plan.id, period)} />
+                <p className="text-small text-gray">{describePricePeriod(plan.id, period)}</p>
+                {launchPrice ? <p className="mt-2 text-small text-gray">{launchPrice}</p> : null}
               </div>
             );
           })}
@@ -76,12 +77,12 @@ export const PlanColumns = () => (
           href={MARKETING_PATHS.signUp}
           className={cn(
             plan.isRecommended ? PRIMARY_BUTTON_CLASSES : SECONDARY_BUTTON_CLASSES,
-            "order-last w-full desktop:order-none desktop:mt-5",
+            "order-last w-full desktop:order-none desktop:mt-6 desktop:self-center",
           )}
         >
           {CALLS_TO_ACTION[plan.id]}
         </Link>
-        <CheckList items={plan.highlights} className="desktop:border-t desktop:border-hairline-200 desktop:pt-5" />
+        <CheckList items={plan.highlights} />
       </li>
     ))}
   </ul>

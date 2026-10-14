@@ -18,4 +18,5 @@ export const buildDeleteConfirmation = (authorName: string) => ({
   message:
     "Le texte, la photo et la preuve de consentement seront effacés de PULSACITY. Vous ne pourrez pas les retrouver.",
   confirmLabel: "Supprimer l'avis",
+  isDestructive: true,
 });

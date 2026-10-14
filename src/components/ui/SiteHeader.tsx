@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand/BrandLogo";
+import { cn } from "@/lib/cn";
+import { FOCUS_RING } from "./button-styles";
 
+/** The header of the pages without the site's menu (sign-in, onboarding, errors): white, 64 high, 88 on a computer. */
 export const SiteHeader = () => (
-  <header className="flex h-[60px] shrink-0 items-center border-b border-hairline-200 px-page-gutter">
-    <Link
-      href="/"
-      aria-label="Pulsacity, accueil"
-      className="text-ink-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
-    >
+  <header className="flex h-[64px] shrink-0 items-center bg-white px-page-gutter desktop:h-[88px]">
+    <Link href="/" aria-label="Pulsacity, accueil" className={cn("rounded-field", FOCUS_RING)}>
       <BrandLogo variant="small" height={24} alt="" className="desktop:hidden" />
       <BrandLogo variant="regular" height={32} alt="" className="hidden desktop:block" />
     </Link>

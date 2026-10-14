@@ -49,8 +49,8 @@ const ConnectorHistoryPage = async ({ params, searchParams }: PageProps<"/app/co
       <SpacePage className="desktop:max-w-[1128px]">
         <Breadcrumb parentHref={connectorHref(connector.slug)} parentLabel={connector.name} current="Historique" />
         <div className="flex flex-col gap-2">
-          <h1 className="font-serif text-h1 font-medium">Historique des événements</h1>
-          <p className="max-w-text text-body text-slate-600">
+          <h1 className="font-display text-h1">Historique des événements</h1>
+          <p className="max-w-text text-body text-gray">
             {`Tout ce que ${connector.name} nous a envoyé, du plus récent au plus ancien.`}
           </p>
         </div>
@@ -62,7 +62,7 @@ const ConnectorHistoryPage = async ({ params, searchParams }: PageProps<"/app/co
             now={new Date()}
           />
         ) : (
-          <p className="border-t border-ink-900 pt-4 text-body">Aucun événement sur cette page.</p>
+          <p className="text-body">Aucun événement sur cette page.</p>
         )}
         {page > 1 || !isLastPage ? (
           <nav aria-label="Pages de l'historique" className="flex flex-col gap-3 desktop:flex-row">
