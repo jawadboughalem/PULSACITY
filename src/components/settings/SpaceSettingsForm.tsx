@@ -82,11 +82,11 @@ export const SpaceSettingsForm = ({ initial, collectionAddressPrefix, previewPro
       noValidate
       className={cn(
         "flex max-w-[712px] flex-col gap-6",
-        "@min-[1064px]:grid @min-[1064px]:max-w-none @min-[1064px]:grid-cols-[minmax(0,712px)_320px] @min-[1064px]:items-start @min-[1064px]:gap-x-8",
+        "@min-[960px]:grid @min-[960px]:max-w-none @min-[960px]:grid-cols-[minmax(0,712px)_320px] @min-[960px]:items-start @min-[960px]:gap-x-8",
       )}
     >
       {summaryItems.length > 0 ? (
-        <div className="@min-[1064px]:col-start-1">
+        <div className="@min-[960px]:col-start-1">
           <ErrorSummary
             key={form.submissionCount}
             title={`${describeSummary(summaryItems.length)} avant d'enregistrer`}
@@ -95,7 +95,7 @@ export const SpaceSettingsForm = ({ initial, collectionAddressPrefix, previewPro
           />
         </div>
       ) : null}
-      <SettingsSection id="settings-space" title="Votre espace" className="@min-[1064px]:col-start-1">
+      <SettingsSection id="settings-space" title="Votre espace" className="@min-[960px]:col-start-1">
         <div className="flex flex-col gap-8">
           <TextField
             id="name"
@@ -125,9 +125,9 @@ export const SpaceSettingsForm = ({ initial, collectionAddressPrefix, previewPro
         logoUrl={form.logo.shownUrl}
         accentColor={values.accentColor}
         productName={previewProductName}
-        className="@min-[1064px]:sticky @min-[1064px]:top-10 @min-[1064px]:col-start-2 @min-[1064px]:row-span-5 @min-[1064px]:row-start-1"
+        className="@min-[960px]:sticky @min-[960px]:top-10 @min-[960px]:col-start-2 @min-[960px]:row-span-5 @min-[960px]:row-start-1"
       />
-      <SettingsSection id="settings-emails" title="E-mails à vos clients" className="@min-[1064px]:col-start-1">
+      <SettingsSection id="settings-emails" title="E-mails à vos clients" className="@min-[960px]:col-start-1">
         <div className="flex flex-col gap-8">
           <TextField
             id="replyToEmail"
@@ -182,7 +182,7 @@ export const SpaceSettingsForm = ({ initial, collectionAddressPrefix, previewPro
           </p>
         </div>
       </SettingsSection>
-      <SettingsSection id="settings-notifications" title="Vos notifications" className="@min-[1064px]:col-start-1">
+      <SettingsSection id="settings-notifications" title="Vos notifications" className="@min-[960px]:col-start-1">
         <div className="flex items-start justify-between gap-4">
           <div className="flex min-w-[0] flex-col gap-1">
             <p id={notificationLabelId} className="text-body font-bold">
@@ -202,7 +202,7 @@ export const SpaceSettingsForm = ({ initial, collectionAddressPrefix, previewPro
           <input type="hidden" name="newTestimonialEmailEnabled" value={String(values.isNewTestimonialEmailEnabled)} />
         </div>
       </SettingsSection>
-      <SettingsSection id="settings-incentive" title="Contrepartie" className="@min-[1064px]:col-start-1">
+      <SettingsSection id="settings-incentive" title="Contrepartie" className="@min-[960px]:col-start-1">
         <div className="flex flex-col gap-4">
           <label className="flex min-h-[44px] cursor-pointer items-start gap-3">
             <Checkbox
@@ -227,7 +227,7 @@ export const SpaceSettingsForm = ({ initial, collectionAddressPrefix, previewPro
           ) : null}
         </div>
       </SettingsSection>
-      <div className="flex flex-col gap-2 @min-[1064px]:col-start-1">
+      <div className="flex flex-col gap-2 @min-[960px]:col-start-1">
         <button
           type="submit"
           disabled={form.isPending || isUploadingLogo}

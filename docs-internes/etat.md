@@ -98,7 +98,7 @@ La V1 attend ; la recette de bout en bout en production devient le lot 4.11, jus
 - Adresse postale : facultative, sans « (facultatif) » comme la maquette. La rendre obligatoire bloquerait l'envoi des demandes : question pour la relecture juridique (6.7).
 - Contrepartie : la case et sa date sont gardées ; la mention sous les widgets et sur « À propos de ces avis » arrive avec le lot 4.13, avant la bêta.
 - « Parrainage » (menu du compte et « Plus » de 3.3) : pas encore dans les menus, sa page arrive avec le lot 4.12.
-- Réglages en erreur à 360 px : la maquette écrase le champ d'adresse à côté de « Prendre … » ; le champ garde sa largeur, l'erreur suit, puis le bouton. Sur ordinateur, l'aperçu passe sous « Votre espace » tant que les deux colonnes de 712 et 320 px n'ont pas la place (de 1024 à 1330 px de large environ).
+- Réglages en erreur à 360 px : la maquette écrase le champ d'adresse à côté de « Prendre … » ; le champ garde sa largeur, l'erreur suit, puis le bouton. Sur ordinateur, l'aperçu passe sous « Votre espace » tant que les deux colonnes n'ont pas la place (fenêtre de moins de 1340 px de large environ) ; au-delà, la colonne de 712 px peut se resserrer, pour qu'une fenêtre de 1440 px avec une barre de défilement classique (Windows) garde les deux colonnes.
 - Erreur d'un champ : juste sous le champ, puis l'aide (maquettes 3.3), dans tout l'espace.
 - Logo remplacé ou retiré : l'ancien fichier est gardé, pour les e-mails déjà envoyés ; tous les fichiers partent à la suppression de l'espace.
 - « Écrivez-nous » (page de suppression) : `mailto:contact@pulsacity.com` jusqu'à `/aide#contact` (lot 4.4).

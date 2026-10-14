@@ -35,7 +35,7 @@ const SettingsPage = async () => {
           <MobileBackLink />
           <SettingsPageHeading title="Réglages" lead="Votre espace, vos e-mails à vos clients, vos notifications." />
         </div>
-        {/* Two columns once the form has room for both (3.3: 712 and 320); below, the preview follows « Votre espace ». */}
+        {/* Two columns once the form has room for both (3.3: 712 and 320, the first one may narrow); below, the preview follows « Votre espace ». */}
         <div className="@container">
           <SpaceSettingsForm
             initial={{
