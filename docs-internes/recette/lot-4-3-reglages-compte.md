@@ -6,7 +6,7 @@ Dans l'ordre :
 - Prompt 6 : recette à 360 px.
 - Prompt 7 : revérification, sur l'aperçu, des corrections apportées après la recette du 14 octobre.
 - Prompt 8 : Vercel, les erreurs serveur de l'aperçu, en lecture seule, juste après le prompt 7.
-- Prompt 9 : vérification sur pulsacity.com, après la fusion.
+- Prompt 9 : vérification sur pulsacity.com, après la fusion, à la toute fin avec celles des autres lots.
 
 Ce lot ne touche à aucun service : aucune action à faire de votre côté sur Vercel, Supabase, Cloudflare, Resend ou Stripe, aucune variable. Une migration (0011, trois colonnes facultatives) : « Recette database migration » l'applique à la base de recette dès l'ouverture de la PR, « Database migration » à la production à la fusion.
 Si la dernière recette date de plus d'une semaine, réveillez d'abord la base de recette (prompt 0 bis de `lot-4-1-decisions.md`).
@@ -274,15 +274,15 @@ Compte rendu à me donner : la liste, sans aucun secret, ni adresse e-mail, ni v
 
 ## 9. Vérification sur pulsacity.com, après la fusion
 
-Avant ce prompt : la PR est fusionnée, « CI » et « Database migration » sont verts sur `main`, et le déploiement de production est en ligne. Connectez-vous vous-même sur https://pulsacity.com avec votre compte de test de production.
+PR fusionnée le 14 octobre, « CI » et « Database migration » verts sur `main`. Ce prompt se lance à la toute fin, avec les vérifications en production des autres lots (décision du fondateur, 14 octobre). Avant ce prompt : connectez-vous vous-même sur https://pulsacity.com avec votre compte de test de production.
 
 ```
-Tu vérifies sur la production de PULSACITY les pages Réglages et Mon compte. Je suis connecté sur https://pulsacity.com avec un compte de test. Tu ne supprimes rien, tu ne changes pas l'adresse de connexion, tu n'envoies aucune demande. Pour chaque point, note « OK » ou décris ce que tu vois.
+Tu vérifies sur la production de PULSACITY les pages Réglages et Mon compte. Je suis connecté sur https://pulsacity.com avec un compte de test. Tu ne supprimes rien, tu ne changes pas l'adresse de connexion, tu n'envoies aucune demande. Pour chaque point, note « OK » ou décris ce que tu vois. Ne relève pas les erreurs réseau vues par ton outil de surveillance du navigateur : elles ne font pas foi.
 
 1. Ouvre https://github.com/jawadboughalem/PULSACITY/actions/workflows/db-migrate.yml : la dernière exécution, sur main, est verte.
 2. https://pulsacity.com/app/reglages s'affiche, avec les quatre cartes, l'aperçu de la page de collecte à droite, et l'adresse de la page de collecte qui commence par « pulsacity.com/t/ ».
 3. Clique « Voir l'e-mail de demande » : l'e-mail s'affiche dans la fenêtre, avec « De : <nom de l'espace> via PULSACITY ». Ferme-la.
-4. Éteins puis rallume l'interrupteur « Nouveau témoignage » et clique « Enregistrer les modifications » : « Modifications enregistrées. »
+4. Éteins puis rallume l'interrupteur « Nouveau témoignage » et clique « Enregistrer les modifications » : « Modifications enregistrées. » apparaît en bas (il ne reste que 4 secondes ; s'il t'échappe, recharge la page et vérifie que l'interrupteur est allumé).
 5. https://pulsacity.com/app/compte s'affiche, avec les cinq cartes. « Appareils connectés » montre cet ordinateur avec « Cet appareil · actif maintenant ».
 6. Clique « Préparer le fichier », puis « Télécharger le fichier » : le fichier JSON est téléchargé et s'ouvre.
 7. Le menu du compte (en bas à gauche) : « Mon compte » mène à /app/compte, et le menu se ferme. La navigation : « Réglages » mène à /app/reglages.
