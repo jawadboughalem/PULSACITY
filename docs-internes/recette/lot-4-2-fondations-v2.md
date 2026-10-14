@@ -205,17 +205,27 @@ Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu
 
 ---
 
+Résultat de la contre-recette (14 octobre) : 8 points OK (1, 3 à 7, 9, 10), rien supprimé ni envoyé.
+- Point 2 non testé : connecté, /connexion et /inscription mènent à /app. Vérifié par Claude Code dans son conteneur (8 px entre le « ? » et le lien, l'anneau ne le touche plus) ; le prompt 5 le revoit en production, dans une fenêtre privée.
+- Point 8 : à 150 %, la page passe sous 1 024 px et « Demander un avis » s'ouvre en plein écran, comme prévu au téléphone (m20). En affichage ordinateur, fenêtre moins haute que le formulaire : la barre de défilement est entre les coins arrondis, les quatre coins restent ronds.
+- Hors liste : pas de « … » sur les cartes de Témoignages à 360 px. Mise en page v1, gardée jusqu'à la maquette v2 de Témoignages (lot 4.6).
+
+Recette validée par le fondateur le 14 octobre.
+
+---
+
 ## 5. Vérification sur pulsacity.com, après la fusion
 
 ```
 Tu vérifies la nouvelle charte graphique de PULSACITY en production, sur https://pulsacity.com. Tu ne crées aucun compte et tu n'envoies aucun formulaire. Pour chaque point, note « OK » ou décris ce que tu vois.
 
 1. Ouvre https://pulsacity.com/integrations dans une fenêtre de navigation privée (premier chargement, sans cache) : dès l'affichage, les titres sont en grotesque très gras et le texte en Figtree, pas en Arial. Lance dans la console : [...document.fonts].filter(f => f.family === "bricolage" || f.family === "figtree").map(f => f.family + " " + f.status).join(", "). Le résultat vaut « bricolage loaded, figtree loaded ». Ferme la fenêtre privée.
-2. https://pulsacity.com : le nouveau logo (fusée bleu marine, étoile corail) dans l'en-tête et l'onglet du navigateur ; le bouton principal jaune ; les titres en grotesque très gras. Aucun rouge carmin.
-3. https://pulsacity.com/tarifs : les trois colonnes arrondies, Essentiel en bleu clair ; la bascule Mensuel / Annuel en pilule.
-4. Dans la console, sur https://pulsacity.com : performance.getEntriesByType("resource").filter(e => e.name.includes("fonts.g")).length doit valoir 0 (aucune police chargée chez Google).
-5. Lance PageSpeed Insights (https://pagespeed.web.dev) sur https://pulsacity.com puis sur https://pulsacity.com/tarifs, en mobile. Note la performance, l'accessibilité, les bonnes pratiques et le SEO de chaque page.
-6. Ouvre https://www.opengraph.xyz/url/https%3A%2F%2Fpulsacity.com%2Ftarifs : l'aperçu montre le nouveau logo et le titre en grotesque très gras. Puis https://www.opengraph.xyz/url/https%3A%2F%2Fpulsacity.com : le logo et la promesse, une seule fois.
+2. Toujours dans une fenêtre privée, ouvre https://pulsacity.com/connexion et appuie sur Tab jusqu'au lien « Créer mon espace gratuit », en bas : l'anneau du focus ne touche pas le « ? » qui précède. Même chose sur https://pulsacity.com/inscription avec « Me connecter ». N'envoie rien.
+3. https://pulsacity.com : le nouveau logo (fusée bleu marine, étoile corail) dans l'en-tête et l'onglet du navigateur ; le bouton principal jaune ; les titres en grotesque très gras. Aucun rouge carmin.
+4. https://pulsacity.com/tarifs : les trois colonnes arrondies, Essentiel en bleu clair ; la bascule Mensuel / Annuel en pilule.
+5. Dans la console, sur https://pulsacity.com : performance.getEntriesByType("resource").filter(e => e.name.includes("fonts.g")).length doit valoir 0 (aucune police chargée chez Google).
+6. Lance PageSpeed Insights (https://pagespeed.web.dev) sur https://pulsacity.com puis sur https://pulsacity.com/tarifs, en mobile. Note la performance, l'accessibilité, les bonnes pratiques et le SEO de chaque page.
+7. Ouvre https://www.opengraph.xyz/url/https%3A%2F%2Fpulsacity.com%2Ftarifs : l'aperçu montre le nouveau logo et le titre en grotesque très gras. Puis https://www.opengraph.xyz/url/https%3A%2F%2Fpulsacity.com : le logo et la promesse, une seule fois.
 
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu, et les notes de PageSpeed.
 ```
