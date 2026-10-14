@@ -4,7 +4,9 @@ Dans l'ordre :
 - Prompt 1 : la migration de recette, puis deux espaces de démonstration, remplis depuis la branche de la PR.
 - Prompts 2 à 5 : recette sur l'aperçu, sur ordinateur.
 - Prompt 6 : recette à 360 px.
-- Prompt 7 : vérification sur pulsacity.com, après la fusion.
+- Prompt 7 : revérification, sur l'aperçu, des corrections apportées après la recette du 14 octobre.
+- Prompt 8 : Vercel, les erreurs serveur de l'aperçu, en lecture seule, juste après le prompt 7.
+- Prompt 9 : vérification sur pulsacity.com, après la fusion.
 
 Ce lot ne touche à aucun service : aucune action à faire de votre côté sur Vercel, Supabase, Cloudflare, Resend ou Stripe, aucune variable. Une migration (0011, trois colonnes facultatives) : « Recette database migration » l'applique à la base de recette dès l'ouverture de la PR, « Database migration » à la production à la fusion.
 Si la dernière recette date de plus d'une semaine, réveillez d'abord la base de recette (prompt 0 bis de `lot-4-1-decisions.md`).
@@ -79,7 +81,7 @@ D. La contrepartie et la couleur sur la page de collecte
 14. Ouvre https://pulsacity-git-claude-focused-pa-64f557-jawadboughalems-projects.vercel.app/t/ suivi de la fin d'adresse notée au point 3, puis /programme-30-jours, dans un nouvel onglet : le bouton « Envoyer mon avis » en bas est vert (#4F6F52), à texte blanc ; survolé, il fonce un peu. N'envoie rien. Ferme l'onglet.
 
 E. L'aperçu de l'e-mail
-15. Clique « Voir l'e-mail de demande » : une fenêtre s'ouvre au centre, « Aperçu de l'e-mail de demande », avec en haut « De : Julie Nutrition via PULSACITY · Objet : Camille, votre avis sur Programme 30 jours ? », puis l'e-mail dessiné : le logo choisi au point 10, « Bonjour Camille, », le bouton rouge « Donner mon avis (1 minute) » (l'ancien style des e-mails, attendu jusqu'au lot 4.8), et tout en bas « Julie Martin · 12 rue des Lilas · 69003 Lyon » puis « Ne plus recevoir ces e-mails ».
+15. Clique « Voir l'e-mail de demande » : une fenêtre s'ouvre au centre, « Aperçu de l'e-mail de demande », avec en haut « De : Julie Nutrition via PULSACITY · Objet : Camille, votre avis sur Programme 30 jours ? », puis l'e-mail dessiné : le logo choisi au point 10, « Bonjour Camille, », le bouton rouge « Donner mon avis (1 minute) » (l'ancien style des e-mails, attendu jusqu'au lot 4.8) et son lien de secours, puis en bas, dans l'ordre : « Vous recevez cet e-mail parce que vous avez acheté … », « Julie Martin · 12 rue des Lilas · 69003 Lyon », « Ne plus recevoir ces e-mails », « Envoyé avec PULSACITY pour Julie Nutrition ».
 16. Dessous : « Exemple, pour un client fictif. Le texte reste celui de PULSACITY ; votre nom, votre logo et votre adresse postale s'y appliquent. » Clique « Fermer » : la fenêtre se ferme. Rouvre-la, puis appuie sur Échap : elle se ferme aussi.
 17. Vide l'adresse postale (sans enregistrer), puis rouvre l'aperçu : la ligne de l'adresse a disparu du bas de l'e-mail. Ferme la fenêtre et recharge la page sans enregistrer.
 
@@ -144,7 +146,7 @@ E. Le changement d'adresse de connexion
 9. Clique « Changer d'adresse » : « Aujourd'hui : … » rappelle l'adresse actuelle, puis le champ « Nouvelle adresse », le bouton « Envoyer le lien », le lien « Annuler », et « Nous envoyons un lien à la nouvelle adresse. Elle remplace l'ancienne dès que vous cliquez dessus. »
 10. Écris « recette@exemple » et clique « Envoyer le lien » : le champ prend un bord rouge et le message « Cette adresse e-mail est incomplète. Écrivez-la en entier, par exemple julie@exemple.fr. » apparaît juste dessous.
 11. Demande-moi l'adresse C et écris-la, puis clique « Envoyer le lien » : un bandeau vert « Un lien est parti à <adresse C>. » avec « Votre adresse change quand vous cliquez dessus. D'ici là, gardez celle-ci : <adresse A>. »
-12. Demande-moi si l'e-mail « Confirmez votre nouvelle adresse de connexion » est arrivé dans la boîte C, et de cliquer sur « Confirmer cette adresse » dans cette fenêtre de navigateur. On attend le retour sur Mon compte, avec « Adresse de connexion changée. » en bas, et l'adresse C dans « Adresse de connexion ».
+12. Demande-moi si l'e-mail « Confirmez votre nouvelle adresse de connexion » est arrivé dans la boîte C, et de cliquer sur « Confirmer cette adresse » dans cette fenêtre de navigateur. On attend le retour sur Mon compte, avec « Adresse de connexion changée. » en bas (il ne reste que 4 secondes : demande-moi de regarder le bas de l'écran dès que la page s'ouvre), et l'adresse C dans « Adresse de connexion ».
 13. Demande-moi de cliquer une seconde fois sur le même lien : on attend Mon compte avec un bandeau rouge « Ce lien ne marche plus. »
 14. Remets l'adresse A de la même façon (« Changer d'adresse », adresse A, lien reçu dans la boîte A, clic). On attend de nouveau « Adresse de connexion changée. » et l'adresse A.
 
@@ -210,7 +212,61 @@ Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu
 
 ---
 
-## 7. Vérification sur pulsacity.com, après la fusion
+## Résultats de la recette du 14 octobre (prompts 1 à 6)
+
+Tout est passé, avec ces remarques :
+- **Menu du compte** (prompt 4, point 1) : il restait ouvert par-dessus la page ouverte par un de ses liens. Corrigé : suivre un lien du menu le ferme (testé). Le défaut datait d'avant ce lot ; il se voit maintenant que « Mon compte » mène à une vraie page.
+- **Adresse de la page de collecte** (prompts 2, 5 et 6) : l'adresse d'un aperçu est longue ; à 360 px, la partie modifiable n'avait que 98 px et « julie-nutrition » était coupé. Corrigé : la partie grise est coupée par son début (« …vercel.app/t/ » reste lisible) et la partie modifiable garde au moins 45 % du champ. En production, « pulsacity.com/t/ » tient en entier à 360 px, et « julie-nutrition » aussi (mesuré dans le conteneur).
+- **« Adresse de connexion changée. »** (prompt 4, points 12 et 14) et **« Modifications enregistrées. »** (prompt 3, point 4) : non vus. Rejoués dans le conteneur : le message apparaît dès l'ouverture de la page et reste 4 secondes, comme le veut la charte (« Message après une action »). L'agent regarde trop tard, et le bouton « Stop Claude » de Claude in Chrome couvre le bas de l'écran, là où le message s'affiche.
+- **Erreurs 503** (prompt 3) : le navigateur a vu des 503 en enregistrant Réglages et en ouvrant Témoignages, Widgets et Connecteurs, sans erreur à l'écran. Rien de tel dans le conteneur, sur la version de production : la piste est côté Vercel. Prompts 7 et 8.
+- Sans défaut : le témoignage « interrupteur éteint » est au nom du remplissage automatique du navigateur (« Prénom et nom » demande bien le nom entier) ; le pied de l'e-mail de demande est celui de l'e-mail v1 (texte du point 15 du prompt 2 corrigé) ; « Supprimer définitivement » inactif est gris clair sans rouge, et la fenêtre a une croix « Fermer », comme le veut la charte (« Bouton danger », « Fenêtre de dialogue ») ; l'aperçu de la page de collecte garde le nom enregistré tant que le champ est vide.
+
+---
+
+## 7. Revérification sur l'aperçu, après les corrections
+
+Avant ce prompt : sur https://github.com/jawadboughalem/PULSACITY/pull/36, le commentaire de Vercel dit « Ready », mis à jour après le dernier commit (« Close the account menu on its links… »). Connectez-vous vous-même sur l'aperçu avec l'adresse A, fenêtre en grand.
+
+Facultatif, à faire vous-même si vous voulez voir « Adresse de connexion changée. » : Mon compte, « Changer d'adresse », adresse C, cliquez le lien reçu en regardant le bas de l'écran dès que la page s'ouvre ; puis remettez l'adresse A de la même façon.
+
+```
+Tu revérifies deux corrections de PULSACITY sur l'aperçu https://pulsacity-git-claude-focused-pa-64f557-jawadboughalems-projects.vercel.app. Je suis connecté. Pour chaque point, note « OK » ou décris ce que tu vois. N'enregistre rien, n'envoie rien, ne supprime rien. Note l'heure à laquelle tu commences.
+
+Pendant tout le prompt, garde un œil sur la console et les requêtes réseau : pour chaque erreur 500 à 599, note l'heure, l'adresse complète de la requête (avec son domaine, sans ce qui suit « ? ») et le code.
+
+A. Le menu du compte, fenêtre en grand
+1. Ouvre https://pulsacity-git-claude-focused-pa-64f557-jawadboughalems-projects.vercel.app/app/reglages. Ouvre le menu du compte en bas à gauche et clique « Mon compte » : Mon compte s'ouvre, et le menu se ferme seul (plus aucun panneau au-dessus du bouton du compte, sans appuyer sur Échap).
+2. Rouvre le menu et clique « Abonnement et factures » : même chose, le menu se ferme seul.
+
+B. L'adresse de la page de collecte
+3. Ouvre Réglages, fenêtre en grand. « Adresse de votre page de collecte » : le champ commence par « … », puis la fin de l'adresse de l'aperçu en gris, qui se termine par « vercel.app/t/ », puis « julie-nutrition » en entier.
+4. Affiche Réglages à 360 px de large (comme la dernière fois : un cadre de 360 px, sans barre de défilement). Le même champ montre « … », une fin d'adresse grise terminée par « /t/ », puis « julie-nutrition » en entier, sans lettre coupée. Mesure la largeur de la partie modifiable (le champ de saisie) : on attend 110 px environ.
+5. Navigue, toujours à 360 px puis fenêtre en grand : Accueil, Témoignages, Widgets, Connecteurs, Réglages, Mon compte. Puis, sur Réglages, clique deux fois « Enregistrer les modifications » sans rien changer.
+
+Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu, l'heure de début et de fin, et la liste des erreurs 500 à 599 vues (ou « aucune »). Ne recopie aucune adresse e-mail.
+```
+
+---
+
+## 8. Vercel — les erreurs serveur de l'aperçu, en lecture seule
+
+Juste après le prompt 7 : un projet Vercel gratuit ne garde ses journaux qu'une heure environ.
+
+```
+Tu m'aides à lire les journaux de l'aperçu de PULSACITY sur Vercel. Tu ne modifies rien : aucun réglage, aucune variable, aucun domaine, aucun redéploiement.
+
+1. Ouvre https://vercel.com/jawadboughalems-projects/pulsacity/logs (connecte-toi si je dois le faire, demande-moi).
+2. Choisis la plus longue période proposée (au moins la dernière heure), et l'environnement Preview.
+3. Filtre sur les codes de statut de 500 à 599 (le filtre « Status Code », ou cherche « 503 » puis « 500 »).
+4. Pour chaque requête trouvée (vingt au plus, les plus récentes) : l'heure, la méthode (GET, POST), le chemin (remplace toute longue suite de lettres et de chiffres par « … »), le code, puis, en ouvrant la ligne, le code d'erreur Vercel s'il y en a un (par exemple FUNCTION_THROTTLED ou FUNCTION_INVOCATION_FAILED) et le message d'erreur de la fonction (la première ligne seulement).
+5. S'il n'y en a aucune, dis-le, avec la période couverte.
+
+Compte rendu à me donner : la liste, sans aucun secret, ni adresse e-mail, ni valeur de cookie ou d'en-tête.
+```
+
+---
+
+## 9. Vérification sur pulsacity.com, après la fusion
 
 Avant ce prompt : la PR est fusionnée, « CI » et « Database migration » sont verts sur `main`, et le déploiement de production est en ligne. Connectez-vous vous-même sur https://pulsacity.com avec votre compte de test de production.
 
@@ -223,7 +279,8 @@ Tu vérifies sur la production de PULSACITY les pages Réglages et Mon compte. J
 4. Éteins puis rallume l'interrupteur « Nouveau témoignage » et clique « Enregistrer les modifications » : « Modifications enregistrées. »
 5. https://pulsacity.com/app/compte s'affiche, avec les cinq cartes. « Appareils connectés » montre cet ordinateur avec « Cet appareil · actif maintenant ».
 6. Clique « Préparer le fichier », puis « Télécharger le fichier » : le fichier JSON est téléchargé et s'ouvre.
-7. Le menu du compte (en bas à gauche) : « Mon compte » mène à /app/compte. La navigation : « Réglages » mène à /app/reglages.
+7. Le menu du compte (en bas à gauche) : « Mon compte » mène à /app/compte, et le menu se ferme. La navigation : « Réglages » mène à /app/reglages.
+8. À 360 px (un cadre de 360 px, comme à la recette), sur Réglages : « pulsacity.com/t/ » en gris, en entier, puis la fin de l'adresse de la page de collecte, sans lettre coupée.
 
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu.
 ```

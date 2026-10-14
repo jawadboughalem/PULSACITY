@@ -17,7 +17,8 @@ type CollectionAddressFieldProps = {
 
 /**
  * Réglages, Adresse de votre page de collecte: the site's part stays in the field, in Gris, before the space's part.
- * Taken by another space: « Prendre … », a free one, beside the field (under the error on a phone).
+ * Taken by another space: « Prendre … », a free one, beside the field (under the error on a phone). A long site's part
+ * (a preview's) is cut at its start, so that « …/t/ » stays, and the space's part keeps at least 45 % of the field.
  */
 export const CollectionAddressField = ({ prefix, value, onChange, error, suggestedSlug }: CollectionAddressFieldProps) => {
   const suggestion = suggestedSlug ? (
@@ -39,8 +40,8 @@ export const CollectionAddressField = ({ prefix, value, onChange, error, suggest
             error ? "border-error" : "border-gray hover:border-ink focus-within:border-ink",
           )}
         >
-          <span aria-hidden="true" className="min-w-[0] max-w-[60%] shrink truncate text-gray">
-            {prefix}
+          <span aria-hidden="true" dir="rtl" className="min-w-[0] shrink truncate text-gray">
+            <bdi dir="ltr">{prefix}</bdi>
           </span>
           <input
             id="slug"
@@ -54,7 +55,7 @@ export const CollectionAddressField = ({ prefix, value, onChange, error, suggest
             required
             aria-invalid={error ? true : undefined}
             aria-describedby={cn("slug-hint", error && "slug-error")}
-            className="h-full min-w-[0] flex-1 bg-transparent text-ink focus:outline-none"
+            className="h-full min-w-[45%] flex-1 bg-transparent text-ink focus:outline-none"
           />
         </div>
         {suggestion ? <div className="max-desktop:hidden">{suggestion}</div> : null}
