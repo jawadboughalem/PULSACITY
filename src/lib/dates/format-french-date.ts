@@ -27,3 +27,7 @@ export const formatLongDate = (date: Date): string => withFirstDay(LONG_DATE.for
 
 /** « 26 sept. 2026 à 21:47 » */
 export const formatDateTime = (date: Date): string => `${DAY_MONTH_YEAR.format(date)} à ${HOUR_MINUTE.format(date)}`;
+
+/** « 12 oct. 2026 à 15 h 40 » (3.3, the export of Mon compte). */
+export const formatDateAtHour = (date: Date): string =>
+  `${formatDayMonthYear(date)} à ${HOUR_MINUTE.format(date).replace(":", "\u00a0h\u00a0")}`;

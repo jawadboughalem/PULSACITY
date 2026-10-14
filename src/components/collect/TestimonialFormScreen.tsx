@@ -35,6 +35,7 @@ type TestimonialFormScreenProps = {
   form: TestimonialFormState;
   spaceName: string;
   logoUrl: string | null;
+  accentColor: string | null;
   title: string;
   consentText: string;
   homeUrl: string;
@@ -45,6 +46,7 @@ export const TestimonialFormScreen = ({
   form,
   spaceName,
   logoUrl,
+  accentColor,
   title,
   consentText,
   homeUrl,
@@ -115,6 +117,7 @@ export const TestimonialFormScreen = ({
         />
         <HoneypotField value={values.honeypot} onChange={setters.setHoneypot} />
         <CollectSubmitButton
+          accentColor={accentColor}
           isSubmitting={form.isSubmitting}
           isWaitingForPhoto={form.photoUpload.state.status === "uploading"}
         />

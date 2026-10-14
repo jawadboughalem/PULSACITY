@@ -149,19 +149,19 @@ await sql.begin(async (tx) => {
   const [existingUser] = await tx`select id from "user" where email = ${email}`;
   const userId = existingUser?.id ?? randomUUID();
   if (existingUser) {
-    await tx`update "user" set name = 'Julie Martin', email_verified = true where id = ${userId}`;
+    await tx`update "user" set name = 'Julie', email_verified = true where id = ${userId}`;
     await tx`delete from spaces where user_id = ${userId}`;
   } else {
-    await tx`insert into "user" (id, name, email, email_verified) values (${userId}, 'Julie Martin', ${email}, true)`;
+    await tx`insert into "user" (id, name, email, email_verified) values (${userId}, 'Julie', ${email}, true)`;
   }
 
   const [slugTaken] = await tx`select id from spaces where slug = 'julie-nutrition'`;
   const slug = slugTaken ? `julie-nutrition-${randomUUID().slice(0, 6)}` : "julie-nutrition";
   const [space] = await tx`
     insert into spaces (user_id, name, slug, accent_color, reply_to_email, plan, referral_code,
-      collection_link_shared_at, first_day_celebrated_at, first_approval_celebrated_at)
+      collection_link_shared_at, first_day_celebrated_at, first_approval_celebrated_at, sender_postal_address)
     values (${userId}, 'Julie Nutrition', ${slug}, '#4F6F52', ${email}, ${plan}, ${randomUUID().slice(0, 8)},
-      ${daysAgo(130)}, ${daysAgo(130)}, ${daysAgo(120)})
+      ${daysAgo(130)}, ${daysAgo(130)}, ${daysAgo(120)}, ${"Julie Martin\n12 rue des Lilas\n69003 Lyon"})
     returning id`;
   await tx`insert into widgets (space_id, type) values (${space.id}, 'wall')`;
 

@@ -8,24 +8,31 @@ const SLUG_MESSAGE = "Utilisez des lettres minuscules, des chiffres et des tiret
 
 const ACCENT_COLOR_MESSAGE = "Choisissez la couleur dans le sélecteur.";
 
+/** The fields a space is created with (onboarding), and changed with afterwards (Réglages). */
+export const spaceNameSchema = z
+  .string()
+  .trim()
+  .min(2, { error: "Indiquez le nom de votre activité." })
+  .max(MAX_SPACE_NAME_LENGTH, { error: `Ce nom dépasse ${MAX_SPACE_NAME_LENGTH} caractères. Raccourcissez-le.` });
+
+export const spaceSlugSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .min(MIN_SLUG_LENGTH, { error: SLUG_MESSAGE })
+  .max(MAX_SLUG_LENGTH, { error: SLUG_MESSAGE })
+  .regex(SLUG_PATTERN, { error: SLUG_MESSAGE });
+
+export const replyToEmailSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .pipe(z.email({ error: "Cette adresse e-mail est incomplète. Écrivez-la en entier, par exemple julie@exemple.fr." }));
+
 export const newSpaceFormSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, { error: "Indiquez le nom de votre activité." })
-    .max(MAX_SPACE_NAME_LENGTH, { error: `Ce nom dépasse ${MAX_SPACE_NAME_LENGTH} caractères. Raccourcissez-le.` }),
-  slug: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .min(MIN_SLUG_LENGTH, { error: SLUG_MESSAGE })
-    .max(MAX_SLUG_LENGTH, { error: SLUG_MESSAGE })
-    .regex(SLUG_PATTERN, { error: SLUG_MESSAGE }),
-  replyToEmail: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .pipe(z.email({ error: "Cette adresse e-mail est incomplète. Écrivez-la en entier, par exemple julie@exemple.fr." })),
+  name: spaceNameSchema,
+  slug: spaceSlugSchema,
+  replyToEmail: replyToEmailSchema,
   accentColor: z
     .union([z.literal(""), z.string().regex(HEX_COLOR_PATTERN, { error: ACCENT_COLOR_MESSAGE })], {
       error: ACCENT_COLOR_MESSAGE,

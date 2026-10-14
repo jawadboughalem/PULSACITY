@@ -54,9 +54,9 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 ## Structure
 
 ```
-src/app/(marketing)/          # /, /integrations, /integrations/[connector], /tarifs, /guides, /guides/[slug], légal
+src/app/(marketing)/          # /, /integrations, /integrations/[connector], /tarifs, /guides, /guides/[slug], légal, /espace-supprime
 src/app/(auth)/               # /inscription, /connexion
-src/app/app/                  # /app, /app/temoignages, /app/offres, /app/widgets, /app/connecteurs, /app/connecteurs/[connector], /app/demandes, /app/reglages, /app/facturation
+src/app/app/                  # /app, /app/temoignages, /app/offres, /app/widgets, /app/connecteurs, /app/connecteurs/[connector], /app/demandes, /app/reglages (l'espace), /app/compte (la personne, export /app/compte/export), /app/facturation
 src/app/t/[spaceSlug]/        # page publique de collecte (+ /t/[spaceSlug]/[productSlug])
 src/app/api/connectors/[connector]/[token]/  # réception des webhooks de tous les connecteurs
 src/app/api/widget/[widgetId]/# JSON public des témoignages d'un widget (cache CDN)
@@ -82,8 +82,8 @@ src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées
 
 ## Modèle de données
 
-- Tables Better Auth : `user`, `session`, `account`, `verification`
-- `spaces` : id, userId, name, slug (unique), logoUrl, accentColor, replyToEmail, plan (free|essentiel|pro), stripeCustomerId, stripeSubscriptionId, referralCode, collectionLinkSharedAt, firstDayCelebratedAt, firstApprovalCelebratedAt (moments de marque déjà joués), createdAt
+- Tables Better Auth : `user` (name = prénom du créateur, facultatif, « Bonjour Julie » ; Mon compte), `session`, `account`, `verification`
+- `spaces` : id, userId, name, slug (unique, modifiable dans Réglages : l'ancienne adresse cesse de marcher), logoUrl, accentColor (bouton de la page de collecte, étoiles et widgets), replyToEmail, senderPostalAddress (pied des e-mails aux clients, une ligne par ligne saisie), newTestimonialEmailEnabled (e-mail « Nouveau témoignage », vrai par défaut), incentiveDeclaredAt (« J'offre une contrepartie », depuis quand ; null = non), plan (free|essentiel|pro), stripeCustomerId, stripeSubscriptionId, referralCode, collectionLinkSharedAt, firstDayCelebratedAt, firstApprovalCelebratedAt (moments de marque déjà joués), createdAt. Supprimer l'espace (Mon compte) supprime le compte `user` et, en cascade, tout l'espace ; l'abonnement s'arrête d'abord (`src/lib/billing/stop-space-subscription.ts`, branché au lot 4.5)
 - `connections` : id, spaceId, connector (systeme|stripe|calendly|…), webhookToken (unique, secret, régénérable), status (pending|active|error), lastEventAt, config (jsonb : signingSecret), createdAt (unique spaceId + connector)
 - `products` (les « offres » : formation, accompagnement, séance…) : id, spaceId, name, slug, requestDelayDays (défaut 14), requestsEnabled (bool), createdAt
 - `product_refs` : id, productId, connectionId, externalRef — relie une offre à son identifiant dans chaque connecteur

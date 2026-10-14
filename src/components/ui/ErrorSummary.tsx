@@ -7,18 +7,32 @@ import { Icon } from "./Icon";
 export type ErrorSummaryItem = {
   fieldId: string;
   message: string;
+  /** On a phone, the field's name alone, when the message is long (Réglages). */
+  shortMessage?: string;
 };
 
 type ErrorSummaryProps = {
   title: string;
+  /** On a phone, a shorter title. */
+  shortTitle?: string;
   items: ErrorSummaryItem[];
 };
+
+const Responsive = ({ text, short }: { text: string; short?: string }) =>
+  short ? (
+    <>
+      <span className="desktop:hidden">{short}</span>
+      <span className="max-desktop:hidden">{text}</span>
+    </>
+  ) : (
+    text
+  );
 
 /**
  * The list of what to fix, at the top of a form: it takes the focus, and each line leads to its field. Charte v2: the
  * error banner (Erreur fond, a 2 px Erreur border, the icon in Erreur, the text in Encre).
  */
-export const ErrorSummary = ({ title, items }: ErrorSummaryProps) => {
+export const ErrorSummary = ({ title, shortTitle, items }: ErrorSummaryProps) => {
   const summaryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -42,7 +56,9 @@ export const ErrorSummary = ({ title, items }: ErrorSummaryProps) => {
     >
       <Icon name="alert" size={24} className="mt-[1px] shrink-0 text-error" />
       <div className="flex flex-col gap-2">
-        <p className="text-body font-bold">{title}</p>
+        <p className="text-body font-bold">
+          <Responsive text={title} short={shortTitle} />
+        </p>
         <ul className="flex list-disc flex-col gap-1 pl-6 text-small">
           {items.map((item) => (
             <li key={item.fieldId}>
@@ -51,7 +67,7 @@ export const ErrorSummary = ({ title, items }: ErrorSummaryProps) => {
                 onClick={(event) => goToField(event, item.fieldId)}
                 className={INLINE_LINK_CLASSES}
               >
-                {item.message}
+                <Responsive text={item.message} short={item.shortMessage} />
               </a>
             </li>
           ))}

@@ -37,6 +37,13 @@ beforeEach(async () => {
 });
 
 describe("submitTestimonial", () => {
+  it("keeps the testimonial, without telling the creator who turned off « Nouveau témoignage »", async () => {
+    await database.update(spaces).set({ newTestimonialEmailEnabled: false }).where(eq(spaces.id, spaceId));
+
+    expect(await submitTestimonial(database, CAMILLE)).toEqual({ status: "received", notification: null });
+    expect(await findTestimonials()).toHaveLength(1);
+  });
+
   it("keeps the testimonial pending, with the consent text and its date", async () => {
     const before = new Date();
 

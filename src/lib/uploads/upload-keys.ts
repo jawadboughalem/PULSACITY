@@ -25,3 +25,8 @@ export const buildTestimonialPhotoKey = (spaceId: string, contentType: ImageCont
 
 export const isTestimonialPhotoKeyOf = (spaceId: string, key: string) =>
   isKeyOf(TESTIMONIAL_PHOTO_FOLDER, spaceId, key);
+
+/** Every file of one owner sits under its folder: deleting a space deletes these folders. */
+export const logoFolderOf = (userId: string) => `${LOGO_FOLDER}/${userId}/`;
+
+export const testimonialPhotoFolderOf = (spaceId: string) => `${TESTIMONIAL_PHOTO_FOLDER}/${spaceId}/`;

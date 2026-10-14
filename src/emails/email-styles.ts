@@ -17,8 +17,8 @@ const SANS = "Arial, Helvetica, sans-serif";
 
 export const EMAIL_MOBILE_STYLES = `
 @media (max-width: 600px) {
-  .email-card { padding: 24px !important; }
-  .email-legal { padding: 0 24px !important; }
+  .email-card > tbody > tr > td { padding: 24px !important; }
+  .email-legal > tbody > tr > td { padding: 0 24px !important; }
   .email-button { display: block !important; padding-top: 14px !important; padding-bottom: 14px !important; text-align: center !important; }
 }
 `;

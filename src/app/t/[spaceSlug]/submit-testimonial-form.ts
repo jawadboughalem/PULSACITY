@@ -38,12 +38,15 @@ export const submitTestimonialForm = async (input: unknown): Promise<SubmitTesti
   const result = await submitTestimonial(database, parsed.data);
   if (result.status !== "received") return { ok: false, error: result.status };
 
-  after(async () => {
-    try {
-      await notifyCreatorOfTestimonial(result.notification);
-    } catch (error) {
-      Sentry.captureException(error);
-    }
-  });
+  const { notification } = result;
+  if (notification) {
+    after(async () => {
+      try {
+        await notifyCreatorOfTestimonial(notification);
+      } catch (error) {
+        Sentry.captureException(error);
+      }
+    });
+  }
   return { ok: true, data: null };
 };
