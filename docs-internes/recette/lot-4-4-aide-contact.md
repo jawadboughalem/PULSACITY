@@ -156,7 +156,7 @@ Compte rendu à me donner : les points 1 à 5 avec « OK » ou ta description, e
 - Hors cahier (prompt 1) : les erreurs restaient affichées pendant la saisie et pendant « Envoi… » : l'erreur d'un champ part maintenant dès qu'on le modifie, et le cadre rouge avec la dernière. Après l'envoi, la carte rapetissait et son titre passait sous l'en-tête : la page le ramène en vue.
 - Prompt 2 : 4 sur 4. L'adresse A et la boîte de contact@ étant la même, le cas d'un visiteur sur une autre boîte reste à voir (prompt 8, facultatif). Le logo cassé de l'e-mail vient de l'aperçu, protégé par Vercel Authentication, comme l'e-mail « Nouveau témoignage » au lot 6 : à vérifier en production (prompt 9).
 - Prompt 3 : 4 sur 4. Remarque : connecté, l'en-tête du site montre « Se connecter » et « Créer mon espace gratuit », comme la maquette 8.4 : question pour Design.
-- Prompt 4 : la limite ne s'est pas déclenchée, cinq messages en moins de 4 minutes. Le compteur est en base, pas en mémoire, et il joue en local et dans les tests ; cause la plus probable : l'adresse IP vue par Vercel a changé d'un envoi à l'autre (IPv6 temporaire, alternance IPv4 et IPv6), ce qui ouvre un compteur par adresse IP. Ajouté : 3 messages par quart d'heure pour une même adresse e-mail, quel que soit le réseau. Le prompt 7 vérifie la cause.
+- Prompt 4 : la limite ne s'est pas déclenchée, cinq messages en moins de 4 minutes. Le compteur est en base, pas en mémoire, et il joue en local et dans les tests. Première hypothèse : une adresse IP qui change d'un envoi à l'autre ; le prompt 7 l'a écartée (voir plus bas). Ajouté : 3 messages par quart d'heure pour une même adresse e-mail, quel que soit le réseau.
 - Prompt 5 : 9 sur 9. Les deux « [À COMPLÉTER] » des mentions légales attendent le lot 4.9. Le plan du site d'un aperçu donne l'adresse de l'aperçu ; en production, celle de pulsacity.com (prompt 9).
 - Prompt 6 : 5 sur 5.
 
@@ -227,6 +227,14 @@ Compte rendu à me donner : les points 1 à 8 avec « OK » ou ta description, e
 Puis, vous-même :
 - dans la boîte de contact@pulsacity.com : les trois e-mails « Contre-recette 4.4, envoi 1 » à « envoi 3 » sont arrivés, pas le quatrième ;
 - facultatif, le cas d'un visiteur : depuis une fenêtre privée, envoyez un message sur /aide avec une adresse d'une autre boîte que celle de contact@ ; répondez-y depuis la boîte de contact@ ; dans l'autre boîte, notez de quelle adresse arrive la réponse (votre adresse personnelle, ou contact@pulsacity.com).
+
+---
+
+## Résultats de la contre-recette du 14 octobre (prompts 7 et 8)
+
+- Prompt 7 : `contact-message-all`, une clé, 6 envois comptés, fenêtre ouverte à 19:20 ; `contact-message-ip`, une seule clé, 3 envois, fenêtre ouverte à 19:35:57. Une seule clé : l'adresse IP n'a pas changé. Le quart d'heure compte depuis le premier message (prompt 1, vers 19:20) et s'est refermé à 19:35 au milieu du prompt 4 : le premier message, le deuxième (prompt 3) et « limite 1 » comptaient dans l'ancien quart d'heure, « limite 2 » à « limite 4 » dans le nouveau, jamais plus de 3 par quart d'heure. La limite marchait ; c'est le cahier qui supposait un quart d'heure glissant. La limite par adresse e-mail reste : une adresse IP peut changer d'un envoi à l'autre.
+- Prompt 8 : 8 sur 8. « Retour » réaffiche /aide à hauteur de « Widgets », et le guide Zapier à hauteur de « Choisir le déclencheur » ; les erreurs partent pendant la saisie, champ par champ, puis le cadre rouge ; « Message envoyé. » avec le titre « Écrivez-nous » en vue, à 360 et à 1440 px ; le quatrième message d'affilée est arrêté par « Plusieurs messages sont partis en peu de temps. », sujet et message gardés.
+- Recette validée le 14 octobre.
 
 ---
 
