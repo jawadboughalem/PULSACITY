@@ -15,8 +15,8 @@ export const MeanwhileList = ({ items, layout }: MeanwhileListProps) => (
   <ul
     className={cn(
       layout === "columns"
-        ? "grid gap-6 desktop:grid-cols-3 desktop:gap-7"
-        : "flex flex-col border-t border-ink-900",
+        ? "grid gap-8 desktop:grid-cols-3 desktop:gap-10"
+        : "flex flex-col border-t border-ink",
     )}
   >
     {items.map((item) => (
@@ -24,12 +24,12 @@ export const MeanwhileList = ({ items, layout }: MeanwhileListProps) => (
         key={item.title}
         className={cn(
           "flex flex-col",
-          layout === "columns" ? "gap-3 border-t border-ink-900 pt-5" : "gap-2 border-b border-hairline-200 py-5 desktop:py-6",
+          layout === "columns" ? "gap-3 border-t border-ink pt-6" : "gap-2 border-b border-hairline-200 py-6 desktop:py-8",
         )}
       >
         {item.icon ? <Icon name={item.icon} size={20} className="mb-1" /> : null}
-        <h3 className="font-serif text-quote font-medium">{item.title}</h3>
-        <p className="max-w-text text-body text-slate-600">{item.text}</p>
+        <h3 className="font-display text-quote font-semibold">{item.title}</h3>
+        <p className="max-w-text text-body text-gray">{item.text}</p>
         {item.link ? (
           <Link href={item.link.href} className={cn(TEXT_LINK_CLASSES, "self-start")}>
             {item.link.label}

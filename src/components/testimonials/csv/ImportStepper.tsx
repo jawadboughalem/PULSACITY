@@ -15,12 +15,12 @@ export const ImportStepper = ({ current }: ImportStepperProps) => (
         aria-current={index === current ? "step" : undefined}
         className="flex flex-auto flex-col gap-3 text-small"
       >
-        <span className={cn("h-[4px]", index <= current ? "bg-ink-900" : "bg-hairline-200")} />
+        <span className={cn("h-[4px]", index <= current ? "bg-ink" : "bg-hairline-200")} />
         <span
           className={cn(
-            index === current && "font-semibold text-ink-900",
-            index < current && "text-ink-900",
-            index > current && "text-slate-600",
+            index === current && "font-bold text-ink",
+            index < current && "text-ink",
+            index > current && "text-gray",
           )}
         >
           {label}

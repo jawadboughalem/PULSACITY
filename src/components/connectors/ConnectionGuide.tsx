@@ -51,7 +51,7 @@ const renderPart = (part: GuidePart, index: number) =>
   typeof part === "string" ? (
     <Fragment key={index}>{part}</Fragment>
   ) : (
-    <strong key={index} className="font-semibold">
+    <strong key={index} className="font-bold">
       {part.strong}
     </strong>
   );
@@ -69,12 +69,12 @@ export const ConnectionGuide = ({ connectorId, connectorName }: ConnectionGuideP
     );
   }
   return (
-    <ol className="grid grid-cols-[repeat(auto-fill,minmax(232px,1fr))] gap-5">
+    <ol className="grid grid-cols-[repeat(auto-fill,minmax(232px,1fr))] gap-6">
       {steps.map((step, index) => (
         <li key={index} className="flex flex-col gap-3">
-          <div className="border border-hairline-200 bg-paper-100">{step.drawing}</div>
+          <div className="border border-hairline-200 bg-sky">{step.drawing}</div>
           <p className="text-small">
-            <span className="font-semibold">{`${index + 1}.`}</span> {step.parts.map(renderPart)}
+            <span className="font-bold">{`${index + 1}.`}</span> {step.parts.map(renderPart)}
           </p>
         </li>
       ))}
@@ -118,8 +118,8 @@ const OPTIONAL_GUIDES: Record<string, OptionalGuide> = {
 
 const RuleCard = ({ caption, name, hint }: RuleBox) => (
   <div className="flex flex-1 flex-col gap-1 border border-hairline-200 bg-white p-4">
-    <p className="text-small text-slate-600">{caption}</p>
-    <p className="text-body font-semibold">{name}</p>
+    <p className="text-small text-gray">{caption}</p>
+    <p className="text-body font-bold">{name}</p>
     <p className="text-small">{hint}</p>
   </div>
 );
@@ -149,19 +149,19 @@ export const ConnectionOptionalStep = ({ connectorId }: { connectorId: string })
   const guide = OPTIONAL_GUIDES[connectorId];
   if (!guide) return null;
   return (
-    <section aria-labelledby="optional-step" className="flex gap-4 border-b border-hairline-200 py-6 desktop:gap-5 desktop:py-7">
+    <section aria-labelledby="optional-step" className="flex gap-4 border-b border-hairline-200 py-8 desktop:gap-6 desktop:py-10">
       <span
         aria-hidden="true"
-        className="flex size-[32px] shrink-0 items-center justify-center rounded-full border border-ink-900 bg-white desktop:size-[40px]"
+        className="flex size-[32px] shrink-0 items-center justify-center rounded-full border border-ink bg-white desktop:size-[40px]"
       >
         <Icon name="plus" size={20} />
       </span>
-      <div className="flex min-w-[0] flex-1 flex-col gap-5">
+      <div className="flex min-w-[0] flex-1 flex-col gap-6">
         <div className="flex flex-col gap-1">
-          <h3 id="optional-step" className="font-serif text-quote font-medium">
+          <h3 id="optional-step" className="font-display text-quote font-semibold">
             {guide.title}
           </h3>
-          <p className="max-w-text text-body text-slate-600">{guide.description}</p>
+          <p className="max-w-text text-body text-gray">{guide.description}</p>
         </div>
         <ConnectionRule connectorId={connectorId} addressStep={1} />
         <p className="max-w-text text-small">{guide.parts.map(renderPart)}</p>

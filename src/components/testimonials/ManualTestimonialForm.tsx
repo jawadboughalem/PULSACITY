@@ -102,7 +102,7 @@ const describeSummary = (count: number) =>
   `${count} ${count > 1 ? "points" : "point"} à corriger avant d'ajouter le témoignage`;
 
 const CONTROL_CLASSES =
-  "w-full rounded-sm border border-gray-400 bg-white text-body text-ink-900 placeholder:text-slate-600 focus:border-2 focus:border-ink-900 focus:outline-none disabled:cursor-not-allowed disabled:bg-paper-100";
+  "w-full rounded-card border border-gray bg-white text-body text-ink placeholder:text-gray focus:border-2 focus:border-ink focus:outline-none disabled:cursor-not-allowed disabled:bg-sky";
 
 type ManualTestimonialFormProps = {
   products: { id: string; name: string }[];
@@ -172,7 +172,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
   const consentError = messageFor("hasConsent");
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
       {submitError ? (
         <StatusBanner tone="error" title="Le témoignage n'a pas été ajouté.">
           {SUBMIT_ERRORS[submitError]}
@@ -181,7 +181,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
       {summaryItems.length > 0 ? (
         <ErrorSummary key={summaryKey} title={describeSummary(summaryItems.length)} items={summaryItems} />
       ) : null}
-      <fieldset disabled={isSubmitting} className="flex min-w-[0] flex-col gap-6">
+      <fieldset disabled={isSubmitting} className="flex min-w-[0] flex-col gap-8">
         <TextField
           id={FIELD_IDS.authorName}
           label="Nom affiché"
@@ -197,7 +197,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
           id={FIELD_IDS.authorTitle}
           label={
             <>
-              Titre <span className="font-normal text-slate-600">(facultatif)</span>
+              Titre <span className="font-normal text-gray">(facultatif)</span>
             </>
           }
           value={form.authorTitle}
@@ -214,7 +214,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
           onChange={(rating) => updateField("rating", rating)}
         />
         <div className="flex flex-col gap-2">
-          <label htmlFor={FIELD_IDS.body} className="text-small font-semibold">
+          <label htmlFor={FIELD_IDS.body} className="text-small font-bold">
             Texte du témoignage
           </label>
           <textarea
@@ -234,15 +234,15 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
           {bodyError ? (
             <FieldError id={`${FIELD_IDS.body}-error`} message={bodyError} />
           ) : (
-            <p id={`${FIELD_IDS.body}-hint`} className="text-small text-slate-600">
+            <p id={`${FIELD_IDS.body}-hint`} className="text-small text-gray">
               Recopiez le message tel quel. Vous pourrez corriger une faute plus tard.
             </p>
           )}
         </div>
-        <div className="flex flex-col gap-6 desktop:grid desktop:grid-cols-[minmax(0,1fr)_240px] desktop:gap-5">
+        <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-[minmax(0,1fr)_240px] desktop:gap-6">
           <div className="flex flex-col gap-2">
-            <label htmlFor="manual-offer" className="text-small font-semibold">
-              Offre <span className="font-normal text-slate-600">(facultatif)</span>
+            <label htmlFor="manual-offer" className="text-small font-bold">
+              Offre <span className="font-normal text-gray">(facultatif)</span>
             </label>
             <span className="relative flex">
               <select
@@ -250,7 +250,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
                 value={form.productId}
                 aria-describedby="manual-offer-hint"
                 onChange={(event) => updateField("productId", event.target.value)}
-                className={cn(CONTROL_CLASSES, "h-[48px] appearance-none pr-7 pl-4 focus:pl-[15px]")}
+                className={cn(CONTROL_CLASSES, "h-[48px] appearance-none pr-10 pl-4 focus:pl-[15px]")}
               >
                 <option value="">Aucune offre</option>
                 {products.map((product) => (
@@ -261,7 +261,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
               </select>
               <Icon name="chevronDown" size={20} className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2" />
             </span>
-            <p id="manual-offer-hint" className="text-small text-slate-600">
+            <p id="manual-offer-hint" className="text-small text-gray">
               Le témoignage s&apos;affichera dans les widgets de cette offre.
             </p>
           </div>
@@ -269,7 +269,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
             id={FIELD_IDS.receivedAt}
             label={
               <>
-                Date de réception <span className="font-normal text-slate-600">(facultatif)</span>
+                Date de réception <span className="font-normal text-gray">(facultatif)</span>
               </>
             }
             value={form.receivedAt}
@@ -279,7 +279,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
             error={messageFor("receivedAt")}
           />
         </div>
-        <div className="border-t border-hairline-200 pt-6">
+        <div className="border-t border-hairline-200 pt-8">
           <div className={cn("flex flex-col gap-2", consentError && "border-2 border-error bg-error-surface p-4")}>
             <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-body has-disabled:cursor-not-allowed">
               <Checkbox
@@ -299,23 +299,23 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
           </div>
         </div>
       </fieldset>
-      <div className="flex flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-5">
+      <div className="flex flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-6">
         <button type="submit" disabled={isSubmitting} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
           {isSubmitting ? "Ajout en cours…" : "Ajouter le témoignage"}
         </button>
         {isSubmitting ? (
-          <p className="text-small text-slate-600">Ne fermez pas la page.</p>
+          <p className="text-small text-gray">Ne fermez pas la page.</p>
         ) : (
           <Link href={testimonialsHref} className={cn(DISCREET_BUTTON_CLASSES, "self-start desktop:self-auto")}>
             Annuler
           </Link>
         )}
       </div>
-      <p className="text-small text-slate-600 min-[1280px]:hidden">
+      <p className="text-small text-gray min-[1280px]:hidden">
         Vous en avez beaucoup ?{" "}
         <Link
           href={importHref}
-          className="font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+          className="font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
         >
           Importer un fichier CSV
         </Link>

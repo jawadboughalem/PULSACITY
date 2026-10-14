@@ -27,20 +27,20 @@ const AddTestimonialPage = async () => {
       <SpacePage className="desktop:max-w-[1192px]">
         <Breadcrumb parentHref={TESTIMONIALS_SECTION_HREF} parentLabel="Témoignages" current="Ajouter un témoignage" />
         <div className="flex flex-col gap-2">
-          <h1 className="font-serif text-h1 font-medium">Ajouter un témoignage</h1>
-          <p className="max-w-text text-body text-slate-600">
+          <h1 className="font-display text-h1 font-semibold">Ajouter un témoignage</h1>
+          <p className="max-w-text text-body text-gray">
             Pour un avis reçu ailleurs : un message WhatsApp, un e-mail, un mot après une séance.
           </p>
         </div>
-        <div className="flex flex-col gap-7 min-[1280px]:grid min-[1280px]:grid-cols-[minmax(0,632px)_minmax(280px,368px)] min-[1280px]:items-start min-[1280px]:gap-8">
+        <div className="flex flex-col gap-10 min-[1280px]:grid min-[1280px]:grid-cols-[minmax(0,632px)_minmax(280px,368px)] min-[1280px]:items-start min-[1280px]:gap-12">
           <ManualTestimonialForm
             products={products}
             dateExample={formatFrenchDay(readParisDate(new Date()))}
             testimonialsHref={TESTIMONIALS_SECTION_HREF}
             importHref={IMPORT_TESTIMONIALS_HREF}
           />
-          <aside className="hidden flex-col gap-4 bg-paper-100 p-5 min-[1280px]:flex">
-            <h2 className="font-serif text-quote font-medium">Bon à savoir</h2>
+          <aside className="hidden flex-col gap-4 bg-sky p-6 min-[1280px]:flex">
+            <h2 className="font-display text-quote font-semibold">Bon à savoir</h2>
             <p className="text-small">
               Vous l&apos;ajoutez vous-même : le témoignage arrive directement en <strong>Validé</strong> et peut
               s&apos;afficher tout de suite.
@@ -52,10 +52,10 @@ const AddTestimonialPage = async () => {
               Il porte la mention {quoteInFrench("Ajouté par vous")} dans votre espace. Vos visiteurs ne la voient pas.
             </p>
             <div className="flex flex-col gap-2 border-t border-hairline-200 pt-4">
-              <p className="text-small font-semibold">Vous en avez beaucoup ?</p>
+              <p className="text-small font-bold">Vous en avez beaucoup ?</p>
               <Link
                 href={IMPORT_TESTIMONIALS_HREF}
-                className="self-start text-small font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+                className="self-start text-small font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
               >
                 Importer un fichier CSV
               </Link>

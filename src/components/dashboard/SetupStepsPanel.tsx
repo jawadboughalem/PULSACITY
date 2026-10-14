@@ -30,7 +30,7 @@ const buildSteps = ({ steps, collectionUrl, widgetSnippet, approvedCount }: Setu
     isDone: steps.isLinkShared,
     content: (
       <>
-        <p className="text-small text-slate-600">Envoyez-le à vos clients : leurs avis arrivent ici.</p>
+        <p className="text-small text-gray">Envoyez-le à vos clients : leurs avis arrivent ici.</p>
         <CopyCollectionLinkButton url={collectionUrl} />
       </>
     ),
@@ -41,7 +41,7 @@ const buildSteps = ({ steps, collectionUrl, widgetSnippet, approvedCount }: Setu
     isDone: steps.connection === "active",
     content: (
       <>
-        <p className="text-small text-slate-600">
+        <p className="text-small text-gray">
           Chaque vente déclenchera une demande d&apos;avis<span className="hidden desktop:inline">, sans rien faire</span>.
         </p>
         <Link href={CONNECTORS_SECTION_HREF} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto desktop:self-start")}>
@@ -56,7 +56,7 @@ const buildSteps = ({ steps, collectionUrl, widgetSnippet, approvedCount }: Setu
     isDone: steps.isWidgetPasted,
     content: widgetSnippet ? (
       <>
-        <p className="hidden text-small text-slate-600 desktop:block">
+        <p className="hidden text-small text-gray desktop:block">
           {approvedCount > 0
             ? `Vos ${approvedCount} avis validés s'afficheront tout seuls.`
             : "Vos avis validés s'afficheront tout seuls."}
@@ -64,7 +64,7 @@ const buildSteps = ({ steps, collectionUrl, widgetSnippet, approvedCount }: Setu
         <div className="hidden flex-col desktop:flex">
           <CopyWidgetCodeButton snippet={widgetSnippet} />
         </div>
-        <p className="text-small text-slate-600 desktop:hidden">
+        <p className="text-small text-gray desktop:hidden">
           Plus simple depuis un ordinateur : nous pouvons vous envoyer le code par e-mail.
         </p>
         <div className="desktop:hidden">
@@ -85,37 +85,37 @@ export const SetupStepsPanel = (props: SetupStepsPanelProps) => {
   const { done, total } = countDoneSteps(props.steps);
 
   return (
-    <section aria-labelledby="setup-steps" className="flex flex-col gap-5 bg-paper-100 p-4 desktop:p-5">
+    <section aria-labelledby="setup-steps" className="flex flex-col gap-6 rounded-panel bg-sky p-5 desktop:p-6">
       <div className="flex flex-col gap-3">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 id="setup-steps" className="font-serif text-quote font-medium">
+          <h2 id="setup-steps" className="font-display text-h3">
             Étapes restantes
           </h2>
-          <span className="text-small text-slate-600 desktop:hidden">{`${done} sur ${total}`}</span>
+          <span className="text-small text-gray desktop:hidden">{`${done} sur ${total}`}</span>
         </div>
-        <p className="hidden text-small text-slate-600 desktop:block">{`${done} étapes sur ${total} terminées`}</p>
+        <p className="hidden text-small text-gray desktop:block">{`${done} étapes sur ${total} terminées`}</p>
         <div
           role="progressbar"
           aria-label="Étapes terminées"
           aria-valuemin={0}
           aria-valuemax={total}
           aria-valuenow={done}
-          className="h-1 bg-hairline-200"
+          className="h-2 overflow-hidden rounded-full bg-white"
         >
-          <div className="h-1 bg-ink-900" style={{ width: `${(done / total) * 100}%` }} />
+          <div className="h-2 rounded-full bg-ink" style={{ width: `${(done / total) * 100}%` }} />
         </div>
       </div>
       <ul className="hidden flex-col gap-3 desktop:flex">
         {steps
           .filter((step) => step.isDone)
           .map((step) => (
-            <li key={step.key} className="flex items-center gap-3 text-small text-slate-600">
+            <li key={step.key} className="flex items-center gap-3 text-small text-gray">
               <Icon name="valid" size={20} className="text-success" />
               {step.title}
             </li>
           ))}
       </ul>
-      <ol className="flex flex-col">
+      <ol className="flex flex-col gap-3">
         {steps
           .filter((step) => !step.isDone)
           .map((step, index) => {
@@ -123,16 +123,16 @@ export const SetupStepsPanel = (props: SetupStepsPanelProps) => {
             return (
               <li
                 key={step.key}
-                className="flex gap-3 border-hairline-200 py-5 first:pt-[0] last:pb-[0] not-first:border-t desktop:first:border-t desktop:first:pt-5"
+                className="flex gap-3 rounded-card bg-white p-4 desktop:p-5"
               >
                 <span
                   aria-hidden="true"
-                  className="hidden size-[24px] shrink-0 items-center justify-center rounded-full border border-ink-900 text-legal font-semibold desktop:flex"
+                  className="hidden size-[24px] shrink-0 items-center justify-center rounded-full border-2 border-ink text-legal font-bold desktop:flex"
                 >
                   {stepNumber}
                 </span>
                 <div className="flex min-w-[0] flex-1 flex-col gap-3">
-                  <h3 className="text-body font-semibold">{step.title}</h3>
+                  <h3 className="text-body font-bold">{step.title}</h3>
                   {step.content}
                 </div>
               </li>

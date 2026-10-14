@@ -4,7 +4,7 @@ import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
 type RatingStarsProps = {
   /** A whole rating, or an average: it is shown to the nearest half star. */
   rating: number;
-  size: 16 | 20;
+  size: 16 | 18 | 20;
   label?: string;
 };
 

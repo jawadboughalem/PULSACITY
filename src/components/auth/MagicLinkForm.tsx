@@ -19,7 +19,7 @@ export const MagicLinkForm = () => {
         <StatusBanner tone="success" title="Un lien vous attend dans votre boîte de réception.">
           Nous l&apos;avons envoyé à {email}. Il est valable {MAGIC_LINK_LIFETIME_MINUTES} minutes.
         </StatusBanner>
-        <p className="text-small text-slate-600">
+        <p className="text-small text-gray">
           Rien reçu ? Regardez dans vos courriers indésirables.
         </p>
         <button type="button" onClick={handleUseAnotherAddress} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
@@ -30,7 +30,7 @@ export const MagicLinkForm = () => {
   }
 
   return (
-    <form action={submitAction} noValidate className="flex flex-col gap-5">
+    <form action={submitAction} noValidate className="flex flex-col gap-6">
       {error === "too-many-requests" ? (
         <StatusBanner tone="error" title="Vous avez demandé plusieurs liens en peu de temps.">
           Patientez quelques minutes, puis réessayez. Pensez à regarder dans vos courriers indésirables.

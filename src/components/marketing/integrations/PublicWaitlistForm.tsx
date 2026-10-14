@@ -38,8 +38,8 @@ export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistF
   const isInvalid = result?.ok === false && result.error === "invalid-email";
 
   return (
-    <section aria-labelledby="waitlist-title" className="flex flex-col gap-5 bg-paper-100 p-5 desktop:max-w-[704px] desktop:p-6">
-      <h2 id="waitlist-title" className="font-serif text-quote font-medium desktop:text-h2">
+    <section aria-labelledby="waitlist-title" className="flex flex-col gap-6 bg-sky p-6 desktop:max-w-[704px] desktop:p-8">
+      <h2 id="waitlist-title" className="font-display text-quote font-semibold desktop:text-h2">
         {`Être prévenu à la sortie de ${connectorName}`}
       </h2>
       {result?.ok ? (
@@ -88,7 +88,7 @@ export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistF
             </button>
           </div>
           {isInvalid ? null : (
-            <p className="text-small text-slate-600">Un seul e-⁠mail, le jour de la sortie. Votre adresse ne sert qu&apos;à cela.</p>
+            <p className="text-small text-gray">Un seul e-⁠mail, le jour de la sortie. Votre adresse ne sert qu&apos;à cela.</p>
           )}
         </form>
       )}

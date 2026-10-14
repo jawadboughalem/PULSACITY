@@ -73,7 +73,7 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
           <Link
             href={ADD_TESTIMONIAL_HREF}
             aria-label="Ajouter un témoignage"
-            className="flex size-[48px] items-center justify-center rounded-sm border border-ink-900 bg-white hover:bg-paper-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+            className="flex size-[48px] items-center justify-center rounded-card border border-ink bg-white hover:bg-sky focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
           >
             <Icon name="plus" size={24} />
           </Link>
@@ -81,11 +81,11 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
       />
       <SpacePage>
         <FirstApprovalCelebration>
-          <div className="flex flex-col gap-5 desktop:gap-6">
-            <header className="flex items-start justify-between gap-5">
+          <div className="flex flex-col gap-6 desktop:gap-8">
+            <header className="flex items-start justify-between gap-6">
               <div className="flex flex-col gap-2">
-                <h1 className="hidden font-serif text-h1 font-medium desktop:block">Témoignages</h1>
-                <p className="text-small text-slate-600 desktop:text-body">{describeCounts(counts)}</p>
+                <h1 className="hidden font-display text-h1 font-semibold desktop:block">Témoignages</h1>
+                <p className="text-small text-gray desktop:text-body">{describeCounts(counts)}</p>
               </div>
               <Link href={ADD_TESTIMONIAL_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "hidden shrink-0 desktop:inline-flex")}>
                 Ajouter un témoignage
@@ -102,7 +102,7 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
                   products={products}
                 />
                 {list.total === 0 ? (
-                  <div className="flex flex-col items-start gap-2 border-t border-ink-900 pt-5">
+                  <div className="flex flex-col items-start gap-2 border-t border-ink pt-6">
                     <p className="text-body">Aucun témoignage ne correspond à ces filtres.</p>
                     {hasTestimonialFilter(filters) ? (
                       <Link href={TESTIMONIALS_SECTION_HREF} className={DISCREET_BUTTON_CLASSES}>
@@ -115,12 +115,12 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
                     <div className="hidden overflow-x-auto desktop:block">
                       <table className="w-full min-w-[1000px] table-fixed border-collapse text-left">
                         <thead>
-                          <tr className="border-b border-ink-900">
+                          <tr className="border-b border-ink">
                             {TABLE_COLUMNS.map((column) => (
                               <th
                                 key={column.heading}
                                 scope="col"
-                                className={cn("pr-4 pb-3 text-small font-semibold whitespace-nowrap", column.width)}
+                                className={cn("pr-4 pb-3 text-small font-bold whitespace-nowrap", column.width)}
                               >
                                 {column.heading}
                               </th>

@@ -66,9 +66,9 @@ type WidgetPreviewProps = {
 };
 
 const FakeSection = ({ isPhone, children }: { isPhone: boolean; children: ReactNode }) => (
-  <section className={cn("bg-paper-100", isPhone ? "px-5 py-7" : "px-[80px] py-8")}>
+  <section className={cn("bg-sky", isPhone ? "px-6 py-10" : "px-[80px] py-12")}>
     <h2
-      className={cn("font-semibold text-ink-900", isPhone ? "mb-5 text-[28px] leading-[34px]" : "mb-6 text-[36px] leading-[44px]")}
+      className={cn("font-bold text-ink", isPhone ? "mb-6 text-[28px] leading-[34px]" : "mb-8 text-[36px] leading-[44px]")}
     >
       Ce qu&apos;en disent mes clients
     </h2>
@@ -112,34 +112,34 @@ export const WidgetPreview = ({ payload, isEmpty, spaceName, pageTitle, pageAcce
         <div
           ref={pageRef}
           style={{ width: pageWidth, transform: `scale(${scale})`, transformOrigin: "0 0" }}
-          className="bg-white font-[Georgia,'Times_New_Roman',serif] text-ink-900"
+          className="bg-white font-[Georgia,'Times_New_Roman',serif] text-ink"
         >
           <header
             className={cn(
               "flex items-center justify-between border-b border-hairline-200",
-              isPhone ? "h-[64px] px-5" : "h-[80px] px-[80px]",
+              isPhone ? "h-[64px] px-6" : "h-[80px] px-[80px]",
             )}
           >
-            <span className={cn("font-semibold", isPhone ? "text-[18px]" : "text-[20px]")} style={{ color: brandColor }}>
+            <span className={cn("font-bold", isPhone ? "text-[18px]" : "text-[20px]")} style={{ color: brandColor }}>
               {spaceName}
             </span>
             {isPhone ? null : (
-              <span className="flex gap-6 text-[15px] text-slate-600">
+              <span className="flex gap-8 text-[15px] text-gray">
                 <span>Accueil</span>
                 <span>Offres</span>
                 <span>Contact</span>
               </span>
             )}
           </header>
-          <div className={cn(isPhone ? "px-5 py-7" : "px-[80px] py-8", !showsHero && "hidden")}>
+          <div className={cn(isPhone ? "px-6 py-10" : "px-[80px] py-12", !showsHero && "hidden")}>
             <p
-              className={cn("max-w-[900px] font-semibold", isPhone ? "text-[32px] leading-[38px]" : "text-[52px] leading-[64px]")}
+              className={cn("max-w-[900px] font-bold", isPhone ? "text-[32px] leading-[38px]" : "text-[52px] leading-[64px]")}
             >
               {pageTitle}
             </p>
             <p
               className={cn(
-                "mt-5 max-w-[760px] text-slate-600",
+                "mt-6 max-w-[760px] text-gray",
                 isPhone ? "text-[17px] leading-[26px]" : "text-[18px] leading-[28px]",
               )}
             >
@@ -147,14 +147,14 @@ export const WidgetPreview = ({ payload, isEmpty, spaceName, pageTitle, pageAcce
             </p>
             <span
               className={cn(
-                "mt-6 inline-flex items-center justify-center rounded-sm px-6 font-semibold text-white",
+                "mt-8 inline-flex items-center justify-center rounded-card px-8 font-bold text-white",
                 isPhone ? "h-[52px] w-full text-[17px]" : "h-[52px] text-[16px]",
               )}
               style={{ backgroundColor: brandColor }}
             >
               Je m&apos;inscris
             </span>
-            {payload.type === "badge" ? <div className="mt-6">{widget}</div> : null}
+            {payload.type === "badge" ? <div className="mt-8">{widget}</div> : null}
           </div>
           {payload.type === "badge" ? null : <FakeSection isPhone={isPhone}>{widget}</FakeSection>}
         </div>

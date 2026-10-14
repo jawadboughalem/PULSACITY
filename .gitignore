@@ -31,3 +31,6 @@ yarn-error.log*
 
 *.tsbuildinfo
 next-env.d.ts
+
+# Python caches of the vendored UI UX Pro Max skill
+__pycache__/

@@ -15,7 +15,7 @@ const SpaceLayout = async ({ children }: SpaceLayoutProps) => {
   const account = buildSpaceAccount(signedInUser, space);
 
   return (
-    <div className="flex min-h-dvh">
+    <div className="flex min-h-dvh bg-cloud">
       <div className="hidden desktop:flex">
         <SpaceNavigation account={account} pendingTestimonials={counts.pending} />
       </div>

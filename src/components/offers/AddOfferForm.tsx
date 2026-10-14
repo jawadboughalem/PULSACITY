@@ -29,10 +29,10 @@ export const AddOfferForm = ({ onDone }: AddOfferFormProps) => {
   const error = result?.ok === false ? ERRORS[result.error] : undefined;
 
   return (
-    <form action={submitAction} noValidate className="flex flex-col gap-4 bg-paper-100 p-5 desktop:p-6">
-      <h2 className="font-serif text-quote font-medium">Nouvelle offre</h2>
+    <form action={submitAction} noValidate className="flex flex-col gap-4 bg-sky p-6 desktop:p-8">
+      <h2 className="font-display text-quote font-semibold">Nouvelle offre</h2>
       <div className="flex flex-col gap-2">
-        <label htmlFor="offer-name" className="text-small font-semibold">
+        <label htmlFor="offer-name" className="text-small font-bold">
           Nom de l&apos;offre
         </label>
         <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-4">
@@ -46,7 +46,7 @@ export const AddOfferForm = ({ onDone }: AddOfferFormProps) => {
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? "offer-name-error" : "offer-name-hint"}
             className={cn(
-              "h-[48px] w-full rounded-sm border border-gray-400 bg-white px-4 text-body text-ink-900 placeholder:text-slate-600 focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none desktop:max-w-[400px]",
+              "h-[48px] w-full rounded-card border border-gray bg-white px-4 text-body text-ink placeholder:text-gray focus:border-2 focus:border-ink focus:px-[15px] focus:outline-none desktop:max-w-[400px]",
               error && "border-2 border-error px-[15px]",
             )}
           />
@@ -60,7 +60,7 @@ export const AddOfferForm = ({ onDone }: AddOfferFormProps) => {
         {error ? (
           <FieldError id="offer-name-error" message={error} />
         ) : (
-          <p id="offer-name-hint" className="text-small text-slate-600">
+          <p id="offer-name-hint" className="text-small text-gray">
             Elle reçoit tout de suite son lien de collecte. Vous réglerez ensuite la demande d&apos;avis.
           </p>
         )}

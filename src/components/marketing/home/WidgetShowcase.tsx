@@ -96,8 +96,8 @@ const LiveWidget = ({ payload }: { payload: WidgetPayload }) => {
  * in Georgia bold), and the points under the carousel (288 px).
  */
 export const WidgetShowcase = () => (
-  <figure className="-mx-2 border border-hairline-200 bg-white font-[Georgia,'Times_New_Roman',serif] text-ink-900 desktop:mx-[0]">
-    <figcaption className="sr-only font-sans text-legal text-slate-600 desktop:not-sr-only desktop:flex desktop:h-[40px] desktop:items-center desktop:gap-4 desktop:border-b desktop:border-hairline-200 desktop:px-4">
+  <figure className="-mx-2 border border-hairline-200 bg-white font-[Georgia,'Times_New_Roman',serif] text-ink desktop:mx-[0]">
+    <figcaption className="sr-only font-sans text-legal text-gray desktop:not-sr-only desktop:flex desktop:h-[40px] desktop:items-center desktop:gap-4 desktop:border-b desktop:border-hairline-200 desktop:px-4">
       <span aria-hidden="true" className="hidden gap-2 desktop:flex">
         <span className="size-[8px] rounded-full bg-hairline-200" />
         <span className="size-[8px] rounded-full bg-hairline-200" />
@@ -105,11 +105,11 @@ export const WidgetShowcase = () => (
       </span>
       Page de vente de Julie Nutrition · exemple
     </figcaption>
-    <div className="min-h-[104px] py-4 desktop:min-h-[56px] desktop:px-9 desktop:py-2">
+    <div className="min-h-[104px] py-4 desktop:min-h-[56px] desktop:px-14 desktop:py-2">
       <LiveWidget payload={BADGE} />
     </div>
-    <div className="bg-paper-100 px-2 py-7 desktop:px-9 desktop:py-9">
-      <p className="mb-5 px-4 text-[28px] leading-[34px] font-semibold desktop:mb-6 desktop:px-[0] desktop:text-[36px] desktop:leading-[44px]">
+    <div className="bg-sky px-2 py-10 desktop:px-14 desktop:py-14">
+      <p className="mb-6 px-4 text-[28px] leading-[34px] font-bold desktop:mb-8 desktop:px-[0] desktop:text-[36px] desktop:leading-[44px]">
         Ils ont suivi le programme
       </p>
       <div className="min-h-[440px] desktop:min-h-[360px]">

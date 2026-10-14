@@ -20,8 +20,8 @@ const ErrorPage = ({ error, retry }: ErrorPageProps) => {
     <TextColumnPage>
       <title>Page indisponible · PULSACITY</title>
       <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-h1 font-medium">Cette page n&apos;a pas pu s&apos;afficher</h1>
-        <p className="text-body text-slate-600">
+        <h1 className="font-display text-h1 font-semibold">Cette page n&apos;a pas pu s&apos;afficher</h1>
+        <p className="text-body text-gray">
           Le problème vient de chez nous, pas de vous. Réessayez dans quelques instants.
         </p>
       </div>

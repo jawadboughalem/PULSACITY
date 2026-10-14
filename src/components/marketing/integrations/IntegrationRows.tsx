@@ -10,7 +10,7 @@ export const IntegrationBadge = ({ integration }: { integration: Integration }) 
   integration.status === "available" ? (
     <ToneBadge tone="success" icon="valid" label="Disponible" />
   ) : (
-    <ToneBadge tone="neutral" label="Bientôt" />
+    <ToneBadge tone="soon" label="Bientôt" />
   );
 
 type IntegrationRowsProps = {
@@ -26,14 +26,14 @@ const DetailedRow = ({ integration }: { integration: Integration }) => (
     <ConnectorLogo name={integration.name} />
     <span className="flex min-w-[0] flex-1 flex-col gap-2 desktop:gap-1">
       <span className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <span className="font-serif text-quote">{integration.name}</span>
+        <span className="font-display text-quote">{integration.name}</span>
         <span className="desktop:hidden">
           <IntegrationBadge integration={integration} />
         </span>
       </span>
-      <span className="text-small text-slate-600 desktop:text-body">{integration.summary}</span>
+      <span className="text-small text-gray desktop:text-body">{integration.summary}</span>
       {integration.status === "soon" ? (
-        <span className="text-small text-slate-600">{describeMeanwhile(integration).line}</span>
+        <span className="text-small text-gray">{describeMeanwhile(integration).line}</span>
       ) : null}
     </span>
     <span className="hidden shrink-0 desktop:block">
@@ -45,14 +45,14 @@ const DetailedRow = ({ integration }: { integration: Integration }) => (
 
 /** « Connecteurs » of maquette 7: a rule of Encre, one row per tool, its state on the right. Each row opens its page. */
 export const IntegrationRows = ({ isDetailed = false, integrations = INTEGRATIONS }: IntegrationRowsProps) => (
-  <ul className="border-t border-ink-900">
+  <ul className="border-t border-ink">
     {integrations.map((integration) => (
       <li key={integration.slug} className="border-b border-hairline-200">
         <Link
           href={integrationPath(integration.slug)}
           className={cn(
-            "flex gap-4 py-5 hover:bg-paper-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 desktop:gap-5",
-            isDetailed ? "items-start desktop:items-center desktop:py-6" : "items-center",
+            "flex gap-4 py-6 hover:bg-sky focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink desktop:gap-6",
+            isDetailed ? "items-start desktop:items-center desktop:py-8" : "items-center",
           )}
         >
           {isDetailed ? (
@@ -60,7 +60,7 @@ export const IntegrationRows = ({ isDetailed = false, integrations = INTEGRATION
           ) : (
             <>
               <ConnectorLogo name={integration.name} />
-              <span className="min-w-[0] flex-1 font-serif text-quote">{integration.name}</span>
+              <span className="min-w-[0] flex-1 font-display text-quote">{integration.name}</span>
               <IntegrationBadge integration={integration} />
             </>
           )}

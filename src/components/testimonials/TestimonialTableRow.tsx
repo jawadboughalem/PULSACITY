@@ -31,42 +31,42 @@ export const TestimonialTableRow = ({ testimonial, detailHref, isApprovalAllowed
 
   return (
     <tr className={cn("border-b border-hairline-200 align-middle", deletion.isDeleting && "opacity-60")}>
-      <td className="py-5 pr-4">
+      <td className="py-6 pr-4">
         <div className="flex items-center gap-4">
-          <SpaceAvatar name={testimonial.authorName} logoUrl={testimonial.authorPhotoUrl} size={44} background="paper" />
+          <SpaceAvatar name={testimonial.authorName} logoUrl={testimonial.authorPhotoUrl} size={44} background="sky" />
           <div className="flex min-w-[0] flex-col">
             <Link
               href={detailHref}
-              className="truncate text-body font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+              className="truncate text-body font-bold hover:underline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
             >
               {testimonial.authorName}
             </Link>
-            <span className="text-small whitespace-nowrap text-slate-600">{`Reçu le ${formatDayMonth(testimonial.createdAt)}`}</span>
+            <span className="text-small whitespace-nowrap text-gray">{`Reçu le ${formatDayMonth(testimonial.createdAt)}`}</span>
           </div>
         </div>
       </td>
-      <td className="py-5 pr-4">
-        <p className="line-clamp-2 font-serif text-body">{getDisplayedBody(testimonial)}</p>
-        {review.isOverPlanLimit ? <p className="mt-2 text-small text-slate-600">{PLAN_LIMIT_MESSAGE}</p> : null}
+      <td className="py-6 pr-4">
+        <p className="line-clamp-2 font-display text-body">{getDisplayedBody(testimonial)}</p>
+        {review.isOverPlanLimit ? <p className="mt-2 text-small text-gray">{PLAN_LIMIT_MESSAGE}</p> : null}
         {error ? (
           <div className="mt-2">
             <FieldError id={`${testimonial.id}-row-error`} message={REVIEW_ERROR_MESSAGES[error]} />
           </div>
         ) : null}
       </td>
-      <td className="py-5 pr-4">
+      <td className="py-6 pr-4">
         <RatingStars rating={testimonial.rating} size={16} />
       </td>
-      <td className="py-5 pr-4 text-small text-slate-600">
+      <td className="py-6 pr-4 text-small text-gray">
         <span className="line-clamp-2">{testimonial.productName ?? "Sans offre"}</span>
       </td>
-      <td className="py-5 pr-4">
+      <td className="py-6 pr-4">
         <StatusBadge status={review.status} isJustApproved={review.isJustApproved} />
       </td>
-      <td className="py-5 pr-4">
+      <td className="py-6 pr-4">
         <FeatureToggle isFeatured={review.featured} authorName={testimonial.authorName} onToggle={review.toggleFeatured} />
       </td>
-      <td className="py-5">
+      <td className="py-6">
         <div className="flex items-center justify-end gap-3">
           {review.status !== "approved" ? (
             <button

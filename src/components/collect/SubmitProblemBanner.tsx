@@ -31,10 +31,10 @@ type SubmitProblemBannerProps = {
 };
 
 export const SubmitProblemBanner = ({ problem }: SubmitProblemBannerProps) => (
-  <div role="alert" className="flex items-start gap-3 rounded-lg border-2 border-error bg-error-surface p-4 text-error">
+  <div role="alert" className="flex items-start gap-3 rounded-card border-2 border-error bg-error-surface p-4 text-error">
     <Icon name="alert" size={20} className="mt-[2px]" />
     <div className="flex flex-col gap-1">
-      <p className="text-body font-semibold">{PROBLEM_MESSAGES[problem].title}</p>
+      <p className="text-body font-bold">{PROBLEM_MESSAGES[problem].title}</p>
       <p className="text-small">{PROBLEM_MESSAGES[problem].detail}</p>
     </div>
   </div>

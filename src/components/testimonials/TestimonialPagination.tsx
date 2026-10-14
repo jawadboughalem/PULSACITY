@@ -12,7 +12,7 @@ type TestimonialPaginationProps = {
 };
 
 const DISABLED_BUTTON_CLASSES =
-  "inline-flex h-[48px] items-center justify-center rounded-sm border border-hairline-200 bg-paper-100 px-5 text-body font-semibold text-slate-600";
+  "inline-flex h-[48px] items-center justify-center rounded-card border border-hairline-200 bg-sky px-6 text-body font-bold text-gray";
 
 export const TestimonialPagination = ({
   page,
@@ -27,13 +27,13 @@ export const TestimonialPagination = ({
 
   return (
     <nav aria-label="Pages de témoignages" className="flex flex-wrap items-center justify-between gap-4">
-      <p className="text-small text-slate-600">
+      <p className="text-small text-gray">
         <span className="desktop:hidden">{nextHref ? `${summary}. ` : summary}</span>
         <span className="hidden desktop:inline">{summary}</span>
         {nextHref ? (
           <Link
             href={nextHref}
-            className="text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 desktop:hidden"
+            className="text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink desktop:hidden"
           >
             Afficher les suivants
           </Link>

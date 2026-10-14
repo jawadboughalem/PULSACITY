@@ -34,42 +34,42 @@ const PricingPage = () => (
     <JsonLd data={buildFaqPageData(BILLING_FAQ)} />
 
     <ChoiceScope initial="monthly" className="group/billing">
-      <MarketingSection labelledBy="pricing-title" className="pb-7 desktop:pb-7">
-        <div className="flex flex-col gap-6 desktop:flex-row desktop:items-start desktop:justify-between">
+      <MarketingSection labelledBy="pricing-title" className="pb-10 desktop:pb-10">
+        <div className="flex flex-col gap-8 desktop:flex-row desktop:items-start desktop:justify-between">
           <div className="flex flex-col gap-4 desktop:max-w-[720px]">
-            <h1 id="pricing-title" className="font-serif text-display font-medium tracking-title">
+            <h1 id="pricing-title" className="font-display text-display font-semibold ">
               Un prix simple, qui suit vos ventes.
             </h1>
-            <p className="text-body text-slate-600 desktop:max-w-[680px]">
+            <p className="text-body text-gray desktop:max-w-[680px]">
               Commencez gratuitement. Passez à Essentiel quand les avis arrivent. Sans engagement. Prix finaux : rien
               ne s&apos;ajoute au paiement.
             </p>
           </div>
-          <div className="flex flex-col gap-3 desktop:mt-6 desktop:items-end">
+          <div className="flex flex-col gap-3 desktop:mt-8 desktop:items-end">
             <ChoiceToggle
               label="Période de paiement"
               options={BILLING_OPTIONS}
               announcements={{ monthly: "Prix mensuels affichés.", yearly: "Prix annuels affichés." }}
               className="w-full desktop:w-auto"
             />
-            <p className="text-small text-slate-600">{`Annuel : ${YEARLY_FREE_MONTHS} mois offerts`}</p>
+            <p className="text-small text-gray">{`Annuel : ${YEARLY_FREE_MONTHS} mois offerts`}</p>
           </div>
         </div>
-        <div className="mt-6 desktop:mt-7">
+        <div className="mt-8 desktop:mt-10">
           <PlanColumns />
         </div>
       </MarketingSection>
     </ChoiceScope>
 
     <div className="desktop:border-t desktop:border-hairline-200">
-      <p className="mx-auto max-w-[1440px] px-page-gutter text-small text-slate-600 desktop:pt-5">
+      <p className="mx-auto max-w-[1440px] px-page-gutter text-small text-gray desktop:pt-6">
         Sans engagement · Changez de plan à tout moment · Paiement par carte
       </p>
     </div>
 
     <MarketingSection labelledBy="compare-title">
       <SectionTitle id="compare-title">Comparer en détail</SectionTitle>
-      <ChoiceScope initial={RECOMMENDED_PLAN} className="group/compare mt-5 desktop:mt-6">
+      <ChoiceScope initial={RECOMMENDED_PLAN} className="group/compare mt-6 desktop:mt-8">
         <ChoiceToggle
           label="Plan à comparer"
           options={PLAN_OPTIONS}
@@ -81,7 +81,7 @@ const PricingPage = () => (
     </MarketingSection>
 
     <MarketingSection labelledBy="billing-title" className="pt-[0] desktop:pt-[0]">
-      <div className="grid gap-6 desktop:grid-cols-[448px_1fr]">
+      <div className="grid gap-8 desktop:grid-cols-[448px_1fr]">
         <SectionTitle id="billing-title">Facturation</SectionTitle>
         <FaqList name="billing-faq" entries={BILLING_FAQ} />
       </div>

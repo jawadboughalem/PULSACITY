@@ -50,7 +50,7 @@ type TableOfContentsProps = {
 };
 
 const LINK_CLASSES =
-  "block py-1 text-small hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+  "block py-1 text-small hover:underline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
 /**
  * m22 and m23 on a computer: the titles of the text beside it, the one being read marked by a rule of Encre. Stays in
@@ -59,8 +59,8 @@ const LINK_CLASSES =
 export const TableOfContents = ({ title, headings }: TableOfContentsProps) => {
   const currentId = useCurrentHeading(headings);
   return (
-    <nav aria-label={title} className="sticky top-5 flex flex-col gap-4">
-      <p className="text-small font-semibold">{title}</p>
+    <nav aria-label={title} className="sticky top-6 flex flex-col gap-4">
+      <p className="text-small font-bold">{title}</p>
       <ul className="flex flex-col gap-1 border-l border-hairline-200">
         {headings.map((heading) => {
           const isCurrent = heading.id === currentId;
@@ -72,7 +72,7 @@ export const TableOfContents = ({ title, headings }: TableOfContentsProps) => {
                 className={cn(
                   LINK_CLASSES,
                   "-ml-px border-l-2 pl-4",
-                  isCurrent ? "border-ink-900 font-semibold" : "border-transparent",
+                  isCurrent ? "border-ink font-bold" : "border-transparent",
                 )}
               >
                 {heading.title}
@@ -87,8 +87,8 @@ export const TableOfContents = ({ title, headings }: TableOfContentsProps) => {
 
 /** m22 and m23 on a phone: the same titles, folded under the introduction. */
 export const FoldedTableOfContents = ({ title, headings }: TableOfContentsProps) => (
-  <details className="group border-y border-hairline-200 border-t-ink-900">
-    <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 text-body font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 [&::-webkit-details-marker]:hidden">
+  <details className="group border-y border-hairline-200 border-t-ink">
+    <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 text-body font-bold focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink [&::-webkit-details-marker]:hidden">
       {title}
       <Icon name="chevronDown" size={20} className="shrink-0 group-open:rotate-180" />
     </summary>

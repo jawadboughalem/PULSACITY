@@ -17,11 +17,11 @@ export const AccentColorField = ({ value, onChange }: AccentColorFieldProps) => 
 
   return (
     <fieldset className="flex min-w-[0] flex-col gap-3" aria-describedby="accent-color-hint">
-      <legend className="mb-2 text-small font-semibold">
-        Couleur d&apos;accent <span className="font-normal text-slate-600">(facultatif)</span>
+      <legend className="mb-2 text-small font-bold">
+        Couleur d&apos;accent <span className="font-normal text-gray">(facultatif)</span>
       </legend>
       <div className="flex flex-wrap items-center gap-3">
-        <label className="flex size-[44px] shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-ink-900 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink-900">
+        <label className="flex size-[44px] shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink">
           <span className="sr-only">Choisir la couleur d&apos;accent</span>
           <input
             type="color"
@@ -37,11 +37,11 @@ export const AccentColorField = ({ value, onChange }: AccentColorFieldProps) => 
           </button>
         ) : null}
       </div>
-      <p id="accent-color-hint" className="text-small text-slate-600">
+      <p id="accent-color-hint" className="text-small text-gray">
         Elle colore les étoiles de vos widgets. Sans choix, ils reprennent la couleur des liens de votre page de vente.
       </p>
       {isHardToRead ? (
-        <p role="status" className="flex items-start gap-2 text-small text-attention">
+        <p role="status" className="flex items-start gap-2 text-small text-waiting">
           <Icon name="alert" size={20} />
           <span>Cette couleur ressort peu sur fond blanc : vos étoiles seraient peu lisibles. Choisissez-la plus foncée.</span>
         </p>

@@ -9,29 +9,29 @@ import { cn } from "@/lib/cn";
  * the rows of the others, so that the taglines and the lists stay aligned.
  */
 export const PlanSummary = () => (
-  <ul className="grid gap-7 desktop:grid-cols-3 desktop:gap-6">
+  <ul className="grid gap-10 desktop:grid-cols-3 desktop:gap-8">
     {PLAN_PRESENTATIONS.map((plan) => {
       const launchPrice = describeLaunchPrice(plan.id, "monthly");
       return (
         <li
           key={plan.id}
           className={cn(
-            "flex flex-col gap-4 pt-5 desktop:row-span-4 desktop:grid desktop:grid-rows-subgrid",
-            plan.isRecommended ? "border-t-2 border-ink-900" : "border-t border-ink-900",
+            "flex flex-col gap-4 pt-6 desktop:row-span-4 desktop:grid desktop:grid-rows-subgrid",
+            plan.isRecommended ? "border-t-2 border-ink" : "border-t border-ink",
           )}
         >
           <div className="flex items-baseline justify-between gap-4">
-            <h3 className="font-serif text-h2 font-medium">{plan.name}</h3>
-            {plan.isRecommended ? <span className="text-small font-semibold">Recommandé</span> : null}
+            <h3 className="font-display text-h2 font-semibold">{plan.name}</h3>
+            {plan.isRecommended ? <span className="text-small font-bold">Recommandé</span> : null}
           </div>
           <div className="flex flex-col gap-2">
             <p className="flex items-baseline gap-1">
               <PlanPrice amountCents={readPlanPrice(plan.id, "monthly")} size="medium" />
               <span className="text-body">{describePricePeriod(plan.id, "monthly")}</span>
             </p>
-            {launchPrice ? <p className="text-small text-slate-600">{launchPrice}</p> : null}
+            {launchPrice ? <p className="text-small text-gray">{launchPrice}</p> : null}
           </div>
-          <p className="text-body text-slate-600">{plan.tagline}</p>
+          <p className="text-body text-gray">{plan.tagline}</p>
           <CheckList items={plan.highlights} />
         </li>
       );

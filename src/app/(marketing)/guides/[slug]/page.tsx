@@ -29,10 +29,10 @@ const Breadcrumb = ({ title }: { title: string }) => (
           Guides
         </Link>
       </li>
-      <li aria-hidden="true" className="flex text-slate-600">
+      <li aria-hidden="true" className="flex text-gray">
         <Icon name="chevronRight" size={16} />
       </li>
-      <li aria-current="page" className="min-w-[0] text-slate-600">
+      <li aria-current="page" className="min-w-[0] text-gray">
         {title}
       </li>
     </ol>
@@ -53,11 +53,11 @@ const GuidePage = async ({ params }: PageProps<"/guides/[slug]">) => {
         breadcrumb={<Breadcrumb title={guide.title} />}
         header={
           <>
-            <h1 id="guide-title" className="font-serif text-display font-medium tracking-title">
+            <h1 id="guide-title" className="font-display text-display font-semibold ">
               {guide.title}
             </h1>
-            <p className="text-small text-slate-600">{formatGuideMeta(guide)}</p>
-            <p className="mt-2 font-serif text-quote">{guide.description}</p>
+            <p className="text-small text-gray">{formatGuideMeta(guide)}</p>
+            <p className="mt-2 font-display text-quote">{guide.description}</p>
           </>
         }
         contentsTitle="Dans ce guide"
@@ -67,7 +67,7 @@ const GuidePage = async ({ params }: PageProps<"/guides/[slug]">) => {
       </ReadingLayout>
 
       <MarketingSection labelledBy="other-guides" hasTopRule>
-        <div className="grid gap-6 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-6">
+        <div className="grid gap-8 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-8">
           <SectionTitle id="other-guides">Autres guides</SectionTitle>
           <GuideList guides={otherGuides} />
         </div>

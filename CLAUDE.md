@@ -72,10 +72,12 @@ src/lib/purchases/            # record-purchase.ts : de NormalizedPurchase au cl
 src/lib/requests/             # planification et envoi des demandes
 src/emails/                   # templates React Email
 src/content/                  # textes du site : offres (depuis plans.ts), FAQ, un fichier par connecteur et leurs familles (integrations/), guides et textes légaux en MDX
-docs-internes/                # décisions, payloads, recette ; etat.md : où en est le projet
+docs-internes/                # décisions, payloads, recette ; etat.md : où en est le projet ; design-v2/ : charte, maquettes et logo v2
 scripts/seed-demo.mjs         # espace de démonstration (local, recette)
 compose.yaml                  # Postgres local
 assets/og-fonts/              # polices WOFF des images de partage (next/og)
+src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées (next/font/local)
+.claude/skills/ui-ux-pro-max/  # skill UI UX Pro Max, figé (règles UX seulement, voir « Design system »)
 ```
 
 ## Modèle de données
@@ -115,21 +117,32 @@ Dépasser une limite ne supprime jamais de données : on bloque l'ajout et on pr
 
 ## Design system (application et site)
 
-**La charte graphique et les maquettes sont définies en Phase 1, AVANT tout code d'interface.** Sources uniques :
-- `docs-internes/charte.md` : valeurs exactes des couleurs, polices, tailles, espacements, rayons, ombres, ton de voix.
-- `docs-internes/maquettes/` : un export par écran (collecte mobile, widget ×3, e-mail de demande, tableau de bord, connexion Systeme.io, éditeur de widget, accueil, tarifs).
+Depuis le lot 4.2 (14 octobre 2026), la v2 (direction « Tournesol », logo « Galet ») est la source. Sources uniques :
+- `docs-internes/design-v2/charte.md` : valeurs exactes des couleurs, polices, tailles, espacements, rayons, ombres, bordures, composants et leurs états, mouvement, ton de voix.
+- `docs-internes/design-v2/maquettes/` (index : `INDEX.md`) : les planches de la charte et des coques, puis un export par écran, au fil des maquettes v2 (lots 4.3 à 4.8).
+- `docs-internes/design-v2/identite/` : le logo (`logo/`) et sa spécification (`SPEC.md`).
+
+La v1 (`docs-internes/charte.md`, `docs-internes/maquettes/`, `docs-internes/identite-v2/`) ne donne plus aucune valeur. Un écran pas encore migré garde sa mise en page v1 (sa maquette v1), avec les jetons et les composants v2, jusqu'à ce que sa maquette v2 arrive.
 
 Règles :
-- N'invente jamais une couleur, une police ou un espacement : si une valeur manque dans charte.md, arrête-toi et demande-la.
+- N'invente jamais une couleur, une police ou un espacement : si une valeur manque dans la charte v2, arrête-toi et demande-la.
 - Chaque écran reproduit sa maquette. Un écran sans maquette n'est pas construit : demande la maquette.
-- Tant que charte.md n'existe pas, seuls des écrans techniques neutres (noir sur blanc, police système) sont autorisés, et uniquement pour tester la logique.
+- Les jetons sont dans `src/app/globals.css` (un test les compare à la charte v2), le mouvement dans `src/app/pulsacity-motion.css`, les composants de base dans `src/components/ui/`. Un écran s'en sert, il ne recopie pas leurs classes.
 
-Interdits permanents (signatures de sites générés) : étiquettes en majuscules espacées au-dessus des titres ; un mot du titre en couleur ou italique ; flèches « → » dans les boutons ; grilles de cartes identiques avec la même ombre ; dégradés décoratifs ; animations d'apparition sur chaque section ; numérotation 01/02/03 hors vraie séquence.
+Interdits permanents (signatures de sites générés) : étiquettes en majuscules espacées au-dessus des titres ; un mot du titre en couleur ou italique ; flèches « → » dans les boutons ; grilles de cartes identiques avec la même ombre ; dégradés décoratifs ; animations d'apparition sur chaque section ; numérotation 01/02/03 hors vraie séquence. Et ceux de la charte v2 : filets fins pour séparer ; titres à empattements sur fond crème ; durées d'installation ou de saisie ; « TVA comprise », « HT » ; « tout Systeme.io » ; « partenaire officiel » ; « avis vérifiés » ; prix barré, compteur de places.
+
+### Le skill UI UX Pro Max
+
+Installé dans `.claude/skills/ui-ux-pro-max/` (version 2.15.0, figée, licence MIT dans le dossier). Il sert seulement à deux choses :
+- ses règles UX et d'accessibilité : `python3 -B .claude/skills/ui-ux-pro-max/scripts/search.py "<question>" --domain ux`, `--stack nextjs` ou `--stack shadcn` (`-B` : aucun cache dans le dépôt) ;
+- sa liste de contrôle avant de livrer un écran : `references/pro-rules.md` et `references/quick-reference.md`.
+
+Jamais son générateur (`--design-system`, `--persist`), ni ses palettes, ses polices ou ses styles. En cas de conflit, la charte v2 et les interdits l'emportent. On ne le met pas à jour sans décision du fondateur.
 
 ## Design du widget
 
 - Rendu dans un Shadow DOM : aucun style de la page hôte ne le casse, aucun style du widget ne fuit.
-- `font-family: inherit` récupérée depuis l'élément hôte ; couleur d'accent configurable ; thème clair/sombre/auto ; rendu conforme à la maquette 2 (`docs-internes/maquettes/`).
+- `font-family: inherit` récupérée depuis l'élément hôte ; couleur d'accent configurable ; thème clair/sombre/auto ; rendu conforme à la maquette 2 (`docs-internes/maquettes/`) jusqu'au lot 4.8, qui le passe à la section Widget de la charte v2.
 - Mur : colonnes en maçonnerie responsive. Carrousel : défilement au doigt, flèches accessibles. Badge : « 4,9/5 · 87 avis » + 3 avatars.
 - Chargement asynchrone, espace réservé pour éviter les sauts de mise en page, images en lazy-load.
 - Badge « Propulsé par PULSACITY » discret mais lisible.

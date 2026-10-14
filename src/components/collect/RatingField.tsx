@@ -17,18 +17,18 @@ const labelRating = (rating: number) => `${rating} ${rating === 1 ? "étoile" : 
 
 export const RatingField = ({ rating, hasError, firstStarRef, onChange }: RatingFieldProps) => (
   <fieldset className="min-w-[0]" aria-describedby={hasError ? "rating-error" : "rating-hint"}>
-    <legend className="mb-2 text-small font-semibold">Votre note</legend>
+    <legend className="mb-2 text-small font-bold">Votre note</legend>
     <div
       className={cn(
-        "flex justify-between rounded-lg border-2 bg-white px-2 py-1",
-        hasError ? "border-error" : "border-ink-900",
+        "flex justify-between rounded-card border-2 bg-white px-2 py-1",
+        hasError ? "border-error" : "border-ink",
       )}
     >
       {RATINGS.map((value) => (
         <label
           key={value}
           className={cn(
-            "pz-note-etoile flex size-[56px] cursor-pointer items-center justify-center rounded-sm has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink-900",
+            "pz-note-etoile flex size-[56px] cursor-pointer items-center justify-center rounded-card has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink",
             value === rating && "is-choisie",
           )}
         >
@@ -54,7 +54,7 @@ export const RatingField = ({ rating, hasError, firstStarRef, onChange }: Rating
       <p
         id="rating-hint"
         aria-live="polite"
-        className={cn("mt-2 text-small", rating > 0 ? "font-semibold text-carmine" : "text-slate-600")}
+        className={cn("mt-2 text-small", rating > 0 ? "font-bold text-ink" : "text-gray")}
       >
         {rating > 0 ? `${rating} sur ${RATINGS.length}, merci.` : "Touchez une étoile."}
       </p>

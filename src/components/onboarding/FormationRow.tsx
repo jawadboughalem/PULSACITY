@@ -30,8 +30,8 @@ export const FormationRow = ({ id, name, collectionAddress }: FormationRowProps)
     <li className="flex flex-col gap-2 border-b border-hairline-200 py-4">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <div className="flex min-w-[0] flex-col">
-          <span className="text-body font-semibold">{name}</span>
-          <span className="text-small break-all text-slate-600">{collectionAddress}</span>
+          <span className="text-body font-bold">{name}</span>
+          <span className="text-small break-all text-gray">{collectionAddress}</span>
         </div>
         <button type="button" onClick={handleRemove} disabled={isRemoving} className={DISCREET_BUTTON_CLASSES}>
           Retirer

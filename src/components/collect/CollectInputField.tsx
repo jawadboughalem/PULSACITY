@@ -16,7 +16,7 @@ export const CollectInputField = ({ id, label, hint, error, inputRef, ...inputPr
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-small font-semibold">
+      <label htmlFor={id} className="text-small font-bold">
         {label}
       </label>
       <input
@@ -28,7 +28,7 @@ export const CollectInputField = ({ id, label, hint, error, inputRef, ...inputPr
         {...inputProps}
       />
       {hint ? (
-        <p id={`${id}-hint`} className="text-small text-slate-600">
+        <p id={`${id}-hint`} className="text-small text-gray">
           {hint}
         </p>
       ) : null}

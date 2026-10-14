@@ -1,4 +1,7 @@
+import { FILTER_CHIP_CHOSEN_CLASSES, FILTER_CHIP_CLASSES } from "@/components/ui/chip-styles";
+import { FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
+import { SelectControl } from "@/components/ui/SelectControl";
 import { cn } from "@/lib/cn";
 
 export type FilterOption = {
@@ -14,42 +17,42 @@ type FilterSelectProps = {
   onChange: () => void;
 };
 
-/** Desktop: the select under its label. Mobile: a chip showing the label, over an invisible native select. */
+/**
+ * Desktop: the select under its label. Mobile: a filter chip (40 high in a 44 zone) showing the label, over an
+ * invisible native select; Soleil with its check once a filter is set.
+ */
 export const FilterSelect = ({ name, label, options, value, onChange }: FilterSelectProps) => {
   const selected = options.find((option) => option.value === value);
   const isFiltered = value !== "" && selected !== undefined;
 
   return (
-    <label className="relative flex flex-col gap-2 max-desktop:max-w-full">
-      <span className="text-small font-semibold max-desktop:sr-only">{label}</span>
+    <label className="group relative flex flex-col gap-2 max-desktop:h-[44px] max-desktop:max-w-full max-desktop:justify-center">
+      <span className={cn(FIELD_LABEL_CLASSES, "max-desktop:sr-only")}>{label}</span>
       <span
         aria-hidden="true"
         className={cn(
-          "flex h-[48px] max-w-full items-center gap-2 rounded-sm border border-ink-900 px-3 text-body font-semibold whitespace-nowrap desktop:hidden",
-          isFiltered ? "bg-ink-900 text-white" : "bg-white text-ink-900",
+          FILTER_CHIP_CLASSES,
+          "max-w-full group-hover:bg-sky group-has-focus-visible:outline-2 group-has-focus-visible:outline-offset-3 group-has-focus-visible:outline-ink desktop:hidden",
+          isFiltered && cn(FILTER_CHIP_CHOSEN_CLASSES, "group-hover:bg-sun-hover"),
         )}
       >
+        {isFiltered ? <Icon name="check" size={16} /> : null}
         <span className="truncate">{isFiltered ? selected.label : label}</span>
-        <Icon name="chevronDown" size={16} className="shrink-0" />
+        <Icon name="chevronDown" size={16} />
       </span>
-      <span className="relative flex max-desktop:absolute max-desktop:inset-[0]">
-        <select
+      <span className="flex max-desktop:absolute max-desktop:inset-[0] max-desktop:opacity-[0]">
+        <SelectControl
           name={name}
           defaultValue={value}
           onChange={onChange}
-          className="h-[48px] w-full appearance-none rounded-sm border border-gray-400 bg-white pr-7 pl-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:pl-[15px] focus:outline-none max-desktop:h-full max-desktop:opacity-[0] desktop:min-w-[176px]"
+          className="max-desktop:h-full desktop:min-w-[176px]"
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
-        </select>
-        <Icon
-          name="chevronDown"
-          size={20}
-          className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 max-desktop:hidden"
-        />
+        </SelectControl>
       </span>
     </label>
   );

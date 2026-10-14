@@ -33,7 +33,7 @@ const Value = ({ value }: { value: ComparisonValue }) => {
       );
     case "excluded":
       return (
-        <span className="text-slate-600">
+        <span className="text-gray">
           <span className="desktop:hidden">{value.label}</span>
           <span aria-hidden="true" className="hidden desktop:inline">
             —
@@ -42,9 +42,9 @@ const Value = ({ value }: { value: ComparisonValue }) => {
         </span>
       );
     case "soon":
-      return <span className="font-semibold desktop:font-normal desktop:text-slate-600">{value.label}</span>;
+      return <span className="font-bold desktop:font-normal desktop:text-gray">{value.label}</span>;
     case "text":
-      return <span className="font-semibold desktop:font-normal">{value.label}</span>;
+      return <span className="font-bold desktop:font-normal">{value.label}</span>;
   }
 };
 
@@ -59,15 +59,15 @@ export const PlanComparison = () => (
       ))}
     </colgroup>
     <thead className="sr-only desktop:not-sr-only">
-      <tr className="border-b border-ink-900">
+      <tr className="border-b border-ink">
         <td />
         {PLAN_IDS.map((id) => (
           <th
             key={id}
             scope="col"
             className={cn(
-              "px-4 py-4 font-serif text-quote font-medium",
-              id === RECOMMENDED_PLAN && "bg-paper-100",
+              "px-4 py-4 font-display text-quote font-semibold",
+              id === RECOMMENDED_PLAN && "bg-sky",
               PHONE_VISIBILITY[id],
             )}
           >
@@ -79,11 +79,11 @@ export const PlanComparison = () => (
     <tbody>
       {PLAN_COMPARISON.map((group) => (
         <Fragment key={group.title}>
-          <tr className="border-b border-ink-900 desktop:border-b-[0]">
+          <tr className="border-b border-ink desktop:border-b-[0]">
             <th
               scope="colgroup"
               colSpan={PLAN_IDS.length + 1}
-              className="pt-7 pb-3 text-small font-semibold text-slate-600 desktop:pt-6 desktop:pb-2"
+              className="pt-10 pb-3 text-small font-bold text-gray desktop:pt-8 desktop:pb-2"
             >
               {group.title}
             </th>
@@ -98,7 +98,7 @@ export const PlanComparison = () => (
                   key={id}
                   className={cn(
                     "py-3 text-right whitespace-nowrap desktop:px-4 desktop:py-4 desktop:text-left",
-                    id === RECOMMENDED_PLAN && "desktop:bg-paper-100",
+                    id === RECOMMENDED_PLAN && "desktop:bg-sky",
                     PHONE_VISIBILITY[id],
                   )}
                 >

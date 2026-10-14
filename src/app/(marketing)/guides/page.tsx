@@ -18,26 +18,26 @@ const GuidesPage = () => (
   <>
     <MarketingSection labelledBy="guides-title">
       <div className="flex max-w-[680px] flex-col gap-4">
-        <h1 id="guides-title" className="font-serif text-display font-medium tracking-title">
+        <h1 id="guides-title" className="font-display text-display font-semibold ">
           Guides
         </h1>
-        <p className="font-serif text-quote">
+        <p className="font-display text-quote">
           Recueillir vos premiers avis, les afficher, rester dans les règles. Des guides courts, tenus à jour à chaque
           changement.
         </p>
       </div>
-      <div className="mt-7 flex flex-col gap-8 desktop:mt-8">
+      <div className="mt-10 flex flex-col gap-12 desktop:mt-12">
         {GUIDE_GROUPS.map((group) => (
           <section
             key={group.id}
             aria-labelledby={`guides-${group.id}`}
-            className="grid gap-5 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-6"
+            className="grid gap-6 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-8"
           >
             <div className="flex flex-col gap-3">
-              <h2 id={`guides-${group.id}`} className="font-serif text-h2 font-medium">
+              <h2 id={`guides-${group.id}`} className="font-display text-h2 font-semibold">
                 {group.title}
               </h2>
-              <p className="text-body text-slate-600 desktop:text-small">{group.text}</p>
+              <p className="text-body text-gray desktop:text-small">{group.text}</p>
             </div>
             <GuideList guides={GUIDES.filter((guide) => guide.group === group.id)} />
           </section>

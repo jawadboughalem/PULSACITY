@@ -26,21 +26,21 @@ export const PublicSuggestTool = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="max-w-text text-body text-slate-600">
+      <p className="max-w-text text-body text-gray">
         Vous vendez ailleurs ?{" "}
         <button
           type="button"
           onClick={() => setIsOpen(true)}
           aria-expanded={isOpen}
           aria-controls="suggested-tool-form"
-          className="font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+          className="font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
         >
           Dites-nous quel outil
         </button>
         {" : c'est ainsi que nous choisissons les prochains."}
       </p>
       {result?.ok ? (
-        <p role="status" className="flex items-center gap-2 text-small font-medium text-success">
+        <p role="status" className="flex items-center gap-2 text-small font-semibold text-success">
           <Icon name="valid" size={20} />
           Merci, c&apos;est noté.
         </p>

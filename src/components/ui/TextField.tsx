@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { cn } from "@/lib/cn";
 import { FieldError } from "./FieldError";
+import { FIELD_CLASSES, FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES } from "./field-styles";
 
 type TextFieldProps = Omit<ComponentPropsWithoutRef<"input">, "id" | "className"> & {
   id: string;
@@ -9,6 +9,7 @@ type TextFieldProps = Omit<ComponentPropsWithoutRef<"input">, "id" | "className"
   error?: string;
 };
 
+/** Charte v2, Champ de texte: the label 8 px above, the help or the error below, tied by aria-describedby. */
 export const TextField = ({ id, label, hint, error, ...inputProps }: TextFieldProps) => {
   const hintId = `${id}-hint`;
   const errorId = `${id}-error`;
@@ -16,22 +17,18 @@ export const TextField = ({ id, label, hint, error, ...inputProps }: TextFieldPr
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-small font-semibold">
+      <label htmlFor={id} className={FIELD_LABEL_CLASSES}>
         {label}
       </label>
       <input
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy || undefined}
-        className={cn(
-          "h-[48px] w-full rounded-sm border border-gray-400 bg-white px-4 text-body text-ink-900 placeholder:text-slate-600",
-          "focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none disabled:cursor-not-allowed disabled:bg-paper-100",
-          error && "border-2 border-error px-[15px]",
-        )}
+        className={FIELD_CLASSES}
         {...inputProps}
       />
       {hint ? (
-        <p id={hintId} className="text-small text-slate-600">
+        <p id={hintId} className={FIELD_HINT_CLASSES}>
           {hint}
         </p>
       ) : null}

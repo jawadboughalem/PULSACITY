@@ -5,7 +5,7 @@ import { cn } from "./cn";
 const stylesheet = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 
 function tokenNames(namespace: string): string[] {
-  const names = [...stylesheet.matchAll(new RegExp(`--${namespace}-([a-z0-9-]+?)(?:--line-height)?:`, "g"))];
+  const names = [...stylesheet.matchAll(new RegExp(`--${namespace}-([a-z0-9]+(?:-[a-z0-9]+)*)(?:--[a-z-]+)?:`, "g"))];
   return [...new Set(names.map(([, name]) => name))];
 }
 
@@ -14,7 +14,7 @@ describe("cn", () => {
     const sizes = tokenNames("text");
     expect(sizes.length).toBeGreaterThan(0);
     for (const size of sizes) {
-      expect(cn(`text-${size}`, "text-ink-900")).toBe(`text-${size} text-ink-900`);
+      expect(cn(`text-${size}`, "text-ink")).toBe(`text-${size} text-ink`);
     }
   });
 
@@ -31,7 +31,6 @@ describe("cn", () => {
       ["radius", "rounded"],
       ["shadow", "shadow"],
       ["container", "max-w"],
-      ["tracking", "tracking"],
       ["font-weight", "font"],
     ];
     for (const [namespace, utility] of scales) {
@@ -43,7 +42,7 @@ describe("cn", () => {
   });
 
   it("keeps a font family next to a font weight", () => {
-    expect(cn("font-serif", "font-semibold")).toBe("font-serif font-semibold");
-    expect(cn("font-serif", "font-sans")).toBe("font-sans");
+    expect(cn("font-display", "font-bold")).toBe("font-display font-bold");
+    expect(cn("font-display", "font-sans")).toBe("font-sans");
   });
 });

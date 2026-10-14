@@ -9,14 +9,14 @@ type FaqListProps = {
 
 /** « Vos questions » (m7) and « Facturation » (m8): a rule of Encre above, the first answer open. Works without script. */
 export const FaqList = ({ name, entries }: FaqListProps) => (
-  <div className="border-t border-ink-900">
+  <div className="border-t border-ink">
     {entries.map((entry, index) => (
       <details key={entry.question} name={name} open={index === 0} className="group border-b border-hairline-200">
-        <summary className="flex min-h-[64px] cursor-pointer list-none items-center justify-between gap-4 py-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 [&::-webkit-details-marker]:hidden">
-          <span className="font-serif text-quote">{entry.question}</span>
+        <summary className="flex min-h-[64px] cursor-pointer list-none items-center justify-between gap-4 py-4 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink [&::-webkit-details-marker]:hidden">
+          <span className="font-display text-quote">{entry.question}</span>
           <Icon name="chevronDown" size={20} className="group-open:rotate-180" />
         </summary>
-        <p className="max-w-text pb-5 text-body">{entry.answer}</p>
+        <p className="max-w-text pb-6 text-body">{entry.answer}</p>
       </details>
     ))}
   </div>

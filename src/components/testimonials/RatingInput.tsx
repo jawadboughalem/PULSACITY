@@ -15,13 +15,13 @@ const labelRating = (rating: number) => `${rating} ${rating === 1 ? "étoile" : 
 /** Five stars as radio buttons. `id` goes to the first star, so an error summary can lead to it. */
 export const RatingInput = ({ id, rating, error, onChange }: RatingInputProps) => (
   <fieldset className="flex min-w-[0] flex-col gap-2" aria-describedby={error ? `${id}-error` : undefined}>
-    <legend className="mb-2 text-small font-semibold">Note</legend>
+    <legend className="mb-2 text-small font-bold">Note</legend>
     <div className="flex items-center gap-3">
-      <div className={cn("-ml-3 flex rounded-sm", error && "border-2 border-error")}>
+      <div className={cn("-ml-3 flex rounded-card", error && "border-2 border-error")}>
         {RATINGS.map((value) => (
           <label
             key={value}
-            className="flex size-[44px] cursor-pointer items-center justify-center rounded-sm has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink-900 has-disabled:cursor-not-allowed"
+            className="flex size-[44px] cursor-pointer items-center justify-center rounded-card has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink has-disabled:cursor-not-allowed"
           >
             <input
               id={value === RATINGS[0] ? id : undefined}
@@ -37,7 +37,7 @@ export const RatingInput = ({ id, rating, error, onChange }: RatingInputProps) =
           </label>
         ))}
       </div>
-      {rating > 0 ? <span className="text-small text-slate-600">{`${rating} sur ${RATINGS.length}`}</span> : null}
+      {rating > 0 ? <span className="text-small text-gray">{`${rating} sur ${RATINGS.length}`}</span> : null}
     </div>
     {error ? <FieldError id={`${id}-error`} message={error} /> : null}
   </fieldset>

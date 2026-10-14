@@ -9,22 +9,27 @@ export const SOCIAL_IMAGE_TYPE = "image/png";
 const PROMISE = "Vos ventes deviennent des témoignages, automatiquement.";
 
 const INK = "#16213E";
-const SLATE = "#5A5F6E";
-const HAIRLINE = "#D8D9DD";
+const GRAY = "#565B6B";
+
+/** Width over height of pulsacity-logo.svg (logo v2 « Galet »). */
+const LOGO_RATIO = 263.38 / 64;
+const LOGO_HEIGHT = 48;
 
 /**
- * The image shown when a page is shared: the logo, the page's title in Newsreader, the promise in Public Sans. White,
- * like the site; no gradient, no label above the title. The fonts are static WOFF files (assets/og-fonts).
+ * The image shown when a page is shared: the logo, the page's title in Bricolage Grotesque 800, the promise in Figtree.
+ * White, like the site; no gradient, no label above the title, no rule (charte v2). The fonts are static WOFF files
+ * (assets/og-fonts).
  */
 export const renderSocialImage = async (title: string): Promise<ImageResponse> => {
   // Literal paths: the build then traces these three files only, not the whole project.
-  const [newsreader, publicSans, logo] = await Promise.all([
-    readFile(join(process.cwd(), "assets", "og-fonts", "newsreader-500.woff")),
-    readFile(join(process.cwd(), "assets", "og-fonts", "public-sans-400.woff")),
+  const [bricolage, figtree, logo] = await Promise.all([
+    readFile(join(process.cwd(), "assets", "og-fonts", "bricolage-grotesque-800.woff")),
+    readFile(join(process.cwd(), "assets", "og-fonts", "figtree-400.woff")),
     readFile(join(process.cwd(), "public", "brand", "pulsacity-logo.svg")),
   ]);
   const logoSource = `data:image/svg+xml;base64,${logo.toString("base64")}`;
   const isLong = title.length > 60;
+  const titleSize = isLong ? 60 : 72;
 
   return new ImageResponse(
     (
@@ -41,20 +46,19 @@ export const renderSocialImage = async (title: string): Promise<ImageResponse> =
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse draws plain img elements only */}
-        <img src={logoSource} alt="" width={201} height={48} />
-        <div style={{ display: "flex", fontFamily: "Newsreader", fontSize: isLong ? 60 : 72, lineHeight: 1.1 }}>
-          {title}
-        </div>
+        <img src={logoSource} alt="" width={Math.round(LOGO_HEIGHT * LOGO_RATIO)} height={LOGO_HEIGHT} />
         <div
           style={{
             display: "flex",
-            borderTop: `1px solid ${HAIRLINE}`,
-            paddingTop: 32,
-            fontFamily: "Public Sans",
-            fontSize: 28,
-            color: SLATE,
+            fontFamily: "Bricolage Grotesque",
+            fontSize: titleSize,
+            lineHeight: 1.05,
+            letterSpacing: -0.035 * titleSize,
           }}
         >
+          {title}
+        </div>
+        <div style={{ display: "flex", fontFamily: "Figtree", fontSize: 28, color: GRAY }}>
           {PROMISE}
         </div>
       </div>
@@ -62,8 +66,8 @@ export const renderSocialImage = async (title: string): Promise<ImageResponse> =
     {
       ...SOCIAL_IMAGE_SIZE,
       fonts: [
-        { name: "Newsreader", data: newsreader, weight: 500, style: "normal" },
-        { name: "Public Sans", data: publicSans, weight: 400, style: "normal" },
+        { name: "Bricolage Grotesque", data: bricolage, weight: 800, style: "normal" },
+        { name: "Figtree", data: figtree, weight: 400, style: "normal" },
       ],
     },
   );

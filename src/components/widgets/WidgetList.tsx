@@ -12,7 +12,7 @@ import type { WidgetType } from "../../../widget/src/payload";
 import { WidgetThumbnail } from "./WidgetThumbnail";
 
 const LINK_CLASSES =
-  "font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+  "font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
 export type ListedWidget = {
   id: string;
@@ -56,7 +56,7 @@ const WidgetStatus = ({ widget }: { widget: ListedWidget }) =>
       {widget.shownSince}
     </p>
   ) : (
-    <p className="flex items-start gap-2 text-small text-slate-600">
+    <p className="flex items-start gap-2 text-small text-gray">
       <Icon name="clock" size={20} className="shrink-0" />
       <span>
         Pas encore collé sur une page ·{" "}
@@ -71,8 +71,8 @@ const WidgetStatus = ({ widget }: { widget: ListedWidget }) =>
   );
 
 const EmptyState = () => (
-  <section aria-labelledby="no-widget" className="flex flex-col gap-4 bg-paper-100 p-5 desktop:p-7">
-    <h2 id="no-widget" className="font-serif text-quote font-medium desktop:text-h2">
+  <section aria-labelledby="no-widget" className="flex flex-col gap-4 bg-sky p-6 desktop:p-10">
+    <h2 id="no-widget" className="font-display text-quote font-semibold desktop:text-h2">
       Aucun widget pour l&apos;instant
     </h2>
     <p className="max-w-text text-body">
@@ -83,8 +83,8 @@ const EmptyState = () => (
         <li key={choice.type} className="flex items-center gap-4 border-b border-hairline-200 py-3">
           <WidgetThumbnail type={choice.type} className="w-[72px]" isOnPaper />
           <span className="flex flex-col">
-            <span className="text-body font-semibold">{choice.title}</span>
-            <span className="text-small text-slate-600">{choice.text}</span>
+            <span className="text-body font-bold">{choice.title}</span>
+            <span className="text-small text-gray">{choice.text}</span>
           </span>
         </li>
       ))}
@@ -97,20 +97,20 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
   const [result, createWidget, isCreating] = useActionState<CreateWidgetResult | null>(createWidgetFromList, null);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <div
         className={cn(
-          "flex flex-col gap-5 desktop:flex-row desktop:items-start desktop:justify-between",
-          widgets.length > 0 && "border-b border-ink-900 pb-5 desktop:pb-6",
+          "flex flex-col gap-6 desktop:flex-row desktop:items-start desktop:justify-between",
+          widgets.length > 0 && "border-b border-ink pb-6 desktop:pb-8",
         )}
       >
         <div className="flex flex-col gap-2">
-          <h1 className="font-serif text-h1 font-medium">Widgets</h1>
-          <p className="max-w-[600px] text-body text-slate-600">
+          <h1 className="font-display text-h1 font-semibold">Widgets</h1>
+          <p className="max-w-[600px] text-body text-gray">
             Affichez vos témoignages sur vos pages de vente. Chaque widget a son code, à coller une seule fois.
           </p>
         </div>
-        <div className="flex flex-col gap-2 desktop:items-end desktop:pt-6">
+        <div className="flex flex-col gap-2 desktop:items-end desktop:pt-8">
           <form action={createWidget}>
             <button
               type="submit"
@@ -121,7 +121,7 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
             </button>
           </form>
           {createLimit ? (
-            <p className="text-small text-slate-600 desktop:text-right">
+            <p className="text-small text-gray desktop:text-right">
               {`Le plan ${createLimit.planName} comprend ${createLimit.widgetLimit} widget${createLimit.widgetLimit > 1 ? "s" : ""}. `}
               <Link href={BILLING_HREF} className={LINK_CLASSES}>
                 Voir les plans
@@ -135,17 +135,17 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
       {widgets.length === 0 ? (
         <EmptyState />
       ) : (
-        <ul className="-mt-6 flex flex-col">
+        <ul className="-mt-8 flex flex-col">
           {widgets.map((widget) => (
             <li
               key={widget.id}
-              className="flex flex-col gap-4 border-b border-hairline-200 py-5 desktop:flex-row desktop:items-center desktop:gap-6"
+              className="flex flex-col gap-4 border-b border-hairline-200 py-6 desktop:flex-row desktop:items-center desktop:gap-8"
             >
-              <div className="flex min-w-[0] flex-1 items-start gap-4 desktop:gap-6">
+              <div className="flex min-w-[0] flex-1 items-start gap-4 desktop:gap-8">
                 <WidgetThumbnail type={widget.type} className="w-[72px] desktop:w-[120px]" />
                 <div className="flex min-w-[0] flex-col gap-1">
-                  <h2 className="font-serif text-quote font-medium">{widget.title}</h2>
-                  <p className="text-small text-slate-600">{widget.description}</p>
+                  <h2 className="font-display text-quote font-semibold">{widget.title}</h2>
+                  <p className="text-small text-gray">{widget.description}</p>
                   <WidgetStatus widget={widget} />
                 </div>
               </div>
@@ -162,10 +162,10 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
       )}
 
       {createLimit && widgets.length > 0 ? (
-        <aside className="flex items-start gap-3 bg-paper-100 p-5 desktop:px-6">
+        <aside className="flex items-start gap-3 bg-sky p-6 desktop:px-8">
           <Icon name="info" size={20} className="mt-[2px] shrink-0" />
           <div className="flex flex-col gap-2">
-            <p className="text-body font-semibold">Un mur, un carrousel et un badge sur vos pages ?</p>
+            <p className="text-body font-bold">Un mur, un carrousel et un badge sur vos pages ?</p>
             <p className="text-small">
               {`Avec le plan Essentiel, à ${createLimit.nextPlanPrice}, vous créez autant de widgets que vous voulez : un pour chaque page de vente.`}
             </p>

@@ -2,7 +2,8 @@
 
 import Form from "next/form";
 import { useRef } from "react";
-import { Icon } from "@/components/ui/Icon";
+import { FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
+import { SelectControl } from "@/components/ui/SelectControl";
 import { REQUEST_STATUS_PARAMETER } from "./describe-request";
 
 type RequestStatusFilterProps = {
@@ -29,25 +30,21 @@ export const RequestStatusFilter = ({ action, value, options }: RequestStatusFil
       }}
       className="flex flex-col gap-2 desktop:hidden"
     >
-      <label htmlFor="request-status" className="text-small font-semibold">
+      <label htmlFor="request-status" className={FIELD_LABEL_CLASSES}>
         Statut
       </label>
-      <span className="relative flex">
-        <select
-          id="request-status"
-          name={REQUEST_STATUS_PARAMETER}
-          defaultValue={value}
-          onChange={() => formRef.current?.requestSubmit()}
-          className="h-[48px] w-full appearance-none rounded-sm border border-gray-400 bg-white pr-7 pl-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:pl-[15px] focus:outline-none"
-        >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <Icon name="chevronDown" size={20} className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2" />
-      </span>
+      <SelectControl
+        id="request-status"
+        name={REQUEST_STATUS_PARAMETER}
+        defaultValue={value}
+        onChange={() => formRef.current?.requestSubmit()}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </SelectControl>
     </Form>
   );
 };

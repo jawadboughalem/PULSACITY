@@ -32,33 +32,33 @@ export const ThankYouScreen = ({ testimonial, spaceName, logoUrl, homeUrl, refer
     <>
       <div
         role="status"
-        className="flex items-center gap-2 rounded-lg bg-success-surface px-4 py-3 text-small font-medium text-success"
+        className="flex items-center gap-2 rounded-card bg-success-surface px-4 py-3 text-small font-semibold text-success"
       >
         <Icon name="valid" size={20} />
         Votre témoignage est bien envoyé.
       </div>
-      <div className="flex flex-col gap-4 rounded-lg border-2 border-ink-900 bg-white p-5">
-        <SpaceAvatar name={spaceName} logoUrl={logoUrl} size={64} background="paper" />
-        <h1 ref={headingRef} tabIndex={-1} className="font-serif text-h2 font-medium focus:outline-none">
+      <div className="flex flex-col gap-4 rounded-card border-2 border-ink bg-white p-6">
+        <SpaceAvatar name={spaceName} logoUrl={logoUrl} size={64} background="sky" />
+        <h1 ref={headingRef} tabIndex={-1} className="font-display text-h2 font-semibold focus:outline-none">
           {`Merci ${getFirstName(testimonial.authorName)}.`}
         </h1>
-        <p className="font-serif text-quote">{THANK_YOU_MESSAGE}</p>
-        <p className="border-t border-hairline-200 pt-4 font-serif text-quote font-medium">{spaceName}</p>
+        <p className="font-display text-quote">{THANK_YOU_MESSAGE}</p>
+        <p className="border-t border-hairline-200 pt-4 font-display text-quote font-semibold">{spaceName}</p>
       </div>
       <div className="flex flex-col gap-2">
-        <h2 className="text-small font-semibold">Votre témoignage</h2>
-        <div className="flex flex-col gap-2 rounded-lg border border-hairline-200 bg-white p-4">
+        <h2 className="text-small font-bold">Votre témoignage</h2>
+        <div className="flex flex-col gap-2 rounded-card border border-hairline-200 bg-white p-4">
           <div role="img" aria-label={`${testimonial.rating} sur ${RATINGS.length}`} className="flex gap-[2px]">
             {RATINGS.map((value) => (
               <StarIcon key={value} size={16} isFilled={value <= testimonial.rating} />
             ))}
           </div>
           <p className="text-small">{`« ${formatExcerpt(testimonial.body)} »`}</p>
-          <p className="text-small text-slate-600">
+          <p className="text-small text-gray">
             {testimonial.authorTitle ? `${testimonial.authorName} · ${testimonial.authorTitle}` : testimonial.authorName}
           </p>
         </div>
-        <p className="text-small text-slate-600">
+        <p className="text-small text-gray">
           {`${spaceName} le relit avant de le publier. Vous pouvez fermer cette page.`}
         </p>
       </div>

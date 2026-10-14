@@ -37,7 +37,7 @@ const NEW_OFFER = "nouvelle-offre";
 const DEFAULT_DELAY_DAYS = 14;
 
 const CONTROL_CLASSES =
-  "h-[48px] rounded-sm border border-gray-400 bg-white text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:outline-none disabled:cursor-not-allowed disabled:border-hairline-200 disabled:bg-paper-100 disabled:text-slate-600";
+  "h-[48px] rounded-card border border-gray bg-white text-body text-ink focus:border-2 focus:border-ink focus:outline-none disabled:cursor-not-allowed disabled:border-hairline-200 disabled:bg-sky disabled:text-gray";
 
 const ERRORS = {
   "not-saved": "La modification n'a pas été enregistrée. Vérifiez votre connexion, puis réessayez.",
@@ -112,18 +112,18 @@ const ExternalProductRow = ({ product, offers }: RowProps) => {
   const isDelayDisabled = !offer || !offer.requestsEnabled || isSaving;
 
   return (
-    <li className="flex flex-col gap-4 border-b border-hairline-200 py-5 desktop:grid desktop:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)_minmax(0,2fr)] desktop:items-center desktop:gap-5">
+    <li className="flex flex-col gap-4 border-b border-hairline-200 py-6 desktop:grid desktop:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)_minmax(0,2fr)] desktop:items-center desktop:gap-6">
       <div className="flex items-start justify-between gap-3 desktop:block">
         <div className="flex min-w-[0] flex-col gap-1">
-          <p className="text-body font-semibold">{product.name}</p>
-          <p className="text-small text-slate-600">{product.details}</p>
+          <p className="text-body font-bold">{product.name}</p>
+          <p className="text-small text-gray">{product.details}</p>
         </div>
         <span className="desktop:hidden">
           <ToneBadge {...badge} />
         </span>
       </div>
       <div className="flex flex-col gap-2">
-        <label htmlFor={ids.offer} className="text-small font-semibold desktop:sr-only">
+        <label htmlFor={ids.offer} className="text-small font-bold desktop:sr-only">
           Offre PULSACITY<span className="sr-only">{` pour ${quoteInFrench(product.name)}`}</span>
         </label>
         <select
@@ -131,7 +131,7 @@ const ExternalProductRow = ({ product, offers }: RowProps) => {
           value={product.productId ?? ""}
           disabled={isSaving}
           onChange={(event) => handleOffer(event.target.value)}
-          className={cn(CONTROL_CLASSES, "w-full px-4 focus:px-[15px]", !product.productId && "border-2 border-ink-900 px-[15px]")}
+          className={cn(CONTROL_CLASSES, "w-full px-4 focus:px-[15px]", !product.productId && "border-2 border-ink px-[15px]")}
         >
           {product.productId ? null : <option value="">Choisir une offre</option>}
           {offers.map((candidate) => (
@@ -143,7 +143,7 @@ const ExternalProductRow = ({ product, offers }: RowProps) => {
         </select>
       </div>
       <div className="flex flex-col gap-2">
-        <label htmlFor={ids.delay} className="text-small font-semibold desktop:sr-only">
+        <label htmlFor={ids.delay} className="text-small font-bold desktop:sr-only">
           Demande d&apos;avis<span className="sr-only">{` pour ${quoteInFrench(product.name)}, en jours après l'achat`}</span>
         </label>
         <div className="flex items-center gap-3">
@@ -162,10 +162,10 @@ const ExternalProductRow = ({ product, offers }: RowProps) => {
             }}
             className={cn(CONTROL_CLASSES, "w-[80px] px-4 focus:px-[15px]")}
           />
-          <span className={cn("text-small", isDelayDisabled && "text-slate-600")}>jours après l&apos;achat</span>
+          <span className={cn("text-small", isDelayDisabled && "text-gray")}>jours après l&apos;achat</span>
         </div>
         {offer && !offer.requestsEnabled ? (
-          <p className="text-small text-slate-600">Demandes désactivées pour cette offre.</p>
+          <p className="text-small text-gray">Demandes désactivées pour cette offre.</p>
         ) : null}
       </div>
       <span className="hidden desktop:block">
@@ -185,20 +185,20 @@ export const ExternalProductsTable = ({ connectorName, products, offers }: Exter
     <div className="flex flex-col">
       <div
         aria-hidden="true"
-        className="hidden border-b border-ink-900 pb-3 text-small font-semibold desktop:grid desktop:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)_minmax(0,2fr)] desktop:gap-5"
+        className="hidden border-b border-ink pb-3 text-small font-bold desktop:grid desktop:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)_minmax(0,2fr)] desktop:gap-6"
       >
         <span>{`Produit reçu de ${connectorName}`}</span>
         <span>Offre PULSACITY</span>
         <span>Demande d&apos;avis</span>
         <span>État</span>
       </div>
-      <ul className="flex flex-col border-t border-ink-900 desktop:border-t-0">
+      <ul className="flex flex-col border-t border-ink desktop:border-t-0">
         {products.map((product) => (
           <ExternalProductRow key={product.id} product={product} offers={offers} />
         ))}
       </ul>
     </div>
-    <p className="text-small text-slate-600">
+    <p className="text-small text-gray">
       Tant qu&apos;un produit n&apos;est pas associé, ses ventes sont gardées de côté : aucune demande n&apos;est envoyée.
     </p>
   </div>

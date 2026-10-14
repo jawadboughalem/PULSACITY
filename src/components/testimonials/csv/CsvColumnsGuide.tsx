@@ -16,45 +16,45 @@ type CsvColumnsGuideProps = {
 };
 
 export const CsvColumnsGuide = ({ templateHref }: CsvColumnsGuideProps) => (
-  <section aria-labelledby="csv-columns" className="flex flex-col gap-5">
-    <h2 id="csv-columns" className="text-body font-semibold max-desktop:sr-only">
+  <section aria-labelledby="csv-columns" className="flex flex-col gap-6">
+    <h2 id="csv-columns" className="text-body font-bold max-desktop:sr-only">
       Colonnes attendues
     </h2>
     <table className="hidden w-full border-collapse text-left text-body desktop:table">
       <thead>
-        <tr className="border-b border-ink-900 text-small">
-          <th scope="col" className="w-[30%] pb-3 font-semibold">Colonne</th>
-          <th scope="col" className="w-[20%] pb-3 font-semibold">Statut</th>
-          <th scope="col" className="pb-3 font-semibold">Contenu attendu</th>
+        <tr className="border-b border-ink text-small">
+          <th scope="col" className="w-[30%] pb-3 font-bold">Colonne</th>
+          <th scope="col" className="w-[20%] pb-3 font-bold">Statut</th>
+          <th scope="col" className="pb-3 font-bold">Contenu attendu</th>
         </tr>
       </thead>
       <tbody>
         {CSV_COLUMNS.map((column) => (
           <tr key={column} className="border-b border-hairline-200">
-            <th scope="row" className="py-4 pr-4 font-semibold">{column}</th>
-            <td className={COLUMNS[column].isRequired ? "py-4 pr-4" : "py-4 pr-4 text-slate-600"}>{statusOf(column)}</td>
+            <th scope="row" className="py-4 pr-4 font-bold">{column}</th>
+            <td className={COLUMNS[column].isRequired ? "py-4 pr-4" : "py-4 pr-4 text-gray"}>{statusOf(column)}</td>
             <td className="py-4">{COLUMNS[column].content}</td>
           </tr>
         ))}
       </tbody>
     </table>
-    <ul className="flex flex-col border-t border-ink-900 desktop:hidden">
+    <ul className="flex flex-col border-t border-ink desktop:hidden">
       {CSV_COLUMNS.map((column) => (
         <li key={column} className="flex flex-col gap-1 border-b border-hairline-200 py-4 text-body">
           <span>
-            <span className="font-semibold">{column}</span>
-            <span className="text-slate-600">{` · ${statusOf(column)}`}</span>
+            <span className="font-bold">{column}</span>
+            <span className="text-gray">{` · ${statusOf(column)}`}</span>
           </span>
           <span>{COLUMNS[column].content}</span>
         </li>
       ))}
     </ul>
-    <p className="text-small text-slate-600">
+    <p className="text-small text-gray">
       La première ligne du fichier doit contenir les noms des colonnes.{" "}
       <a
         href={templateHref}
         download="modele-temoignages.csv"
-        className="font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+        className="font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
       >
         Télécharger un fichier modèle
       </a>

@@ -12,7 +12,7 @@ type PlanPriceProps = {
 export const PlanPrice = ({ amountCents, size, className }: PlanPriceProps) => {
   const { whole, rest } = splitPrice(amountCents);
   return (
-    <span className={cn("inline-flex items-baseline font-serif font-medium whitespace-nowrap", className)}>
+    <span className={cn("inline-flex items-baseline font-display font-semibold whitespace-nowrap", className)}>
       <span className={size === "large" ? "text-display" : "text-h1"}>{whole}</span>
       <span
         className={cn(

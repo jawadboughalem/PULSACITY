@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 const OnboardingLayout = ({ children }: LayoutProps<"/app/onboarding">) => (
   <>
     <SiteHeader />
-    <main className="px-page-gutter py-7">
-      <div className="mx-auto flex w-full max-w-text flex-col gap-6">{children}</div>
+    <main className="px-page-gutter py-10">
+      <div className="mx-auto flex w-full max-w-text flex-col gap-8">{children}</div>
     </main>
   </>
 );

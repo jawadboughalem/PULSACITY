@@ -15,10 +15,10 @@ type LegalPageProps = {
 
 /** m23, while the texts are drafts: the passages still to provide are highlighted in Attention. */
 const DraftBanner = () => (
-  <div role="note" className="flex items-start gap-3 bg-attention-surface p-4 desktop:p-5">
-    <Icon name="clock" size={20} className="mt-[2px] shrink-0 text-attention" />
+  <div role="note" className="flex items-start gap-3 bg-waiting-surface p-4 desktop:p-6">
+    <Icon name="clock" size={20} className="mt-[2px] shrink-0 text-waiting" />
     <div className="flex flex-col gap-1">
-      <p className="text-body font-semibold text-attention">Brouillon en cours de relecture</p>
+      <p className="text-body font-bold text-waiting">Brouillon en cours de relecture</p>
       <p className="text-small">Ce texte n&apos;est pas encore validé. Les passages surlignés restent à compléter.</p>
     </div>
   </div>
@@ -30,10 +30,10 @@ export const LegalPage = async ({ name, title, updatedOn, children }: LegalPageP
     labelledBy="legal-title"
     header={
       <>
-        <h1 id="legal-title" className="font-serif text-display font-medium tracking-title">
+        <h1 id="legal-title" className="font-display text-display font-semibold ">
           {title}
         </h1>
-        <p className="text-small text-slate-600">{`Version du ${updatedOn}`}</p>
+        <p className="text-small text-gray">{`Version du ${updatedOn}`}</p>
         {isLegalValidated() ? null : (
           <div className="mt-2">
             <DraftBanner />

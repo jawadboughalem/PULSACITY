@@ -12,7 +12,7 @@ import { cn } from "@/lib/cn";
 import { quoteInFrench } from "@/lib/french/typography";
 
 const FIELD_CLASSES =
-  "h-[48px] w-full min-w-[0] rounded-sm border border-gray-400 bg-paper-100 px-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none";
+  "h-[48px] w-full min-w-[0] rounded-card border border-gray bg-sky px-4 text-body text-ink focus:border-2 focus:border-ink focus:px-[15px] focus:outline-none";
 
 type ConnectionAddressFieldsProps = {
   connectorSlug: string;
@@ -59,9 +59,9 @@ export const ConnectionAddressFields = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-5 desktop:flex-row desktop:gap-5">
+      <div className="flex flex-col gap-6 desktop:flex-row desktop:gap-6">
         <div className="flex min-w-[0] flex-col gap-2 desktop:flex-[3]">
-          <label htmlFor="connection-address" className="text-small font-semibold">
+          <label htmlFor="connection-address" className="text-small font-bold">
             Adresse de connexion
           </label>
           <div className="flex flex-col gap-3 desktop:flex-row desktop:gap-2">
@@ -81,7 +81,7 @@ export const ConnectionAddressFields = ({
         </div>
         {signingSecret ? (
           <div className="flex min-w-[0] flex-col gap-2 desktop:flex-[2]">
-            <label htmlFor="connection-secret" className="text-small font-semibold">
+            <label htmlFor="connection-secret" className="text-small font-bold">
               Clé secrète
             </label>
             <div className="flex flex-col gap-3 desktop:flex-row desktop:gap-2">
@@ -123,13 +123,13 @@ export const ConnectionAddressFields = ({
           />
         ) : null}
       </div>
-      <p className="text-small text-slate-600">
+      <p className="text-small text-gray">
         Adresse partagée par erreur ?{" "}
         <button
           type="button"
           disabled={isRenewing}
           onClick={() => setIsConfirming(true)}
-          className="font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:cursor-not-allowed"
+          className="font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink disabled:cursor-not-allowed"
         >
           {hasSecret ? "Changer d'adresse et de clé" : "Changer d'adresse"}
         </button>

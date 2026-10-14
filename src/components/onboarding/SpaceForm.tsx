@@ -19,7 +19,7 @@ export const SpaceForm = ({ defaultReplyToEmail, collectionAddressPrefix }: Spac
   const isUploadingLogo = form.logoUpload.state.status === "uploading";
 
   return (
-    <form action={form.submitAction} noValidate className="flex flex-col gap-6">
+    <form action={form.submitAction} noValidate className="flex flex-col gap-8">
       <TextField
         id="space-name"
         name="name"
@@ -77,7 +77,7 @@ export const SpaceForm = ({ defaultReplyToEmail, collectionAddressPrefix }: Spac
           Créer mon espace
         </button>
         {isUploadingLogo ? (
-          <p className="text-small text-slate-600">Le bouton revient dès que le logo est envoyé.</p>
+          <p className="text-small text-gray">Le bouton revient dès que le logo est envoyé.</p>
         ) : null}
       </div>
     </form>

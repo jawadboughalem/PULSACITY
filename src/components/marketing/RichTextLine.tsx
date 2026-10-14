@@ -15,7 +15,7 @@ export const RichTextLine = ({ parts }: { parts: RichText }) =>
       );
     }
     return (
-      <strong key={index} className="font-semibold">
+      <strong key={index} className="font-bold">
         {part.strong}
       </strong>
     );

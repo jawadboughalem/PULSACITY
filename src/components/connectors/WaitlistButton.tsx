@@ -20,7 +20,7 @@ export const WaitlistButton = ({ connector, connectorName, isWaiting }: Waitlist
 
   if (isDone) {
     return (
-      <p role="status" className="flex min-h-[48px] items-center gap-2 text-small font-medium text-success">
+      <p role="status" className="flex min-h-[48px] items-center gap-2 text-small font-semibold text-success">
         <Icon name="valid" size={20} />
         Nous vous préviendrons par e-mail
       </p>

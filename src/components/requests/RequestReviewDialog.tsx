@@ -29,10 +29,10 @@ import {
 } from "./describe-manual-request";
 
 const LINK_CLASSES =
-  "inline-flex min-h-[44px] items-center gap-2 text-body font-semibold text-carmine hover:text-carmine-dark hover:underline underline-offset-[3px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+  "inline-flex min-h-[44px] items-center gap-2 text-body font-bold text-ink hover:text-ink-800 hover:underline underline-offset-[3px] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
 const SELECT_CLASSES =
-  "h-[48px] w-full appearance-none rounded-sm border border-gray-400 bg-white pr-7 pl-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:pl-[15px] focus:outline-none";
+  "h-[48px] w-full appearance-none rounded-card border border-gray bg-white pr-10 pl-4 text-body text-ink focus:border-2 focus:border-ink focus:pl-[15px] focus:outline-none";
 
 /** Looks like an address before it goes to the server, which checks it for good. */
 const LOOKS_LIKE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -56,10 +56,10 @@ type RequestReviewDialogProps = {
 type Refusal = Extract<RequestReviewResult, { ok: false }> | { ok: false; error: "network" };
 
 const RefusalBox = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div role="alert" className="flex items-start gap-3 border-2 border-error bg-error-surface p-4 desktop:p-5">
+  <div role="alert" className="flex items-start gap-3 border-2 border-error bg-error-surface p-4 desktop:p-6">
     <Icon name="alert" size={20} className="mt-[2px] shrink-0 text-error" />
     <div className="flex min-w-[0] flex-col gap-2 text-small">
-      <p className="text-body font-semibold text-error">{title}</p>
+      <p className="text-body font-bold text-error">{title}</p>
       {children}
     </div>
   </div>
@@ -67,7 +67,7 @@ const RefusalBox = ({ title, children }: { title: string; children: ReactNode })
 
 const ToDo = ({ children }: { children: ReactNode }) => (
   <p>
-    <strong className="font-semibold">À faire :</strong> {children}
+    <strong className="font-bold">À faire :</strong> {children}
   </p>
 );
 
@@ -189,7 +189,7 @@ export const RequestReviewDialog = ({
           <RefusalBox title={`${refusal.customerName} a déjà une demande pour ${offer?.name ?? "cette offre"}.`}>
             <p>{detail}</p>
             <ToDo>{todo}</ToDo>
-            <div className="flex flex-wrap gap-x-6">
+            <div className="flex flex-wrap gap-x-8">
               <CopyCollectionLink url={offerUrl} />
               <Link
                 href={`${REQUESTS_SECTION_HREF}${filter ? `?${REQUEST_STATUS_PARAMETER}=${filter.value}` : ""}`}
@@ -270,52 +270,52 @@ export const RequestReviewDialog = ({
         }}
         aria-labelledby={titleId}
         className={cn(
-          "overflow-y-auto bg-white text-ink-900 backdrop:bg-[rgba(22,33,62,0.12)]",
+          "overflow-y-auto bg-white text-ink backdrop:bg-[rgba(22,33,62,0.12)]",
           "max-desktop:m-[0] max-desktop:h-dvh max-desktop:max-h-none max-desktop:w-full max-desktop:max-w-none",
           "desktop:m-auto desktop:max-h-[calc(100dvh-48px)] desktop:w-[600px] desktop:border desktop:border-hairline-200 desktop:shadow-float",
         )}
       >
         {/* Focus starts on the window itself, not on its close button: nothing looks selected when it opens. */}
         <div autoFocus tabIndex={-1} className="outline-none">
-          <div className="sticky top-[0] z-10 flex items-center gap-3 border-b border-hairline-200 bg-white px-5 py-3 desktop:hidden">
+          <div className="sticky top-[0] z-10 flex items-center gap-3 border-b border-hairline-200 bg-white px-6 py-3 desktop:hidden">
             <button
               type="button"
               onClick={close}
               aria-label="Fermer"
-              className="flex size-[44px] items-center justify-center focus-visible:outline-2 focus-visible:outline-ink-900"
+              className="flex size-[44px] items-center justify-center focus-visible:outline-2 focus-visible:outline-ink"
             >
               <Icon name="close" size={24} />
             </button>
-            <h2 id={titleId} className="text-body font-semibold">
+            <h2 id={titleId} className="text-body font-bold">
               Demander un avis
             </h2>
           </div>
-          <div className="flex flex-col gap-5 px-5 py-5 desktop:p-7">
+          <div className="flex flex-col gap-6 px-6 py-6 desktop:p-10">
             <div className="hidden items-start justify-between gap-4 desktop:flex">
-              <p aria-hidden="true" className="font-serif text-h2 font-medium">
+              <p aria-hidden="true" className="font-display text-h2 font-semibold">
                 Demander un avis
               </p>
               <button
                 type="button"
                 onClick={close}
                 aria-label="Fermer"
-                className="-mt-2 -mr-2 flex size-[44px] items-center justify-center focus-visible:outline-2 focus-visible:outline-ink-900"
+                className="-mt-2 -mr-2 flex size-[44px] items-center justify-center focus-visible:outline-2 focus-visible:outline-ink"
               >
                 <Icon name="close" size={24} />
               </button>
             </div>
-            <p className="text-body text-slate-600">
+            <p className="text-body text-gray">
               {`Pour un client qui a acheté en dehors d'un outil connecté : virement, séance, autre plateforme. Il reçoit le même e-mail qu'après une vente reçue d'un outil connecté, au nom de ${spaceName}.`}
             </p>
 
             {offers.length === 0 ? (
-              <div className="flex flex-col gap-3 bg-paper-100 p-5">
-                <p className="text-body font-semibold">Ajoutez d&apos;abord une offre.</p>
+              <div className="flex flex-col gap-3 bg-sky p-6">
+                <p className="text-body font-bold">Ajoutez d&apos;abord une offre.</p>
                 <p className="text-small">
                   Une demande d&apos;avis porte toujours sur une offre : c&apos;est elle que l&apos;e-mail nomme, et c&apos;est
                   sur elle que l&apos;avis s&apos;affichera. Votre espace n&apos;en a pas encore.
                 </p>
-                <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-5">
+                <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-6">
                   <Link href={OFFERS_SECTION_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
                     Aller à Offres
                   </Link>
@@ -332,18 +332,18 @@ export const RequestReviewDialog = ({
                   event.preventDefault();
                   handleSubmit(event.currentTarget);
                 }}
-                className="flex flex-col gap-5"
+                className="flex flex-col gap-6"
               >
                 {renderRefusal()}
                 <div className="flex flex-col gap-2">
-                  <div className="flex flex-col gap-5 desktop:flex-row desktop:gap-4">
+                  <div className="flex flex-col gap-6 desktop:flex-row desktop:gap-4">
                     <div className="flex-1">
                       <TextField
                         id={`${titleId}-first-name`}
                         name="firstName"
                         label={
                           <>
-                            Prénom <span className="font-normal text-slate-600">(facultatif)</span>
+                            Prénom <span className="font-normal text-gray">(facultatif)</span>
                           </>
                         }
                         placeholder="Par exemple : Élodie"
@@ -359,7 +359,7 @@ export const RequestReviewDialog = ({
                         name="lastName"
                         label={
                           <>
-                            Nom <span className="font-normal text-slate-600">(facultatif)</span>
+                            Nom <span className="font-normal text-gray">(facultatif)</span>
                           </>
                         }
                         placeholder="Par exemple : V."
@@ -368,7 +368,7 @@ export const RequestReviewDialog = ({
                       />
                     </div>
                   </div>
-                  <p className="text-small text-slate-600">{describeEmailGreeting(firstName)}</p>
+                  <p className="text-small text-gray">{describeEmailGreeting(firstName)}</p>
                 </div>
                 <TextField
                   id={`${titleId}-email`}
@@ -382,7 +382,7 @@ export const RequestReviewDialog = ({
                   onChange={() => setEmailError(null)}
                 />
                 <div className="flex flex-col gap-2">
-                  <label htmlFor={`${titleId}-offer`} className="text-small font-semibold">
+                  <label htmlFor={`${titleId}-offer`} className="text-small font-bold">
                     Offre
                   </label>
                   <span className="relative flex">
@@ -433,9 +433,9 @@ export const RequestReviewDialog = ({
                       }}
                     />
                   </div>
-                  <p className="text-small text-slate-600">{describeEmailReason(offer?.name ?? null, spaceName, purchaseDay)}</p>
+                  <p className="text-small text-gray">{describeEmailReason(offer?.name ?? null, spaceName, purchaseDay)}</p>
                 </div>
-                <div className="flex flex-col gap-2 border-t border-hairline-200 pt-5">
+                <div className="flex flex-col gap-2 border-t border-hairline-200 pt-6">
                   <label className="flex cursor-pointer items-start gap-3 text-body">
                     <Checkbox
                       name="isAttested"
@@ -448,16 +448,16 @@ export const RequestReviewDialog = ({
                   {attestationError ? <FieldError id={`${titleId}-attestation-error`} message={attestationError} /> : null}
                 </div>
                 {monthlyLimit ? (
-                  <div role="status" className="flex items-start gap-3 bg-paper-100 p-4 desktop:p-5">
+                  <div role="status" className="flex items-start gap-3 bg-sky p-4 desktop:p-6">
                     <Icon name="info" size={20} className="mt-[2px] shrink-0" />
                     <div className="flex flex-col gap-2 text-small">
-                      <p className="text-body font-semibold">{`Les ${monthlyLimit.count} demandes ${monthlyLimit.month} sont parties.`}</p>
+                      <p className="text-body font-bold">{`Les ${monthlyLimit.count} demandes ${monthlyLimit.month} sont parties.`}</p>
                       <p>
                         {`Celle-ci est gardée et partira le 1er ${monthlyLimit.nextMonth} : rien n'est perdu. Avec le plan Essentiel, elle part tout de suite.`}
                       </p>
                       <Link
                         href={BILLING_HREF}
-                        className="self-start font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark"
+                        className="self-start font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800"
                       >
                         Voir le plan Essentiel
                       </Link>
@@ -465,7 +465,7 @@ export const RequestReviewDialog = ({
                   </div>
                 ) : null}
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-5">
+                  <div className="flex items-center gap-6">
                     <button
                       type="submit"
                       disabled={isSending || isAtDailyLimit}
@@ -477,7 +477,7 @@ export const RequestReviewDialog = ({
                       Annuler
                     </button>
                   </div>
-                  <p className="text-small text-slate-600">
+                  <p className="text-small text-gray">
                     {monthlyLimit
                       ? `Elle partira le 1er ${monthlyLimit.nextMonth}, au premier envoi du mois. Sans réponse, une seule relance part quatre jours plus tard.`
                       : "Elle part au prochain envoi, dans les minutes qui suivent. Sans réponse, une seule relance part quatre jours plus tard."}

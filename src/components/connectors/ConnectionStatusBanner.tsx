@@ -38,10 +38,10 @@ export const ConnectionStatusBanner = ({
   if (status === "active" && setAsideCount > 0) {
     const isOne = setAsideCount === 1;
     return (
-      <div role="status" className="flex items-start gap-4 bg-attention-surface p-4 desktop:p-5">
-        <Icon name="alert" size={24} className="shrink-0 text-attention" />
+      <div role="status" className="flex items-start gap-4 bg-waiting-surface p-4 desktop:p-6">
+        <Icon name="alert" size={24} className="shrink-0 text-waiting" />
         <div className="flex flex-col gap-1">
-          <p className="text-body font-semibold text-attention">
+          <p className="text-body font-bold text-waiting">
             {isOne ? "1 vente gardée de côté" : `${setAsideCount} ventes gardées de côté`}
           </p>
           <p className="text-small">
@@ -60,10 +60,10 @@ export const ConnectionStatusBanner = ({
 
   if (status === "active") {
     return (
-      <div role="status" className="flex items-start gap-4 bg-success-surface p-4 desktop:p-5">
+      <div role="status" className="flex items-start gap-4 bg-success-surface p-4 desktop:p-6">
         <Icon name="valid" size={24} className="text-success" />
         <div className="flex flex-col gap-1">
-          <p className="text-body font-semibold text-success">
+          <p className="text-body font-bold text-success">
             {lastEventSince ? `Connecté — dernière vente reçue ${lastEventSince}` : "Connecté"}
           </p>
           <p className="text-small">Tout fonctionne. Vous n&apos;avez plus rien à faire ici.</p>
@@ -74,17 +74,17 @@ export const ConnectionStatusBanner = ({
 
   if (status === "error") {
     return (
-      <div role="alert" className="flex items-start gap-4 border-2 border-error bg-error-surface p-4 desktop:p-5">
+      <div role="alert" className="flex items-start gap-4 border-2 border-error bg-error-surface p-4 desktop:p-6">
         <Icon name="alert" size={24} className="text-error" />
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <p className="text-body font-semibold text-error">Problème de connexion</p>
+            <p className="text-body font-bold text-error">Problème de connexion</p>
             <p className="max-w-text text-small">
               {`${problemSince ? `Depuis ${problemSince}, ` : ""}${connectorName} nous envoie vos ventes avec une clé secrète qui ne correspond plus. Aucune vente n'est perdue : nous les gardons de côté.`}
             </p>
           </div>
           <div className="flex flex-col gap-1">
-            <p className="text-small font-semibold">À faire :</p>
+            <p className="text-small font-bold">À faire :</p>
             <p className="max-w-text text-small">
               {`Copiez la clé secrète ci-dessous, puis collez-la à nouveau dans ${connectorName}, dans le webhook ${quoteInFrench("PULSACITY")}.`}
             </p>
@@ -106,13 +106,13 @@ export const ConnectionStatusBanner = ({
   return (
     <div
       role="status"
-      className="flex flex-col gap-4 bg-paper-100 p-4 desktop:flex-row desktop:items-center desktop:justify-between desktop:p-5"
+      className="flex flex-col gap-4 bg-sky p-4 desktop:flex-row desktop:items-center desktop:justify-between desktop:p-6"
     >
       <div className="flex items-start gap-4">
         <Icon name="clock" size={24} />
         <div className="flex flex-col gap-1">
-          <p className="text-body font-semibold">En attente de votre première vente…</p>
-          <p className="text-small text-slate-600">
+          <p className="text-body font-bold">En attente de votre première vente…</p>
+          <p className="text-small text-gray">
             {hasChecked ? CHECK_HINT : "Rien à faire si les étapes 1 et 2 sont faites. Pour vérifier tout de suite, faites un achat test."}
           </p>
         </div>

@@ -34,18 +34,18 @@ export const ErrorSummary = ({ title, items }: ErrorSummaryProps) => {
       ref={summaryRef}
       role="alert"
       tabIndex={-1}
-      className="flex items-start gap-3 border-2 border-error bg-error-surface p-4 text-error focus:outline-none desktop:p-5"
+      className="flex items-start gap-3 border-2 border-error bg-error-surface p-4 text-error focus:outline-none desktop:p-6"
     >
       <Icon name="alert" size={20} className="mt-[2px] shrink-0" />
       <div className="flex flex-col gap-2">
-        <p className="text-body font-semibold">{title}</p>
-        <ul className="flex list-disc flex-col gap-1 pl-5 text-small">
+        <p className="text-body font-bold">{title}</p>
+        <ul className="flex list-disc flex-col gap-1 pl-6 text-small">
           {items.map((item) => (
             <li key={item.fieldId}>
               <a
                 href={`#${item.fieldId}`}
                 onClick={(event) => goToField(event, item.fieldId)}
-                className="underline underline-offset-[3px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
+                className="underline underline-offset-[3px] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
               >
                 {item.message}
               </a>

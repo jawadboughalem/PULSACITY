@@ -21,7 +21,7 @@ const ERRORS = {
   network: "La demande n'a pas abouti. Vérifiez votre connexion, puis réessayez.",
 } as const;
 
-const ACTION_CLASSES = cn(DISCREET_BUTTON_CLASSES, "min-h-[44px] px-[0]");
+const ACTION_CLASSES = DISCREET_BUTTON_CLASSES;
 
 type RequestActionsProps = {
   requestId: string;
@@ -110,7 +110,7 @@ export const RequestActions = ({
 
   return (
     <div className="flex flex-col gap-1 desktop:items-end">
-      <div className="flex flex-wrap items-center gap-x-6">
+      <div className="flex flex-wrap items-center gap-x-3">
         {isPlanned && canSendNow ? (
           <button
             type="button"

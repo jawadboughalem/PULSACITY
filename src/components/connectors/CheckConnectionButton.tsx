@@ -18,7 +18,7 @@ export const CheckConnectionButton = ({ isWaiting }: { isWaiting: boolean }) => 
       >
         Vérifier la connexion
       </button>
-      <p aria-live="polite" className="text-small text-slate-600">
+      <p aria-live="polite" className="text-small text-gray">
         {hasChecked && isWaiting ? CHECK_HINT : ""}
       </p>
     </div>

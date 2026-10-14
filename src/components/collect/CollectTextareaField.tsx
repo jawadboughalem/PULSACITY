@@ -20,7 +20,7 @@ export const CollectTextareaField = ({
   ...textareaProps
 }: CollectTextareaFieldProps) => (
   <div className="flex flex-col gap-2">
-    <label htmlFor={id} className="text-small font-semibold">
+    <label htmlFor={id} className="text-small font-bold">
       {label}
     </label>
     <textarea
@@ -35,7 +35,7 @@ export const CollectTextareaField = ({
       )}
       {...textareaProps}
     />
-    <p id={`${id}-hint`} className="hidden text-small text-slate-600 peer-focus:block">
+    <p id={`${id}-hint`} className="hidden text-small text-gray peer-focus:block">
       {focusHint}
     </p>
     {error ? <FieldError id={`${id}-error`} message={error} /> : null}

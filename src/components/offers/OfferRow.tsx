@@ -31,7 +31,7 @@ const ERRORS: Record<Exclude<OfferActionResult, { ok: true }>["error"] | "not-sa
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-const LABEL_CLASSES = "text-small font-semibold";
+const LABEL_CLASSES = "text-small font-bold";
 
 const isValidDelay = (days: number) =>
   Number.isInteger(days) && days >= MIN_REQUEST_DELAY_DAYS && days <= MAX_REQUEST_DELAY_DAYS;
@@ -53,7 +53,7 @@ type OfferRowProps = {
 };
 
 const LINK_CLASSES =
-  "font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+  "font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
 export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, today }: OfferRowProps) => {
   const [isEditingName, setIsEditingName] = useState(false);
@@ -116,7 +116,7 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
   const requestDay = formatDayMonth(new Date(new Date(`${today}T12:00:00Z`).getTime() + shownDelay * DAY_MS));
 
   return (
-    <li className="flex flex-col gap-6 border-b border-hairline-200 py-6 desktop:py-7">
+    <li className="flex flex-col gap-8 border-b border-hairline-200 py-8 desktop:py-10">
       {isEditingName ? (
         <form onSubmit={handleRename} className="flex flex-col gap-2">
           <label htmlFor={ids.name} className={LABEL_CLASSES}>
@@ -130,7 +130,7 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
               autoFocus
               aria-describedby={`${ids.name}-hint`}
               onChange={(event) => setName(event.target.value)}
-              className="h-[48px] w-full rounded-sm border border-gray-400 bg-white px-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none desktop:max-w-[400px]"
+              className="h-[48px] w-full rounded-card border border-gray bg-white px-4 text-body text-ink focus:border-2 focus:border-ink focus:px-[15px] focus:outline-none desktop:max-w-[400px]"
             />
             <button type="submit" disabled={isSaving} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
               Enregistrer
@@ -146,15 +146,15 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
               Annuler
             </button>
           </div>
-          <p id={`${ids.name}-hint`} className="text-small text-slate-600">
+          <p id={`${ids.name}-hint`} className="text-small text-gray">
             Le nouveau nom s&apos;affiche sur votre page de collecte. Le lien ne change pas.
           </p>
         </form>
       ) : (
         <div className="flex flex-col gap-3 desktop:flex-row desktop:items-start desktop:justify-between">
           <div className="flex min-w-[0] flex-col gap-1">
-            <h2 className="font-serif text-quote font-medium">{offer.name}</h2>
-            <p className="text-small text-slate-600">
+            <h2 className="font-display text-quote font-semibold">{offer.name}</h2>
+            <p className="text-small text-gray">
               {offer.price
                 ? formatPrice(offer.price.amountCents, offer.price.currency)
                 : offer.testimonialCount > 1
@@ -162,7 +162,7 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
                   : `${offer.testimonialCount} témoignage`}
             </p>
           </div>
-          <div className="flex gap-5">
+          <div className="flex gap-6">
             <button type="button" onClick={() => setIsEditingName(true)} className={DISCREET_BUTTON_CLASSES}>
               Renommer
             </button>
@@ -179,15 +179,15 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
       )}
 
       {removal === "confirm" ? (
-        <div role="alertdialog" aria-labelledby={`${offer.id}-removal`} className="flex flex-col gap-3 border-2 border-ink-900 p-5">
-          <p id={`${offer.id}-removal`} className="text-body font-semibold">
+        <div role="alertdialog" aria-labelledby={`${offer.id}-removal`} className="flex flex-col gap-3 border-2 border-ink p-6">
+          <p id={`${offer.id}-removal`} className="text-body font-bold">
             {`Retirer ${quoteInFrench(offer.name)} ?`}
           </p>
           <p className="text-body">
             Son lien de collecte ne fonctionnera plus et aucune demande ne partira. Les témoignages déjà reçus restent dans
             votre espace.
           </p>
-          <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-5">
+          <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-6">
             <button
               type="button"
               disabled={isSaving}
@@ -203,19 +203,19 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
         </div>
       ) : null}
       {removal === "impossible" ? (
-        <div role="alert" className="flex items-start gap-3 border-2 border-error bg-error-surface p-4 text-error desktop:p-5">
+        <div role="alert" className="flex items-start gap-3 border-2 border-error bg-error-surface p-4 text-error desktop:p-6">
           <Icon name="alert" size={20} className="mt-[2px]" />
           <div className="flex flex-col gap-1">
-            <p className="text-body font-semibold">{ERRORS["has-sales"]}</p>
-            <p className="text-small text-ink-900">
+            <p className="text-body font-bold">{ERRORS["has-sales"]}</p>
+            <p className="text-small text-ink">
               {`Pour ne plus envoyer de demandes, désactivez ${quoteInFrench("Demander un avis après chaque vente")}.`}
             </p>
           </div>
         </div>
       ) : null}
 
-      <div className="flex flex-col gap-6 desktop:grid desktop:grid-cols-2 desktop:gap-8">
-        <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-2 desktop:gap-12">
+        <div className="flex flex-col gap-8">
           <div className="flex items-start gap-4">
             <Switch
               id={ids.requests}
@@ -225,10 +225,10 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
               onChange={handleRequestsEnabled}
             />
             <div className="flex flex-col gap-1">
-              <label id={ids.requestsLabel} htmlFor={ids.requests} className="cursor-pointer text-body font-semibold">
+              <label id={ids.requestsLabel} htmlFor={ids.requests} className="cursor-pointer text-body font-bold">
                 Demander un avis après chaque vente
               </label>
-              <p id={ids.requestsDescription} className="text-small text-slate-600">
+              <p id={ids.requestsDescription} className="text-small text-gray">
                 {requestsEnabled
                   ? "Activé : chaque client reçoit une demande, une seule fois."
                   : "Désactivé : aucune demande ne part toute seule. Vous pouvez toujours envoyer le lien vous-même."}
@@ -254,11 +254,11 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
                 onKeyDown={(event) => {
                   if (event.key === "Enter") handleDelay();
                 }}
-                className="h-[48px] w-[96px] rounded-sm border border-gray-400 bg-white px-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none disabled:border-hairline-200 disabled:bg-paper-100 disabled:text-slate-600"
+                className="h-[48px] w-[96px] rounded-card border border-gray bg-white px-4 text-body text-ink focus:border-2 focus:border-ink focus:px-[15px] focus:outline-none disabled:border-hairline-200 disabled:bg-sky disabled:text-gray"
               />
-              <span className={cn("text-body", !requestsEnabled && "text-slate-600")}>jours après la vente</span>
+              <span className={cn("text-body", !requestsEnabled && "text-gray")}>jours après la vente</span>
             </div>
-            <p id={`${ids.delay}-hint`} className="text-small text-slate-600">
+            <p id={`${ids.delay}-hint`} className="text-small text-gray">
               {requestsEnabled
                 ? `Pour une vente aujourd'hui, la demande partira le ${requestDay}${requestDay.endsWith(".") ? "" : "."}`
                 : "Activez la demande automatique pour régler le délai."}
@@ -270,18 +270,18 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
           </div>
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-2">
             <span id={ids.link} className={LABEL_CLASSES}>
               Lien de collecte
             </span>
             <p
               aria-labelledby={ids.link}
-              className="flex min-h-[48px] items-center rounded-sm border border-hairline-200 bg-paper-100 px-4 py-3 text-body break-all"
+              className="flex min-h-[48px] items-center rounded-card border border-hairline-200 bg-sky px-4 py-3 text-body break-all"
             >
               {collectionAddress}
             </p>
-            <p className="text-small text-slate-600">À envoyer vous-même, ou à coller dans vos e-mails et vos pages.</p>
+            <p className="text-small text-gray">À envoyer vous-même, ou à coller dans vos e-mails et vos pages.</p>
             <button
               type="button"
               onClick={handleCopy}
@@ -300,7 +300,7 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
                   <li key={`${ref.connector}-${ref.externalRef}`} className="flex items-start gap-3 border-b border-hairline-200 py-4 text-small">
                     <Icon name="connection" size={20} />
                     <span className="flex min-w-[0] flex-1 flex-col gap-1">
-                      <span className="text-body font-semibold">{connector?.name ?? ref.connector}</span>
+                      <span className="text-body font-bold">{connector?.name ?? ref.connector}</span>
                       <span>{ref.productName ? `Produit ${quoteInFrench(ref.productName)}` : ref.externalRef}</span>
                     </span>
                     {connector ? (
@@ -315,9 +315,9 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
                 .filter((connector) => !offer.connectorRefs.some((ref) => ref.connector === connector.id))
                 .map((connector) => (
                   <li key={connector.id} className="flex items-start gap-3 border-b border-hairline-200 py-4 text-small">
-                    <Icon name="clock" size={20} className="text-attention" />
+                    <Icon name="clock" size={20} className="text-waiting" />
                     <span className="flex flex-col gap-1">
-                      <span className="text-body font-semibold">{`${connector.name} · aucun produit associé`}</span>
+                      <span className="text-body font-bold">{`${connector.name} · aucun produit associé`}</span>
                       <span>Les ventes de ce produit sont gardées de côté : aucune demande n&apos;est envoyée.</span>
                       <Link href={connector.associationHref} className={cn(LINK_CLASSES, "self-start")}>
                         {`Associer un produit ${connector.name}`}
@@ -327,10 +327,10 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
                 ))}
               {connectors.length === 0 && offer.connectorRefs.length === 0 ? (
                 <li className="flex items-start gap-3 border-b border-hairline-200 py-4 text-small">
-                  <Icon name="connection" size={20} className="text-slate-600" />
+                  <Icon name="connection" size={20} className="text-gray" />
                   <span className="flex flex-col gap-1">
-                    <span className="text-body font-semibold">Aucun outil connecté</span>
-                    <span className="text-slate-600">
+                    <span className="text-body font-bold">Aucun outil connecté</span>
+                    <span className="text-gray">
                       L&apos;identifiant de chaque outil s&apos;ajoute ici à la première vente reçue.
                     </span>
                   </span>

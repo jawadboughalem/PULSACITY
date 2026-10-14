@@ -25,12 +25,12 @@ const describeRun = (item: Extract<PreviewItem, { kind: "ready-run" }>) =>
 
 const RowBadge = ({ isReady }: { isReady: boolean }) =>
   isReady ? (
-    <span className="inline-flex h-[28px] shrink-0 items-center gap-2 rounded-full bg-success-surface pr-3 pl-2 text-small font-medium whitespace-nowrap text-success">
+    <span className="inline-flex h-[28px] shrink-0 items-center gap-2 rounded-full bg-success-surface pr-3 pl-2 text-small font-semibold whitespace-nowrap text-success">
       <Icon name="valid" size={16} />
       Prête
     </span>
   ) : (
-    <span className="inline-flex h-[28px] shrink-0 items-center gap-2 text-small font-medium whitespace-nowrap text-error">
+    <span className="inline-flex h-[28px] shrink-0 items-center gap-2 text-small font-semibold whitespace-nowrap text-error">
       <Icon name="alert" size={16} />À revoir
     </span>
   );
@@ -41,8 +41,8 @@ const FilterChip = ({ label, isSelected, onSelect }: { label: string; isSelected
     aria-pressed={isSelected}
     onClick={onSelect}
     className={cn(
-      "h-[40px] rounded-full border px-4 text-small whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900",
-      isSelected ? "border-ink-900 bg-paper-100 font-semibold" : "border-hairline-200 bg-white hover:border-gray-400",
+      "h-[40px] rounded-full border px-4 text-small whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink",
+      isSelected ? "border-ink bg-sky font-bold" : "border-hairline-200 bg-white hover:border-gray",
     )}
   >
     {label}
@@ -69,8 +69,8 @@ export const CsvPreviewList = ({ rows }: CsvPreviewListProps) => {
 
   return (
     <section aria-labelledby="csv-preview" className="flex flex-col gap-4">
-      <div className="flex flex-col gap-3 border-b border-ink-900 pb-3 desktop:flex-row desktop:items-center desktop:justify-between desktop:border-b-0 desktop:pb-0">
-        <h2 id="csv-preview" className="font-serif text-quote font-medium">
+      <div className="flex flex-col gap-3 border-b border-ink pb-3 desktop:flex-row desktop:items-center desktop:justify-between desktop:border-b-0 desktop:pb-0">
+        <h2 id="csv-preview" className="font-display text-quote font-semibold">
           <span className="desktop:hidden">Aperçu</span>
           <span className="max-desktop:hidden">Aperçu ligne par ligne</span>
         </h2>
@@ -83,22 +83,22 @@ export const CsvPreviewList = ({ rows }: CsvPreviewListProps) => {
 
       <table className="hidden w-full table-fixed border-collapse text-left text-small desktop:table">
         <thead>
-          <tr className="border-b border-ink-900">
-            <th scope="col" className="w-[56px] pr-3 pb-3 font-semibold">Ligne</th>
-            <th scope="col" className="w-[112px] pr-3 pb-3 font-semibold">Nom</th>
-            <th scope="col" className="w-[112px] pr-3 pb-3 font-semibold">Titre</th>
-            <th scope="col" className="w-[104px] pr-3 pb-3 font-semibold">Note</th>
-            <th scope="col" className="pr-3 pb-3 font-semibold">Texte</th>
-            <th scope="col" className="w-[112px] pr-3 pb-3 font-semibold">Formation</th>
-            <th scope="col" className="w-[104px] pr-3 pb-3 font-semibold">Date</th>
-            <th scope="col" className="w-[112px] pb-3 font-semibold">État</th>
+          <tr className="border-b border-ink">
+            <th scope="col" className="w-[56px] pr-3 pb-3 font-bold">Ligne</th>
+            <th scope="col" className="w-[112px] pr-3 pb-3 font-bold">Nom</th>
+            <th scope="col" className="w-[112px] pr-3 pb-3 font-bold">Titre</th>
+            <th scope="col" className="w-[104px] pr-3 pb-3 font-bold">Note</th>
+            <th scope="col" className="pr-3 pb-3 font-bold">Texte</th>
+            <th scope="col" className="w-[112px] pr-3 pb-3 font-bold">Formation</th>
+            <th scope="col" className="w-[104px] pr-3 pb-3 font-bold">Date</th>
+            <th scope="col" className="w-[112px] pb-3 font-bold">État</th>
           </tr>
         </thead>
         <tbody>
           {items.map((item) =>
             item.kind === "ready-run" ? (
               <tr key={`run-${item.fromLine}`} className="border-b border-hairline-200">
-                <td colSpan={8} className="py-3 text-slate-600">
+                <td colSpan={8} className="py-3 text-gray">
                   {describeRun(item)}
                 </td>
               </tr>
@@ -107,10 +107,10 @@ export const CsvPreviewList = ({ rows }: CsvPreviewListProps) => {
                 key={item.row.line}
                 className={cn("border-b border-hairline-200 align-top", item.row.status !== "ready" && "bg-error-surface")}
               >
-                <td className={cn("py-4 pr-3 pl-2", item.row.status === "ready" ? "text-slate-600" : "text-error")}>
+                <td className={cn("py-4 pr-3 pl-2", item.row.status === "ready" ? "text-gray" : "text-error")}>
                   {item.row.line}
                 </td>
-                <td className="py-4 pr-3 font-semibold break-words">{item.row.authorName || "—"}</td>
+                <td className="py-4 pr-3 font-bold break-words">{item.row.authorName || "—"}</td>
                 <td className="py-4 pr-3 break-words">{item.row.authorTitle ?? ""}</td>
                 <td className="py-4 pr-3">
                   {item.row.rating === null ? (
@@ -144,24 +144,24 @@ export const CsvPreviewList = ({ rows }: CsvPreviewListProps) => {
         {mobileRows.map((row) => (
           <li key={row.line} className="flex flex-col gap-2 border-b border-hairline-200 py-4">
             <span className="flex items-center justify-between gap-3">
-              <span className="text-small text-slate-600">{`Ligne ${row.line}`}</span>
+              <span className="text-small text-gray">{`Ligne ${row.line}`}</span>
               <RowBadge isReady />
             </span>
             <span className="text-body">
-              <span className="font-semibold">{row.authorName}</span>
-              {row.authorTitle ? <span className="text-slate-600">{` · ${row.authorTitle}`}</span> : null}
+              <span className="font-bold">{row.authorName}</span>
+              {row.authorTitle ? <span className="text-gray">{` · ${row.authorTitle}`}</span> : null}
             </span>
             <span className="flex items-start gap-3">
               {row.rating === null ? null : <RatingStars rating={row.rating} size={16} />}
-              <span className="text-small text-slate-600">{`${row.productName ?? "Sans offre"} · ${dateOf(row)}`}</span>
+              <span className="text-small text-gray">{`${row.productName ?? "Sans offre"} · ${dateOf(row)}`}</span>
             </span>
-            <span className="font-serif text-body">{quoteInFrench(formatExcerpt(row.body, 90))}</span>
+            <span className="font-display text-body">{quoteInFrench(formatExcerpt(row.body, 90))}</span>
           </li>
         ))}
       </ul>
       {hiddenOnMobile > 0 ? (
         <div className="flex flex-col gap-1 desktop:hidden">
-          <p className="text-small text-slate-600">
+          <p className="text-small text-gray">
             {hiddenOnMobile === 1 ? "Et 1 autre ligne prête." : `Et ${hiddenOnMobile} autres lignes prêtes.`}
           </p>
           <button type="button" onClick={() => setIsExpanded(true)} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>

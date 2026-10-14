@@ -39,7 +39,7 @@ import {
 } from "./WidgetSettingsControls";
 
 const LINK_CLASSES =
-  "font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+  "font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
 const LIGHT_CARD = "#FFFFFF";
 const DARK_CARD = "#22262D";
@@ -97,7 +97,7 @@ const SaveStatus = ({ saveState, onRetry }: { saveState: SaveState; onRetry: () 
       </button>
     </span>
   ) : (
-    <span className="text-slate-600">{SAVE_LABELS[saveState]}</span>
+    <span className="text-gray">{SAVE_LABELS[saveState]}</span>
   );
 
 /** Maquette 6, desktop: « Code copié » in green, and where to paste it next. */
@@ -111,7 +111,7 @@ const CopyCodeBlock = ({ isCopied, onCopy }: { isCopied: boolean; onCopy: () => 
       <Icon name={isCopied ? "valid" : "copy"} size={20} />
       {isCopied ? "Code copié" : "Copier le code"}
     </button>
-    <p aria-live="polite" className="text-small text-slate-600">
+    <p aria-live="polite" className="text-small text-gray">
       {isCopied
         ? "Collez-le maintenant dans votre page. Sur Systeme.io, suivez les 4 étapes ci-dessous."
         : "Un seul code pour ce widget : vos réglages s'appliquent même après l'avoir collé."}
@@ -181,8 +181,8 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
   const settings = (
     <>
       <div className="flex flex-col gap-2">
-        <label htmlFor="widget-name" className="text-small font-semibold">
-          Nom du widget <span className="font-normal text-slate-600">(facultatif)</span>
+        <label htmlFor="widget-name" className="text-small font-bold">
+          Nom du widget <span className="font-normal text-gray">(facultatif)</span>
         </label>
         <input
           id="widget-name"
@@ -192,16 +192,16 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
           placeholder={derivedName}
           aria-describedby="widget-name-hint"
           onChange={(event) => change({ name: event.target.value }, TYPING_PAUSE_MS)}
-          className="h-[48px] w-full rounded-sm border border-gray-400 bg-white px-4 text-body text-ink-900 placeholder:text-gray-400 focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none"
+          className="h-[48px] w-full rounded-card border border-gray bg-white px-4 text-body text-ink placeholder:text-gray focus:border-2 focus:border-ink focus:px-[15px] focus:outline-none"
         />
-        <p id="widget-name-hint" className="text-small text-slate-600">
+        <p id="widget-name-hint" className="text-small text-gray">
           Pour le retrouver dans votre liste. Vos visiteurs ne le voient pas.
           <span className="hidden desktop:inline">{` Laissé vide : « ${derivedName} ».`}</span>
         </p>
       </div>
       <WidgetTypePicker value={edit.type} onChange={(type) => change({ type })} />
       <div className="flex flex-col gap-2">
-        <label htmlFor="widget-offer" className="text-small font-semibold">
+        <label htmlFor="widget-offer" className="text-small font-bold">
           Offre
         </label>
         <span className="relative flex">
@@ -209,7 +209,7 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
             id="widget-offer"
             value={edit.productId ?? ""}
             onChange={(event) => change({ productId: event.target.value || null })}
-            className="h-[48px] w-full appearance-none rounded-sm border border-gray-400 bg-white pr-7 pl-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:pl-[15px] focus:outline-none"
+            className="h-[48px] w-full appearance-none rounded-card border border-gray bg-white pr-10 pl-4 text-body text-ink focus:border-2 focus:border-ink focus:pl-[15px] focus:outline-none"
           >
             <option value="">{ALL_OFFERS_LABEL}</option>
             {offers.map((offer) => (
@@ -223,7 +223,7 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
       </div>
       {edit.type === "badge" ? null : (
         <div className="flex flex-col gap-2">
-          <label htmlFor="widget-max-items" className="text-small font-semibold">
+          <label htmlFor="widget-max-items" className="text-small font-bold">
             Nombre maximum de témoignages
           </label>
           <input
@@ -240,7 +240,7 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
             }}
             onBlur={() => setIsMaxItemsTouched(true)}
             className={cn(
-              "h-[48px] w-[120px] rounded-sm border border-gray-400 bg-white px-4 text-body text-ink-900 focus:border-2 focus:border-ink-900 focus:px-[15px] focus:outline-none",
+              "h-[48px] w-[120px] rounded-card border border-gray bg-white px-4 text-body text-ink focus:border-2 focus:border-ink focus:px-[15px] focus:outline-none",
               showsMaxItemsError && "border-2 border-error px-[15px]",
             )}
           />
@@ -248,7 +248,7 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
         </div>
       )}
       <fieldset className="flex min-w-[0] flex-col gap-1">
-        <legend className="mb-1 text-small font-semibold">Afficher</legend>
+        <legend className="mb-1 text-small font-bold">Afficher</legend>
         {DISPLAY_OPTIONS.map((option) => (
           <label key={option.key} className="flex min-h-[44px] cursor-pointer items-center gap-3">
             <Checkbox checked={edit[option.key]} onChange={(event) => toggleDisplay(option.key, event.target.checked)} />
@@ -260,13 +260,13 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
       <ThemeSelector value={edit.theme} onChange={(theme) => change({ theme })} />
       <AccentWarningNote warning={accentWarning} onUseInk={() => change({ accentColor: INK })} />
       <CardStyleSelector value={edit.cardStyle} onChange={(cardStyle) => change({ cardStyle })} />
-      <div className="flex items-start justify-between gap-4 border-t border-hairline-200 pt-5">
+      <div className="flex items-start justify-between gap-4 border-t border-hairline-200 pt-6">
         <div className="flex min-w-[0] flex-col gap-1">
-          <span id="widget-hide-powered-label" className={cn("text-body", !look.canHideBadge && "text-slate-600")}>
+          <span id="widget-hide-powered-label" className={cn("text-body", !look.canHideBadge && "text-gray")}>
             Masquer « Propulsé par PULSACITY »
           </span>
           {look.canHideBadge ? null : (
-            <p id="widget-hide-powered-hint" className="text-small text-slate-600">
+            <p id="widget-hide-powered-hint" className="text-small text-gray">
               Disponible avec le plan Pro ·{" "}
               <Link href={BILLING_HREF} className={LINK_CLASSES}>
                 Voir les plans
@@ -290,23 +290,23 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
 
   return (
     <div className="flex flex-col">
-      <header className="hidden items-center justify-between gap-5 border-b border-hairline-200 px-7 py-4 desktop:flex">
+      <header className="hidden items-center justify-between gap-6 border-b border-hairline-200 px-10 py-4 desktop:flex">
         <div className="flex min-w-[0] flex-col">
-          <nav aria-label="Fil d'Ariane" className="text-small text-slate-600">
+          <nav aria-label="Fil d'Ariane" className="text-small text-gray">
             <Link href={WIDGETS_SECTION_HREF} className={LINK_CLASSES}>
               Widgets
             </Link>{" "}
             / <span aria-current="page">{label}</span>
           </nav>
-          <h1 className="font-serif text-h2 font-medium">Modifier le widget</h1>
+          <h1 className="font-display text-h2 font-semibold">Modifier le widget</h1>
         </div>
         <p aria-live="polite" className="min-h-[20px] text-small">
           <SaveStatus saveState={saveState} onRetry={retry} />
         </p>
       </header>
-      <div className="flex flex-col gap-2 px-5 pt-5 desktop:hidden">
-        <h1 className="font-serif text-h1 font-medium">Modifier le widget</h1>
-        <p aria-live="polite" className="text-small text-slate-600">
+      <div className="flex flex-col gap-2 px-6 pt-6 desktop:hidden">
+        <h1 className="font-display text-h1 font-semibold">Modifier le widget</h1>
+        <p aria-live="polite" className="text-small text-gray">
           {`${label} · `}
           <SaveStatus saveState={saveState} onRetry={retry} />
         </p>
@@ -323,8 +323,8 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
                 aria-controls={`${tabId(option.value)}-panel`}
                 onClick={() => setTab(option.value)}
                 className={cn(
-                  "-mb-px h-[48px] border-b-2 text-body focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900",
-                  isChosen ? "border-ink-900 font-semibold text-ink-900" : "border-transparent text-slate-600",
+                  "-mb-px h-[48px] border-b-2 text-body focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink",
+                  isChosen ? "border-ink font-bold text-ink" : "border-transparent text-gray",
                 )}
               >
                 {option.label}
@@ -340,12 +340,12 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
           role="tabpanel"
           aria-labelledby={tabId("settings")}
           className={cn(
-            "flex-col gap-6 px-5 py-5 desktop:flex desktop:w-[380px] desktop:shrink-0 desktop:border-r desktop:border-hairline-200 desktop:py-6 desktop:pr-6 desktop:pl-7",
+            "flex-col gap-8 px-6 py-6 desktop:flex desktop:w-[380px] desktop:shrink-0 desktop:border-r desktop:border-hairline-200 desktop:py-8 desktop:pr-8 desktop:pl-10",
             tab === "settings" ? "flex" : "hidden",
           )}
         >
           {settings}
-          <div className="mt-auto hidden pt-7 desktop:block">
+          <div className="mt-auto hidden pt-10 desktop:block">
             <CopyCodeBlock isCopied={isCopied} onCopy={handleCopy} />
           </div>
         </div>
@@ -354,13 +354,13 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
           role="tabpanel"
           aria-labelledby={tabId("preview")}
           className={cn(
-            "min-w-[0] flex-col gap-4 bg-paper-100 px-5 py-5 desktop:flex desktop:flex-1 desktop:px-6 desktop:py-6",
+            "min-w-[0] flex-col gap-4 bg-sky px-6 py-6 desktop:flex desktop:flex-1 desktop:px-8 desktop:py-8",
             tab === "preview" ? "flex" : "hidden",
           )}
         >
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            <h2 className="text-small font-semibold">Aperçu en direct</h2>
-            <p className="text-small text-slate-600">
+            <h2 className="text-small font-bold">Aperçu en direct</h2>
+            <p className="text-small text-gray">
               <span className="desktop:hidden">Votre page, sur mobile</span>
               <span className="hidden desktop:inline">Votre page de vente, réduite</span>
             </p>
@@ -382,14 +382,14 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
             pageAccent={look.spaceAccentColor}
             loadMore={loadMore}
           />
-          <p className="text-small text-slate-600 desktop:hidden">L&apos;aperçu suit vos réglages.</p>
+          <p className="text-small text-gray desktop:hidden">L&apos;aperçu suit vos réglages.</p>
         </section>
       </div>
 
-      <div className="px-5 pt-2 pb-[108px] desktop:hidden">
+      <div className="px-6 pt-2 pb-[108px] desktop:hidden">
         <WidgetInstallPanel widgetId={widgetId} snippet={snippet} email={email} guideHref={guideHref} />
       </div>
-      <div className="hidden px-7 pb-7 desktop:block">
+      <div className="hidden px-10 pb-10 desktop:block">
         <SystemePasteGuide isCodeCopied={isCopied} />
       </div>
     </div>

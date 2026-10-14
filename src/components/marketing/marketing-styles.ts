@@ -5,8 +5,8 @@ export const LARGE_BUTTON_CLASSES = `${PRIMARY_BUTTON_CLASSES} h-[56px] w-full d
 
 /** A link inside a sentence: Carmin, underlined, on the line of the text. */
 export const INLINE_LINK_CLASSES =
-  "font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+  "font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
 /** A link in a text of the public site: Carmin, underlined, 44 high to be easy to touch. */
 export const TEXT_LINK_CLASSES =
-  "inline-flex min-h-[44px] items-center font-medium text-carmine underline underline-offset-[3px] hover:text-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900";
+  "inline-flex min-h-[44px] items-center font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";

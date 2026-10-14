@@ -1,20 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Newsreader, Public_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { readSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  axes: ["opsz"],
-  fallback: ["Georgia", "Times New Roman", "serif"],
-  variable: "--font-newsreader",
+/** Charte v2: titles, key figures and prices in Bricolage Grotesque 800, its optical size following the text. */
+const bricolage = localFont({
+  src: "./fonts/bricolage-grotesque-800-latin.woff2",
+  weight: "800",
+  style: "normal",
+  fallback: ["Arial Black", "system-ui", "sans-serif"],
+  variable: "--font-bricolage",
 });
 
-const publicSans = Public_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+/** Charte v2: the interface and the text in Figtree 400, 600 and 700 (one variable file). */
+const figtree = localFont({
+  src: "./fonts/figtree-latin.woff2",
+  weight: "300 900",
+  style: "normal",
   fallback: ["system-ui", "-apple-system", "Segoe UI", "sans-serif"],
-  variable: "--font-public-sans",
+  variable: "--font-figtree",
 });
 
 export const metadata: Metadata = {
@@ -36,7 +40,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="fr" className={`${newsreader.variable} ${publicSans.variable}`}>
+    <html lang="fr" className={`${bricolage.variable} ${figtree.variable}`}>
       <body>{children}</body>
     </html>
   );

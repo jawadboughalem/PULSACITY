@@ -8,8 +8,8 @@ type OnboardingStepHeadingProps = {
 
 export const OnboardingStepHeading = ({ step, title, description }: OnboardingStepHeadingProps) => (
   <div className="flex flex-col gap-2">
-    <p className="text-small text-slate-600">{`Étape ${step} sur ${STEP_COUNT}`}</p>
-    <h1 className="font-serif text-h1 font-medium">{title}</h1>
-    <p className="text-body text-slate-600">{description}</p>
+    <p className="text-small text-gray">{`Étape ${step} sur ${STEP_COUNT}`}</p>
+    <h1 className="font-display text-h1 font-semibold">{title}</h1>
+    <p className="text-body text-gray">{description}</p>
   </div>
 );

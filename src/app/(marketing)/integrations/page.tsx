@@ -19,12 +19,12 @@ export const generateMetadata = () =>
 const IntegrationsPage = () => (
   <>
     <MarketingSection labelledBy="integrations-title">
-      <div className="grid gap-6 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-6">
+      <div className="grid gap-8 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-8">
         <div className="flex flex-col gap-4">
-          <h1 id="integrations-title" className="font-serif text-display font-medium tracking-title">
+          <h1 id="integrations-title" className="font-display text-display font-semibold ">
             Intégrations
           </h1>
-          <p className="font-serif text-quote">
+          <p className="font-display text-quote">
             PULSACITY se branche sur l&apos;outil où vous vendez. Chaque vente déclenche une demande d&apos;avis, à
             votre nom.
           </p>
@@ -36,15 +36,15 @@ const IntegrationsPage = () => (
     <MarketingSection labelledBy="without-connector-title" tone="paper">
       <div className="flex flex-col gap-4">
         <SectionTitle id="without-connector-title">Votre outil n&apos;est pas encore là ?</SectionTitle>
-        <p className="max-w-text text-body text-slate-600">
+        <p className="max-w-text text-body text-gray">
           Le connecteur universel reçoit ses ventes par Zapier, Make ou n8n. Et sans rien relier, vous recueillez déjà des
           avis.
         </p>
       </div>
-      <div className="mt-6 desktop:mt-7">
+      <div className="mt-8 desktop:mt-10">
         <MeanwhileList items={WITHOUT_CONNECTOR} layout="columns" />
       </div>
-      <div className="mt-6 desktop:mt-7">
+      <div className="mt-8 desktop:mt-10">
         <PublicSuggestTool />
       </div>
     </MarketingSection>
