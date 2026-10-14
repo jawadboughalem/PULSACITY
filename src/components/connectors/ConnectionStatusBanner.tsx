@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCopyLink } from "@/components/space/useCopyLink";
 import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
@@ -82,9 +83,9 @@ export const ConnectionStatusBanner = ({
               <Icon name={isCopied ? "valid" : "copy"} size={20} />
               {isCopied ? "Clé secrète copiée" : "Copier la clé secrète"}
             </button>
-            <a href={`#${stepTwoId}`} className={cn(DISCREET_BUTTON_CLASSES, "self-start desktop:self-auto")}>
+            <Link href={`#${stepTwoId}`} className={cn(DISCREET_BUTTON_CLASSES, "self-start desktop:self-auto")}>
               Revoir l&apos;étape 2
-            </a>
+            </Link>
           </div>
         </div>
       </StatusBanner>

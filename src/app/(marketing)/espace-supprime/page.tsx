@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MARKETING_PATHS, WRITE_TO_US_HREF } from "@/components/marketing/marketing-paths";
+import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { cn } from "@/lib/cn";
 
@@ -34,9 +34,9 @@ const SpaceDeletedPage = () => (
         <Link href={MARKETING_PATHS.home} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
           Revenir à l&apos;accueil
         </Link>
-        <a href={WRITE_TO_US_HREF} className={cn(DISCREET_BUTTON_CLASSES, "max-desktop:-ml-[10px]")}>
+        <Link href={MARKETING_PATHS.contact} className={cn(DISCREET_BUTTON_CLASSES, "max-desktop:-ml-[10px]")}>
           Écrivez-nous
-        </a>
+        </Link>
       </div>
     </div>
   </div>

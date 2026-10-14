@@ -8,43 +8,52 @@ export type FaqEntry = {
   answer: string;
 };
 
-const RESIGN: FaqEntry = {
+/** The answers shared by the home page, the prices and the help page (/aide). */
+export const RESIGN: FaqEntry = {
   question: "Comment résilier ?",
   answer:
     "Depuis votre espace, en deux clics, sans frais ni préavis. Votre abonnement s'arrête à la fin de la période déjà payée. Votre espace repasse alors au plan Gratuit, avec tous vos témoignages.",
 };
 
+export const REQUEST_TIMING: FaqEntry = {
+  question: "Quand la demande d'avis est-elle envoyée ?",
+  answer: `Vous choisissez le délai pour chaque offre, par exemple 30 jours après l'achat pour un programme d'un mois. Par défaut, ${DEFAULT_REQUEST_DELAY_DAYS} jours. Sans réponse, une seule relance part ${REMINDER_DELAY_DAYS} jours plus tard.`,
+};
+
+export const GDPR: FaqEntry = {
+  question: "Est-ce conforme au RGPD ?",
+  answer:
+    "Oui. Pour les données de vos clients, PULSACITY agit comme sous-traitant : nous les traitons pour votre compte, seulement pour demander et afficher leurs avis. Chaque témoignage est publié avec l'accord explicite de son auteur, daté et gardé comme preuve. Les données sont stockées dans l'Union européenne.",
+};
+
+export const SITE_COMPATIBILITY: FaqEntry = {
+  question: "Est-ce compatible avec mon site ?",
+  answer:
+    "Le widget s'affiche sur toute page qui accepte un bloc de code HTML : Systeme.io, WordPress et la plupart des outils de création de pages. Il reprend la police et la couleur de votre page, sans rien changer autour. Pour les ventes, Systeme.io se connecte directement, et vos autres outils passent par le connecteur universel, avec Zapier, Make ou n8n.",
+};
+
+export const VAT: FaqEntry = {
+  question: "Les prix incluent-ils la TVA ?",
+  answer:
+    "Le prix affiché est celui que vous payez. PULSACITY ne facture pas de TVA aujourd'hui : il n'y en a donc aucune à récupérer sur nos factures.",
+};
+
 /** « Vos questions », maquette 7: the delay, the GDPR, unsubscribing, compatibility, cancelling. */
 export const HOME_FAQ: FaqEntry[] = [
-  {
-    question: "Quand la demande d'avis est-elle envoyée ?",
-    answer: `Vous choisissez le délai pour chaque offre, par exemple 30 jours après l'achat pour un programme d'un mois. Par défaut, ${DEFAULT_REQUEST_DELAY_DAYS} jours. Sans réponse, une seule relance part ${REMINDER_DELAY_DAYS} jours plus tard.`,
-  },
-  {
-    question: "Est-ce conforme au RGPD ?",
-    answer:
-      "Oui. Pour les données de vos clients, PULSACITY agit comme sous-traitant : nous les traitons pour votre compte, seulement pour demander et afficher leurs avis. Chaque témoignage est publié avec l'accord explicite de son auteur, daté et gardé comme preuve. Les données sont stockées dans l'Union européenne.",
-  },
+  REQUEST_TIMING,
+  GDPR,
   {
     question: "Mes clients peuvent-ils se désinscrire ?",
     answer:
       "Oui, en un clic. Chaque e-⁠mail contient un lien de désinscription, et la plupart des messageries affichent aussi un bouton. Un client reçoit au plus deux e-⁠mails par offre : la demande et une relance.",
   },
-  {
-    question: "Est-ce compatible avec mon site ?",
-    answer:
-      "Le widget s'affiche sur toute page qui accepte un bloc de code HTML : Systeme.io, WordPress et la plupart des outils de création de pages. Il reprend la police et la couleur de votre page, sans rien changer autour. Pour les ventes, Systeme.io se connecte directement, et vos autres outils passent par le connecteur universel, avec Zapier, Make ou n8n.",
-  },
+  SITE_COMPATIBILITY,
   RESIGN,
 ];
 
 /** « Facturation », maquette 8, with the answers of decisions/tarifs.md. */
 export const BILLING_FAQ: FaqEntry[] = [
-  {
-    question: "Les prix incluent-ils la TVA ?",
-    answer:
-      "Le prix affiché est celui que vous payez. PULSACITY ne facture pas de TVA aujourd'hui : il n'y en a donc aucune à récupérer sur nos factures.",
-  },
+  VAT,
   RESIGN,
   {
     question: "Que deviennent mes témoignages si j'arrête ?",

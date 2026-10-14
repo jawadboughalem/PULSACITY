@@ -1,8 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { SettingsSection } from "@/components/settings/SettingsSection";
-import { PRIMARY_BUTTON_CLASSES, SECONDARY_COMPACT_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import {
+  INLINE_LINK_CLASSES,
+  PRIMARY_BUTTON_CLASSES,
+  SECONDARY_COMPACT_BUTTON_CLASSES,
+} from "@/components/ui/button-styles";
 import { FIELD_HINT_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
 import { StatusBanner } from "@/components/ui/StatusBanner";
@@ -76,7 +82,13 @@ export const ExportSection = () => {
       {state.status === "failed" ? (
         <StatusBanner tone="error" title="Le fichier n'a pas pu être préparé.">
           <div className="flex flex-col items-start gap-3">
-            <p>Rien n&apos;est perdu. Réessayez ; si cela se reproduit, écrivez-nous.</p>
+            <p>
+              Rien n&apos;est perdu. Réessayez ; si cela se reproduit,{" "}
+              <Link href={MARKETING_PATHS.contact} className={INLINE_LINK_CLASSES}>
+                écrivez-nous
+              </Link>
+              .
+            </p>
             <button type="button" onClick={prepare} className={SECONDARY_COMPACT_BUTTON_CLASSES}>
               <Icon name="replay" size={20} />
               Réessayer

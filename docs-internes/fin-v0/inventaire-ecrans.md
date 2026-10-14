@@ -205,10 +205,9 @@ Sources : `docs-internes/decisions/` (`positionnement.md`, `commercialisation.md
 | Lien | Où | Mène à |
 | --- | --- | --- |
 | « Abonnement et factures » | Menu du compte, page « Plus » | `/app/facturation` |
-| « Aide et contact » | Menu du compte, page « Plus » | `/aide` |
 | « Voir le plan Essentiel » | Accueil (limite atteinte), Widgets, Demandes, Demander un avis, import CSV | `/app/facturation` |
 | « Voir les plans » | Widgets, éditeur de widget (retirer le badge) | `/app/facturation` |
 
-« Réglages » et « Mon compte » mènent à leurs pages depuis le lot 4.3 (`/app/reglages`, `/app/compte`).
+« Réglages » et « Mon compte » mènent à leurs pages depuis le lot 4.3 (`/app/reglages`, `/app/compte`), « Aide et contact » à `/aide` depuis le lot 4.4.
 
-Le lien « Contact » du pied de page fonctionne, mais l'adresse qu'il montre est encore « [À COMPLÉTER] ».
+Le lien « Contact » du pied de page mène à « Écrivez-nous » (`/aide#contact`) depuis le lot 4.4.

@@ -1,3 +1,4 @@
+import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import type { IconName } from "@/components/ui/icon-paths";
 import { ACCOUNT_PATH } from "@/lib/spaces/account-paths";
 
@@ -25,7 +26,7 @@ export const MORE_SECTIONS = [OFFERS, WIDGETS, CONNECTORS, SETTINGS];
 export const ACCOUNT_SECTIONS: SpaceSection[] = [
   { label: "Mon compte", href: ACCOUNT_PATH, icon: "user" },
   { label: "Abonnement et factures", href: "/app/facturation", icon: "card" },
-  { label: "Aide et contact", href: "/aide", icon: "help" },
+  { label: "Aide et contact", href: MARKETING_PATHS.help, icon: "help" },
 ];
 
 export const TESTIMONIALS_SECTION_HREF = TESTIMONIALS.href;

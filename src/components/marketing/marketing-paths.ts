@@ -11,12 +11,10 @@ export const MARKETING_PATHS = {
   salesTerms: "/cgv",
   privacy: "/confidentialite",
   cookies: "/confidentialite#cookies",
-  /** No support address yet (etat.md, « Questions ouvertes »): the publisher's contact details. */
-  contact: "/mentions-legales#contact",
+  help: "/aide",
+  /** « Écrivez-nous » of /aide, where the footer's « Contact » and every « Écrivez-nous » lead. */
+  contact: "/aide#contact",
 } as const;
-
-/** « Écrivez-nous »: the one address (CLAUDE.md), until the form of /aide (lot 4.4). */
-export const WRITE_TO_US_HREF = "mailto:contact@pulsacity.com";
 
 export const integrationPath = (slug: string) => `${MARKETING_PATHS.integrations}/${slug}`;
 

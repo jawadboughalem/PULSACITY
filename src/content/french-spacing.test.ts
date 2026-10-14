@@ -3,7 +3,7 @@ import { join } from "node:path";
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
-/** The texts of the public site, and the parts of the space it shows (the guide of Systeme.io, the fields of the universal connector, the paste steps). */
+/** The texts of the public site, and the parts of the space it shows (the guide of Systeme.io, the fields of the universal connector, the paste steps, the errors of « Écrivez-nous »). */
 const FOLDERS = ["src/content", "src/components/marketing", "src/app/(marketing)"];
 const FILES = [
   "src/mdx-components.tsx",
@@ -12,6 +12,7 @@ const FILES = [
   "src/lib/connectors/universal/fields.ts",
   "src/lib/widgets/paste-guide-steps.ts",
   "src/lib/forms/describe-invalid-email.ts",
+  "src/lib/support/contact-message.ts",
 ];
 
 const listFiles = (folder: string): string[] =>

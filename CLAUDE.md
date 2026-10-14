@@ -54,7 +54,7 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 ## Structure
 
 ```
-src/app/(marketing)/          # /, /integrations, /integrations/[connector], /tarifs, /guides, /guides/[slug], légal, /espace-supprime
+src/app/(marketing)/          # /, /integrations, /integrations/[connector], /tarifs, /guides, /guides/[slug], /aide (aide et « Écrivez-nous »), légal, /espace-supprime
 src/app/(auth)/               # /inscription, /connexion
 src/app/app/                  # /app, /app/temoignages, /app/offres, /app/widgets, /app/connecteurs, /app/connecteurs/[connector], /app/demandes, /app/reglages (l'espace), /app/compte (la personne, export /app/compte/export), /app/facturation
 src/app/t/[spaceSlug]/        # page publique de collecte (+ /t/[spaceSlug]/[productSlug])
@@ -70,8 +70,9 @@ src/db/schema.ts
 src/lib/connectors/           # types.ts (contrat), registry.ts, moteur (réception, traitement), systeme/, universal/ (connecteur universel), upcoming-connectors.ts
 src/lib/purchases/            # record-purchase.ts : de NormalizedPurchase au client, à l'achat et à la demande
 src/lib/requests/             # planification et envoi des demandes
+src/lib/support/              # « Écrivez-nous » : contact@pulsacity.com, champs, limites, envoi (rien gardé en base)
 src/emails/                   # templates React Email
-src/content/                  # textes du site : offres (depuis plans.ts), FAQ, un fichier par connecteur et leurs familles (integrations/), guides et textes légaux en MDX
+src/content/                  # textes du site : offres (depuis plans.ts), FAQ, aide par thème (help.ts), un fichier par connecteur et leurs familles (integrations/), guides et textes légaux en MDX
 docs-internes/                # décisions, payloads, recette ; etat.md : où en est le projet ; design-v2/ : charte, maquettes et logo v2
 scripts/seed-demo.mjs         # espace de démonstration (local, recette)
 compose.yaml                  # Postgres local

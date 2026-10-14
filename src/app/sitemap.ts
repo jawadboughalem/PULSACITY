@@ -29,6 +29,7 @@ const sitemap = (): MetadataRoute.Sitemap => {
     ),
     page(MARKETING_PATHS.guides, 0.6),
     ...GUIDES.map((guide) => page(guidePath(guide.slug), 0.7, guide.updatedAt)),
+    page(MARKETING_PATHS.help, 0.4),
     ...(isLegalValidated() ? LEGAL_PATHS.map((path) => page(path, 0.2)) : []),
   ];
 };
