@@ -20,7 +20,7 @@ const SignUpPage = async () => {
         </p>
       </div>
       <MagicLinkForm />
-      <p className="flex flex-wrap items-center gap-x-1 pt-6 text-body">
+      <p className="flex flex-wrap items-center gap-x-2 pt-6 text-body">
         Vous avez déjà un espace ?
         <Link href="/connexion" className={DISCREET_BUTTON_CLASSES}>
           Me connecter

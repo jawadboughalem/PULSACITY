@@ -6,7 +6,7 @@ export const SOCIAL_IMAGE_SIZE = { width: 1200, height: 630 };
 
 export const SOCIAL_IMAGE_TYPE = "image/png";
 
-const PROMISE = "Vos ventes deviennent des témoignages, automatiquement.";
+export const PROMISE = "Vos ventes deviennent des témoignages, automatiquement.";
 
 const INK = "#16213E";
 const GRAY = "#565B6B";
@@ -17,8 +17,8 @@ const LOGO_HEIGHT = 48;
 
 /**
  * The image shown when a page is shared: the logo, the page's title in Bricolage Grotesque 800, the promise in Figtree.
- * White, like the site; no gradient, no label above the title, no rule (charte v2). The fonts are static WOFF files
- * (assets/og-fonts).
+ * White, like the site; no gradient, no label above the title, no rule (charte v2). The home's title is the promise
+ * itself: it is not written twice. The fonts are static WOFF files (assets/og-fonts).
  */
 export const renderSocialImage = async (title: string): Promise<ImageResponse> => {
   // Literal paths: the build then traces these three files only, not the whole project.
@@ -58,9 +58,11 @@ export const renderSocialImage = async (title: string): Promise<ImageResponse> =
         >
           {title}
         </div>
-        <div style={{ display: "flex", fontFamily: "Figtree", fontSize: 28, color: GRAY }}>
-          {PROMISE}
-        </div>
+        {title === PROMISE ? null : (
+          <div style={{ display: "flex", fontFamily: "Figtree", fontSize: 28, color: GRAY }}>
+            {PROMISE}
+          </div>
+        )}
       </div>
     ),
     {

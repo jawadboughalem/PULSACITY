@@ -272,13 +272,21 @@ export const RequestReviewDialog = ({
         }}
         aria-labelledby={titleId}
         className={cn(
-          "pz-flottant overflow-y-auto bg-white text-ink backdrop:bg-veil",
+          "pz-flottant overflow-hidden bg-white text-ink backdrop:bg-veil",
           "max-desktop:m-[0] max-desktop:h-dvh max-desktop:max-h-none max-desktop:w-full max-desktop:max-w-none",
-          "desktop:m-auto desktop:max-h-[calc(100dvh-48px)] desktop:w-[600px] desktop:rounded-panel desktop:shadow-float",
+          "desktop:m-auto desktop:max-h-[calc(100dvh-48px)] desktop:w-[600px] desktop:rounded-panel desktop:py-6 desktop:shadow-float",
         )}
       >
-        {/* Focus starts on the window itself, not on its close button: nothing looks selected when it opens. */}
-        <div autoFocus tabIndex={-1} className="outline-none">
+        {/*
+          Focus starts on the window itself, not on its close button: nothing looks selected when it opens. On a
+          computer, the content scrolls between the window's rounded corners (radius-panel, 24 above and below), so its
+          scrollbar never cuts them; the content's own padding makes up the 32 of the charter.
+        */}
+        <div
+          autoFocus
+          tabIndex={-1}
+          className="h-full overflow-y-auto outline-none desktop:max-h-[calc(100dvh-96px)]"
+        >
           <div className="sticky top-[0] z-10 flex h-[64px] items-center gap-3 bg-white px-5 desktop:hidden">
             {/* The cross's icon lines up with the page's gutter. */}
             <DialogCloseButton onClick={close} className="m-[0] -ml-[10px]" />
@@ -286,7 +294,7 @@ export const RequestReviewDialog = ({
               Demander un avis
             </h2>
           </div>
-          <div className="flex flex-col gap-6 px-5 pt-6 pb-7 desktop:p-8">
+          <div className="flex flex-col gap-6 px-5 pt-6 pb-7 desktop:px-8 desktop:py-2">
             <div className="hidden items-start justify-between gap-4 desktop:flex">
               <p aria-hidden="true" className={DIALOG_TITLE_CLASSES}>
                 Demander un avis

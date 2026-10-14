@@ -6,14 +6,17 @@ type CheckboxProps = Omit<ComponentPropsWithoutRef<"input">, "type" | "className
   hasError?: boolean;
 };
 
-/** Charte v2, Case à cocher: 24 × 24, radius-check; once checked, Encre and a white check drawn in 240 ms. */
+/**
+ * Charte v2, Case à cocher: 24 × 24, radius-check; once checked, Encre and a white check drawn in 240 ms. In error, its
+ * border stays red under the pointer, as a field's does.
+ */
 export const Checkbox = ({ hasError = false, ...inputProps }: CheckboxProps) => (
   <span className="relative size-[24px] shrink-0">
     <input
       type="checkbox"
       aria-invalid={hasError || undefined}
       className={cn(
-        "peer pz-couleur size-[24px] cursor-pointer appearance-none rounded-check border-2 bg-white enabled:hover:border-ink checked:border-ink checked:bg-ink",
+        "peer pz-couleur size-[24px] cursor-pointer appearance-none rounded-check border-2 bg-white enabled:not-aria-invalid:hover:border-ink checked:border-ink checked:bg-ink",
         "disabled:cursor-not-allowed disabled:border-disabled-border disabled:bg-gray-light",
         FOCUS_RING,
         hasError ? "border-error" : "border-gray",

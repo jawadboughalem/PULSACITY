@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ConnectorLogo } from "@/components/connectors/ConnectorLogo";
 import { Icon } from "@/components/ui/Icon";
 import { FOCUS_RING } from "@/components/ui/button-styles";
+import { CARD_LINK_TITLE_CLASSES } from "@/components/ui/card-link-styles";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import { INTEGRATIONS, type Integration, describeMeanwhile } from "@/content/integrations";
 import { cn } from "@/lib/cn";
@@ -27,7 +28,7 @@ const DetailedRow = ({ integration }: { integration: Integration }) => (
     <ConnectorLogo name={integration.name} />
     <span className="flex min-w-[0] flex-1 flex-col gap-2 desktop:gap-1">
       <span className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <span className="font-display text-h3">{integration.name}</span>
+        <span className={CARD_LINK_TITLE_CLASSES}>{integration.name}</span>
         <span className="desktop:hidden">
           <IntegrationBadge integration={integration} />
         </span>
@@ -55,7 +56,7 @@ export const IntegrationRows = ({ isDetailed = false, integrations = INTEGRATION
         <Link
           href={integrationPath(integration.slug)}
           className={cn(
-            "pz-couleur flex gap-4 rounded-card bg-cloud p-5 hover:bg-sky desktop:gap-6 desktop:p-6",
+            "group flex gap-4 rounded-card bg-cloud p-5 desktop:gap-6 desktop:p-6",
             FOCUS_RING,
             isDetailed ? "items-start desktop:items-center" : "items-center",
           )}
@@ -67,7 +68,7 @@ export const IntegrationRows = ({ isDetailed = false, integrations = INTEGRATION
               <ConnectorLogo name={integration.name} />
               {/* On a narrow phone, the state goes under the name rather than out of the card. */}
               <span className="flex min-w-[0] flex-1 flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                <span className="min-w-[0] font-display text-h3">{integration.name}</span>
+                <span className={cn("min-w-[0]", CARD_LINK_TITLE_CLASSES)}>{integration.name}</span>
                 <IntegrationBadge integration={integration} />
               </span>
             </>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FOCUS_RING } from "@/components/ui/button-styles";
+import { CARD_LINK_TITLE_CLASSES } from "@/components/ui/card-link-styles";
 import { Icon } from "@/components/ui/Icon";
 import type { Guide } from "@/content/guides";
 import { cn } from "@/lib/cn";
@@ -14,12 +15,12 @@ export const GuideList = ({ guides }: { guides: Guide[] }) => (
         <Link
           href={guidePath(guide.slug)}
           className={cn(
-            "pz-couleur flex items-center gap-4 rounded-card bg-cloud p-5 hover:bg-sky desktop:gap-6 desktop:p-6",
+            "group flex items-center gap-4 rounded-card bg-cloud p-5 desktop:gap-6 desktop:p-6",
             FOCUS_RING,
           )}
         >
           <span className="flex min-w-[0] flex-1 flex-col gap-2">
-            <span className="font-display text-h3">{guide.title}</span>
+            <span className={CARD_LINK_TITLE_CLASSES}>{guide.title}</span>
             <span className="text-small text-gray desktop:text-body">{guide.summary}</span>
             <span className="text-small text-gray">{formatGuideMeta(guide)}</span>
           </span>

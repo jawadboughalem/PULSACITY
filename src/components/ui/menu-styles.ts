@@ -5,8 +5,11 @@ import { FOCUS_RING } from "./button-styles";
 export const MENU_PANEL_CLASSES =
   "pz-flottant z-20 flex min-w-[232px] flex-col rounded-card bg-white p-2 text-ink shadow-float";
 
-/** An option: 48 high, padding 0 14, radius-field, its icon 20 at 12 px; Ciel when hovered or reached with the keys. */
-export const MENU_ITEM_CLASSES = `pz-couleur flex min-h-[48px] w-full cursor-pointer items-center gap-3 rounded-field px-[14px] text-left text-body text-ink hover:bg-sky focus-visible:bg-sky ${FOCUS_RING}`;
+/**
+ * An option: 48 high, padding 0 14, radius-field, its icon 20 at 12 px; Ciel when hovered or reached with the keys. On
+ * one line: the menu widens to its longest option.
+ */
+export const MENU_ITEM_CLASSES = `pz-couleur flex min-h-[48px] w-full cursor-pointer items-center gap-3 rounded-field px-[14px] text-left text-body whitespace-nowrap text-ink hover:bg-sky focus-visible:bg-sky ${FOCUS_RING}`;
 
 /** The account menu's options are 15 px. */
 export const ACCOUNT_MENU_ITEM_CLASSES = cn(MENU_ITEM_CLASSES, "text-small");

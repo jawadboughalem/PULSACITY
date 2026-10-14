@@ -8,13 +8,20 @@ import { MENU_ITEM_CLASSES, MENU_ITEM_DANGER_CLASSES, MENU_PANEL_CLASSES } from 
 import { useMenu } from "@/components/ui/useMenu";
 import { cn } from "@/lib/cn";
 
+/** The menu sits 4 px from its trigger. */
+const GAP_PX = 4;
+
 type RowMenuProps = {
   authorName: string;
   detailHref: string;
   onDelete: () => void;
 };
 
-/** Charte v2, Menu: « Ouvrir », then the destructive action last, which asks for a confirmation. */
+/**
+ * Charte v2, Menu: « Ouvrir », then the destructive action last, which asks for a confirmation. The menu floats over the
+ * page (position: fixed), so the table that scrolls sideways never cuts it; it opens upward when the window lacks room
+ * below.
+ */
 export const RowMenu = ({ authorName, detailHref, onDelete }: RowMenuProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -23,7 +30,18 @@ export const RowMenu = ({ authorName, detailHref, onDelete }: RowMenuProps) => {
     containerRef,
     triggerRef,
     menuRef,
+    shouldCloseOnScroll: true,
   });
+
+  const placeMenu = (menu: HTMLDivElement | null) => {
+    menuRef.current = menu;
+    const trigger = triggerRef.current;
+    if (!menu || !trigger) return;
+    const box = trigger.getBoundingClientRect();
+    const opensUpward = box.bottom + GAP_PX + menu.offsetHeight > window.innerHeight && box.top > menu.offsetHeight;
+    menu.style.right = `${document.documentElement.clientWidth - box.right}px`;
+    menu.style.top = `${opensUpward ? box.top - GAP_PX - menu.offsetHeight : box.bottom + GAP_PX}px`;
+  };
 
   return (
     <div ref={containerRef} className="relative">
@@ -41,11 +59,11 @@ export const RowMenu = ({ authorName, detailHref, onDelete }: RowMenuProps) => {
       </button>
       {isOpen ? (
         <div
-          ref={menuRef}
+          ref={placeMenu}
           id={menuId}
           data-ouvert="true"
           onKeyDown={moveWithArrows}
-          className={cn(MENU_PANEL_CLASSES, "absolute top-full right-[0] mt-1")}
+          className={cn(MENU_PANEL_CLASSES, "fixed z-30")}
         >
           <Link href={detailHref} className={MENU_ITEM_CLASSES}>
             Ouvrir
@@ -53,7 +71,8 @@ export const RowMenu = ({ authorName, detailHref, onDelete }: RowMenuProps) => {
           <button
             type="button"
             onClick={() => {
-              close(false);
+              // The trigger takes the focus back first: the confirmation returns it there when it closes.
+              close(true);
               onDelete();
             }}
             className={MENU_ITEM_DANGER_CLASSES}

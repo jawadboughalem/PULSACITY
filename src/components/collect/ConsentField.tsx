@@ -32,7 +32,7 @@ export const ConsentField = ({ consentText, spaceName, isChecked, hasError, chec
           aria-invalid={hasError ? true : undefined}
           aria-describedby={hasError ? CONSENT_ERROR_ID : undefined}
           className={cn(
-            "peer pz-couleur size-[24px] cursor-pointer appearance-none rounded-check border-2 bg-white enabled:hover:border-ink checked:border-ink checked:bg-ink",
+            "peer pz-couleur size-[24px] cursor-pointer appearance-none rounded-check border-2 bg-white enabled:not-aria-invalid:hover:border-ink checked:border-ink checked:bg-ink",
             FOCUS_RING,
             hasError ? "border-error" : "border-gray",
           )}

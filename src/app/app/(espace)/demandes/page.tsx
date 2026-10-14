@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/button-styles";
 import { FILTER_CHIP_CHOSEN_CLASSES, FILTER_CHIP_CLASSES } from "@/components/ui/chip-styles";
 import { Icon } from "@/components/ui/Icon";
+import { KeepHyphenatedWords } from "@/components/ui/KeepHyphenatedWords";
 import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import { canSendRequest, getPlan } from "@/config/plans";
@@ -280,7 +281,7 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
                             {` · ${request.productName}`}
                           </p>
                           <p className={cn("text-small", request.status === "failed" ? "text-error" : "text-gray")}>
-                            {describeRequest(request, { now, heldUntil })}
+                            <KeepHyphenatedWords text={describeRequest(request, { now, heldUntil })} />
                           </p>
                         </div>
                         <span className="shrink-0 desktop:w-[160px]">

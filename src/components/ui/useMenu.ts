@@ -4,11 +4,13 @@ import { type KeyboardEvent, type RefObject, useCallback, useEffect, useId, useS
 
 const ITEMS_SELECTOR = "a[href], button:not([disabled])";
 
-type MenuRefs = {
+type MenuOptions = {
   /** Holds the trigger and the menu: a click outside it closes the menu. */
   containerRef: RefObject<HTMLDivElement | null>;
   triggerRef: RefObject<HTMLButtonElement | null>;
   menuRef: RefObject<HTMLDivElement | null>;
+  /** A menu placed over the page (position: fixed) would drift from its trigger: scrolling closes it. */
+  shouldCloseOnScroll?: boolean;
 };
 
 const menuItems = (menu: HTMLElement | null) => [...(menu?.querySelectorAll<HTMLElement>(ITEMS_SELECTOR) ?? [])];
@@ -17,7 +19,7 @@ const menuItems = (menu: HTMLElement | null) => [...(menu?.querySelectorAll<HTML
  * Charte v2, Menu: the trigger says aria-expanded and aria-controls; up and down arrows move between the options,
  * Échap closes and gives the focus back to the trigger, a click elsewhere closes.
  */
-export const useMenu = ({ containerRef, triggerRef, menuRef }: MenuRefs) => {
+export const useMenu = ({ containerRef, triggerRef, menuRef, shouldCloseOnScroll = false }: MenuOptions) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuId = useId();
 
@@ -37,13 +39,20 @@ export const useMenu = ({ containerRef, triggerRef, menuRef }: MenuRefs) => {
     const closeOnEscape = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape") close(true);
     };
+    const closeOnScroll = () => close(false);
     document.addEventListener("pointerdown", closeOnOutsideClick);
     document.addEventListener("keydown", closeOnEscape);
+    if (shouldCloseOnScroll) {
+      window.addEventListener("scroll", closeOnScroll, { capture: true, passive: true });
+      window.addEventListener("resize", closeOnScroll);
+    }
     return () => {
       document.removeEventListener("pointerdown", closeOnOutsideClick);
       document.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("scroll", closeOnScroll, { capture: true });
+      window.removeEventListener("resize", closeOnScroll);
     };
-  }, [isOpen, close, containerRef]);
+  }, [isOpen, close, containerRef, shouldCloseOnScroll]);
 
   /** On the menu: the arrows move from option to option, around the ends. */
   const moveWithArrows = (event: KeyboardEvent<HTMLElement>) => {

@@ -254,10 +254,14 @@
   }
 }
 
-/* A window or the phone's menu is open: the page behind no longer scrolls (charte v2, Fenêtre de dialogue). */
+/*
+ * A window or the phone's menu is open: the page behind no longer scrolls (charte v2, Fenêtre de dialogue). The room of
+ * the scrollbar stays, so the page does not shift sideways.
+ */
 html:has(dialog[open]),
 html:has([data-defilement-bloque="true"]) {
   overflow: hidden;
+  scrollbar-gutter: stable;
 }
 
 /* The site's header stays at the top: an anchor or a focused element lands below it, never under it. */
