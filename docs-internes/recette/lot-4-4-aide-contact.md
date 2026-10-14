@@ -240,7 +240,7 @@ Puis, vous-même :
 
 ## 9. Vérification sur pulsacity.com, après la fusion
 
-À lancer à la toute fin, avec les vérifications en production des autres lots (décision du fondateur, 14 octobre). Sans être connecté.
+PR fusionnée le 14 octobre, « CI » et « Database migration » verts sur `main`. À lancer à la toute fin, avec les vérifications en production des autres lots (décision du fondateur, 14 octobre). Sans être connecté.
 
 ```
 Tu vérifies sur la production de PULSACITY la page « Aide et contact ». Pour chaque point, note « OK » ou décris ce que tu vois. Ne relève pas les erreurs réseau vues par ton outil de surveillance du navigateur : elles ne font pas foi.
