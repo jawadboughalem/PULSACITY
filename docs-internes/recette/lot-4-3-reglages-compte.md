@@ -221,6 +221,12 @@ Tout est passé, avec ces remarques :
 - **Erreurs 503** (prompt 3) : le navigateur a vu des 503 en enregistrant Réglages et en ouvrant Témoignages, Widgets et Connecteurs, sans erreur à l'écran. Rien de tel dans le conteneur, sur la version de production : la piste est côté Vercel. Prompts 7 et 8.
 - Sans défaut : le témoignage « interrupteur éteint » est au nom du remplissage automatique du navigateur (« Prénom et nom » demande bien le nom entier) ; le pied de l'e-mail de demande est celui de l'e-mail v1 (texte du point 15 du prompt 2 corrigé) ; « Supprimer définitivement » inactif est gris clair sans rouge, et la fenêtre a une croix « Fermer », comme le veut la charte (« Bouton danger », « Fenêtre de dialogue ») ; l'aperçu de la page de collecte garde le nom enregistré tant que le champ est vide.
 
+## Contre-recette du 14 octobre (prompts 7 et 8)
+
+- Les deux corrections sont validées sur l'aperçu : le menu du compte se ferme seul après « Mon compte » et « Abonnement et factures » ; l'adresse de la page de collecte montre « …vercel.app/t/ » puis « julie-nutrition » en entier, en grand comme à 360 px (champ de saisie de 110 px).
+- Les 503 venaient de l'outil de surveillance du navigateur de Claude in Chrome, pas de l'aperçu : pour les mêmes requêtes, la page a reçu des 200, 204 ou 404, et les journaux de Vercel ne montrent aucune réponse de 500 à 599 sur l'heure couverte (518 requêtes, dont les deux enregistrements de Réglages en 200). Ne plus relever les erreurs du réseau vues par cet outil : seuls les journaux de Vercel font foi.
+- Attendu : « Abonnement et factures » mène à « Cette page n'existe pas » jusqu'au lot 4.5. Sur l'aperçu seulement, le bouton rond de la barre de Vercel chevauche le bord droit du champ à 360 px : la barre n'existe pas en production.
+
 ---
 
 ## 7. Revérification sur l'aperçu, après les corrections
