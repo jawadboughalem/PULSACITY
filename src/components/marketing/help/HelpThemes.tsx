@@ -48,9 +48,10 @@ export const HelpThemes = ({ themes }: { themes: HelpTheme[] }) => (
       <ul className="flex flex-wrap gap-x-2 gap-y-3">
         {themes.map((theme) => (
           <li key={theme.id}>
-            <a href={`#${theme.id}`} className={FILTER_CHIP_CLASSES}>
+            {/* A Link, not a plain anchor: its history entry keeps Next's state, so Back from a guide brings /aide back. */}
+            <Link href={`#${theme.id}`} className={FILTER_CHIP_CLASSES}>
               {theme.title}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

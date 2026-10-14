@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FOCUS_RING } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
@@ -55,6 +56,7 @@ const LINK_CLASSES = cn("pz-couleur block py-1 text-small decoration-2 underline
 /**
  * m22 and m23 on a computer: the titles of the text beside it, the one being read marked on its left by 3 px of Encre,
  * like the current page of the navigation (charte v2). Stays in view below the sticky header (88) while the text scrolls.
+ * Links of Next, not plain anchors: Back from another page then brings this one back, at its title.
  */
 export const TableOfContents = ({ title, headings }: TableOfContentsProps) => {
   const currentId = useCurrentHeading(headings);
@@ -66,7 +68,7 @@ export const TableOfContents = ({ title, headings }: TableOfContentsProps) => {
           const isCurrent = heading.id === currentId;
           return (
             <li key={heading.id}>
-              <a
+              <Link
                 href={`#${heading.id}`}
                 aria-current={isCurrent ? "location" : undefined}
                 className={cn(
@@ -76,7 +78,7 @@ export const TableOfContents = ({ title, headings }: TableOfContentsProps) => {
                 )}
               >
                 {heading.title}
-              </a>
+              </Link>
             </li>
           );
         })}
@@ -101,9 +103,9 @@ export const FoldedTableOfContents = ({ title, headings }: TableOfContentsProps)
       <ul className="flex flex-col">
         {headings.map((heading) => (
           <li key={heading.id}>
-            <a href={`#${heading.id}`} className={cn(LINK_CLASSES, "flex min-h-[44px] items-center")}>
+            <Link href={`#${heading.id}`} className={cn(LINK_CLASSES, "flex min-h-[44px] items-center")}>
               {heading.title}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

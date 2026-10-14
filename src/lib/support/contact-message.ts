@@ -66,6 +66,16 @@ export const CONTACT_MESSAGES_PER_IP: RateLimitRule = {
 };
 
 /**
+ * One address, a few messages in a quarter of an hour, whatever the network: an IP can change from one message to the
+ * next (IPv6, a phone moving between networks), an address typed does not.
+ */
+export const CONTACT_MESSAGES_PER_ADDRESS: RateLimitRule = {
+  name: "contact-message-address",
+  limit: 3,
+  windowSeconds: 15 * 60,
+};
+
+/**
  * Every visitor together, in a day. The messages share Resend's daily quota with the review requests of the creators:
  * a flood of messages must never stop their requests. To raise with Resend Pro (lot 4.12).
  */

@@ -90,6 +90,25 @@ describe("ContactForm", () => {
     expect(field("contact-subject").value).toBe("Relier Kajabi");
   });
 
+  it("takes away the error of a field as soon as it is corrected, and the summary with the last one", async () => {
+    sendContactMessage.mockResolvedValue({
+      ok: false,
+      error: "invalid-input",
+      fieldErrors: { email: "Cette adresse e-mail est incomplète.", message: "Écrivez votre message." },
+    });
+    act(() => root.render(<ContactForm accountEmail={null} />));
+    act(() => type("contact-email", "julie@exemple"));
+    await submit();
+
+    act(() => type("contact-email", "julie@exemple.fr"));
+    expect(field("contact-email").getAttribute("aria-invalid")).toBeNull();
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain("1 point à corriger avant d'envoyer");
+
+    act(() => type("contact-message", "Bonjour"));
+    expect(field("contact-message").getAttribute("aria-invalid")).toBeNull();
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+  });
+
   it("confirms the message and its address, then opens a new one with the same address", async () => {
     sendContactMessage.mockResolvedValue({ ok: true, data: { email: "julie@exemple.fr" } });
     act(() => root.render(<ContactForm accountEmail="julie@exemple.fr" />));

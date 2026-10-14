@@ -7,7 +7,11 @@ import { rateLimits } from "@/db/schema";
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import { HONEYPOT_FIELD_NAME } from "@/lib/forms/honeypot";
-import { CONTACT_MESSAGES_PER_DAY, CONTACT_MESSAGES_PER_IP } from "@/lib/support/contact-message";
+import {
+  CONTACT_MESSAGES_PER_ADDRESS,
+  CONTACT_MESSAGES_PER_DAY,
+  CONTACT_MESSAGES_PER_IP,
+} from "@/lib/support/contact-message";
 import { sendContactMessage } from "./contact-actions";
 
 type TestContext = {
@@ -153,26 +157,37 @@ describe("sendContactMessage", () => {
     expect(testContext.send).not.toHaveBeenCalled();
   });
 
-  it("stops a single IP after a few messages", async () => {
+  it("stops a single IP after a few messages, whatever the address", async () => {
     for (let message = 0; message < CONTACT_MESSAGES_PER_IP.limit; message += 1) {
-      expect(await submit()).toMatchObject({ ok: true });
+      expect(await submit({ email: `client-${message}@exemple.fr` })).toMatchObject({ ok: true });
     }
 
-    expect(await submit()).toEqual({ ok: false, error: "too-many-requests" });
+    expect(await submit({ email: "encore@exemple.fr" })).toEqual({ ok: false, error: "too-many-requests" });
     expect(testContext.send).toHaveBeenCalledTimes(CONTACT_MESSAGES_PER_IP.limit);
 
     testContext.clientIp = "198.51.100.4";
-    expect(await submit()).toMatchObject({ ok: true });
+    expect(await submit({ email: "encore@exemple.fr" })).toMatchObject({ ok: true });
+  });
+
+  it("stops a single address after a few messages, even when the IP changes between them", async () => {
+    for (let message = 0; message < CONTACT_MESSAGES_PER_ADDRESS.limit; message += 1) {
+      testContext.clientIp = `2001:db8::${message + 1}`;
+      expect(await submit({ email: "Julie@Exemple.fr" })).toMatchObject({ ok: true });
+    }
+
+    testContext.clientIp = "2001:db8::99";
+    expect(await submit({ email: " julie@exemple.fr" })).toEqual({ ok: false, error: "too-many-requests" });
+    expect(testContext.send).toHaveBeenCalledTimes(CONTACT_MESSAGES_PER_ADDRESS.limit);
   });
 
   it("stops every visitor together once the messages of the day are sent", async () => {
     for (let message = 0; message < CONTACT_MESSAGES_PER_DAY.limit; message += 1) {
       testContext.clientIp = `198.51.100.${message}`;
-      await submit();
+      await submit({ email: `client-${message}@exemple.fr` });
     }
 
     testContext.clientIp = "192.0.2.1";
-    expect(await submit()).toEqual({ ok: false, error: "not-sent" });
+    expect(await submit({ email: "encore@exemple.fr" })).toEqual({ ok: false, error: "not-sent" });
     expect(testContext.send).toHaveBeenCalledTimes(CONTACT_MESSAGES_PER_DAY.limit);
   });
 
@@ -192,6 +207,6 @@ describe("sendContactMessage", () => {
       expect(rows, name).not.toContain("julie@exemple.fr");
     }
     const [counters] = await db().select({ total: count() }).from(rateLimits);
-    expect(counters.total).toBe(2);
+    expect(counters.total).toBe(3);
   });
 });

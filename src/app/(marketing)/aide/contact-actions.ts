@@ -12,6 +12,7 @@ import { hashRateLimitSubject } from "@/lib/rate-limit/hash-rate-limit-subject";
 import { readClientIp } from "@/lib/rate-limit/read-client-ip";
 import { findOwnedSpace } from "@/lib/spaces/find-owned-space";
 import {
+  CONTACT_MESSAGES_PER_ADDRESS,
   CONTACT_MESSAGES_PER_DAY,
   CONTACT_MESSAGES_PER_IP,
   type ContactFieldErrors,
@@ -41,7 +42,8 @@ const findSenderSpace = async (): Promise<ContactSenderSpace | null> => {
 
 /**
  * « Écrivez-nous » (/aide): the message goes by e-mail to PULSACITY's one address, its answer to the sender. Nothing is
- * kept in the database, only the counters that stop a flood. Whatever fails, the page stays, with the text typed.
+ * kept in the database, only the counters that stop a flood (per IP, per address, per day). Whatever fails, the page
+ * stays, with the text typed.
  */
 export const sendContactMessage = async (
   _previousResult: SendContactMessageResult | null,
@@ -59,7 +61,9 @@ export const sendContactMessage = async (
   try {
     const database = getDb();
     const ipKey = hashRateLimitSubject(readClientIp(await headers()));
-    const isAllowed = await consumeRateLimit(database, CONTACT_MESSAGES_PER_IP, ipKey);
+    const isAllowed =
+      (await consumeRateLimit(database, CONTACT_MESSAGES_PER_IP, ipKey)) &&
+      (await consumeRateLimit(database, CONTACT_MESSAGES_PER_ADDRESS, hashRateLimitSubject(parsed.data.email)));
     if (!isAllowed) return { ok: false, error: "too-many-requests" };
     if (!(await consumeRateLimit(database, CONTACT_MESSAGES_PER_DAY, EVERY_VISITOR))) {
       Sentry.captureMessage("The daily limit of the contact messages is reached");

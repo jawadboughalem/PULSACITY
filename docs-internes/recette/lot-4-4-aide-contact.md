@@ -7,7 +7,9 @@ Dans l'ordre :
 - Prompt 4 : trop de messages d'affilée.
 - Prompt 5 : tous les liens qui mènent à `/aide`.
 - Prompt 6 : à 360 px.
-- Prompt 7 : vérification sur pulsacity.com, après la fusion, à la toute fin avec celles des autres lots.
+- Prompt 7 : Supabase, les compteurs des messages, en lecture seule, avant tout nouvel envoi.
+- Prompt 8 : contre-recette sur l'aperçu, après les corrections.
+- Prompt 9 : vérification sur pulsacity.com, après la fusion, à la toute fin avec celles des autres lots.
 
 Ce lot ne touche à aucun service : aucune action de votre côté sur Vercel, Supabase, Cloudflare, Resend ou Stripe, aucune variable, aucune migration. L'aperçu envoie déjà ses e-mails par la clé Resend de recette : un message écrit sur l'aperçu part pour de vrai vers contact@pulsacity.com, donc vers votre boîte (redirection OVH).
 Si la dernière recette date de plus d'une semaine, réveillez d'abord la base de recette (prompt 0 bis de `lot-4-1-decisions.md`).
@@ -148,7 +150,87 @@ Compte rendu à me donner : les points 1 à 5 avec « OK » ou ta description, e
 
 ---
 
-## 7. Vérification sur pulsacity.com, après la fusion
+## Résultats de la recette du 14 octobre (prompts 1 à 6)
+
+- Prompt 1 : 13 points sur 14. Point 8 : après un clic sur une pastille, « Retour » depuis un guide remettait l'adresse /aide#widgets sans réafficher /aide. Cause : les pastilles étaient des liens « # » natifs, dont l'entrée d'historique n'a pas l'état de Next, qui ignore alors le retour. Le sommaire des guides et des pages légales, « Voir le guide d'installation » des intégrations et « Revoir l'étape 2 » de Connecteurs avaient le même défaut (depuis le lot 7) : tous passent par `next/link`. Seul « Aller au contenu » reste un lien natif, pour déplacer le focus.
+- Hors cahier (prompt 1) : les erreurs restaient affichées pendant la saisie et pendant « Envoi… » : l'erreur d'un champ part maintenant dès qu'on le modifie, et le cadre rouge avec la dernière. Après l'envoi, la carte rapetissait et son titre passait sous l'en-tête : la page le ramène en vue.
+- Prompt 2 : 4 sur 4. L'adresse A et la boîte de contact@ étant la même, le cas d'un visiteur sur une autre boîte reste à voir (prompt 8, facultatif). Le logo cassé de l'e-mail vient de l'aperçu, protégé par Vercel Authentication, comme l'e-mail « Nouveau témoignage » au lot 6 : à vérifier en production (prompt 9).
+- Prompt 3 : 4 sur 4. Remarque : connecté, l'en-tête du site montre « Se connecter » et « Créer mon espace gratuit », comme la maquette 8.4 : question pour Design.
+- Prompt 4 : la limite ne s'est pas déclenchée, cinq messages en moins de 4 minutes. Le compteur est en base, pas en mémoire, et il joue en local et dans les tests ; cause la plus probable : l'adresse IP vue par Vercel a changé d'un envoi à l'autre (IPv6 temporaire, alternance IPv4 et IPv6), ce qui ouvre un compteur par adresse IP. Ajouté : 3 messages par quart d'heure pour une même adresse e-mail, quel que soit le réseau. Le prompt 7 vérifie la cause.
+- Prompt 5 : 9 sur 9. Les deux « [À COMPLÉTER] » des mentions légales attendent le lot 4.9. Le plan du site d'un aperçu donne l'adresse de l'aperçu ; en production, celle de pulsacity.com (prompt 9).
+- Prompt 6 : 5 sur 5.
+
+---
+
+## 7. Supabase — les compteurs des messages, en lecture seule
+
+À lancer avant le prompt 8, pour lire les compteurs du prompt 4 avant tout nouvel envoi. Avant ce prompt : connectez-vous vous-même à Supabase.
+
+```
+Tu m'aides à lire deux compteurs dans la base de recette de PULSACITY, en lecture seule. Tu ne modifies rien, tu ne lances aucune autre requête que les deux ci-dessous.
+
+1. Ouvre https://supabase.com/dashboard, puis le projet « pulsacity-recette » (organisation PULSACITY). Surtout pas le projet « PULSACITY ».
+2. Ouvre « SQL Editor », puis une nouvelle requête vide.
+3. Colle cette requête, puis clique « Run » :
+
+select split_part(key, ':', 1) as compteur,
+       count(*) as cles,
+       sum(hits) as envois_comptes,
+       max(hits) as max_par_cle,
+       to_char(min(window_started_at) at time zone 'Europe/Paris', 'DD/MM HH24:MI') as premiere,
+       to_char(max(window_started_at) at time zone 'Europe/Paris', 'DD/MM HH24:MI') as derniere
+from rate_limits
+where key like 'contact-message%'
+group by 1
+order by 1;
+
+4. Remplace la requête par celle-ci, puis clique « Run » :
+
+select row_number() over (order by window_started_at) as n,
+       hits as envois,
+       to_char(window_started_at at time zone 'Europe/Paris', 'DD/MM HH24:MI:SS') as debut
+from rate_limits
+where key like 'contact-message-ip:%'
+order by window_started_at;
+
+5. Ferme l'onglet de la requête sans l'enregistrer.
+
+Compte rendu à me donner : les deux tableaux de résultats, tels quels (ils ne contiennent que des nombres et des heures).
+```
+
+---
+
+## 8. Contre-recette sur l'aperçu, après les corrections
+
+Au moins un quart d'heure après le dernier envoi du prompt 4, une fois le prompt 7 fait et l'aperçu reconstruit (commentaire « Ready » de Vercel sur la PR). Dans la fenêtre connectée à l'espace A.
+
+```
+Tu fais la contre-recette de « Aide et contact » de PULSACITY sur l'aperçu https://pulsacity-git-claude-funny-hawk-dbef15-jawadboughalems-projects.vercel.app. Je suis connecté. Recharge chaque page avant de commencer. Pour chaque point, note « OK » ou décris ce que tu vois.
+
+A. Le retour arrière, en fenêtre large (ou dans un cadre de 1440 px)
+1. Ouvre /aide, clique la pastille « Widgets », puis le lien « Guide : Témoignages clients et RGPD : ce qu'un formateur doit savoir ». Le guide s'ouvre. Clique « Retour » du navigateur : la page « Aide et contact » revient, à hauteur du titre « Widgets », et l'adresse finit par /aide#widgets.
+2. Ouvre /guides/envoyer-vos-ventes-avec-zapier. Dans le sommaire « Dans ce guide », à droite, clique « Choisir le déclencheur » : la page descend jusqu'à ce titre. Descends tout en bas et clique « Écrivez-nous » : /aide s'ouvre. Clique « Retour » : le guide Zapier revient.
+
+B. Les erreurs du formulaire, sans rien envoyer
+3. Sur /aide, dans « Écrivez-nous », vide le champ de l'adresse, puis clique « Envoyer » : le cadre rouge « 3 points à corriger avant d'envoyer ».
+4. Écris l'adresse du compte dans le champ de l'adresse (ne me la recopie pas) : son bord rouge et son message disparaissent pendant que tu tapes, et le cadre dit « 2 points à corriger avant d'envoyer ».
+5. Écris « Contre-recette 4.4 » dans « Sujet » : le cadre dit « 1 point à corriger avant d'envoyer ». Écris « Message de contre-recette. » dans « Message » : le cadre rouge disparaît.
+
+C. Le titre après l'envoi, et la limite
+6. Règle un cadre de 360 px de large. Sur /aide, descends jusqu'à « Écrivez-nous ». Avec l'adresse du compte, sujet « Contre-recette 4.4, envoi 1 », message « Envoi 1. », clique « Envoyer » : « Message envoyé. » apparaît, et le titre « Écrivez-nous » est visible, juste sous l'en-tête.
+7. Reviens en fenêtre large (ou dans un cadre de 1440 px). Recharge /aide. Envoie « Contre-recette 4.4, envoi 2 », puis, après « Écrire un autre message », « Contre-recette 4.4, envoi 3 » : à chaque fois « Message envoyé. », et le titre « Écrivez-nous » reste visible.
+8. Clique « Écrire un autre message » et envoie « Contre-recette 4.4, envoi 4 » : cette fois, un bandeau rouge « Plusieurs messages sont partis en peu de temps. », puis « Patientez quelques minutes, puis réessayez. Votre texte est gardé. », et le sujet et le message restent dans leurs champs. N'envoie plus rien.
+
+Compte rendu à me donner : les points 1 à 8 avec « OK » ou ta description, et une capture d'écran de chaque point qui n'est pas OK. Jamais l'adresse du compte.
+```
+
+Puis, vous-même :
+- dans la boîte de contact@pulsacity.com : les trois e-mails « Contre-recette 4.4, envoi 1 » à « envoi 3 » sont arrivés, pas le quatrième ;
+- facultatif, le cas d'un visiteur : depuis une fenêtre privée, envoyez un message sur /aide avec une adresse d'une autre boîte que celle de contact@ ; répondez-y depuis la boîte de contact@ ; dans l'autre boîte, notez de quelle adresse arrive la réponse (votre adresse personnelle, ou contact@pulsacity.com).
+
+---
+
+## 9. Vérification sur pulsacity.com, après la fusion
 
 À lancer à la toute fin, avec les vérifications en production des autres lots (décision du fondateur, 14 octobre). Sans être connecté.
 
@@ -158,9 +240,9 @@ Tu vérifies sur la production de PULSACITY la page « Aide et contact ». Pour 
 1. Ouvre https://pulsacity.com, descends au pied de page et clique « Contact » : https://pulsacity.com/aide#contact s'ouvre, la carte « Écrivez-nous » en vue.
 2. Les six thèmes et leurs questions s'affichent ; la première réponse est ouverte.
 3. Demande-moi mon adresse de test. Écris-la dans « Votre adresse e-mail », sujet « Vérification production, lot 4.4 », message « Message de vérification de la production. », puis clique « Envoyer » : « Message envoyé. » apparaît.
-4. https://pulsacity.com/sitemap.xml contient une ligne qui finit par « /aide ».
+4. https://pulsacity.com/sitemap.xml contient une ligne « https://pulsacity.com/aide », et toutes ses adresses commencent par https://pulsacity.com.
 
 Compte rendu à me donner : les points 1 à 4 avec « OK » ou ce que tu as vu. Jamais l'adresse de test.
 ```
 
-Puis, vous-même : l'e-mail « Vérification production, lot 4.4 » est arrivé dans votre boîte, de « Aide et contact PULSACITY ».
+Puis, vous-même : l'e-mail « Vérification production, lot 4.4 » est arrivé dans votre boîte, de « Aide et contact PULSACITY », avec le logo PULSACITY en haut (pas une image cassée).

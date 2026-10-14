@@ -116,9 +116,9 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
         <Link href={MARKETING_PATHS.signUp} className={LARGE_BUTTON_CLASSES}>
           Créer mon espace gratuit
         </Link>
-        <a href="#installation" className={TEXT_LINK_CLASSES}>
+        <Link href="#installation" className={TEXT_LINK_CLASSES}>
           Voir le guide d&apos;installation
-        </a>
+        </Link>
       </div>
       <ul className="mt-12 grid gap-8 desktop:grid-cols-3 desktop:gap-10">
         {integration.benefits.map((benefit) => (

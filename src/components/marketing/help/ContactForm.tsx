@@ -13,6 +13,7 @@ import { cn } from "@/lib/cn";
 import {
   CONTACT_FIELDS,
   type ContactField,
+  type ContactFieldErrors,
   MAX_CONTACT_MESSAGE_LENGTH,
   MAX_CONTACT_SUBJECT_LENGTH,
 } from "@/lib/support/contact-message";
@@ -35,6 +36,16 @@ const describeSummary = (count: number) =>
 
 /** Each submission is counted: the summary takes the focus again, and « Écrire un autre message » closes its own. */
 type Submission = { result: SendContactMessageResult; count: number };
+
+/** The fields typed into since a submission: their error goes as soon as they change. */
+type EditedFields = { count: number; fields: ContactField[] };
+
+/** Once the message has left, the card shrinks: its title comes back into view, under the sticky header of the site. */
+const revealTop = (section: HTMLElement | null) => {
+  if (!section) return;
+  const headerBottom = document.querySelector("[data-site-header]")?.getBoundingClientRect().bottom ?? 0;
+  if (section.getBoundingClientRect().top < headerBottom) section.scrollIntoView({ block: "start" });
+};
 
 type ContactFormProps = {
   /** The address of a signed-in creator: already typed, and the answer goes there unless it is changed. */
@@ -59,18 +70,33 @@ export const ContactForm = ({ accountEmail }: ContactFormProps) => {
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [closedCount, setClosedCount] = useState(0);
+  const [edited, setEdited] = useState<EditedFields>({ count: 0, fields: [] });
+  const sectionRef = useRef<HTMLElement>(null);
   const noticeRef = useRef<HTMLDivElement>(null);
 
   const count = submission?.count ?? 0;
   const result = count > closedCount ? (submission?.result ?? null) : null;
   const sentTo = result?.ok ? result.data.email : null;
-  const fieldErrors = result?.ok === false && result.error === "invalid-input" ? result.fieldErrors : {};
+  const editedFields = edited.count === count ? edited.fields : [];
+  const submittedErrors = result?.ok === false && result.error === "invalid-input" ? result.fieldErrors : {};
+  const fieldErrors: ContactFieldErrors = Object.fromEntries(
+    CONTACT_FIELDS.flatMap((field) =>
+      submittedErrors[field] && !editedFields.includes(field) ? [[field, submittedErrors[field]]] : [],
+    ),
+  );
   const sendError = result?.ok === false && result.error !== "invalid-input" ? result.error : null;
 
   // The answer of the server is said where the eyes are: the confirmation or the problem takes the focus.
   useEffect(() => {
-    if (sentTo || sendError) noticeRef.current?.focus();
+    if (sentTo) revealTop(sectionRef.current);
+    if (sentTo || sendError) noticeRef.current?.focus({ preventScroll: Boolean(sentTo) });
   }, [count, sentTo, sendError]);
+
+  const markEdited = (field: ContactField) =>
+    setEdited((current) => ({
+      count,
+      fields: current.count === count ? [...new Set([...current.fields, field])] : [field],
+    }));
 
   const writeAnother = () => {
     setSubject("");
@@ -86,6 +112,7 @@ export const ContactForm = ({ accountEmail }: ContactFormProps) => {
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
       aria-labelledby="contact-title"
       className="flex scroll-mt-6 flex-col gap-5 rounded-panel bg-white p-5 desktop:p-8"
@@ -141,7 +168,10 @@ export const ContactForm = ({ accountEmail }: ContactFormProps) => {
               inputMode="email"
               required
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) => {
+                setEmail(event.target.value);
+                markEdited("email");
+              }}
               error={fieldErrors.email}
               hint={isAccountEmail ? "Adresse de votre compte : nous répondrons à cette adresse." : undefined}
             />
@@ -154,7 +184,10 @@ export const ContactForm = ({ accountEmail }: ContactFormProps) => {
               maxLength={MAX_CONTACT_SUBJECT_LENGTH}
               required
               value={subject}
-              onChange={(event) => setSubject(event.target.value)}
+              onChange={(event) => {
+                setSubject(event.target.value);
+                markEdited("subject");
+              }}
               error={fieldErrors.subject}
             />
             <TextAreaField
@@ -164,7 +197,10 @@ export const ContactForm = ({ accountEmail }: ContactFormProps) => {
               maxLength={MAX_CONTACT_MESSAGE_LENGTH}
               required
               value={message}
-              onChange={(event) => setMessage(event.target.value)}
+              onChange={(event) => {
+                setMessage(event.target.value);
+                markEdited("message");
+              }}
               error={fieldErrors.message}
               className="min-h-[180px]"
             />
