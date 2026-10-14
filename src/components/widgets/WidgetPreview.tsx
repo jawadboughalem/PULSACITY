@@ -66,7 +66,7 @@ type WidgetPreviewProps = {
 };
 
 const FakeSection = ({ isPhone, children }: { isPhone: boolean; children: ReactNode }) => (
-  <section className={cn("bg-sky", isPhone ? "px-6 py-10" : "px-[80px] py-12")}>
+  <section className={cn("bg-cloud", isPhone ? "px-6 py-10" : "px-[80px] py-12")}>
     <h2
       className={cn("font-bold text-ink", isPhone ? "mb-6 text-[28px] leading-[34px]" : "mb-8 text-[36px] leading-[44px]")}
     >
@@ -106,7 +106,7 @@ export const WidgetPreview = ({ payload, isEmpty, spaceName, pageTitle, pageAcce
     <div
       ref={frameRef}
       aria-hidden={isEmpty || undefined}
-      className="overflow-hidden border border-hairline-200 bg-white desktop:h-[861px] desktop:overflow-y-auto"
+      className="overflow-hidden rounded-card bg-white desktop:h-[861px] desktop:overflow-y-auto"
     >
       <div style={{ height: size.pageHeight * scale }} className="overflow-hidden">
         <div
@@ -116,7 +116,7 @@ export const WidgetPreview = ({ payload, isEmpty, spaceName, pageTitle, pageAcce
         >
           <header
             className={cn(
-              "flex items-center justify-between border-b border-hairline-200",
+              "flex items-center justify-between border-b border-disabled-border",
               isPhone ? "h-[64px] px-6" : "h-[80px] px-[80px]",
             )}
           >

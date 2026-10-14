@@ -7,11 +7,18 @@ import {
   type AddManualTestimonialFormResult,
   addManualTestimonialForm,
 } from "@/app/app/(espace)/temoignages/manual-testimonial-actions";
-import { DISCREET_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DISCREET_BUTTON_CLASSES, INLINE_LINK_CLASSES, PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { type ErrorSummaryItem, ErrorSummary } from "@/components/ui/ErrorSummary";
 import { FieldError } from "@/components/ui/FieldError";
-import { Icon } from "@/components/ui/Icon";
+import {
+  FIELD_HINT_CLASSES,
+  FIELD_LABEL_CLASSES,
+  OPTIONAL_MARK_CLASSES,
+  TEXTAREA_CLASSES,
+} from "@/components/ui/field-styles";
+import { SelectControl } from "@/components/ui/SelectControl";
+import { Spinner } from "@/components/ui/Spinner";
 import { StatusBanner } from "@/components/ui/StatusBanner";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
@@ -100,9 +107,6 @@ const SUBMIT_ERRORS = {
 
 const describeSummary = (count: number) =>
   `${count} ${count > 1 ? "points" : "point"} à corriger avant d'ajouter le témoignage`;
-
-const CONTROL_CLASSES =
-  "w-full rounded-card border border-gray bg-white text-body text-ink placeholder:text-gray focus:border-2 focus:border-ink focus:outline-none disabled:cursor-not-allowed disabled:bg-sky";
 
 type ManualTestimonialFormProps = {
   products: { id: string; name: string }[];
@@ -197,7 +201,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
           id={FIELD_IDS.authorTitle}
           label={
             <>
-              Titre <span className="font-normal text-gray">(facultatif)</span>
+              Titre <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
             </>
           }
           value={form.authorTitle}
@@ -214,7 +218,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
           onChange={(rating) => updateField("rating", rating)}
         />
         <div className="flex flex-col gap-2">
-          <label htmlFor={FIELD_IDS.body} className="text-small font-bold">
+          <label htmlFor={FIELD_IDS.body} className={FIELD_LABEL_CLASSES}>
             Texte du témoignage
           </label>
           <textarea
@@ -225,43 +229,35 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
             aria-invalid={bodyError ? true : undefined}
             aria-describedby={bodyError ? `${FIELD_IDS.body}-error` : `${FIELD_IDS.body}-hint`}
             onChange={(event) => updateField("body", event.target.value)}
-            className={cn(
-              CONTROL_CLASSES,
-              "min-h-[160px] p-4 focus:p-[15px]",
-              bodyError && "border-2 border-error p-[15px]",
-            )}
+            className={TEXTAREA_CLASSES}
           />
           {bodyError ? (
             <FieldError id={`${FIELD_IDS.body}-error`} message={bodyError} />
           ) : (
-            <p id={`${FIELD_IDS.body}-hint`} className="text-small text-gray">
+            <p id={`${FIELD_IDS.body}-hint`} className={FIELD_HINT_CLASSES}>
               Recopiez le message tel quel. Vous pourrez corriger une faute plus tard.
             </p>
           )}
         </div>
         <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-[minmax(0,1fr)_240px] desktop:gap-6">
           <div className="flex flex-col gap-2">
-            <label htmlFor="manual-offer" className="text-small font-bold">
-              Offre <span className="font-normal text-gray">(facultatif)</span>
+            <label htmlFor="manual-offer" className={FIELD_LABEL_CLASSES}>
+              Offre <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
             </label>
-            <span className="relative flex">
-              <select
-                id="manual-offer"
-                value={form.productId}
-                aria-describedby="manual-offer-hint"
-                onChange={(event) => updateField("productId", event.target.value)}
-                className={cn(CONTROL_CLASSES, "h-[48px] appearance-none pr-10 pl-4 focus:pl-[15px]")}
-              >
-                <option value="">Aucune offre</option>
-                {products.map((product) => (
-                  <option key={product.id} value={product.id}>
-                    {product.name}
-                  </option>
-                ))}
-              </select>
-              <Icon name="chevronDown" size={20} className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2" />
-            </span>
-            <p id="manual-offer-hint" className="text-small text-gray">
+            <SelectControl
+              id="manual-offer"
+              value={form.productId}
+              aria-describedby="manual-offer-hint"
+              onChange={(event) => updateField("productId", event.target.value)}
+            >
+              <option value="">Aucune offre</option>
+              {products.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {product.name}
+                </option>
+              ))}
+            </SelectControl>
+            <p id="manual-offer-hint" className={FIELD_HINT_CLASSES}>
               Le témoignage s&apos;affichera dans les widgets de cette offre.
             </p>
           </div>
@@ -269,7 +265,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
             id={FIELD_IDS.receivedAt}
             label={
               <>
-                Date de réception <span className="font-normal text-gray">(facultatif)</span>
+                Date de réception <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
               </>
             }
             value={form.receivedAt}
@@ -279,28 +275,32 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
             error={messageFor("receivedAt")}
           />
         </div>
-        <div className="border-t border-hairline-200 pt-8">
-          <div className={cn("flex flex-col gap-2", consentError && "border-2 border-error bg-error-surface p-4")}>
-            <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-body has-disabled:cursor-not-allowed">
-              <Checkbox
-                id={FIELD_IDS.hasConsent}
-                checked={form.hasConsent}
-                hasError={Boolean(consentError)}
-                aria-describedby={consentError ? `${FIELD_IDS.hasConsent}-error` : undefined}
-                onChange={(event) => updateField("hasConsent", event.target.checked)}
-              />
-              <span>{MANUAL_CONSENT_TEXT}</span>
-            </label>
-            {consentError ? (
-              <div className="pl-[36px]">
-                <FieldError id={`${FIELD_IDS.hasConsent}-error`} message={consentError} />
-              </div>
-            ) : null}
-          </div>
+        <div className={cn("flex flex-col gap-2", consentError && "rounded-card border-2 border-error bg-error-surface p-4")}>
+          <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-body has-disabled:cursor-not-allowed">
+            <Checkbox
+              id={FIELD_IDS.hasConsent}
+              checked={form.hasConsent}
+              hasError={Boolean(consentError)}
+              aria-describedby={consentError ? `${FIELD_IDS.hasConsent}-error` : undefined}
+              onChange={(event) => updateField("hasConsent", event.target.checked)}
+            />
+            <span>{MANUAL_CONSENT_TEXT}</span>
+          </label>
+          {consentError ? (
+            <div className="pl-[36px]">
+              <FieldError id={`${FIELD_IDS.hasConsent}-error`} message={consentError} />
+            </div>
+          ) : null}
         </div>
       </fieldset>
       <div className="flex flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-6">
-        <button type="submit" disabled={isSubmitting} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          aria-busy={isSubmitting || undefined}
+          className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}
+        >
+          {isSubmitting ? <Spinner size={20} /> : null}
           {isSubmitting ? "Ajout en cours…" : "Ajouter le témoignage"}
         </button>
         {isSubmitting ? (
@@ -313,10 +313,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
       </div>
       <p className="text-small text-gray min-[1280px]:hidden">
         Vous en avez beaucoup ?{" "}
-        <Link
-          href={importHref}
-          className="font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
-        >
+        <Link href={importHref} className={INLINE_LINK_CLASSES}>
           Importer un fichier CSV
         </Link>
       </p>

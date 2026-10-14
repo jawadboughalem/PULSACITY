@@ -21,10 +21,10 @@ const IntegrationsPage = () => (
     <MarketingSection labelledBy="integrations-title">
       <div className="grid gap-8 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-8">
         <div className="flex flex-col gap-4">
-          <h1 id="integrations-title" className="font-display text-display font-semibold ">
+          <h1 id="integrations-title" className="font-display text-h1">
             Intégrations
           </h1>
-          <p className="font-display text-quote">
+          <p className="text-lead">
             PULSACITY se branche sur l&apos;outil où vous vendez. Chaque vente déclenche une demande d&apos;avis, à
             votre nom.
           </p>

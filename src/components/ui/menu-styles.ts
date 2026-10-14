@@ -1,3 +1,4 @@
+import { cn } from "@/lib/cn";
 import { FOCUS_RING } from "./button-styles";
 
 /** Charte v2, Menu: white, radius-card, padding 8, the floating shadow, 232 wide at least. Opens with pz-flottant. */
@@ -8,7 +9,10 @@ export const MENU_PANEL_CLASSES =
 export const MENU_ITEM_CLASSES = `pz-couleur flex min-h-[48px] w-full cursor-pointer items-center gap-3 rounded-field px-[14px] text-left text-body text-ink hover:bg-sky focus-visible:bg-sky ${FOCUS_RING}`;
 
 /** The account menu's options are 15 px. */
-export const ACCOUNT_MENU_ITEM_CLASSES = `${MENU_ITEM_CLASSES} text-small`;
+export const ACCOUNT_MENU_ITEM_CLASSES = cn(MENU_ITEM_CLASSES, "text-small");
 
 /** A destructive action, always last: Erreur 700, Erreur fond when hovered. It always opens a confirmation. */
-export const MENU_ITEM_DANGER_CLASSES = `${MENU_ITEM_CLASSES} font-bold text-error hover:bg-error-surface focus-visible:bg-error-surface`;
+export const MENU_ITEM_DANGER_CLASSES = cn(
+  MENU_ITEM_CLASSES,
+  "font-bold text-error hover:bg-error-surface focus-visible:bg-error-surface",
+);

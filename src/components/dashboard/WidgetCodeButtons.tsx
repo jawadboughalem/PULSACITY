@@ -45,6 +45,7 @@ export const SendWidgetCodeButton = ({ widgetId }: { widgetId?: string }) => {
 
   return (
     <div className="flex flex-col gap-2">
+      {/* At 360, inside the steps panel and its card, the label fits only with 16 of padding on each side. */}
       <button type="button" onClick={handleSend} disabled={isSending} className={cn(SECONDARY_BUTTON_CLASSES, "w-full px-4")}>
         {isSending ? "Envoi…" : "M'envoyer le code par e-mail"}
       </button>

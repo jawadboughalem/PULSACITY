@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { INLINE_LINK_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { cn } from "@/lib/cn";
 
 type TestimonialPaginationProps = {
@@ -10,9 +10,6 @@ type TestimonialPaginationProps = {
   previousHref: string | null;
   nextHref: string | null;
 };
-
-const DISABLED_BUTTON_CLASSES =
-  "inline-flex h-[48px] items-center justify-center rounded-card border border-hairline-200 bg-sky px-6 text-body font-bold text-gray";
 
 export const TestimonialPagination = ({
   page,
@@ -33,7 +30,7 @@ export const TestimonialPagination = ({
         {nextHref ? (
           <Link
             href={nextHref}
-            className="text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink desktop:hidden"
+            className={cn(INLINE_LINK_CLASSES, "desktop:hidden")}
           >
             Afficher les suivants
           </Link>
@@ -46,7 +43,7 @@ export const TestimonialPagination = ({
               Précédents
             </Link>
           ) : (
-            <span aria-disabled="true" className={DISABLED_BUTTON_CLASSES}>
+            <span aria-disabled="true" className={SECONDARY_BUTTON_CLASSES}>
               Précédents
             </span>
           )}
@@ -55,7 +52,7 @@ export const TestimonialPagination = ({
               Suivants
             </Link>
           ) : (
-            <span aria-disabled="true" className={cn(DISABLED_BUTTON_CLASSES)}>
+            <span aria-disabled="true" className={SECONDARY_BUTTON_CLASSES}>
               Suivants
             </span>
           )}

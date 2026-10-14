@@ -4,15 +4,13 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { renewAddress } from "@/app/app/(espace)/connecteurs/connector-actions";
 import { useCopyLink } from "@/components/space/useCopyLink";
-import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { INLINE_LINK_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { FieldError } from "@/components/ui/FieldError";
+import { FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES, READ_ONLY_FIELD_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 import { quoteInFrench } from "@/lib/french/typography";
-
-const FIELD_CLASSES =
-  "h-[48px] w-full min-w-[0] rounded-card border border-gray bg-sky px-4 text-body text-ink focus:border-2 focus:border-ink focus:px-[15px] focus:outline-none";
 
 type ConnectionAddressFieldsProps = {
   connectorSlug: string;
@@ -61,17 +59,17 @@ export const ConnectionAddressFields = ({
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-6 desktop:flex-row desktop:gap-6">
         <div className="flex min-w-[0] flex-col gap-2 desktop:flex-[3]">
-          <label htmlFor="connection-address" className="text-small font-bold">
+          <label htmlFor="connection-address" className={FIELD_LABEL_CLASSES}>
             Adresse de connexion
           </label>
-          <div className="flex flex-col gap-3 desktop:flex-row desktop:gap-2">
+          <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-2">
             <input
               id="connection-address"
               type="text"
               readOnly
               value={webhookUrl}
               onFocus={(event) => event.target.select()}
-              className={FIELD_CLASSES}
+              className={READ_ONLY_FIELD_CLASSES}
             />
             <button type="button" onClick={address.handleCopy} className={cn(PRIMARY_BUTTON_CLASSES, "w-full shrink-0 desktop:w-auto")}>
               <Icon name={address.isCopied ? "valid" : "copy"} size={20} />
@@ -81,17 +79,17 @@ export const ConnectionAddressFields = ({
         </div>
         {signingSecret ? (
           <div className="flex min-w-[0] flex-col gap-2 desktop:flex-[2]">
-            <label htmlFor="connection-secret" className="text-small font-bold">
+            <label htmlFor="connection-secret" className={FIELD_LABEL_CLASSES}>
               Clé secrète
             </label>
-            <div className="flex flex-col gap-3 desktop:flex-row desktop:gap-2">
+            <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-2">
               <input
                 id="connection-secret"
                 type="password"
                 readOnly
                 value={signingSecret}
                 autoComplete="off"
-                className={FIELD_CLASSES}
+                className={READ_ONLY_FIELD_CLASSES}
               />
               <button
                 type="button"
@@ -123,13 +121,13 @@ export const ConnectionAddressFields = ({
           />
         ) : null}
       </div>
-      <p className="text-small text-gray">
+      <p className={FIELD_HINT_CLASSES}>
         Adresse partagée par erreur ?{" "}
         <button
           type="button"
           disabled={isRenewing}
           onClick={() => setIsConfirming(true)}
-          className="font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink disabled:cursor-not-allowed"
+          className={cn(INLINE_LINK_CLASSES, "cursor-pointer disabled:cursor-not-allowed")}
         >
           {hasSecret ? "Changer d'adresse et de clé" : "Changer d'adresse"}
         </button>

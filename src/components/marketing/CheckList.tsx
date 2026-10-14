@@ -6,24 +6,12 @@ type CheckListProps = {
   className?: string;
 };
 
-/** The advantages of a plan, each behind a tick (m7, m8). */
+/** The advantages of a plan (m7, m8), what a connection will do (m21): each behind a tick in Pousse (charte v2). */
 export const CheckList = ({ items, className }: CheckListProps) => (
   <ul className={cn("flex flex-col gap-3", className)}>
     {items.map((item) => (
       <li key={item} className="flex items-start gap-3 text-body">
-        <Icon name="check" size={20} className="mt-[2px]" />
-        {item}
-      </li>
-    ))}
-  </ul>
-);
-
-/** m21, « Ce que fera la connexion »: one tick a row, between hairlines, under a rule of Encre. */
-export const RuledCheckList = ({ items }: { items: string[] }) => (
-  <ul className="border-t border-ink">
-    {items.map((item) => (
-      <li key={item} className="flex items-start gap-3 border-b border-hairline-200 py-4 text-body">
-        <Icon name="check" size={20} className="mt-[2px] shrink-0" />
+        <Icon name="check" size={20} className="mt-[3px] text-success" />
         {item}
       </li>
     ))}

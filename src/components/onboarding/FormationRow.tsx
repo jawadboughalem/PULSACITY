@@ -27,7 +27,7 @@ export const FormationRow = ({ id, name, collectionAddress }: FormationRowProps)
   };
 
   return (
-    <li className="flex flex-col gap-2 border-b border-hairline-200 py-4">
+    <li className="flex flex-col gap-2 rounded-card bg-cloud p-4">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <div className="flex min-w-[0] flex-col">
           <span className="text-body font-bold">{name}</span>

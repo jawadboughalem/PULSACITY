@@ -28,7 +28,7 @@ const FormationsStepPage = async () => {
       />
       <AddFormationForm key={formations.length} />
       {formations.length > 0 ? (
-        <ul className="border-t border-ink">
+        <ul className="flex flex-col gap-3">
           {formations.map((formation) => (
             <FormationRow
               key={formation.id}

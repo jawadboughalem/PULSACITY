@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Icon } from "@/components/ui/Icon";
 import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
+import { StatusBanner } from "@/components/ui/StatusBanner";
 import { getFirstName } from "@/lib/testimonials/format-customer-name";
 import { formatExcerpt } from "@/lib/testimonials/format-excerpt";
 import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
@@ -30,24 +30,18 @@ export const ThankYouScreen = ({ testimonial, spaceName, logoUrl, homeUrl, refer
 
   return (
     <>
-      <div
-        role="status"
-        className="flex items-center gap-2 rounded-card bg-success-surface px-4 py-3 text-small font-semibold text-success"
-      >
-        <Icon name="valid" size={20} />
-        Votre témoignage est bien envoyé.
-      </div>
-      <div className="flex flex-col gap-4 rounded-card border-2 border-ink bg-white p-6">
+      <StatusBanner tone="success" title="Votre témoignage est bien envoyé." />
+      <div className="flex flex-col gap-4 rounded-card bg-cloud p-6">
         <SpaceAvatar name={spaceName} logoUrl={logoUrl} size={64} background="sky" />
-        <h1 ref={headingRef} tabIndex={-1} className="font-display text-h2 font-semibold focus:outline-none">
+        <h1 ref={headingRef} tabIndex={-1} className="font-display text-h2 focus:outline-none">
           {`Merci ${getFirstName(testimonial.authorName)}.`}
         </h1>
-        <p className="font-display text-quote">{THANK_YOU_MESSAGE}</p>
-        <p className="border-t border-hairline-200 pt-4 font-display text-quote font-semibold">{spaceName}</p>
+        <p className="text-quote">{THANK_YOU_MESSAGE}</p>
+        <p className="text-body font-bold">{spaceName}</p>
       </div>
       <div className="flex flex-col gap-2">
         <h2 className="text-small font-bold">Votre témoignage</h2>
-        <div className="flex flex-col gap-2 rounded-card border border-hairline-200 bg-white p-4">
+        <div className="flex flex-col gap-2 rounded-card bg-cloud p-4">
           <div role="img" aria-label={`${testimonial.rating} sur ${RATINGS.length}`} className="flex gap-[2px]">
             {RATINGS.map((value) => (
               <StarIcon key={value} size={16} isFilled={value <= testimonial.rating} />

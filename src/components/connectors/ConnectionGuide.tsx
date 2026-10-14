@@ -72,7 +72,7 @@ export const ConnectionGuide = ({ connectorId, connectorName }: ConnectionGuideP
     <ol className="grid grid-cols-[repeat(auto-fill,minmax(232px,1fr))] gap-6">
       {steps.map((step, index) => (
         <li key={index} className="flex flex-col gap-3">
-          <div className="border border-hairline-200 bg-sky">{step.drawing}</div>
+          <div className="overflow-hidden rounded-card bg-sky">{step.drawing}</div>
           <p className="text-small">
             <span className="font-bold">{`${index + 1}.`}</span> {step.parts.map(renderPart)}
           </p>
@@ -117,7 +117,7 @@ const OPTIONAL_GUIDES: Record<string, OptionalGuide> = {
 };
 
 const RuleCard = ({ caption, name, hint }: RuleBox) => (
-  <div className="flex flex-1 flex-col gap-1 border border-hairline-200 bg-white p-4">
+  <div className="flex flex-1 flex-col gap-1 rounded-card bg-sky p-4">
     <p className="text-small text-gray">{caption}</p>
     <p className="text-body font-bold">{name}</p>
     <p className="text-small">{hint}</p>
@@ -149,16 +149,16 @@ export const ConnectionOptionalStep = ({ connectorId }: { connectorId: string })
   const guide = OPTIONAL_GUIDES[connectorId];
   if (!guide) return null;
   return (
-    <section aria-labelledby="optional-step" className="flex gap-4 border-b border-hairline-200 py-8 desktop:gap-6 desktop:py-10">
+    <section aria-labelledby="optional-step" className="flex gap-4 py-8 desktop:gap-6 desktop:py-10">
       <span
         aria-hidden="true"
-        className="flex size-[32px] shrink-0 items-center justify-center rounded-full border border-ink bg-white desktop:size-[40px]"
+        className="flex size-[32px] shrink-0 items-center justify-center rounded-full border-2 border-ink bg-white desktop:size-[40px]"
       >
         <Icon name="plus" size={20} />
       </span>
       <div className="flex min-w-[0] flex-1 flex-col gap-6">
         <div className="flex flex-col gap-1">
-          <h3 id="optional-step" className="font-display text-quote font-semibold">
+          <h3 id="optional-step" className="font-display text-h3">
             {guide.title}
           </h3>
           <p className="max-w-text text-body text-gray">{guide.description}</p>

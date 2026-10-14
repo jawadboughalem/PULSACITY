@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ConnectorLogo } from "@/components/connectors/ConnectorLogo";
 import { Icon } from "@/components/ui/Icon";
+import { FOCUS_RING } from "@/components/ui/button-styles";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import { INTEGRATIONS, type Integration, describeMeanwhile } from "@/content/integrations";
 import { cn } from "@/lib/cn";
@@ -26,7 +27,7 @@ const DetailedRow = ({ integration }: { integration: Integration }) => (
     <ConnectorLogo name={integration.name} />
     <span className="flex min-w-[0] flex-1 flex-col gap-2 desktop:gap-1">
       <span className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <span className="font-display text-quote">{integration.name}</span>
+        <span className="font-display text-h3">{integration.name}</span>
         <span className="desktop:hidden">
           <IntegrationBadge integration={integration} />
         </span>
@@ -43,16 +44,20 @@ const DetailedRow = ({ integration }: { integration: Integration }) => (
   </>
 );
 
-/** « Connecteurs » of maquette 7: a rule of Encre, one row per tool, its state on the right. Each row opens its page. */
+/**
+ * « Connecteurs » of maquette 7: one card per tool on Nuage, its state on the right (charte v2: no rule between the
+ * rows). Each card opens its page.
+ */
 export const IntegrationRows = ({ isDetailed = false, integrations = INTEGRATIONS }: IntegrationRowsProps) => (
-  <ul className="border-t border-ink">
+  <ul className="flex flex-col gap-3">
     {integrations.map((integration) => (
-      <li key={integration.slug} className="border-b border-hairline-200">
+      <li key={integration.slug}>
         <Link
           href={integrationPath(integration.slug)}
           className={cn(
-            "flex gap-4 py-6 hover:bg-sky focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink desktop:gap-6",
-            isDetailed ? "items-start desktop:items-center desktop:py-8" : "items-center",
+            "pz-couleur flex gap-4 rounded-card bg-cloud p-5 hover:bg-sky desktop:gap-6 desktop:p-6",
+            FOCUS_RING,
+            isDetailed ? "items-start desktop:items-center" : "items-center",
           )}
         >
           {isDetailed ? (
@@ -60,7 +65,7 @@ export const IntegrationRows = ({ isDetailed = false, integrations = INTEGRATION
           ) : (
             <>
               <ConnectorLogo name={integration.name} />
-              <span className="min-w-[0] flex-1 font-display text-quote">{integration.name}</span>
+              <span className="min-w-[0] flex-1 font-display text-h3">{integration.name}</span>
               <IntegrationBadge integration={integration} />
             </>
           )}

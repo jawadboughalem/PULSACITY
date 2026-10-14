@@ -11,7 +11,7 @@ type FinalCallProps = {
 /** The end of a page of m7: a large title, one sentence, « Créer mon espace gratuit ». */
 export const FinalCall = ({ title, text }: FinalCallProps) => (
   <MarketingSection labelledBy="final-call">
-    <h2 id="final-call" className="max-w-[760px] font-display text-display font-semibold ">
+    <h2 id="final-call" className="max-w-[760px] font-display text-h1">
       {title}
     </h2>
     <p className="mt-8 text-body text-gray">{text}</p>

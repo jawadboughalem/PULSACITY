@@ -53,20 +53,18 @@ type StepRowProps = {
  * and in the column of the text on a computer.
  */
 const StepRow = ({ marker, spokenPrefix, isOptional = false, step, addressStep, integration }: StepRowProps) => (
-  <div className="grid grid-cols-[32px_minmax(0,1fr)] gap-x-4 gap-y-6 border-b border-hairline-200 py-8 desktop:grid-cols-[40px_minmax(0,1fr)] desktop:gap-x-6 desktop:py-8">
+  <div className="grid grid-cols-[32px_minmax(0,1fr)] gap-x-4 gap-y-6 desktop:grid-cols-[40px_minmax(0,1fr)] desktop:gap-x-6">
     <span
       aria-hidden="true"
       className={cn(
         "flex size-[32px] items-center justify-center rounded-full desktop:size-[40px]",
-        isOptional
-          ? "border border-ink bg-white"
-          : "bg-ink font-display text-body text-white desktop:text-quote",
+        isOptional ? "border-2 border-ink bg-white" : "bg-ink text-body font-bold text-white",
       )}
     >
       {marker}
     </span>
     <div className="flex flex-col gap-2">
-      <h3 className="font-display text-quote font-semibold">
+      <h3 className="font-display text-h3">
         {spokenPrefix ? <span className="sr-only">{spokenPrefix}</span> : null}
         {step.title}
       </h3>
@@ -87,12 +85,12 @@ const StepRow = ({ marker, spokenPrefix, isOptional = false, step, addressStep, 
   </div>
 );
 
-/** « Installer la connexion », step by step under a rule of Encre (m21), then the optional step marked « + ». */
+/** « Installer la connexion », step by step (m21), spaced without rules (charte v2), then the optional step marked « + ». */
 export const InstallGuide = ({ integration }: { integration: AvailableIntegration }) => {
   const addressStep = findAddressStep(integration.installSteps);
   return (
-    <div className="border-t border-ink">
-      <ol>
+    <div className="flex flex-col gap-12">
+      <ol className="flex flex-col gap-12">
         {integration.installSteps.map((step, index) => (
           <li key={step.title}>
             <StepRow

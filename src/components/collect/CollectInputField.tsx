@@ -1,7 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode, Ref } from "react";
 import { FieldError } from "@/components/ui/FieldError";
-import { cn } from "@/lib/cn";
-import { COLLECT_FIELD_BORDER, COLLECT_FIELD_CLASSES } from "./collect-field-styles";
+import { FIELD_CLASSES, FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 
 type CollectInputFieldProps = Omit<ComponentPropsWithoutRef<"input">, "id" | "className"> & {
   id: string;
@@ -11,12 +10,13 @@ type CollectInputFieldProps = Omit<ComponentPropsWithoutRef<"input">, "id" | "cl
   inputRef?: Ref<HTMLInputElement>;
 };
 
+/** Charte v2, Champ de texte: aria-invalid turns its border to Erreur. */
 export const CollectInputField = ({ id, label, hint, error, inputRef, ...inputProps }: CollectInputFieldProps) => {
   const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-error` : null].filter(Boolean).join(" ");
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-small font-bold">
+      <label htmlFor={id} className={FIELD_LABEL_CLASSES}>
         {label}
       </label>
       <input
@@ -24,11 +24,11 @@ export const CollectInputField = ({ id, label, hint, error, inputRef, ...inputPr
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy || undefined}
-        className={cn(COLLECT_FIELD_CLASSES, "h-[48px] px-4", error ? COLLECT_FIELD_BORDER.error : COLLECT_FIELD_BORDER.normal)}
+        className={FIELD_CLASSES}
         {...inputProps}
       />
       {hint ? (
-        <p id={`${id}-hint`} className="text-small text-gray">
+        <p id={`${id}-hint`} className={FIELD_HINT_CLASSES}>
           {hint}
         </p>
       ) : null}

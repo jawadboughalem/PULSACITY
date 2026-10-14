@@ -1,4 +1,6 @@
+import { DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
+import { cn } from "@/lib/cn";
 import { CollectHeader } from "./CollectHeader";
 import { PoweredByPulsacity } from "./PoweredByPulsacity";
 
@@ -17,13 +19,13 @@ export const InactiveLinkScreen = ({ spaceName, logoUrl, replyToEmail, homeUrl, 
       <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink bg-white">
         <Icon name="clock" size={32} />
       </span>
-      <h1 className="font-display text-h2 font-semibold">Ce lien n&apos;est plus actif</h1>
+      <h1 className="font-display text-h2">Ce lien n&apos;est plus actif</h1>
       <p className="text-body">Il a peut-être déjà servi, ou il a expiré.</p>
       <p className="text-body">{`Si vous avez déjà envoyé votre témoignage, ${spaceName} l'a bien reçu. Merci.`}</p>
     </div>
     <a
       href={`mailto:${replyToEmail}`}
-      className="flex min-h-[44px] items-center gap-2 self-start text-body font-bold text-ink hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
+      className={cn(DISCREET_BUTTON_CLASSES, "self-start")}
     >
       <Icon name="email" size={20} />
       {`Écrire à ${spaceName}`}

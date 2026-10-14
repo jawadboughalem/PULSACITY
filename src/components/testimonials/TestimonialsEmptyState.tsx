@@ -10,7 +10,7 @@ export const EMPTY_TESTIMONIALS_TEXT =
   "Partagez votre lien de collecte ou connectez l'outil où vous vendez pour recevoir vos premiers avis.";
 
 export const TestimonialsEmptyState = ({ collectionUrl }: { collectionUrl: string }) => (
-  <section className="flex flex-col gap-6 border-t border-ink pt-6 desktop:gap-8 desktop:pt-8">
+  <section className="flex flex-col gap-6 desktop:gap-8">
     <p className="max-w-text text-body">{EMPTY_TESTIMONIALS_TEXT}</p>
     <div className="hidden flex-col gap-8 desktop:flex">
       <CopyLinkField url={collectionUrl} />

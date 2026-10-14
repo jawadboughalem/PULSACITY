@@ -10,13 +10,13 @@ type MeanwhileListProps = {
   layout: "columns" | "rows";
 };
 
-/** What works with any tool, under rules of Encre, like « Comment ça marche » of m7 without numbers. */
+/** What works with any tool, like « Comment ça marche » of m7 without numbers; spaced, without rules (charte v2). */
 export const MeanwhileList = ({ items, layout }: MeanwhileListProps) => (
   <ul
     className={cn(
       layout === "columns"
         ? "grid gap-8 desktop:grid-cols-3 desktop:gap-10"
-        : "flex flex-col border-t border-ink",
+        : "flex flex-col gap-10 desktop:gap-12",
     )}
   >
     {items.map((item) => (
@@ -24,11 +24,11 @@ export const MeanwhileList = ({ items, layout }: MeanwhileListProps) => (
         key={item.title}
         className={cn(
           "flex flex-col",
-          layout === "columns" ? "gap-3 border-t border-ink pt-6" : "gap-2 border-b border-hairline-200 py-6 desktop:py-8",
+          layout === "columns" ? "gap-3" : "gap-2",
         )}
       >
         {item.icon ? <Icon name={item.icon} size={20} className="mb-1" /> : null}
-        <h3 className="font-display text-quote font-semibold">{item.title}</h3>
+        <h3 className="font-display text-h3">{item.title}</h3>
         <p className="max-w-text text-body text-gray">{item.text}</p>
         {item.link ? (
           <Link href={item.link.href} className={cn(TEXT_LINK_CLASSES, "self-start")}>

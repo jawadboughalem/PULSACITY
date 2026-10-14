@@ -1,7 +1,9 @@
 "use client";
 
 import { DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES, OPTIONAL_MARK_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
+import { cn } from "@/lib/cn";
 import { MIN_ACCENT_CONTRAST_RATIO, calculateContrastRatio } from "@/lib/colors/contrast-ratio";
 
 const PICKER_STARTING_COLOR = "#16213E";
@@ -17,8 +19,8 @@ export const AccentColorField = ({ value, onChange }: AccentColorFieldProps) => 
 
   return (
     <fieldset className="flex min-w-[0] flex-col gap-3" aria-describedby="accent-color-hint">
-      <legend className="mb-2 text-small font-bold">
-        Couleur d&apos;accent <span className="font-normal text-gray">(facultatif)</span>
+      <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>
+        Couleur d&apos;accent <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
       </legend>
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex size-[44px] shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-ink has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink">
@@ -37,7 +39,7 @@ export const AccentColorField = ({ value, onChange }: AccentColorFieldProps) => 
           </button>
         ) : null}
       </div>
-      <p id="accent-color-hint" className="text-small text-gray">
+      <p id="accent-color-hint" className={FIELD_HINT_CLASSES}>
         Elle colore les étoiles de vos widgets. Sans choix, ils reprennent la couleur des liens de votre page de vente.
       </p>
       {isHardToRead ? (

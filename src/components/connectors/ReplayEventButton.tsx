@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { replayEvent } from "@/app/app/(espace)/connecteurs/connector-actions";
-import { SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { SECONDARY_COMPACT_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 
 /** « Rejouer »: an event put aside is processed again. A sale already recorded is never recorded twice. */
@@ -32,7 +32,7 @@ export const ReplayEventButton = ({ eventId, eventLabel }: { eventId: string; ev
         onClick={handleClick}
         disabled={isReplaying}
         aria-label={`Rejouer : ${eventLabel}`}
-        className={SECONDARY_BUTTON_CLASSES}
+        className={SECONDARY_COMPACT_BUTTON_CLASSES}
       >
         <Icon name="replay" size={20} />
         Rejouer

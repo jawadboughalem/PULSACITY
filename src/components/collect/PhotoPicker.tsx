@@ -29,7 +29,7 @@ export const PhotoPicker = ({ upload }: PhotoPickerProps) => {
       <div className="flex items-center gap-4">
         <label
           className={cn(
-            "flex h-[116px] w-[104px] shrink-0 -rotate-3 cursor-pointer rounded-card border-2 border-ink bg-white p-2 pb-6",
+            "flex h-[116px] w-[104px] shrink-0 -rotate-2 cursor-pointer rounded-field border-2 border-ink bg-white p-2 pb-6",
             "has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink",
           )}
         >

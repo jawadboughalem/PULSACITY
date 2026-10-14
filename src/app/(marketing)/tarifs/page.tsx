@@ -37,7 +37,7 @@ const PricingPage = () => (
       <MarketingSection labelledBy="pricing-title" className="pb-10 desktop:pb-10">
         <div className="flex flex-col gap-8 desktop:flex-row desktop:items-start desktop:justify-between">
           <div className="flex flex-col gap-4 desktop:max-w-[720px]">
-            <h1 id="pricing-title" className="font-display text-display font-semibold ">
+            <h1 id="pricing-title" className="font-display text-h1">
               Un prix simple, qui suit vos ventes.
             </h1>
             <p className="text-body text-gray desktop:max-w-[680px]">
@@ -52,7 +52,7 @@ const PricingPage = () => (
               announcements={{ monthly: "Prix mensuels affichés.", yearly: "Prix annuels affichés." }}
               className="w-full desktop:w-auto"
             />
-            <p className="text-small text-gray">{`Annuel : ${YEARLY_FREE_MONTHS} mois offerts`}</p>
+            <p className="text-small font-bold">{`Annuel : ${YEARLY_FREE_MONTHS} mois offerts`}</p>
           </div>
         </div>
         <div className="mt-8 desktop:mt-10">
@@ -61,8 +61,8 @@ const PricingPage = () => (
       </MarketingSection>
     </ChoiceScope>
 
-    <div className="desktop:border-t desktop:border-hairline-200">
-      <p className="mx-auto max-w-[1440px] px-page-gutter text-small text-gray desktop:pt-6">
+    <div className="px-page-gutter">
+      <p className="mx-auto max-w-content text-small text-gray desktop:pt-6">
         Sans engagement · Changez de plan à tout moment · Paiement par carte
       </p>
     </div>
@@ -83,7 +83,7 @@ const PricingPage = () => (
     <MarketingSection labelledBy="billing-title" className="pt-[0] desktop:pt-[0]">
       <div className="grid gap-8 desktop:grid-cols-[448px_1fr]">
         <SectionTitle id="billing-title">Facturation</SectionTitle>
-        <FaqList name="billing-faq" entries={BILLING_FAQ} />
+        <FaqList name="billing-faq" entries={BILLING_FAQ} surface="cloud" />
       </div>
     </MarketingSection>
   </>

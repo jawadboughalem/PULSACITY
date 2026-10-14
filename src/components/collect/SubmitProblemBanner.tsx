@@ -1,4 +1,4 @@
-import { Icon } from "@/components/ui/Icon";
+import { StatusBanner } from "@/components/ui/StatusBanner";
 import type { SubmitProblem } from "./useTestimonialForm";
 
 const KEPT_TEXT = "Votre texte est bien conservé.";
@@ -30,12 +30,9 @@ type SubmitProblemBannerProps = {
   problem: SubmitProblem;
 };
 
+/** Charte v2, Bandeau d'erreur: the detail says what to do, since the form itself is the action. */
 export const SubmitProblemBanner = ({ problem }: SubmitProblemBannerProps) => (
-  <div role="alert" className="flex items-start gap-3 rounded-card border-2 border-error bg-error-surface p-4 text-error">
-    <Icon name="alert" size={20} className="mt-[2px]" />
-    <div className="flex flex-col gap-1">
-      <p className="text-body font-bold">{PROBLEM_MESSAGES[problem].title}</p>
-      <p className="text-small">{PROBLEM_MESSAGES[problem].detail}</p>
-    </div>
-  </div>
+  <StatusBanner tone="error" title={PROBLEM_MESSAGES[problem].title}>
+    {PROBLEM_MESSAGES[problem].detail}
+  </StatusBanner>
 );

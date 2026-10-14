@@ -33,7 +33,7 @@ type RowProps = {
 };
 
 const EventRow = ({ icon, tone, detailTone, label, subject, detail, time, action }: RowProps) => (
-  <li className="flex items-start gap-4 border-b border-hairline-200 py-4 desktop:items-center">
+  <li className="flex items-start gap-4 rounded-card bg-white p-4 desktop:items-center desktop:px-6">
     <span className={cn("flex size-[40px] shrink-0 items-center justify-center rounded-full", TONE_CLASSES[tone])}>
       <Icon name={icon} size={20} />
     </span>
@@ -60,9 +60,12 @@ type ConnectionEventListProps = {
   now: Date;
 };
 
-/** Maquette 5, « Derniers événements reçus »: readable lines, « Rejouer » where an event was put aside. */
+/**
+ * Maquette 5, « Derniers événements reçus »: readable lines, « Rejouer » where an event was put aside. Charte v2: no
+ * rule between the lines, each a white card on the space's Nuage.
+ */
 export const ConnectionEventList = ({ events, connectorName, firstEventAt, now }: ConnectionEventListProps) => (
-  <ul className="flex flex-col border-t border-ink">
+  <ul className="flex flex-col gap-3">
     {events.map((event) => {
       const described = describeConnectionEvent(event, connectorName);
       return (

@@ -29,7 +29,7 @@ type PasteGuideStepsProps = { layout: "grid" | "pairs" | "column" };
 const LIST_CLASSES: Record<PasteGuideStepsProps["layout"], string> = {
   grid: "grid grid-cols-[repeat(auto-fill,minmax(232px,1fr))] gap-6",
   pairs: "grid gap-6 desktop:grid-cols-2",
-  column: "flex flex-col",
+  column: "flex flex-col gap-8",
 };
 
 /**
@@ -39,14 +39,8 @@ const LIST_CLASSES: Record<PasteGuideStepsProps["layout"], string> = {
 export const PasteGuideSteps = ({ layout }: PasteGuideStepsProps) => (
   <ol className={LIST_CLASSES[layout]}>
     {PASTE_GUIDE_STEPS.map((parts, index) => (
-      <li
-        key={index}
-        className={cn(
-          "flex flex-col gap-3",
-          layout === "column" && "border-b border-hairline-200 py-6 first:pt-0",
-        )}
-      >
-        <div className="border border-hairline-200 bg-sky">{DRAWINGS[index]}</div>
+      <li key={index} className="flex flex-col gap-3">
+        <div className="overflow-hidden rounded-card bg-sky">{DRAWINGS[index]}</div>
         <p className={layout === "column" ? "text-body" : "text-small"}>
           <span className="font-bold">{`${index + 1}.`}</span> {parts.map(renderPart)}
         </p>
@@ -60,12 +54,12 @@ export const SystemePasteGuide = ({ isCodeCopied = false }: { isCodeCopied?: boo
   <section
     aria-labelledby="paste-guide"
     className={cn(
-      "flex flex-col gap-4 bg-white p-6 desktop:p-8",
-      isCodeCopied ? "border-2 border-ink" : "border border-hairline-200",
+      "flex flex-col gap-4 rounded-panel border-2 bg-white p-6 desktop:p-8",
+      isCodeCopied ? "border-ink" : "border-transparent",
     )}
   >
     <div className="flex flex-col gap-1 desktop:flex-row desktop:items-baseline desktop:justify-between desktop:gap-6">
-      <h2 id="paste-guide" className="scroll-mt-6 font-display text-quote font-semibold">
+      <h2 id="paste-guide" className="scroll-mt-6 font-display text-h3">
         Coller dans Systeme.io
       </h2>
       <p className={cn("text-small", isCodeCopied ? "font-bold text-success" : "text-gray")}>

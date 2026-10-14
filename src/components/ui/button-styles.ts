@@ -1,3 +1,5 @@
+import { cn } from "@/lib/cn";
+
 /** Charte v2, Bordures: focus-ring, on every interactive element reached with the keyboard. */
 export const FOCUS_RING = "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
@@ -16,7 +18,7 @@ export const PRIMARY_BUTTON_CLASSES = `${BUTTON_BASE} h-[56px] bg-sun px-7 text-
 export const SECONDARY_BUTTON_CLASSES = `${BUTTON_BASE} h-[52px] border-2 border-ink bg-white px-6 text-ink hover:bg-sky active:bg-sky-pressed disabled:border-disabled-border disabled:bg-white disabled:text-gray aria-disabled:border-disabled-border aria-disabled:bg-white aria-disabled:text-gray`;
 
 /** Its compact variant, in the rows of a table: 44 high. */
-export const SECONDARY_COMPACT_BUTTON_CLASSES = `${SECONDARY_BUTTON_CLASSES} h-[44px] px-[18px]`;
+export const SECONDARY_COMPACT_BUTTON_CLASSES = cn(SECONDARY_BUTTON_CLASSES, "h-[44px] px-[18px]");
 
 /** Bouton discret: Encre text underlined 2 px, 4 px below; 44 high to be easy to touch. No loading state. */
 export const DISCREET_BUTTON_CLASSES = `pz-couleur inline-flex min-h-[44px] items-center gap-2 rounded-full px-[10px] text-body font-bold text-ink underline decoration-2 underline-offset-4 cursor-pointer hover:text-ink-800 hover:decoration-[3px] active:bg-sky ${FOCUS_RING} disabled:cursor-not-allowed disabled:text-gray disabled:no-underline aria-disabled:text-gray aria-disabled:no-underline`;

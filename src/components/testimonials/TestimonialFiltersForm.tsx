@@ -78,7 +78,7 @@ export const TestimonialFiltersForm = ({ action, filters, products }: Testimonia
             defaultValue={filters.query ?? ""}
             maxLength={MAX_SEARCH_LENGTH}
             placeholder="Un prénom, un mot…"
-            className={cn(FIELD_CLASSES, "pl-12")}
+            className={cn(FIELD_CLASSES, "pl-10")}
           />
         </span>
       </label>

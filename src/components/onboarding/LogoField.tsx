@@ -2,6 +2,7 @@
 
 import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { FieldError } from "@/components/ui/FieldError";
+import { FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES, OPTIONAL_MARK_CLASSES } from "@/components/ui/field-styles";
 import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
 import type { ImageUpload } from "@/components/uploads/useImageUpload";
 import { cn } from "@/lib/cn";
@@ -26,8 +27,8 @@ export const LogoField = ({ upload, spaceName, serverError }: LogoFieldProps) =>
 
   return (
     <fieldset className="flex min-w-[0] flex-col gap-3" aria-describedby="logo-hint">
-      <legend className="mb-2 text-small font-bold">
-        Votre logo <span className="font-normal text-gray">(facultatif)</span>
+      <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>
+        Votre logo <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
       </legend>
       <div className="flex items-center gap-4">
         <SpaceAvatar
@@ -58,11 +59,11 @@ export const LogoField = ({ upload, spaceName, serverError }: LogoFieldProps) =>
           ) : null}
         </div>
       </div>
-      <p id="logo-hint" className="text-small text-gray">
+      <p id="logo-hint" className={FIELD_HINT_CLASSES}>
         Il s&apos;affiche en rond sur votre page de collecte. JPEG ou PNG, 10 Mo au plus.
       </p>
       {state.status === "uploading" ? (
-        <p role="status" className="text-small text-gray">
+        <p role="status" className={FIELD_HINT_CLASSES}>
           Envoi du logo…
         </p>
       ) : null}

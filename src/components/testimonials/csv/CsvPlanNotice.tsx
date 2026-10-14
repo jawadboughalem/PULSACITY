@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BILLING_HREF } from "@/components/space/space-sections";
-import { Icon } from "@/components/ui/Icon";
+import { DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { StatusBanner } from "@/components/ui/StatusBanner";
 
 type CsvPlanNoticeProps = {
   pendingCount: number;
@@ -44,19 +45,15 @@ const describe = ({ pendingCount, publishedCount, planName, limit, isDone }: Csv
 
 /** Past the plan's limit, the imported testimonials wait in pending: the creator knows how many, and why. */
 export const CsvPlanNotice = (props: CsvPlanNoticeProps) => (
-  <section className="flex items-start gap-3 bg-sky p-4 desktop:p-6">
-    <Icon name="info" size={20} className="mt-[2px]" />
-    <div className="flex flex-col gap-2">
-      <p className="text-body font-bold">
-        {`${count(props.pendingCount, "témoignage", "témoignages")} ${remainVerb(props.pendingCount, props.isDone)} en attente`}
-      </p>
-      <p className="text-small">{describe(props)}</p>
-      <Link
-        href={BILLING_HREF}
-        className="self-start text-small font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
-      >
+  <StatusBanner
+    tone="info"
+    title={`${count(props.pendingCount, "témoignage", "témoignages")} ${remainVerb(props.pendingCount, props.isDone)} en attente`}
+  >
+    <div className="flex flex-col items-start gap-1">
+      <p>{describe(props)}</p>
+      <Link href={BILLING_HREF} className={DISCREET_BUTTON_CLASSES}>
         Voir le plan Essentiel
       </Link>
     </div>
-  </section>
+  </StatusBanner>
 );

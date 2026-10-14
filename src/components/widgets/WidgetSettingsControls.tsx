@@ -1,12 +1,18 @@
 "use client";
 
+import { DISCREET_BUTTON_CLASSES, FOCUS_RING } from "@/components/ui/button-styles";
+import { FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
+import {
+  SEGMENTED_CLASSES,
+  SEGMENTED_OPTION_CHOSEN_CLASSES,
+  SEGMENTED_OPTION_CLASSES,
+  SEGMENTED_OPTION_IDLE_CLASSES,
+} from "@/components/ui/segmented-styles";
 import { cn } from "@/lib/cn";
 import { nameColor } from "@/lib/colors/name-color";
 import type { WidgetCardStyle, WidgetTheme, WidgetType } from "../../../widget/src/payload";
 import { WIDGET_TYPE_OPTIONS } from "./describe-widget";
-
-const FOCUS_RING = "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
 export const INK = "#16213E";
 
@@ -14,10 +20,10 @@ export const CARMINE = "#A3243B";
 
 type TypePickerProps = { value: WidgetType; onChange: (type: WidgetType) => void };
 
-/** Maquette 6, « Type »: three tiles, the chosen one on Paper with an Ink border. */
+/** Maquette 6, « Type »: three tiles, the chosen one on Ciel with an Encre border. */
 export const WidgetTypePicker = ({ value, onChange }: TypePickerProps) => (
   <fieldset className="flex min-w-[0] flex-col">
-    <legend className="mb-2 text-small font-bold">Type</legend>
+    <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>Type</legend>
     <div className="grid grid-cols-3 gap-2">
       {WIDGET_TYPE_OPTIONS.map((option) => {
         const isChosen = option.type === value;
@@ -28,9 +34,9 @@ export const WidgetTypePicker = ({ value, onChange }: TypePickerProps) => (
             aria-pressed={isChosen}
             onClick={() => onChange(option.type)}
             className={cn(
-              "flex h-[72px] flex-col items-center justify-center gap-1 rounded-card text-body text-ink",
+              "pz-couleur flex h-[72px] cursor-pointer flex-col items-center justify-center gap-1 rounded-field border-2 text-body text-ink",
               FOCUS_RING,
-              isChosen ? "border-2 border-ink bg-sky font-bold" : "border border-gray bg-white hover:bg-sky",
+              isChosen ? "border-ink bg-sky font-bold" : "border-gray bg-white hover:border-ink hover:bg-sky",
             )}
           >
             <Icon name={option.icon} size={24} />
@@ -71,7 +77,7 @@ export const AccentSwatches = ({ swatches, value, onChange }: AccentSwatchesProp
   const chosen = swatches.find((swatch) => swatch.value === value) ?? swatches[0];
   return (
     <fieldset className="flex min-w-[0] flex-col gap-3">
-      <legend className="mb-2 text-small font-bold">Couleur d&apos;accent</legend>
+      <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>Couleur d&apos;accent</legend>
       <div className="flex items-center gap-3">
         <div className="flex shrink-0">
           {swatches.map((swatch) => {
@@ -83,7 +89,7 @@ export const AccentSwatches = ({ swatches, value, onChange }: AccentSwatchesProp
                 aria-pressed={isChosen}
                 aria-label={swatch.name}
                 onClick={() => onChange(swatch.value)}
-                className={cn("flex size-[44px] items-center justify-center rounded-full", FOCUS_RING)}
+                className={cn("flex size-[44px] cursor-pointer items-center justify-center rounded-full", FOCUS_RING)}
               >
                 <span
                   className={cn(
@@ -94,7 +100,7 @@ export const AccentSwatches = ({ swatches, value, onChange }: AccentSwatchesProp
                   {swatch.color ? (
                     <span className="size-full rounded-full" style={{ backgroundColor: swatch.color }} />
                   ) : (
-                    <span className="flex size-full items-center justify-center rounded-full border border-gray bg-white text-ink">
+                    <span className="flex size-full items-center justify-center rounded-full border-2 border-gray bg-white text-ink">
                       <Icon name="connection" size={16} />
                     </span>
                   )}
@@ -103,7 +109,7 @@ export const AccentSwatches = ({ swatches, value, onChange }: AccentSwatchesProp
             );
           })}
         </div>
-        <p className="min-w-[0] text-small text-gray">{chosen.name}</p>
+        <p className={cn(FIELD_HINT_CLASSES, "min-w-[0]")}>{chosen.name}</p>
       </div>
     </fieldset>
   );
@@ -129,7 +135,7 @@ export const AccentWarningNote = ({ warning, onUseInk }: AccentWarningNoteProps)
           <button
             type="button"
             onClick={onUseInk}
-            className={cn("min-h-[44px] px-1 text-small font-bold text-ink hover:text-ink-800 hover:underline", FOCUS_RING)}
+            className={DISCREET_BUTTON_CLASSES}
           >
             Utiliser Encre
           </button>
@@ -148,17 +154,13 @@ type SegmentedChoiceProps<Value extends string> = {
   onChange: (value: Value) => void;
 };
 
-/** The charter's segmented selector: Ink for the chosen option, aria-pressed on each. */
+/** Charte v2, Bascule à choix: the Ciel pill of the panel tabs, Encre for the chosen option, aria-pressed on each. */
 const SegmentedChoice = <Value extends string>({ id, label, options, value, hint, onChange }: SegmentedChoiceProps<Value>) => (
   <div className="flex flex-col gap-2">
-    <p id={id} className="text-small font-bold">
+    <p id={id} className={FIELD_LABEL_CLASSES}>
       {label}
     </p>
-    <div
-      role="group"
-      aria-labelledby={id}
-      className="grid h-[48px] grid-flow-col auto-cols-fr rounded-card border border-ink"
-    >
+    <div role="group" aria-labelledby={id} className={SEGMENTED_CLASSES}>
       {options.map((option) => {
         const isChosen = option.value === value;
         return (
@@ -168,9 +170,8 @@ const SegmentedChoice = <Value extends string>({ id, label, options, value, hint
             aria-pressed={isChosen}
             onClick={() => onChange(option.value)}
             className={cn(
-              "text-body font-bold",
-              FOCUS_RING,
-              isChosen ? "bg-ink text-white" : "bg-white text-ink hover:bg-sky",
+              SEGMENTED_OPTION_CLASSES,
+              isChosen ? SEGMENTED_OPTION_CHOSEN_CLASSES : SEGMENTED_OPTION_IDLE_CLASSES,
             )}
           >
             {option.label}
@@ -178,7 +179,7 @@ const SegmentedChoice = <Value extends string>({ id, label, options, value, hint
         );
       })}
     </div>
-    <p className="text-small text-gray">{hint}</p>
+    <p className={FIELD_HINT_CLASSES}>{hint}</p>
   </div>
 );
 

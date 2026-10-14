@@ -5,6 +5,8 @@ import { useState, useTransition } from "react";
 import { associateProduct } from "@/app/app/(espace)/connecteurs/connector-actions";
 import { setOfferRequestDelay } from "@/app/app/(espace)/offres/offer-actions";
 import { FieldError } from "@/components/ui/FieldError";
+import { FIELD_CLASSES, FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
+import { SelectControl } from "@/components/ui/SelectControl";
 import { ToneBadge } from "@/components/ui/ToneBadge";
 import { cn } from "@/lib/cn";
 import { quoteInFrench } from "@/lib/french/typography";
@@ -35,9 +37,6 @@ type ExternalProductsTableProps = {
 const NEW_OFFER = "nouvelle-offre";
 
 const DEFAULT_DELAY_DAYS = 14;
-
-const CONTROL_CLASSES =
-  "h-[48px] rounded-card border border-gray bg-white text-body text-ink focus:border-2 focus:border-ink focus:outline-none disabled:cursor-not-allowed disabled:border-hairline-200 disabled:bg-sky disabled:text-gray";
 
 const ERRORS = {
   "not-saved": "La modification n'a pas été enregistrée. Vérifiez votre connexion, puis réessayez.",
@@ -112,7 +111,7 @@ const ExternalProductRow = ({ product, offers }: RowProps) => {
   const isDelayDisabled = !offer || !offer.requestsEnabled || isSaving;
 
   return (
-    <li className="flex flex-col gap-4 border-b border-hairline-200 py-6 desktop:grid desktop:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)_minmax(0,2fr)] desktop:items-center desktop:gap-6">
+    <li className="flex flex-col gap-4 rounded-card bg-white p-4 desktop:grid desktop:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)_minmax(0,2fr)] desktop:items-center desktop:gap-6 desktop:rounded-field desktop:px-4 desktop:py-[18px]">
       <div className="flex items-start justify-between gap-3 desktop:block">
         <div className="flex min-w-[0] flex-col gap-1">
           <p className="text-body font-bold">{product.name}</p>
@@ -123,15 +122,15 @@ const ExternalProductRow = ({ product, offers }: RowProps) => {
         </span>
       </div>
       <div className="flex flex-col gap-2">
-        <label htmlFor={ids.offer} className="text-small font-bold desktop:sr-only">
+        <label htmlFor={ids.offer} className={cn(FIELD_LABEL_CLASSES, "desktop:sr-only")}>
           Offre PULSACITY<span className="sr-only">{` pour ${quoteInFrench(product.name)}`}</span>
         </label>
-        <select
+        <SelectControl
           id={ids.offer}
           value={product.productId ?? ""}
           disabled={isSaving}
           onChange={(event) => handleOffer(event.target.value)}
-          className={cn(CONTROL_CLASSES, "w-full px-4 focus:px-[15px]", !product.productId && "border-2 border-ink px-[15px]")}
+          className={cn(!product.productId && "border-ink")}
         >
           {product.productId ? null : <option value="">Choisir une offre</option>}
           {offers.map((candidate) => (
@@ -140,10 +139,10 @@ const ExternalProductRow = ({ product, offers }: RowProps) => {
             </option>
           ))}
           <option value={NEW_OFFER}>{`Créer l'offre ${quoteInFrench(product.name)}`}</option>
-        </select>
+        </SelectControl>
       </div>
       <div className="flex flex-col gap-2">
-        <label htmlFor={ids.delay} className="text-small font-bold desktop:sr-only">
+        <label htmlFor={ids.delay} className={cn(FIELD_LABEL_CLASSES, "desktop:sr-only")}>
           Demande d&apos;avis<span className="sr-only">{` pour ${quoteInFrench(product.name)}, en jours après l'achat`}</span>
         </label>
         <div className="flex items-center gap-3">
@@ -160,12 +159,12 @@ const ExternalProductRow = ({ product, offers }: RowProps) => {
             onKeyDown={(event) => {
               if (event.key === "Enter") handleDelay();
             }}
-            className={cn(CONTROL_CLASSES, "w-[80px] px-4 focus:px-[15px]")}
+            className={cn(FIELD_CLASSES, "w-[80px]")}
           />
           <span className={cn("text-small", isDelayDisabled && "text-gray")}>jours après l&apos;achat</span>
         </div>
         {offer && !offer.requestsEnabled ? (
-          <p className="text-small text-gray">Demandes désactivées pour cette offre.</p>
+          <p className={FIELD_HINT_CLASSES}>Demandes désactivées pour cette offre.</p>
         ) : null}
       </div>
       <span className="hidden desktop:block">
@@ -182,17 +181,17 @@ const ExternalProductRow = ({ product, offers }: RowProps) => {
 /** Maquette 5, « Offres à associer »: each product received, the offer it belongs to, and when to ask. */
 export const ExternalProductsTable = ({ connectorName, products, offers }: ExternalProductsTableProps) => (
   <div className="flex flex-col gap-4">
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-2">
       <div
         aria-hidden="true"
-        className="hidden border-b border-ink pb-3 text-small font-bold desktop:grid desktop:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)_minmax(0,2fr)] desktop:gap-6"
+        className="hidden h-[48px] items-center rounded-field bg-sky px-4 text-small font-bold desktop:grid desktop:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)_minmax(0,2fr)] desktop:gap-6"
       >
         <span>{`Produit reçu de ${connectorName}`}</span>
         <span>Offre PULSACITY</span>
         <span>Demande d&apos;avis</span>
         <span>État</span>
       </div>
-      <ul className="flex flex-col border-t border-ink desktop:border-t-0">
+      <ul className="flex flex-col gap-3 desktop:gap-2">
         {products.map((product) => (
           <ExternalProductRow key={product.id} product={product} offers={offers} />
         ))}

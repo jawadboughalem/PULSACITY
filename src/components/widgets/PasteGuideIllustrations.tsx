@@ -35,21 +35,21 @@ const Bar = ({ x, y, width, height = 6 }: { x: number; y: number; width: number;
 
 const EditorWindow = ({ children }: { children: ReactNode }) => (
   <svg viewBox="0 0 240 120" aria-hidden="true" focusable="false" className="block h-auto w-full">
-    <rect x={12.5} y={10.5} width={215} height={99} rx={2} className="fill-white stroke-hairline-200" />
+    <rect x={12.5} y={10.5} width={215} height={99} rx={2} className="fill-white stroke-disabled-border" />
     <rect x={13} y={11} width={214} height={14} className="fill-sky" />
-    <line x1={13} y1={25.5} x2={227} y2={25.5} className="stroke-hairline-200" />
+    <line x1={13} y1={25.5} x2={227} y2={25.5} className="stroke-disabled-border" />
     {children}
   </svg>
 );
 
 export const AddHtmlElementDrawing = () => (
   <EditorWindow>
-    <line x1={100.5} y1={26} x2={100.5} y2={109} className="stroke-hairline-200" />
-    <rect x={18.5} y={34.5} width={76} height={18} rx={2} className="fill-white stroke-hairline-200" />
+    <line x1={100.5} y1={26} x2={100.5} y2={109} className="stroke-disabled-border" />
+    <rect x={18.5} y={34.5} width={76} height={18} rx={2} className="fill-white stroke-disabled-border" />
     <Label x={26} y={48}>
       Texte
     </Label>
-    <rect x={18.5} y={58.5} width={76} height={18} rx={2} className="fill-white stroke-hairline-200" />
+    <rect x={18.5} y={58.5} width={76} height={18} rx={2} className="fill-white stroke-disabled-border" />
     <Label x={26} y={72}>
       Image
     </Label>
@@ -113,9 +113,16 @@ export const PasteCodeDrawing = () => (
 
 const MiniCard = ({ x }: { x: number }) => (
   <g>
-    <rect x={x + 0.5} y={52.5} width={59} height={46} rx={2} className="fill-white stroke-hairline-200" />
+    <rect x={x + 0.5} y={52.5} width={59} height={46} rx={2} className="fill-white stroke-disabled-border" />
     {[0, 1, 2, 3, 4].map((index) => (
-      <path key={index} d={STAR} transform={`translate(${x + 7 + index * 8} 59) scale(0.3)`} className="fill-carmine" />
+      <path
+        key={index}
+        d={STAR}
+        transform={`translate(${x + 7 + index * 8} 59) scale(0.3)`}
+        strokeWidth={1.3}
+        strokeLinejoin="round"
+        className="fill-sun stroke-ink"
+      />
     ))}
     <Bar x={x + 7} y={72} width={46} height={4} />
     <Bar x={x + 7} y={80} width={34} height={4} />
@@ -125,9 +132,9 @@ const MiniCard = ({ x }: { x: number }) => (
 
 export const SaveAndPreviewDrawing = () => (
   <svg viewBox="0 0 240 120" aria-hidden="true" focusable="false" className="block h-auto w-full">
-    <rect x={12.5} y={10.5} width={215} height={99} rx={2} className="fill-white stroke-hairline-200" />
+    <rect x={12.5} y={10.5} width={215} height={99} rx={2} className="fill-white stroke-disabled-border" />
     <rect x={13} y={11} width={214} height={28} className="fill-sky" />
-    <line x1={13} y1={39.5} x2={227} y2={39.5} className="stroke-hairline-200" />
+    <line x1={13} y1={39.5} x2={227} y2={39.5} className="stroke-disabled-border" />
     <path
       d="M108 25s3-5.5 8-5.5 8 5.5 8 5.5-3 5.5-8 5.5-8-5.5-8-5.5z"
       strokeWidth={1.5}

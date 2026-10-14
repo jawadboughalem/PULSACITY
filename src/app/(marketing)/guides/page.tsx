@@ -18,10 +18,10 @@ const GuidesPage = () => (
   <>
     <MarketingSection labelledBy="guides-title">
       <div className="flex max-w-[680px] flex-col gap-4">
-        <h1 id="guides-title" className="font-display text-display font-semibold ">
+        <h1 id="guides-title" className="font-display text-h1">
           Guides
         </h1>
-        <p className="font-display text-quote">
+        <p className="text-lead">
           Recueillir vos premiers avis, les afficher, rester dans les règles. Des guides courts, tenus à jour à chaque
           changement.
         </p>
@@ -34,7 +34,7 @@ const GuidesPage = () => (
             className="grid gap-6 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-8"
           >
             <div className="flex flex-col gap-3">
-              <h2 id={`guides-${group.id}`} className="font-display text-h2 font-semibold">
+              <h2 id={`guides-${group.id}`} className="font-display text-h2">
                 {group.title}
               </h2>
               <p className="text-body text-gray desktop:text-small">{group.text}</p>

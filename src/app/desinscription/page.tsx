@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { CollectHeader } from "@/components/collect/CollectHeader";
 import { PoweredByPulsacity } from "@/components/collect/PoweredByPulsacity";
+import { FOCUS_RING } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { getDb } from "@/db";
 import { getAppUrl } from "@/lib/app-url";
+import { cn } from "@/lib/cn";
 import { loadUnsubscribedCustomer } from "@/lib/requests/unsubscribe-customer";
 import {
   UNSUBSCRIBE_STATE_PARAMETER,
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
 
 const readParameter = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) ?? null;
 
-const PAGE_CLASSES = "min-h-dvh bg-sky px-page-gutter py-6 text-ink";
+const PAGE_CLASSES = "min-h-dvh bg-white px-page-gutter py-6 text-ink";
 const MAIN_CLASSES = "mx-auto flex min-h-[calc(100dvh-48px)] w-full max-w-text flex-col gap-6";
 
 const Problem = ({ title, detail }: { title: string; detail: string }) => (
@@ -28,7 +30,7 @@ const Problem = ({ title, detail }: { title: string; detail: string }) => (
         <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink bg-white">
           <Icon name="alert" size={32} />
         </span>
-        <h1 className="font-display text-h2 font-semibold">{title}</h1>
+        <h1 className="font-display text-h2">{title}</h1>
         <p className="text-body">{detail}</p>
       </div>
     </main>
@@ -66,13 +68,16 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
           <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink bg-white">
             <Icon name="valid" size={32} />
           </span>
-          <h1 className="font-display text-h2 font-semibold">Désinscription confirmée</h1>
+          <h1 className="font-display text-h2">Désinscription confirmée</h1>
           <p className="text-body">{`Vous ne recevrez plus de demande d'avis de ${customer.spaceName}.`}</p>
           <p className="text-body text-gray">Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.</p>
         </div>
         <a
           href={`mailto:${customer.replyToEmail}`}
-          className="mb-1 flex h-[56px] w-full items-center justify-center gap-2 rounded-card border-2 border-ink bg-carmine text-body font-bold text-white hover:bg-carmine-dark focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink active:translate-y-1 active:shadow-none"
+          className={cn(
+            "pz-couleur pz-appui mb-1 flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-sun text-[18px] font-bold text-ink hover:bg-sun-hover active:bg-sun-pressed",
+            FOCUS_RING,
+          )}
         >
           <Icon name="email" size={20} />
           {`Écrire à ${customer.spaceName}`}

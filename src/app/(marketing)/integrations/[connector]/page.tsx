@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { ConnectorLogo } from "@/components/connectors/ConnectorLogo";
-import { RuledCheckList } from "@/components/marketing/CheckList";
+import { CheckList } from "@/components/marketing/CheckList";
 import { FaqList } from "@/components/marketing/FaqList";
 import { FinalCall } from "@/components/marketing/FinalCall";
 import { InstallGuide } from "@/components/marketing/integrations/InstallGuide";
@@ -12,7 +12,11 @@ import { PublicWaitlistForm } from "@/components/marketing/integrations/PublicWa
 import { JsonLd } from "@/components/marketing/JsonLd";
 import { MARKETING_PATHS, integrationPath } from "@/components/marketing/marketing-paths";
 import { MarketingSection, SectionTitle } from "@/components/marketing/MarketingSection";
-import { LARGE_BUTTON_CLASSES, TEXT_LINK_CLASSES } from "@/components/marketing/marketing-styles";
+import {
+  BREADCRUMB_LINK_CLASSES,
+  LARGE_BUTTON_CLASSES,
+  TEXT_LINK_CLASSES,
+} from "@/components/marketing/marketing-styles";
 import { Icon } from "@/components/ui/Icon";
 import {
   type AvailableIntegration,
@@ -46,7 +50,7 @@ const Breadcrumb = ({ name }: { name: string }) => (
   <nav aria-label="Fil d'Ariane" className="text-small">
     <ol className="flex items-center gap-3">
       <li>
-        <Link href={MARKETING_PATHS.integrations} className={TEXT_LINK_CLASSES}>
+        <Link href={MARKETING_PATHS.integrations} className={BREADCRUMB_LINK_CLASSES}>
           Intégrations
         </Link>
       </li>
@@ -68,10 +72,10 @@ const Hero = ({ integration, children }: { integration: AvailableIntegration | U
         <ConnectorLogo name={integration.name} />
         <IntegrationBadge integration={integration} />
       </div>
-      <h1 id="integration-title" className="font-display text-display font-semibold ">
+      <h1 id="integration-title" className="font-display text-h1">
         {integration.heading}
       </h1>
-      <p className="max-w-[656px] font-display text-quote">{integration.intro}</p>
+      <p className="max-w-[656px] text-lead">{integration.intro}</p>
     </div>
     {children}
   </MarketingSection>
@@ -83,17 +87,15 @@ const SplitSection = ({
   title,
   text,
   tone,
-  hasTopRule,
   children,
 }: {
   id: string;
   title: string;
   text: string;
   tone?: "white" | "paper";
-  hasTopRule?: boolean;
   children: ReactNode;
 }) => (
-  <MarketingSection labelledBy={id} tone={tone} hasTopRule={hasTopRule}>
+  <MarketingSection labelledBy={id} tone={tone}>
     <div className="grid gap-8 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-8">
       <div className="flex flex-col gap-4 desktop:pr-10">
         <SectionTitle id={id}>{title}</SectionTitle>
@@ -118,15 +120,15 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
       </div>
       <ul className="mt-12 grid gap-8 desktop:grid-cols-3 desktop:gap-10">
         {integration.benefits.map((benefit) => (
-          <li key={benefit.title} className="flex flex-col gap-3 border-t border-ink pt-6 desktop:pt-8">
-            <h2 className="font-display text-quote font-semibold">{benefit.title}</h2>
+          <li key={benefit.title} className="flex flex-col gap-3">
+            <h2 className="font-display text-h3">{benefit.title}</h2>
             <p className="text-body text-gray">{benefit.text}</p>
           </li>
         ))}
       </ul>
     </Hero>
 
-    <MarketingSection id="installation" labelledBy="install-title" hasTopRule>
+    <MarketingSection id="installation" labelledBy="install-title">
       <div className="grid gap-8 desktop:grid-cols-[392px_minmax(0,1fr)] desktop:gap-10">
         <div className="flex flex-col gap-4">
           <SectionTitle id="install-title">
@@ -141,7 +143,7 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
     <MarketingSection labelledBy="integration-questions" tone="paper">
       <div className="grid gap-8 desktop:grid-cols-[448px_minmax(0,1fr)]">
         <SectionTitle id="integration-questions">Vos questions</SectionTitle>
-        <FaqList name="integration-faq" entries={integration.faq} />
+        <FaqList name="integration-faq" entries={integration.faq} surface="white" />
       </div>
     </MarketingSection>
 
@@ -164,9 +166,8 @@ const UpcomingPage = ({ integration }: { integration: UpcomingIntegration }) => 
       id="will-do-title"
       title="Ce que fera la connexion"
       text={`Elle fonctionnera comme celle de ${AVAILABLE_NAME} : rien à faire après l'installation.`}
-      hasTopRule
     >
-      <RuledCheckList items={integration.willDo} />
+      <CheckList items={integration.willDo} className="gap-4" />
     </SplitSection>
 
     <SplitSection

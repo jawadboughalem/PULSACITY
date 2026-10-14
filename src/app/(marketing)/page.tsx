@@ -9,6 +9,7 @@ import { JsonLd } from "@/components/marketing/JsonLd";
 import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { MarketingSection, SectionTitle } from "@/components/marketing/MarketingSection";
 import { LARGE_BUTTON_CLASSES, TEXT_LINK_CLASSES } from "@/components/marketing/marketing-styles";
+import { FOCUS_RING } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { HOME_FAQ } from "@/content/faq";
 import { FEATURED_INTEGRATIONS } from "@/content/integrations";
@@ -48,10 +49,10 @@ const HomePage = () => (
 
     <MarketingSection labelledBy="hero-title">
       <div className="flex flex-col gap-6 desktop:max-w-[720px]">
-        <h1 id="hero-title" className="font-display text-display font-semibold ">
+        <h1 id="hero-title" className="font-display text-display">
           Vos ventes deviennent des témoignages, automatiquement.
         </h1>
-        <p className="font-display text-quote desktop:max-w-[660px]">
+        <p className="text-lead desktop:max-w-[660px]">
           Après chaque vente, votre client reçoit un e-⁠mail à votre nom qui lui demande son avis, au bon moment. Vous
           validez, et son témoignage s&apos;affiche sur votre page de vente.
         </p>
@@ -62,7 +63,10 @@ const HomePage = () => (
         </Link>
         <Link
           href={MARKETING_PATHS.integrations}
-          className="inline-flex min-h-[44px] items-center gap-2 text-body hover:underline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
+          className={cn(
+            "pz-couleur inline-flex min-h-[44px] items-center gap-2 text-body decoration-2 underline-offset-4 hover:underline",
+            FOCUS_RING,
+          )}
         >
           <Icon name="valid" size={20} className="text-success" />
           Fonctionne avec Systeme.io, Zapier et Make
@@ -73,15 +77,15 @@ const HomePage = () => (
       </div>
     </MarketingSection>
 
-    <MarketingSection id="fonctionnement" labelledBy="how-it-works" hasTopRule>
+    <MarketingSection id="fonctionnement" labelledBy="how-it-works">
       <SectionTitle id="how-it-works">Comment ça marche</SectionTitle>
       <ol className="mt-8 grid gap-8 desktop:mt-10 desktop:grid-cols-3 desktop:gap-10">
         {HOW_IT_WORKS.map((step, index) => (
-          <li key={step.title} className="flex flex-col gap-3 border-t border-ink pt-6">
-            <span aria-hidden="true" className="font-display text-h1">
+          <li key={step.title} className="flex flex-col gap-3">
+            <span aria-hidden="true" className="font-display text-h2">
               {index + 1}
             </span>
-            <h3 className="font-display text-quote font-semibold">{step.title}</h3>
+            <h3 className="font-display text-h3">{step.title}</h3>
             <p className="text-body text-gray">{step.text}</p>
           </li>
         ))}
@@ -116,7 +120,7 @@ const HomePage = () => (
       </div>
     </MarketingSection>
 
-    <MarketingSection labelledBy="prices" hasTopRule>
+    <MarketingSection labelledBy="prices">
       <div className="flex flex-col gap-2 desktop:flex-row desktop:items-baseline desktop:justify-between">
         <SectionTitle id="prices">Tarifs</SectionTitle>
         <Link href={MARKETING_PATHS.pricing} className={cn(TEXT_LINK_CLASSES, "hidden desktop:inline-flex")}>
@@ -134,7 +138,7 @@ const HomePage = () => (
     <MarketingSection id="questions" tone="paper" labelledBy="your-questions">
       <div className="grid gap-8 desktop:grid-cols-[448px_1fr]">
         <SectionTitle id="your-questions">Vos questions</SectionTitle>
-        <FaqList name="home-faq" entries={HOME_FAQ} />
+        <FaqList name="home-faq" entries={HOME_FAQ} surface="white" />
       </div>
     </MarketingSection>
 

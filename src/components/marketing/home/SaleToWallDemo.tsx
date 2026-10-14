@@ -3,11 +3,12 @@ import { Icon } from "@/components/ui/Icon";
 import { STAR_PATH } from "@/components/ui/icon-paths";
 import { cn } from "@/lib/cn";
 
+/** Five full stars of the charter v2: Soleil with an Encre outline (12 on the small cards of the wall, 20 elsewhere). */
 const Stars = ({ size }: { size: number }) => (
-  <span className="flex gap-1 text-ink">
+  <span className="flex gap-1">
     {[1, 2, 3, 4, 5].map((star) => (
-      <svg key={star} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d={STAR_PATH} />
+      <svg key={star} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" className="shrink-0">
+        <path d={STAR_PATH} strokeWidth={1.3} strokeLinejoin="round" className="fill-sun stroke-ink" />
       </svg>
     ))}
   </span>
@@ -15,8 +16,8 @@ const Stars = ({ size }: { size: number }) => (
 
 /** Time 1: Systeme.io tells PULSACITY of the sale, like a notification on the creator's phone. */
 const SaleNotification = () => (
-  <div className="flex w-full gap-3 rounded-card border border-hairline-200 bg-white p-4 shadow-float">
-    <span className="flex size-[36px] shrink-0 items-center justify-center bg-ink text-white">
+  <div className="flex w-full gap-3 rounded-card bg-white p-4 shadow-float">
+    <span className="flex size-[36px] shrink-0 items-center justify-center rounded-full bg-ink text-white">
       <Icon name="bag" size={20} />
     </span>
     <span className="flex min-w-[0] flex-1 flex-col">
@@ -30,15 +31,15 @@ const SaleNotification = () => (
   </div>
 );
 
-/** Time 2: the e-mail of maquette 3, in short, in Georgia like every e-mail. */
+/** Time 2: the e-mail of maquette 3, in short, in the system font of every e-mail (charte v2, E-mails). */
 const RequestEmail = () => (
-  <div className="flex w-full flex-col gap-2 border border-hairline-200 bg-white p-4">
+  <div className="flex w-full flex-col gap-2 rounded-card bg-white p-4">
     <span className="text-legal text-gray">Julie Nutrition via PULSACITY</span>
     <span className="text-small font-bold">Camille, votre avis sur le Programme 30 jours ?</span>
-    <span className="font-[Georgia,'Times_New_Roman',serif] text-legal">
+    <span className="font-[Helvetica,Arial,sans-serif] text-legal">
       Bonjour Camille, merci d&apos;avoir suivi le programme. Une note et quelques mots suffisent.
     </span>
-    <span className="mt-1 inline-flex h-[36px] items-center self-start rounded-card border-2 border-ink bg-carmine px-4 text-legal font-bold whitespace-nowrap text-white">
+    <span className="mt-1 inline-flex h-[36px] items-center self-start rounded-full bg-ink px-4 font-[Helvetica,Arial,sans-serif] text-legal font-bold whitespace-nowrap text-white">
       Donner mon avis (1 minute)
     </span>
   </div>
@@ -46,9 +47,9 @@ const RequestEmail = () => (
 
 /** Time 3: what Camille sent from the collection page. */
 const ReviewCard = () => (
-  <div className="flex w-full flex-col gap-3 border border-hairline-200 bg-white p-4">
+  <div className="flex w-full flex-col gap-3 rounded-card bg-white p-4">
     <Stars size={20} />
-    <p className="font-display text-quote">
+    <p className="text-quote">
       « En 30 jours j&apos;ai arrêté de grignoter le soir. Julie explique sans culpabiliser. »
     </p>
     <span className="text-small text-gray">Camille R., Enseignante</span>
@@ -58,17 +59,17 @@ const ReviewCard = () => (
 const MiniCard = ({ quote, name, isNew = false }: { quote: string; name: string; isNew?: boolean }) => (
   <div
     className={cn(
-      "flex flex-col gap-2 bg-white p-3",
-      isNew ? "border-2 border-carmine" : "border border-hairline-200",
+      "flex flex-col gap-2 rounded-card bg-white p-3",
+      isNew && "border-2 border-ink",
     )}
   >
     {isNew ? <Stars size={12} /> : null}
-    <p className="font-display text-legal">{`« ${quote} »`}</p>
+    <p className="text-legal">{`« ${quote} »`}</p>
     <span className="text-legal font-bold">{name}</span>
   </div>
 );
 
-/** Time 4: validated, Camille's review joins the others on the wall, outlined in carmine. */
+/** Time 4: validated, Camille's review joins the others on the wall, outlined in Encre. */
 const MiniWall = () => (
   <div className="grid w-full grid-cols-2 items-start gap-2">
     <div className="flex flex-col gap-2">
@@ -120,7 +121,7 @@ const DEMO_STEPS: DemoStep[] = [
  */
 export const SaleToWallDemo = () => (
   <div className="relative">
-    <span aria-hidden="true" className="absolute inset-x-[0] top-[20px] hidden h-px bg-ink desktop:block" />
+    <span aria-hidden="true" className="absolute inset-x-[0] top-[19px] hidden h-[2px] bg-ink desktop:block" />
     <ol
       aria-label="D'une vente à un témoignage, en quatre temps"
       className="relative grid gap-8 desktop:grid-cols-4 desktop:grid-rows-[auto_auto_auto]"
@@ -131,12 +132,12 @@ export const SaleToWallDemo = () => (
           className="relative grid grid-cols-[40px_1fr] gap-x-3 desktop:row-span-3 desktop:grid-cols-1 desktop:grid-rows-subgrid desktop:gap-y-4"
         >
           {index === DEMO_STEPS.length - 1 ? null : (
-            <span aria-hidden="true" className="absolute top-[40px] -bottom-8 left-[20px] w-px bg-ink desktop:hidden" />
+            <span aria-hidden="true" className="absolute top-[40px] -bottom-8 left-[19px] w-[2px] bg-ink desktop:hidden" />
           )}
           <div className="contents desktop:flex desktop:items-center desktop:gap-3">
             <span
               aria-hidden="true"
-              className="flex size-[40px] shrink-0 items-center justify-center rounded-full bg-ink font-display text-quote text-white"
+              className="flex size-[40px] shrink-0 items-center justify-center rounded-full bg-ink text-body font-bold text-white"
             >
               {index + 1}
             </span>
@@ -149,7 +150,7 @@ export const SaleToWallDemo = () => (
             <div
               aria-hidden="true"
               className={cn(
-                "flex min-h-[248px] justify-center bg-sky px-4",
+                "flex min-h-[248px] justify-center rounded-panel bg-sky px-4",
                 step.isTopAligned ? "items-start py-4" : "items-center",
               )}
             >

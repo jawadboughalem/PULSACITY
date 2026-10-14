@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DISCREET_BUTTON_CLASSES, FOCUS_RING, SECONDARY_COMPACT_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { FieldError } from "@/components/ui/FieldError";
 import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
@@ -17,6 +17,9 @@ import { StatusBadge } from "./StatusBadge";
 import { useTestimonialDeletion } from "./useTestimonialDeletion";
 import { useTestimonialReview } from "./useTestimonialReview";
 
+/** Charte v2, Tableau: rows on white, padding 18 16, no rule between them; Nuage under the pointer, radius-field ends. */
+const CELL_CLASSES = "pz-couleur py-[18px] pr-4 group-hover/row:bg-cloud";
+
 type TestimonialTableRowProps = {
   testimonial: SpaceTestimonial;
   detailHref: string;
@@ -30,14 +33,14 @@ export const TestimonialTableRow = ({ testimonial, detailHref, isApprovalAllowed
   if (deletion.isDeleted) return null;
 
   return (
-    <tr className={cn("border-b border-hairline-200 align-middle", deletion.isDeleting && "opacity-60")}>
-      <td className="py-6 pr-4">
+    <tr className={cn("group/row align-middle", deletion.isDeleting && "opacity-60")}>
+      <td className={cn(CELL_CLASSES, "rounded-l-field pl-4")}>
         <div className="flex items-center gap-4">
           <SpaceAvatar name={testimonial.authorName} logoUrl={testimonial.authorPhotoUrl} size={44} background="sky" />
           <div className="flex min-w-[0] flex-col">
             <Link
               href={detailHref}
-              className="truncate text-body font-bold hover:underline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
+              className={cn("truncate text-body font-bold decoration-2 underline-offset-4 hover:underline", FOCUS_RING)}
             >
               {testimonial.authorName}
             </Link>
@@ -45,8 +48,8 @@ export const TestimonialTableRow = ({ testimonial, detailHref, isApprovalAllowed
           </div>
         </div>
       </td>
-      <td className="py-6 pr-4">
-        <p className="line-clamp-2 font-display text-body">{getDisplayedBody(testimonial)}</p>
+      <td className={CELL_CLASSES}>
+        <p className="line-clamp-2 text-body">{getDisplayedBody(testimonial)}</p>
         {review.isOverPlanLimit ? <p className="mt-2 text-small text-gray">{PLAN_LIMIT_MESSAGE}</p> : null}
         {error ? (
           <div className="mt-2">
@@ -54,32 +57,32 @@ export const TestimonialTableRow = ({ testimonial, detailHref, isApprovalAllowed
           </div>
         ) : null}
       </td>
-      <td className="py-6 pr-4">
-        <RatingStars rating={testimonial.rating} size={16} />
+      <td className={CELL_CLASSES}>
+        <RatingStars rating={testimonial.rating} size={18} />
       </td>
-      <td className="py-6 pr-4 text-small text-gray">
+      <td className={cn(CELL_CLASSES, "text-small text-gray")}>
         <span className="line-clamp-2">{testimonial.productName ?? "Sans offre"}</span>
       </td>
-      <td className="py-6 pr-4">
+      <td className={CELL_CLASSES}>
         <StatusBadge status={review.status} isJustApproved={review.isJustApproved} />
       </td>
-      <td className="py-6 pr-4">
+      <td className={CELL_CLASSES}>
         <FeatureToggle isFeatured={review.featured} authorName={testimonial.authorName} onToggle={review.toggleFeatured} />
       </td>
-      <td className="py-6">
-        <div className="flex items-center justify-end gap-3">
+      <td className={cn(CELL_CLASSES, "rounded-r-field pr-2")}>
+        <div className="flex items-center justify-end gap-2">
           {review.status !== "approved" ? (
             <button
               type="button"
               onClick={review.approve}
               disabled={review.isOverPlanLimit}
-              className={SECONDARY_BUTTON_CLASSES}
+              className={SECONDARY_COMPACT_BUTTON_CLASSES}
             >
               Valider
             </button>
           ) : null}
           {review.status !== "hidden" ? (
-            <button type="button" onClick={review.askToHide} className={cn(DISCREET_BUTTON_CLASSES, "min-h-[44px]")}>
+            <button type="button" onClick={review.askToHide} className={DISCREET_BUTTON_CLASSES}>
               Masquer
             </button>
           ) : null}

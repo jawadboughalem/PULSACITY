@@ -11,6 +11,7 @@ import {
 } from "@/app/app/(espace)/temoignages/testimonial-actions";
 import {
   DISCREET_BUTTON_CLASSES,
+  FOCUS_RING,
   PRIMARY_BUTTON_CLASSES,
   SECONDARY_BUTTON_CLASSES,
 } from "@/components/ui/button-styles";
@@ -18,7 +19,9 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import { Breadcrumb } from "@/components/space/BackBar";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { FieldError } from "@/components/ui/FieldError";
+import { FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES, TEXTAREA_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
+import { SelectControl } from "@/components/ui/SelectControl";
 import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
@@ -43,10 +46,6 @@ import {
 import { StatusBadge } from "./StatusBadge";
 import { useTestimonialDeletion } from "./useTestimonialDeletion";
 import { useTestimonialReview } from "./useTestimonialReview";
-
-const FOCUS_RING = "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
-
-const LINK_CLASSES = `text-ink underline underline-offset-[3px] hover:text-ink-800 ${FOCUS_RING}`;
 
 const FIELD_ERRORS: Record<TestimonialPresentationField, string> = {
   displayBody: `Le texte affiché doit compter de 1 à ${MAX_TESTIMONIAL_LENGTH} caractères.`,
@@ -173,12 +172,12 @@ export const TestimonialDetailView = ({
     <div className="flex flex-col gap-6 desktop:gap-8">
       <Breadcrumb parentHref={listHref} parentLabel="Témoignages" current={testimonial.authorName} />
 
-      <header className="flex flex-col gap-6 border-b border-ink pb-6 desktop:flex-row desktop:items-start desktop:justify-between desktop:pb-8">
+      <header className="flex flex-col gap-6 desktop:flex-row desktop:items-start desktop:justify-between">
         <div className="flex items-start gap-4 desktop:gap-6">
           <SpaceAvatar name={testimonial.authorName} logoUrl={testimonial.authorPhotoUrl} size={64} background="sky" />
           <div className="flex min-w-[0] flex-col gap-2">
             <div className="flex flex-col items-start gap-2 desktop:flex-row desktop:items-center desktop:gap-4">
-              <h1 className="font-display text-h2 font-semibold desktop:text-h1">{testimonial.authorName}</h1>
+              <h1 className="font-display text-h2 desktop:text-h1">{testimonial.authorName}</h1>
               <StatusBadge status={review.status} isJustApproved={review.isJustApproved} />
             </div>
             <p className="hidden text-body text-gray desktop:block">
@@ -196,7 +195,7 @@ export const TestimonialDetailView = ({
       <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-[minmax(0,1fr)_380px] desktop:gap-12">
         <div className="flex min-w-[0] flex-col gap-8">
           <div className="flex flex-col gap-2">
-            <h2 className="text-small font-bold">Note</h2>
+            <h2 className={FIELD_LABEL_CLASSES}>Note</h2>
             <p className="flex flex-wrap items-center gap-3 text-small text-gray">
               <RatingStars rating={testimonial.rating} size={20} />
               <span className="desktop:hidden">non modifiable</span>
@@ -206,7 +205,7 @@ export const TestimonialDetailView = ({
 
           <form onSubmit={handleSave} className="flex flex-col gap-8">
             <div className="flex flex-col gap-2">
-              <label htmlFor="display-body" className="text-small font-bold">
+              <label htmlFor="display-body" className={FIELD_LABEL_CLASSES}>
                 Texte affiché
               </label>
               <textarea
@@ -216,12 +215,9 @@ export const TestimonialDetailView = ({
                 aria-describedby="display-body-hint"
                 aria-invalid={invalidFields.includes("displayBody") || undefined}
                 onChange={(event) => setPresentation({ ...presentation, displayBody: event.target.value })}
-                className={cn(
-                  "min-h-[176px] w-full rounded-card border border-gray bg-white p-4 font-display text-quote text-ink focus:border-2 focus:border-ink focus:p-[15px] focus:outline-none",
-                  invalidFields.includes("displayBody") && "border-2 border-error p-[15px]",
-                )}
+                className={cn(TEXTAREA_CLASSES, "min-h-[176px]")}
               />
-              <p id="display-body-hint" className="text-small text-gray">
+              <p id="display-body-hint" className={FIELD_HINT_CLASSES}>
                 <span className="desktop:hidden">Corrigez une faute ou raccourcissez, sans changer le sens.</span>
                 <span className="hidden desktop:inline">
                   {`Vous pouvez corriger une faute ou raccourcir, sans changer le sens : le témoignage reste signé par ${testimonial.authorName.replace(/\.$/, "")}.`}
@@ -264,7 +260,7 @@ export const TestimonialDetailView = ({
                 {saveMessage}
               </p>
             </div>
-            <details className="group border-t border-hairline-200 pt-6" open={testimonial.displayBody !== null}>
+            <details className="group" open={testimonial.displayBody !== null}>
               <summary
                 className={cn(
                   "flex min-h-[44px] cursor-pointer list-none items-center gap-3 text-body font-bold [&::-webkit-details-marker]:hidden",
@@ -274,8 +270,8 @@ export const TestimonialDetailView = ({
                 <Icon name="chevronRight" size={20} className="group-open:rotate-90" />
                 {`Texte original ${prefixWithDe(firstName)}`}
               </summary>
-              <div className="mt-4 flex flex-col gap-3 bg-sky p-6">
-                <p className="max-w-quote font-display text-quote whitespace-pre-line">{testimonial.body}</p>
+              <div className="mt-4 flex flex-col gap-3 rounded-panel bg-sky p-6">
+                <p className="max-w-quote text-quote whitespace-pre-line text-ink">{testimonial.body}</p>
                 <p className="text-small text-gray">
                   {`Envoyé le ${formatDateTime(testimonial.createdAt)} · conservé tel quel, non modifiable`}
                 </p>
@@ -294,41 +290,31 @@ export const TestimonialDetailView = ({
           </form>
         </div>
 
-        <aside className="flex flex-col desktop:border-t desktop:border-hairline-200">
-          <section className="flex flex-col gap-3 border-t border-hairline-200 py-6 desktop:border-t-0">
-            <label htmlFor="testimonial-offer" className="text-small font-bold">
+        <aside className="flex flex-col gap-8 rounded-card bg-white p-4 desktop:self-start desktop:p-6">
+          <section className="flex flex-col gap-3">
+            <label htmlFor="testimonial-offer" className={FIELD_LABEL_CLASSES}>
               Offre associée
             </label>
-            <span className="relative flex">
-              <select
-                id="testimonial-offer"
-                value={productId}
-                onChange={(event) => handleProductChange(event.target.value)}
-                className={cn(
-                  "h-[48px] w-full appearance-none rounded-card border border-gray bg-white pr-10 pl-4 text-body text-ink focus:border-2 focus:border-ink focus:pl-[15px] focus:outline-none",
-                )}
-              >
-                <option value={WITHOUT_OFFER}>Sans offre</option>
-                {products.map((product) => (
-                  <option key={product.id} value={product.id}>
-                    {product.name}
-                  </option>
-                ))}
-              </select>
-              <Icon
-                name="chevronDown"
-                size={20}
-                className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
-              />
-            </span>
+            <SelectControl
+              id="testimonial-offer"
+              value={productId}
+              onChange={(event) => handleProductChange(event.target.value)}
+            >
+              <option value={WITHOUT_OFFER}>Sans offre</option>
+              {products.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {product.name}
+                </option>
+              ))}
+            </SelectControl>
             <p aria-live="polite" className={cn("text-small", productState === "failed" ? "text-error" : "text-gray")}>
               {productState === "saved" ? "Offre enregistrée." : null}
               {productState === "failed" ? "L'offre n'a pas été enregistrée. Réessayez." : null}
             </p>
           </section>
 
-          <section className="flex flex-col gap-2 border-t border-hairline-200 py-6">
-            <h2 className="text-small font-bold">Source</h2>
+          <section className="flex flex-col gap-2">
+            <h2 className={FIELD_LABEL_CLASSES}>Source</h2>
             <p className="flex items-center gap-3 text-body">
               <Icon name={source.icon} size={20} className="hidden desktop:block" />
               {source.label}
@@ -341,8 +327,8 @@ export const TestimonialDetailView = ({
             ) : null}
           </section>
 
-          <section className="flex flex-col gap-2 border-t border-hairline-200 py-6">
-            <h2 className="text-small font-bold">Consentement</h2>
+          <section className="flex flex-col gap-2">
+            <h2 className={FIELD_LABEL_CLASSES}>Consentement</h2>
             {testimonial.consentAt ? (
               <>
                 <p className="flex items-center gap-3 text-body text-success">
@@ -362,14 +348,14 @@ export const TestimonialDetailView = ({
                 Aucun consentement enregistré
               </p>
             )}
-            <a href={proofHref} download className={cn(LINK_CLASSES, "self-start pt-2 text-small font-semibold")}>
+            <a href={proofHref} download className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
               <span className="desktop:hidden">Télécharger la preuve</span>
               <span className="hidden desktop:inline">Télécharger la preuve de consentement</span>
             </a>
           </section>
 
-          <section className="hidden flex-col gap-3 border-t border-hairline-200 py-6 desktop:flex">
-            <h2 className="text-small font-bold">Photo</h2>
+          <section className="hidden flex-col gap-3 desktop:flex">
+            <h2 className={FIELD_LABEL_CLASSES}>Photo</h2>
             {testimonial.authorPhotoUrl ? (
               <Image
                 src={testimonial.authorPhotoUrl}
@@ -377,14 +363,14 @@ export const TestimonialDetailView = ({
                 width={140}
                 height={140}
                 unoptimized
-                className="size-[140px] rounded-full border border-hairline-200 object-cover"
+                className="size-[140px] rounded-full object-cover"
               />
             ) : (
               <p className="text-body text-gray">Aucune photo envoyée</p>
             )}
           </section>
 
-          <section className="border-t border-hairline-200 py-6">
+          <section>
             <label className="flex min-h-[44px] cursor-pointer items-start gap-3">
               <Checkbox checked={review.featured} onChange={review.toggleFeatured} />
               <span className="flex flex-col">
@@ -396,12 +382,12 @@ export const TestimonialDetailView = ({
             </label>
           </section>
 
-          <section className="border-t border-hairline-200 pt-6">
+          <section>
             <button
               type="button"
               onClick={deletion.askToDelete}
               disabled={deletion.isDeleting}
-              className={cn(DISCREET_BUTTON_CLASSES, "px-[0] text-error hover:text-error")}
+              className={cn(DISCREET_BUTTON_CLASSES, "text-error hover:text-error-hover")}
             >
               Supprimer définitivement
             </button>

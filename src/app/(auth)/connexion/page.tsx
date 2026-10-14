@@ -17,7 +17,7 @@ const SignInPage = async ({ searchParams }: PageProps<"/connexion">) => {
   return (
     <>
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-h1 font-semibold">Retrouvez votre espace</h1>
+        <h1 className="font-display text-h1">Retrouvez votre espace</h1>
         <p className="text-body text-gray">
           Indiquez l&apos;adresse e-mail de votre espace. Vous recevrez un lien pour entrer, sans mot de passe.
         </p>
@@ -29,7 +29,7 @@ const SignInPage = async ({ searchParams }: PageProps<"/connexion">) => {
         </StatusBanner>
       ) : null}
       <MagicLinkForm />
-      <p className="flex flex-wrap items-center gap-x-1 border-t border-hairline-200 pt-6 text-body">
+      <p className="flex flex-wrap items-center gap-x-1 pt-6 text-body">
         Pas encore d&apos;espace ?
         <Link href="/inscription" className={DISCREET_BUTTON_CLASSES}>
           Créer mon espace gratuit

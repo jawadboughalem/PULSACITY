@@ -1,3 +1,4 @@
+import { OPTIONAL_MARK_CLASSES } from "@/components/ui/field-styles";
 import {
   MAX_AUTHOR_NAME_LENGTH,
   MAX_AUTHOR_TITLE_LENGTH,
@@ -55,7 +56,7 @@ export const TestimonialFormScreen = ({
     <>
       <CollectHeader spaceName={spaceName} logoUrl={logoUrl} />
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-h2 font-semibold">{title}</h1>
+        <h1 className="font-display text-h2">{title}</h1>
         <p className="text-body text-gray">{`${spaceName} lira chaque mot. Comptez moins d'une minute.`}</p>
       </div>
       <form onSubmit={form.handleSubmit} onInput={form.handleInput} noValidate className="flex flex-col gap-6">
@@ -92,7 +93,7 @@ export const TestimonialFormScreen = ({
           id="author-title"
           label={
             <>
-              Votre titre <span className="font-normal text-gray">(facultatif)</span>
+              Votre titre <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
             </>
           }
           placeholder="Enseignante, Lyon"

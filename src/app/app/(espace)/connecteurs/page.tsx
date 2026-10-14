@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 const ROW_CLASSES =
-  "flex flex-col gap-4 border-b border-hairline-200 py-6 desktop:flex-row desktop:items-center desktop:gap-8 desktop:py-8";
+  "flex flex-col gap-4 rounded-card bg-white p-4 desktop:flex-row desktop:items-center desktop:gap-8 desktop:p-6";
 
 const describeProducts = (count: number) => (count > 1 ? `${count} produits à associer` : `${count} produit à associer`);
 
@@ -47,14 +47,14 @@ const ConnectorsPage = async () => {
     <>
       <BackBar href={MORE_SECTION_HREF} label="Plus" />
       <SpacePage className="desktop:max-w-[1128px]">
-        <div className="flex flex-col">
-          <div className="flex flex-col gap-2 border-b border-ink pb-6 desktop:pb-8">
-            <h1 className="font-display text-h1 font-semibold">Connecteurs</h1>
+        <div className="flex flex-col gap-6 desktop:gap-8">
+          <div className="flex flex-col gap-2">
+            <h1 className="font-display text-h1">Connecteurs</h1>
             <p className="max-w-text text-body text-gray">
               Reliez l&apos;outil où vous vendez : chaque achat déclenche une demande d&apos;avis.
             </p>
           </div>
-          <ul className="flex flex-col">
+          <ul className="flex flex-col gap-3">
             {available.map(({ connector, overview }) => {
               const details = [
                 connector.description,
@@ -67,7 +67,7 @@ const ConnectorsPage = async () => {
                     <ConnectorLogo name={connector.name} />
                     <div className="flex min-w-[0] flex-col gap-1">
                       <div className="flex flex-wrap items-center gap-3">
-                        <h2 className="font-display text-quote font-semibold">{connector.name}</h2>
+                        <h2 className="font-display text-h3">{connector.name}</h2>
                         {overview ? <ToneBadge {...CONNECTION_BADGES[overview.status]} /> : null}
                       </div>
                       <p className="text-small text-gray">{details.join(" · ")}</p>
@@ -85,7 +85,7 @@ const ConnectorsPage = async () => {
                   <ConnectorLogo name={connector.name} />
                   <div className="flex min-w-[0] flex-col gap-1">
                     <div className="flex flex-wrap items-center gap-3">
-                      <h2 className="font-display text-quote font-semibold">{connector.name}</h2>
+                      <h2 className="font-display text-h3">{connector.name}</h2>
                       <ToneBadge {...COMING_SOON_BADGE} />
                     </div>
                     <p className="text-small text-gray">

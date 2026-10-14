@@ -34,9 +34,9 @@ const Bar = ({ x, y, width, height = 6 }: { x: number; y: number; width: number;
 
 const Window = ({ children }: { children: ReactNode }) => (
   <svg viewBox="0 0 240 150" aria-hidden="true" focusable="false" className="block h-auto w-full">
-    <rect x={12.5} y={10.5} width={215} height={129} rx={2} className="fill-white stroke-hairline-200" />
+    <rect x={12.5} y={10.5} width={215} height={129} rx={2} className="fill-white stroke-disabled-border" />
     <rect x={13} y={11} width={214} height={16} className="fill-sky" />
-    <line x1={13} y1={27.5} x2={227} y2={27.5} className="stroke-hairline-200" />
+    <line x1={13} y1={27.5} x2={227} y2={27.5} className="stroke-disabled-border" />
     {children}
   </svg>
 );
@@ -76,7 +76,7 @@ const Check = ({ x, y, isChecked }: { x: number; y: number; isChecked: boolean }
 export const OpenWebhooksDrawing = () => (
   <Window>
     <circle cx={213} cy={19} r={5.25} strokeWidth={1.5} className="fill-white stroke-ink" />
-    <line x1={96.5} y1={28} x2={96.5} y2={139} className="stroke-hairline-200" />
+    <line x1={96.5} y1={28} x2={96.5} y2={139} className="stroke-disabled-border" />
     <Label x={20} y={46}>
       Paramètres
     </Label>

@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { suggestPublicTool } from "@/app/(marketing)/integrations/public-tool-actions";
 import { HoneypotField } from "@/components/collect/HoneypotField";
-import { SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { INLINE_LINK_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
@@ -33,7 +33,7 @@ export const PublicSuggestTool = () => {
           onClick={() => setIsOpen(true)}
           aria-expanded={isOpen}
           aria-controls="suggested-tool-form"
-          className="font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink"
+          className={cn(INLINE_LINK_CLASSES, "cursor-pointer")}
         >
           Dites-nous quel outil
         </button>

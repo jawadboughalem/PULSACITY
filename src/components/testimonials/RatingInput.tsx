@@ -1,5 +1,6 @@
 import { StarIcon } from "@/components/collect/StarIcon";
 import { FieldError } from "@/components/ui/FieldError";
+import { FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 import { cn } from "@/lib/cn";
 import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
 
@@ -15,13 +16,13 @@ const labelRating = (rating: number) => `${rating} ${rating === 1 ? "étoile" : 
 /** Five stars as radio buttons. `id` goes to the first star, so an error summary can lead to it. */
 export const RatingInput = ({ id, rating, error, onChange }: RatingInputProps) => (
   <fieldset className="flex min-w-[0] flex-col gap-2" aria-describedby={error ? `${id}-error` : undefined}>
-    <legend className="mb-2 text-small font-bold">Note</legend>
+    <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>Note</legend>
     <div className="flex items-center gap-3">
       <div className={cn("-ml-3 flex rounded-card", error && "border-2 border-error")}>
         {RATINGS.map((value) => (
           <label
             key={value}
-            className="flex size-[44px] cursor-pointer items-center justify-center rounded-card has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink has-disabled:cursor-not-allowed"
+            className="flex size-[44px] cursor-pointer items-center justify-center rounded-full has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink has-disabled:cursor-not-allowed"
           >
             <input
               id={value === RATINGS[0] ? id : undefined}
@@ -37,7 +38,7 @@ export const RatingInput = ({ id, rating, error, onChange }: RatingInputProps) =
           </label>
         ))}
       </div>
-      {rating > 0 ? <span className="text-small text-gray">{`${rating} sur ${RATINGS.length}`}</span> : null}
+      {rating > 0 ? <span className={FIELD_HINT_CLASSES}>{`${rating} sur ${RATINGS.length}`}</span> : null}
     </div>
     {error ? <FieldError id={`${id}-error`} message={error} /> : null}
   </fieldset>

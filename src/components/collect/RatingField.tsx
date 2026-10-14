@@ -1,5 +1,6 @@
 import type { Ref } from "react";
 import { FieldError } from "@/components/ui/FieldError";
+import { FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 import { cn } from "@/lib/cn";
 import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
 import { StarIcon } from "./StarIcon";
@@ -17,18 +18,18 @@ const labelRating = (rating: number) => `${rating} ${rating === 1 ? "étoile" : 
 
 export const RatingField = ({ rating, hasError, firstStarRef, onChange }: RatingFieldProps) => (
   <fieldset className="min-w-[0]" aria-describedby={hasError ? "rating-error" : "rating-hint"}>
-    <legend className="mb-2 text-small font-bold">Votre note</legend>
+    <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>Votre note</legend>
     <div
       className={cn(
-        "flex justify-between rounded-card border-2 bg-white px-2 py-1",
-        hasError ? "border-error" : "border-ink",
+        "pz-couleur flex justify-between rounded-field border-2 bg-white px-2 py-1",
+        hasError ? "border-error" : "border-gray hover:border-ink",
       )}
     >
       {RATINGS.map((value) => (
         <label
           key={value}
           className={cn(
-            "pz-note-etoile flex size-[56px] cursor-pointer items-center justify-center rounded-card has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink",
+            "pz-note-etoile flex size-[56px] cursor-pointer items-center justify-center rounded-full has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink",
             value === rating && "is-choisie",
           )}
         >

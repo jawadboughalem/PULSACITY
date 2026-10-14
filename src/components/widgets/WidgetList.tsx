@@ -4,15 +4,12 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { type CreateWidgetResult, createWidgetFromList } from "@/app/app/(espace)/widgets/widget-actions";
 import { BILLING_HREF, widgetEditorHref, widgetGuideHref } from "@/components/space/space-sections";
-import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { INLINE_LINK_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 import type { WidgetType } from "../../../widget/src/payload";
 import { WidgetThumbnail } from "./WidgetThumbnail";
-
-const LINK_CLASSES =
-  "font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
 export type ListedWidget = {
   id: string;
@@ -60,10 +57,10 @@ const WidgetStatus = ({ widget }: { widget: ListedWidget }) =>
       <Icon name="clock" size={20} className="shrink-0" />
       <span>
         Pas encore collé sur une page ·{" "}
-        <Link href={widgetGuideHref(widget.id)} className={cn(LINK_CLASSES, "desktop:hidden")}>
+        <Link href={widgetGuideHref(widget.id)} className={cn(INLINE_LINK_CLASSES, "desktop:hidden")}>
           Voir comment le coller
         </Link>
-        <Link href={`${widgetEditorHref(widget.id)}#paste-guide`} className={cn(LINK_CLASSES, "hidden desktop:inline")}>
+        <Link href={`${widgetEditorHref(widget.id)}#paste-guide`} className={cn(INLINE_LINK_CLASSES, "hidden desktop:inline")}>
           Voir comment le coller
         </Link>
       </span>
@@ -71,16 +68,16 @@ const WidgetStatus = ({ widget }: { widget: ListedWidget }) =>
   );
 
 const EmptyState = () => (
-  <section aria-labelledby="no-widget" className="flex flex-col gap-4 bg-sky p-6 desktop:p-10">
-    <h2 id="no-widget" className="font-display text-quote font-semibold desktop:text-h2">
+  <section aria-labelledby="no-widget" className="flex flex-col gap-4 rounded-panel bg-sky p-6 desktop:p-10">
+    <h2 id="no-widget" className="font-display text-h2">
       Aucun widget pour l&apos;instant
     </h2>
     <p className="max-w-text text-body">
       Créez-en un, réglez-le, puis collez son code sur votre page de vente. Trois formes au choix :
     </p>
-    <ul className="flex flex-col border-t border-hairline-200">
+    <ul className="flex flex-col gap-3">
       {TYPE_CHOICES.map((choice) => (
-        <li key={choice.type} className="flex items-center gap-4 border-b border-hairline-200 py-3">
+        <li key={choice.type} className="flex items-center gap-4">
           <WidgetThumbnail type={choice.type} className="w-[72px]" isOnPaper />
           <span className="flex flex-col">
             <span className="text-body font-bold">{choice.title}</span>
@@ -98,14 +95,9 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
 
   return (
     <div className="flex flex-col gap-8">
-      <div
-        className={cn(
-          "flex flex-col gap-6 desktop:flex-row desktop:items-start desktop:justify-between",
-          widgets.length > 0 && "border-b border-ink pb-6 desktop:pb-8",
-        )}
-      >
+      <div className="flex flex-col gap-6 desktop:flex-row desktop:items-start desktop:justify-between">
         <div className="flex flex-col gap-2">
-          <h1 className="font-display text-h1 font-semibold">Widgets</h1>
+          <h1 className="font-display text-h1">Widgets</h1>
           <p className="max-w-[600px] text-body text-gray">
             Affichez vos témoignages sur vos pages de vente. Chaque widget a son code, à coller une seule fois.
           </p>
@@ -123,7 +115,7 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
           {createLimit ? (
             <p className="text-small text-gray desktop:text-right">
               {`Le plan ${createLimit.planName} comprend ${createLimit.widgetLimit} widget${createLimit.widgetLimit > 1 ? "s" : ""}. `}
-              <Link href={BILLING_HREF} className={LINK_CLASSES}>
+              <Link href={BILLING_HREF} className={INLINE_LINK_CLASSES}>
                 Voir les plans
               </Link>
             </p>
@@ -135,16 +127,16 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
       {widgets.length === 0 ? (
         <EmptyState />
       ) : (
-        <ul className="-mt-8 flex flex-col">
+        <ul className="flex flex-col gap-3">
           {widgets.map((widget) => (
             <li
               key={widget.id}
-              className="flex flex-col gap-4 border-b border-hairline-200 py-6 desktop:flex-row desktop:items-center desktop:gap-8"
+              className="flex flex-col gap-4 rounded-card bg-white p-4 desktop:flex-row desktop:items-center desktop:gap-8 desktop:p-6"
             >
               <div className="flex min-w-[0] flex-1 items-start gap-4 desktop:gap-8">
                 <WidgetThumbnail type={widget.type} className="w-[72px] desktop:w-[120px]" />
                 <div className="flex min-w-[0] flex-col gap-1">
-                  <h2 className="font-display text-quote font-semibold">{widget.title}</h2>
+                  <h2 className="font-display text-h3">{widget.title}</h2>
                   <p className="text-small text-gray">{widget.description}</p>
                   <WidgetStatus widget={widget} />
                 </div>
@@ -162,14 +154,14 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
       )}
 
       {createLimit && widgets.length > 0 ? (
-        <aside className="flex items-start gap-3 bg-sky p-6 desktop:px-8">
-          <Icon name="info" size={20} className="mt-[2px] shrink-0" />
-          <div className="flex flex-col gap-2">
+        <aside className="flex items-start gap-[14px] rounded-card bg-sky px-5 py-4 text-ink desktop:px-6 desktop:py-5">
+          <Icon name="info" size={24} className="mt-[1px] shrink-0" />
+          <div className="flex min-w-[0] flex-col gap-1">
             <p className="text-body font-bold">Un mur, un carrousel et un badge sur vos pages ?</p>
             <p className="text-small">
               {`Avec le plan Essentiel, à ${createLimit.nextPlanPrice}, vous créez autant de widgets que vous voulez : un pour chaque page de vente.`}
             </p>
-            <Link href={BILLING_HREF} className={cn(LINK_CLASSES, "self-start text-small")}>
+            <Link href={BILLING_HREF} className={cn(INLINE_LINK_CLASSES, "self-start text-small")}>
               Voir le plan Essentiel
             </Link>
           </div>

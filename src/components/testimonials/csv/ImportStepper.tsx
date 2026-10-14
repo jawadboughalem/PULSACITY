@@ -15,7 +15,7 @@ export const ImportStepper = ({ current }: ImportStepperProps) => (
         aria-current={index === current ? "step" : undefined}
         className="flex flex-auto flex-col gap-3 text-small"
       >
-        <span className={cn("h-[4px]", index <= current ? "bg-ink" : "bg-hairline-200")} />
+        <span className={cn("h-[4px] rounded-full", index <= current ? "bg-ink" : "bg-sky")} />
         <span
           className={cn(
             index === current && "font-bold text-ink",

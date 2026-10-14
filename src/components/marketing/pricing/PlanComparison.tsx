@@ -27,7 +27,7 @@ const Value = ({ value }: { value: ComparisonValue }) => {
     case "included":
       return (
         <>
-          <Icon name="check" size={20} className="ml-auto desktop:ml-[0]" />
+          <Icon name="check" size={20} className="ml-auto text-success desktop:ml-[0]" />
           <span className="sr-only">Inclus</span>
         </>
       );
@@ -48,9 +48,12 @@ const Value = ({ value }: { value: ComparisonValue }) => {
   }
 };
 
-/** « Comparer en détail » of maquette 8: one row per feature, grouped; Essentiel's column on Papier. */
+/**
+ * « Comparer en détail » of maquette 8: one row per feature, grouped, without rules (charte v2). Essentiel's column on
+ * Ciel, its parts rounded (radius-field) where the group titles cut it.
+ */
 export const PlanComparison = () => (
-  <table className="w-full border-collapse text-left text-body">
+  <table className="w-full border-separate border-spacing-[0] text-left text-body">
     <caption className="sr-only">Ce que comprend chaque plan</caption>
     <colgroup>
       <col className="desktop:w-[41%]" />
@@ -59,15 +62,15 @@ export const PlanComparison = () => (
       ))}
     </colgroup>
     <thead className="sr-only desktop:not-sr-only">
-      <tr className="border-b border-ink">
+      <tr>
         <td />
         {PLAN_IDS.map((id) => (
           <th
             key={id}
             scope="col"
             className={cn(
-              "px-4 py-4 font-display text-quote font-semibold",
-              id === RECOMMENDED_PLAN && "bg-sky",
+              "px-4 py-4 font-display text-h3",
+              id === RECOMMENDED_PLAN && "rounded-field bg-sky",
               PHONE_VISIBILITY[id],
             )}
           >
@@ -79,7 +82,7 @@ export const PlanComparison = () => (
     <tbody>
       {PLAN_COMPARISON.map((group) => (
         <Fragment key={group.title}>
-          <tr className="border-b border-ink desktop:border-b-[0]">
+          <tr>
             <th
               scope="colgroup"
               colSpan={PLAN_IDS.length + 1}
@@ -88,8 +91,8 @@ export const PlanComparison = () => (
               {group.title}
             </th>
           </tr>
-          {group.rows.map((row) => (
-            <tr key={row.label} className="border-b border-hairline-200">
+          {group.rows.map((row, rowIndex) => (
+            <tr key={row.label}>
               <th scope="row" className="py-3 pr-3 font-normal desktop:py-4 desktop:pr-4">
                 {row.label}
               </th>
@@ -99,6 +102,8 @@ export const PlanComparison = () => (
                   className={cn(
                     "py-3 text-right whitespace-nowrap desktop:px-4 desktop:py-4 desktop:text-left",
                     id === RECOMMENDED_PLAN && "desktop:bg-sky",
+                    id === RECOMMENDED_PLAN && rowIndex === 0 && "desktop:rounded-t-field",
+                    id === RECOMMENDED_PLAN && rowIndex === group.rows.length - 1 && "desktop:rounded-b-field",
                     PHONE_VISIBILITY[id],
                   )}
                 >

@@ -33,7 +33,7 @@ export const CollectionPageContent = async ({ spaceSlug, productSlug, requestTok
   const homeUrl = getAppUrl();
 
   return (
-    <div className="min-h-dvh bg-sky px-page-gutter py-6 text-ink">
+    <div className="min-h-dvh bg-white px-page-gutter py-6 text-ink">
       <main className="mx-auto flex min-h-[calc(100dvh-48px)] w-full max-w-text flex-col gap-6">
         {page.status === "link-inactive" ? (
           <InactiveLinkScreen

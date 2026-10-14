@@ -2,13 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { suggestTool } from "@/app/app/(espace)/connecteurs/connector-actions";
-import { SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { INLINE_LINK_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
-
-const LINK_CLASSES =
-  "font-semibold text-ink underline underline-offset-[3px] hover:text-ink-800 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
 const ERRORS = {
   "invalid-name": "Indiquez le nom de l'outil, en 2 caractères au moins.",
@@ -41,7 +38,7 @@ export const SuggestTool = () => {
     <div className="flex flex-col gap-4">
       <p className="max-w-text text-body text-gray">
         Vous vendez ailleurs ?{" "}
-        <button type="button" onClick={() => setIsOpen(true)} className={LINK_CLASSES} aria-expanded={isOpen}>
+        <button type="button" onClick={() => setIsOpen(true)} className={cn(INLINE_LINK_CLASSES, "cursor-pointer")} aria-expanded={isOpen}>
           Dites-nous quel outil
         </button>
         . En attendant, votre lien de collecte fonctionne partout.
