@@ -25,4 +25,8 @@ describe("account links", () => {
     expect(MORE_SECTIONS.find((section) => section.label === "Réglages")?.href).toBe("/app/reglages");
     expect(ACCOUNT_SECTIONS.find((section) => section.label === "Mon compte")?.href).toBe("/app/compte");
   });
+
+  it("leads Aide et contact to the public help page, open with or without a space (8.4)", () => {
+    expect(ACCOUNT_SECTIONS.find((section) => section.label === "Aide et contact")?.href).toBe("/aide");
+  });
 });

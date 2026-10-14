@@ -1,8 +1,11 @@
+import Link from "next/link";
 import { FinalCall } from "@/components/marketing/FinalCall";
 import { GuideList } from "@/components/marketing/guides/GuideList";
 import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
-import { MarketingSection } from "@/components/marketing/MarketingSection";
+import { MarketingSection, SectionTitle } from "@/components/marketing/MarketingSection";
+import { SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { GUIDES, GUIDE_GROUPS } from "@/content/guides";
+import { cn } from "@/lib/cn";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 export const generateMetadata = () =>
@@ -13,7 +16,7 @@ export const generateMetadata = () =>
     path: MARKETING_PATHS.guides,
   });
 
-/** Maquette 22, « Guides »: the guides in two groups, each beside its title, then the call of m7. */
+/** Maquette 22, « Guides »: the guides by group, each beside its title, where to ask, then the call of m7. */
 const GuidesPage = () => (
   <>
     <MarketingSection labelledBy="guides-title">
@@ -42,6 +45,17 @@ const GuidesPage = () => (
             <GuideList guides={GUIDES.filter((guide) => guide.group === group.id)} />
           </section>
         ))}
+      </div>
+    </MarketingSection>
+    <MarketingSection labelledBy="guides-question" tone="paper">
+      <div className="flex flex-col items-start gap-4">
+        <SectionTitle id="guides-question">Une question sans réponse ici ?</SectionTitle>
+        <p className="max-w-text text-body text-gray">
+          Écrivez-nous. Si c&apos;est une installation, nous la faisons avec vous, en partage d&apos;écran.
+        </p>
+        <Link href={MARKETING_PATHS.contact} className={cn(SECONDARY_BUTTON_CLASSES, "mt-2 w-full desktop:w-auto")}>
+          Nous écrire
+        </Link>
       </div>
     </MarketingSection>
     <FinalCall

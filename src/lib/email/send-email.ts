@@ -8,6 +8,9 @@ import { formatSender } from "./format-sender";
 const ACCOUNT_SENDER_NAME = "PULSACITY";
 const ACCOUNT_SENDER_LOCAL_PART = "notifications";
 
+/** « Écrivez-nous » (/aide): the founder's box tells these messages apart from PULSACITY's own e-mails by this name. */
+const SUPPORT_SENDER_NAME = "Aide et contact PULSACITY";
+
 /** The technical address of the e-mails sent on behalf of a creator: the answers go to the creator. */
 const CUSTOMER_SENDER_LOCAL_PART = "avis";
 
@@ -15,6 +18,14 @@ export type AccountEmail = {
   to: string;
   subject: string;
   body: ReactElement;
+};
+
+/** A message written on /aide, to PULSACITY's one address: answering it writes to its sender. */
+export type SupportEmail = {
+  to: string;
+  subject: string;
+  body: ReactElement;
+  replyTo: string;
 };
 
 /** An e-mail to a creator's customer: in the creator's name, with a way out in every message. */
@@ -70,6 +81,9 @@ export const buildCustomerSenderName = (spaceName: string): string => `${spaceNa
 
 export const sendAccountEmail = ({ to, subject, body }: AccountEmail): Promise<void> =>
   deliver({ senderName: ACCOUNT_SENDER_NAME, senderLocalPart: ACCOUNT_SENDER_LOCAL_PART, to, subject, body });
+
+export const sendSupportEmail = ({ to, subject, body, replyTo }: SupportEmail): Promise<void> =>
+  deliver({ senderName: SUPPORT_SENDER_NAME, senderLocalPart: ACCOUNT_SENDER_LOCAL_PART, to, subject, body, replyTo });
 
 export const sendCustomerEmail = ({
   to,

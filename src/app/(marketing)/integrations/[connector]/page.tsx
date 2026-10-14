@@ -17,6 +17,7 @@ import {
   LARGE_BUTTON_CLASSES,
   TEXT_LINK_CLASSES,
 } from "@/components/marketing/marketing-styles";
+import { INLINE_LINK_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import {
   type AvailableIntegration,
@@ -136,6 +137,13 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
             {integration.installTitle ?? `Installer la connexion ${integration.name}, pas à pas`}
           </SectionTitle>
           <p className="text-body text-gray">{integration.installIntro}</p>
+          <p className="rounded-card bg-sky p-4 text-small">
+            {"Un souci à une étape ? "}
+            <Link href={MARKETING_PATHS.contact} className={INLINE_LINK_CLASSES}>
+              Écrivez-nous
+            </Link>
+            {" : nous faisons la connexion avec vous, en partage d'écran."}
+          </p>
         </div>
         <InstallGuide integration={integration} />
       </div>

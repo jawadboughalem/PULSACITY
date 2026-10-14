@@ -25,6 +25,7 @@ const ANCHOR_SOURCES: Record<string, string> = {
   "/mentions-legales": "src/content/legal/mentions-legales.mdx",
   "/confidentialite": "src/content/legal/confidentialite.mdx",
   "/cgu": "src/content/legal/cgu.mdx",
+  "/aide": "src/components/marketing/help/ContactForm.tsx",
 };
 
 const assertLinkWorks = (link: string) => {

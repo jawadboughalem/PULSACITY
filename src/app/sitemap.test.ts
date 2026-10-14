@@ -10,12 +10,20 @@ afterEach(() => {
 const listPaths = () => sitemap().map((entry) => entry.url.replace("https://pulsacity.com", ""));
 
 describe("sitemap", () => {
-  it("lists the public pages on pulsacity.com, every guide and every connector", () => {
+  it("lists the public pages on pulsacity.com, every guide, every connector and the help", () => {
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://pulsacity.com");
     vi.stubEnv("LEGAL_VALIDATED", "false");
     const paths = listPaths();
     expect(paths).toEqual(
-      expect.arrayContaining(["", "/tarifs", "/integrations", "/integrations/systeme-io", "/integrations/stripe", "/guides"]),
+      expect.arrayContaining([
+        "",
+        "/tarifs",
+        "/integrations",
+        "/integrations/systeme-io",
+        "/integrations/stripe",
+        "/guides",
+        "/aide",
+      ]),
     );
     for (const guide of GUIDES) expect(paths).toContain(`/guides/${guide.slug}`);
   });
