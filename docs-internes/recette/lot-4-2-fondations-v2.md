@@ -4,6 +4,7 @@ Dans l'ordre :
 - Prompt 1 : l'espace de démonstration de recette, rempli depuis la branche de la PR.
 - Prompts 2 et 3 : recette sur l'aperçu, sur ordinateur (le site, puis l'espace).
 - Prompt 4 : recette à 360 px.
+- Prompt 4 bis : contre-recette des corrections (après le passage du 14 octobre).
 - Prompt 5 : vérification sur pulsacity.com, après la fusion.
 
 Ce lot ne touche à aucun service : aucune action à faire de votre côté sur Vercel, Supabase, Stripe ou ailleurs. Aucune migration, aucune variable.
@@ -148,16 +149,73 @@ Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu
 
 ---
 
+## Résultats du 14 octobre (prompts 1 à 4)
+
+- Prompt 1 : l'espace « Julie Nutrition » est rempli depuis la branche de la PR (exécution n° 10, 59 s), plan Gratuit.
+- Prompt 2 : 13 points OK. Écarts : 9, 13, 15, 16, 17.
+- Prompt 3 : 13 points OK. Écarts : 10, 11, 14, 16, et Réglages en 404.
+- Prompt 4 : tout OK sauf 8 et 9 ; rien ne dépasse à 360 px.
+
+Corrigé (commit « Fix the recette findings of lot 4.2 on its preview ») :
+- 3.10 : le menu « … » d'une ligne flotte au-dessus du tableau (plus de barre de défilement dans le tableau), s'ouvre vers le haut près du bas de l'écran et se ferme au défilement. Ses options tiennent sur une ligne : le menu prend la largeur de la plus longue.
+- 3.10 : à l'ouverture d'une fenêtre, la place de la barre de défilement de la page est gardée : la page ne bouge plus.
+- 3.11 : après « Supprimer définitivement » puis « Annuler » ou Échap, le focus revient au « … ».
+- 3.14 : la case « Cette personne a acheté… » en erreur garde son bord rouge, même sous la souris (le message d'erreur faisait descendre la case sous le pointeur, et le survol la repassait en bleu marine). Même correction sur la case du consentement de la page de collecte.
+- 3.14 : « Demander un avis » défile à l'intérieur de la fenêtre, entre ses coins arrondis : la barre de défilement ne les coupe plus.
+- 2.13 : au survol d'une carte d'outil (et d'une carte de guide), la carte garde son fond ; le nom de l'outil passe en Encre 800, souligné (survol des liens de la charte). Le badge « Bientôt » reste distinct.
+- 2.16 : plus d'espace entre « ? » et le lien « Créer mon espace gratuit » (et « Me connecter ») : l'anneau du focus ne touche plus le texte.
+- 2.17 : l'image de partage de l'accueil ne répète plus la promesse : son titre est déjà la promesse (logo et titre seulement). Les autres pages gardent titre et promesse.
+- 4.9 : dans Demandes, « e-mail » ne se coupe plus au trait d'union (Figtree n'a pas de trait d'union insécable : le mot est gardé sur une ligne).
+
+Conforme ou prévu, sans changement :
+- 2.9 : « Choisir Essentiel » fait 56 px et les deux autres 52 px : la charte donne 56 au bouton principal et 52 au secondaire. Les zones de clic sont alignées.
+- 2.13 : « En attendant : avec Zapier » (Podia) et « avec le connecteur universel » (Zapier, Make, n8n) : textes décidés au lot 4.1 b (`decisions/connecteurs.md`), qui priment sur la phrase générique de la charte.
+- 2.15 : la vérification de l'adresse se fait sur le serveur (action du formulaire, depuis le lot 2) : la requête part, le serveur la refuse, aucun e-mail ne part. Logique inchangée dans un lot de charte.
+- 2.17 : aucun carmin sur le site : OK.
+- 3.16 : « Carmin · #A3243B » dans « Couleur d'accent » de l'éditeur de widget : c'est une couleur proposée pour le widget sur la page de vente du créateur, pas une couleur de PULSACITY. Les couleurs du widget changent au lot 4.8.
+- 3.12 et 4.9 : « Statut » de Demandes en liste déroulante au téléphone, et pas de « … » ni de « Masquer » sur les cartes validées au téléphone : mise en page v1 des écrans, gardée jusqu'à leur maquette v2 (lots 4.4 et 4.6).
+- Réglages en 404 : la page n'existe pas encore, elle vient au lot 4.3.
+- 2 : les polices d'Intégrations en Arial une fois, au premier chargement, puis correctes : pas reproduit dans le conteneur (polices auto-hébergées, préchargées). Le plus probable : la protection de l'aperçu a répondu à la demande de la police avant que la session Vercel soit posée. Le prompt 5 vérifie le premier chargement en production, sans protection.
+
+---
+
+## 4 bis. Contre-recette des corrections, sur l'aperçu
+
+Avant ce prompt : attendez que Vercel ait reconstruit l'aperçu (le commit « Fix the recette findings of lot 4.2 on its preview » est le dernier de la PR #35 et l'aperçu est « Ready »), ouvrez-le, connectez-vous avec l'adresse du prompt 1, fenêtre en grand.
+
+```
+Tu fais la contre-recette de corrections sur l'aperçu https://pulsacity-git-claude-lot-4-2-fo-b3173d-jawadboughalems-projects.vercel.app de PULSACITY. Je suis connecté. Tu ne supprimes rien, tu n'envoies aucune demande ni aucun formulaire, sauf quand le point le dit. Commence par recharger chaque page sans le cache (Ctrl+Maj+R, ou Cmd+Maj+R sur Mac). Pour chaque point, note « OK » ou décris ce que tu vois.
+
+Fenêtre en grand (1440 px environ) :
+1. https://pulsacity-git-claude-lot-4-2-fo-b3173d-jawadboughalems-projects.vercel.app/integrations : survole la carte « Podia ». La carte garde son fond bleu très pâle ; le nom « Podia » se souligne. Le badge « Bientôt » reste bien visible sur sa pilule bleu clair.
+2. https://pulsacity-git-claude-lot-4-2-fo-b3173d-jawadboughalems-projects.vercel.app/connexion : appuie sur Tab jusqu'au lien « Créer mon espace gratuit », en bas. L'anneau du focus ne touche pas le « ? » qui précède. Même chose sur https://pulsacity-git-claude-lot-4-2-fo-b3173d-jawadboughalems-projects.vercel.app/inscription avec « Me connecter ».
+3. Sur https://pulsacity-git-claude-lot-4-2-fo-b3173d-jawadboughalems-projects.vercel.app/, lance dans la console : document.querySelector('meta[property="og:image"]').content, puis ouvre l'adresse obtenue. L'image montre le logo et le titre « Vos ventes deviennent des témoignages, automatiquement. », sans la même phrase répétée en gris dessous. Puis fais de même sur https://pulsacity-git-claude-lot-4-2-fo-b3173d-jawadboughalems-projects.vercel.app/tarifs : l'image montre le titre de la page et la promesse en gris dessous.
+4. https://pulsacity-git-claude-lot-4-2-fo-b3173d-jawadboughalems-projects.vercel.app/app/temoignages : fais défiler jusqu'à la dernière ligne (Arthur B.), puis clique son « … ». Le menu s'ouvre au-dessus du tableau, sans faire apparaître de barre de défilement dans le tableau ; « Supprimer définitivement » tient sur une ligne. Fais défiler la page de quelques crans : le menu se ferme.
+5. Fais défiler pour que la ligne d'Arthur B. soit tout en bas de la fenêtre, puis rouvre son « … » : le menu s'ouvre vers le haut, en entier dans la fenêtre.
+6. Clique « Supprimer définitivement » : la fenêtre s'ouvre, et la page derrière ne se décale pas vers la droite. Clique « Annuler » : rien n'est supprimé. Lance dans la console : document.activeElement.getAttribute("aria-label"). Le résultat commence par « Autres actions pour l'avis de Arthur B. ».
+7. https://pulsacity-git-claude-lot-4-2-fo-b3173d-jawadboughalems-projects.vercel.app/app/demandes : clique « Demander un avis », puis « Envoyer la demande » sans rien remplir. La case « Cette personne a acheté cette offre auprès de moi. » a un bord rouge ; pose la souris dessus sans cliquer : le bord reste rouge.
+8. Toujours dans la fenêtre : zoome la page à 150 % (Ctrl et +), pour que la fenêtre soit plus haute que l'écran. La barre de défilement est à l'intérieur de la fenêtre, entre ses coins arrondis ; les quatre coins restent ronds. Remets le zoom à 100 % (Ctrl+0), puis ferme la fenêtre avec « Annuler ».
+
+À 360 px de large (outils de développement, mode appareil, largeur 360) :
+9. https://pulsacity-git-claude-lot-4-2-fo-b3173d-jawadboughalems-projects.vercel.app/app/demandes : sur la carte de Bruno P. (« Non envoyée… Vérifiez l'adresse e-mail. »), « e-mail » est en entier sur une ligne, jamais coupé en « e- » et « mail ».
+10. https://pulsacity-git-claude-lot-4-2-fo-b3173d-jawadboughalems-projects.vercel.app/app/temoignages : rien ne dépasse à droite (document.documentElement.scrollWidth vaut 360).
+
+Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu, sans adresse e-mail.
+```
+
+---
+
 ## 5. Vérification sur pulsacity.com, après la fusion
 
 ```
 Tu vérifies la nouvelle charte graphique de PULSACITY en production, sur https://pulsacity.com. Tu ne crées aucun compte et tu n'envoies aucun formulaire. Pour chaque point, note « OK » ou décris ce que tu vois.
 
-1. https://pulsacity.com : le nouveau logo (fusée bleu marine, étoile corail) dans l'en-tête et l'onglet du navigateur ; le bouton principal jaune ; les titres en grotesque très gras. Aucun rouge carmin.
-2. https://pulsacity.com/tarifs : les trois colonnes arrondies, Essentiel en bleu clair ; la bascule Mensuel / Annuel en pilule.
-3. Dans la console, sur https://pulsacity.com : performance.getEntriesByType("resource").filter(e => e.name.includes("fonts.g")).length doit valoir 0 (aucune police chargée chez Google).
-4. Lance PageSpeed Insights (https://pagespeed.web.dev) sur https://pulsacity.com puis sur https://pulsacity.com/tarifs, en mobile. Note la performance, l'accessibilité, les bonnes pratiques et le SEO de chaque page.
-5. Ouvre https://www.opengraph.xyz/url/https%3A%2F%2Fpulsacity.com%2Ftarifs : l'aperçu montre le nouveau logo et le titre en grotesque très gras.
+1. Ouvre https://pulsacity.com/integrations dans une fenêtre de navigation privée (premier chargement, sans cache) : dès l'affichage, les titres sont en grotesque très gras et le texte en Figtree, pas en Arial. Lance dans la console : [...document.fonts].filter(f => f.family === "bricolage" || f.family === "figtree").map(f => f.family + " " + f.status).join(", "). Le résultat vaut « bricolage loaded, figtree loaded ». Ferme la fenêtre privée.
+2. https://pulsacity.com : le nouveau logo (fusée bleu marine, étoile corail) dans l'en-tête et l'onglet du navigateur ; le bouton principal jaune ; les titres en grotesque très gras. Aucun rouge carmin.
+3. https://pulsacity.com/tarifs : les trois colonnes arrondies, Essentiel en bleu clair ; la bascule Mensuel / Annuel en pilule.
+4. Dans la console, sur https://pulsacity.com : performance.getEntriesByType("resource").filter(e => e.name.includes("fonts.g")).length doit valoir 0 (aucune police chargée chez Google).
+5. Lance PageSpeed Insights (https://pagespeed.web.dev) sur https://pulsacity.com puis sur https://pulsacity.com/tarifs, en mobile. Note la performance, l'accessibilité, les bonnes pratiques et le SEO de chaque page.
+6. Ouvre https://www.opengraph.xyz/url/https%3A%2F%2Fpulsacity.com%2Ftarifs : l'aperçu montre le nouveau logo et le titre en grotesque très gras. Puis https://www.opengraph.xyz/url/https%3A%2F%2Fpulsacity.com : le logo et la promesse, une seule fois.
 
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu, et les notes de PageSpeed.
 ```
