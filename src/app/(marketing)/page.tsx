@@ -49,7 +49,8 @@ const HomePage = () => (
 
     <MarketingSection labelledBy="hero-title">
       <div className="flex flex-col gap-6 desktop:max-w-[720px]">
-        <h1 id="hero-title" className="font-display text-display">
+        {/* « automatiquement. » is wider than a 360 px phone in display: the phone takes h1, the computer display. */}
+        <h1 id="hero-title" className="font-display text-h1 desktop:text-display">
           Vos ventes deviennent des témoignages, automatiquement.
         </h1>
         <p className="text-lead desktop:max-w-[660px]">
@@ -103,7 +104,7 @@ const HomePage = () => (
     </MarketingSection>
 
     <MarketingSection labelledBy="connectors">
-      <div className="grid gap-8 desktop:grid-cols-[448px_1fr]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 desktop:grid-cols-[448px_minmax(0,1fr)]">
         <div className="flex flex-col gap-4">
           <SectionTitle id="connectors">Connecteurs</SectionTitle>
           <p className="text-body text-gray">

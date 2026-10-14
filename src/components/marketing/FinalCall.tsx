@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cn } from "@/lib/cn";
 import { MARKETING_PATHS } from "./marketing-paths";
 import { MarketingSection } from "./MarketingSection";
 import { LARGE_BUTTON_CLASSES } from "./marketing-styles";
@@ -15,7 +16,7 @@ export const FinalCall = ({ title, text }: FinalCallProps) => (
       {title}
     </h2>
     <p className="mt-8 text-body text-gray">{text}</p>
-    <Link href={MARKETING_PATHS.signUp} className={`${LARGE_BUTTON_CLASSES} mt-8 desktop:mb-14`}>
+    <Link href={MARKETING_PATHS.signUp} className={cn(LARGE_BUTTON_CLASSES, "mt-8 desktop:mb-14")}>
       Créer mon espace gratuit
     </Link>
   </MarketingSection>

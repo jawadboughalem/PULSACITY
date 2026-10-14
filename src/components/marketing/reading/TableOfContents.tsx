@@ -50,7 +50,7 @@ type TableOfContentsProps = {
   headings: TextHeading[];
 };
 
-const LINK_CLASSES = `pz-couleur block py-1 text-small decoration-2 underline-offset-4 hover:underline ${FOCUS_RING}`;
+const LINK_CLASSES = cn("pz-couleur block py-1 text-small decoration-2 underline-offset-4 hover:underline", FOCUS_RING);
 
 /**
  * m22 and m23 on a computer: the titles of the text beside it, the one being read marked on its left by 3 px of Encre,

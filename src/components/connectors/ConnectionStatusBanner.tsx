@@ -1,7 +1,7 @@
 "use client";
 
 import { useCopyLink } from "@/components/space/useCopyLink";
-import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { StatusBanner } from "@/components/ui/StatusBanner";
 import { cn } from "@/lib/cn";
@@ -76,12 +76,13 @@ export const ConnectionStatusBanner = ({
               {`Copiez la clé secrète ci-dessous, puis collez-la à nouveau dans ${connectorName}, dans le webhook ${quoteInFrench("PULSACITY")}.`}
             </p>
           </div>
-          <div className="flex flex-col gap-3 desktop:flex-row">
-            <button type="button" onClick={handleCopy} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
+          {/* Charte v2: an error banner's action is a secondary button; the page keeps its one main button. */}
+          <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center">
+            <button type="button" onClick={handleCopy} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
               <Icon name={isCopied ? "valid" : "copy"} size={20} />
               {isCopied ? "Clé secrète copiée" : "Copier la clé secrète"}
             </button>
-            <a href={`#${stepTwoId}`} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
+            <a href={`#${stepTwoId}`} className={cn(DISCREET_BUTTON_CLASSES, "self-start desktop:self-auto")}>
               Revoir l&apos;étape 2
             </a>
           </div>

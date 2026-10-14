@@ -65,8 +65,11 @@ export const IntegrationRows = ({ isDetailed = false, integrations = INTEGRATION
           ) : (
             <>
               <ConnectorLogo name={integration.name} />
-              <span className="min-w-[0] flex-1 font-display text-h3">{integration.name}</span>
-              <IntegrationBadge integration={integration} />
+              {/* On a narrow phone, the state goes under the name rather than out of the card. */}
+              <span className="flex min-w-[0] flex-1 flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                <span className="min-w-[0] font-display text-h3">{integration.name}</span>
+                <IntegrationBadge integration={integration} />
+              </span>
             </>
           )}
         </Link>

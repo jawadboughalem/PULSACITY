@@ -39,7 +39,7 @@ const RequestEmail = () => (
     <span className="font-[Helvetica,Arial,sans-serif] text-legal">
       Bonjour Camille, merci d&apos;avoir suivi le programme. Une note et quelques mots suffisent.
     </span>
-    <span className="mt-1 inline-flex h-[36px] items-center self-start rounded-full bg-ink px-4 font-[Helvetica,Arial,sans-serif] text-legal font-bold whitespace-nowrap text-white">
+    <span className="mt-1 inline-flex h-[36px] items-center self-start rounded-full bg-ink px-4 text-legal font-bold whitespace-nowrap text-white">
       Donner mon avis (1 minute)
     </span>
   </div>

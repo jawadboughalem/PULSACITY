@@ -26,6 +26,7 @@ import {
   findIntegration,
 } from "@/content/integrations";
 import { MEANWHILE } from "@/content/integrations/meanwhile";
+import { cn } from "@/lib/cn";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { buildFaqPageData } from "@/lib/seo/structured-data";
 
@@ -179,7 +180,7 @@ const UpcomingPage = ({ integration }: { integration: UpcomingIntegration }) => 
       tone="paper"
     >
       <MeanwhileList items={[describeMeanwhile(integration).item, ...MEANWHILE]} layout="rows" />
-      <Link href={MARKETING_PATHS.signUp} className={`${LARGE_BUTTON_CLASSES} mt-8 desktop:mt-8`}>
+      <Link href={MARKETING_PATHS.signUp} className={cn(LARGE_BUTTON_CLASSES, "mt-8")}>
         Créer mon espace gratuit
       </Link>
     </SplitSection>

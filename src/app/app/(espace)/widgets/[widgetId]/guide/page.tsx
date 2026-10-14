@@ -30,7 +30,7 @@ const WidgetGuidePage = async ({ params }: PageProps<"/app/widgets/[widgetId]/gu
       <BackBar href={widgetEditorHref(widget.id)} label="Modifier le widget" />
       <SpacePage className="desktop:max-w-[720px]">
         <div className="flex flex-col gap-2">
-          <h1 className="font-display text-h1 font-semibold">Coller dans Systeme.io</h1>
+          <h1 className="font-display text-h1">Coller dans Systeme.io</h1>
           <p className="text-body text-gray">{`${PASTE_GUIDE_SUMMARY}. Plus simple depuis un ordinateur.`}</p>
         </div>
         <PasteGuideSteps layout="column" />

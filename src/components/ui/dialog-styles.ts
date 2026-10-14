@@ -12,7 +12,7 @@ export const DIALOG_CLASSES =
 export const DIALOG_TITLE_CLASSES = "font-display text-h3";
 
 /** Its actions: on a computer, on the right, « Annuler » first; on a phone, full width, the action on top. */
-export const DIALOG_ACTIONS_CLASSES = "flex flex-col-reverse gap-3 desktop:flex-row desktop:justify-end";
+export const DIALOG_ACTIONS_CLASSES = "flex flex-col-reverse gap-3 desktop:flex-row desktop:items-center desktop:justify-end";
 
 /** A click on the veil, outside the window itself, closes it. */
 export const isClickOnVeil = (event: MouseEvent<HTMLDialogElement>) => {
