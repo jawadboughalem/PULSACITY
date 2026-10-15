@@ -2,7 +2,7 @@
 
 Le compte Stripe est ouvert (2.8 a, le 15 octobre 2026), en particulier, avec contact@pulsacity.com. Rien n'y est encore réglé. Ce fichier tient, dans l'ordre, tous les prompts Claude in Chrome du lot (groupe d'onglets « PULSACITY »).
 
-Première phase, Stripe en mode test : prompts 1 à 5. Ils n'attendent pas le code : lancez-les dès maintenant, dans l'ordre. Faits le 15 octobre (comptes rendus sous chaque prompt), sauf le 3 bis.
+Première phase, Stripe en mode test : prompts 1 à 5. Ils n'attendent pas le code : lancez-les dès maintenant, dans l'ordre. Faits le 15 octobre, 3 bis compris (comptes rendus sous chaque prompt).
 - Prompt 1 : le compte (image de marque, informations publiques, liens légaux, reçus, factures). C'est le 2.8 b, complété. Fait le 15 octobre, compte rendu sous le prompt.
 - Prompt 1 bis : le bouton de la page de paiement, remis en Soleil.
 - Prompt 2 : les produits et les huit prix. Réécrit le 15 octobre, après un premier essai arrêté avant la création.
@@ -219,6 +219,8 @@ Vérification : recharge la page. Le lien des e-mails est la page hébergée par
 Compte rendu à me donner : le réglage du lien relu après rechargement, le texte exact de l'avertissement de Stripe, l'état des trois e-mails. Ni clé, ni identifiant.
 ```
 
+Compte rendu du 15 octobre : « Lien vers une page hébergée par Stripe » coché ; « Utiliser un lien personnalisé » décoché. Avertissement accepté (« Confirmer le changement ») : « Vous passez d'une configuration de liens mixte à une méthode de mise à jour unique des paiements. Ce changement s'appliquera à toutes les communications des clients et est irréversible. » E-mails de carte refusée, de carte qui expire et de confirmation 3D Secure (rappels à 3, 5 et 7 jours) activés ; Smart Retries inchangées. L'aperçu de l'e-mail de carte refusée mène à une page de Stripe.
+
 ## 4. Stripe — le code des bêta-testeurs
 
 Les bêta-testeurs ont le plan Essentiel offert 3 mois, carte demandée, puis le prix de lancement (`decisions/tarifs.md`, arbitrage n° 3). Le code ne marche que sur Essentiel en mensuel : la page de paiement annuelle ne propose pas de code, pour qu'il n'offre jamais une année entière.
@@ -335,6 +337,8 @@ Vérification :
 Compte rendu à me donner : la version d'API choisie, le format des événements, le nombre d'événements, le réglage des renouvellements à venir (trouvé ou non, valeur), les deux variables vues en Preview, l'heure du déploiement « Ready ». Jamais un secret, ni l'adresse complète avec son secret, ni un identifiant (we_, whsec_, acct_).
 ```
 
+Compte rendu du 15 octobre : destination « PULSACITY recette (aperçu de la PR 40) » active, événements de « Votre compte », version 2026-09-30.endive, format « Instantané », 20 événements, secret de Vercel à la fin de l'adresse. Renouvellements à venir : déjà à 7 jours ; rappels aux clients désactivés. STRIPE_SECRET_KEY et STRIPE_WEBHOOK_SECRET en Preview seulement, de type secret. Redéploiement de la branche « Ready » vers 20 h 56 (heure de Paris), construit après l'ajout des deux variables.
+
 ## 7. GitHub — l'espace de recette, depuis la branche de la PR
 
 ```
@@ -355,6 +359,8 @@ Ne touche surtout pas aux autres workflows, ni à la branche main.
 
 Compte rendu à me donner : la migration de recette (couleur, date), puis pour chaque exécution la branche, le plan et la couleur. Pas les adresses e-mail.
 ```
+
+Compte rendu du 15 octobre : migration de recette verte (n° 40, 20 h 21, branche de la PR) ; « Recette demo space » n° 14 (compte A) et n° 15 (compte B), branche de la PR, plan free, verts.
 
 Si « Recette demo space » échoue sur « tenant/user not found », réveillez d'abord la base de recette (prompt 0 bis de `lot-4-1-decisions.md`).
 
@@ -385,11 +391,12 @@ Ne touche à rien d'autre que ce qui est demandé. N'utilise jamais une vraie ca
 2. Toujours en Mensuel, clique sur « Choisir Essentiel ». La page de paiement de Stripe (mode test) s'ouvre : « PULSACITY Essentiel », 9,99 € par mois, la carte comme seul moyen de paiement (Apple Pay ou Google Pay peuvent s'y ajouter, ce sont des cartes), un lien « Ajouter un code promotionnel », et sous le bouton « En vous abonnant, vous acceptez les conditions générales de vente de PULSACITY. » avec un lien vers /cgv (pas de case à cocher en mode test : elle arrive en mode réel). Relève tout ce qui y est écrit en français ou non.
 3. Paie avec 4242 4242 4242 4242, 12/34, 123, nom « Julie Test », pays France, puis « S'abonner ».
 4. De retour sur /app/facturation (attends jusqu'à 30 secondes, la page se met à jour seule) : bandeau vert « Bienvenue dans Essentiel. » ; « Plan Essentiel » avec le badge « Prix de lancement » ; 9,99 € par mois ; Paiement : Mensuel ; Prochaine échéance : la date dans un mois · 9,99 € ; Votre prix : « Prix de lancement : vous le gardez à vie, tant que votre abonnement continue. » ; bouton « Passer à l'annuel » et « 99 € par an : 2 mois offerts. » ; « Changer de plan » : « Votre plan » sur Essentiel, « Votre plan actuel » ; « Paiement et factures » avec « Gérer mon paiement et mes factures ».
+   Puis, dans un autre onglet : Stripe (bac à sable « PULSACITY ») › Développeurs › « Webhooks » (ou Workbench › « Webhooks ») › la destination « PULSACITY recette (aperçu de la PR 40) » › ses livraisons (« Event deliveries »). Les événements des dernières minutes (checkout.session.completed, customer.subscription.created, invoice.paid…) sont livrés, réponse 200. Si une livraison a une autre réponse (401, 400, 500…), relève son code et le début du message, sans aucun secret, et arrête-toi là : la suite en dépend. Reviens ensuite à l'aperçu.
 5. Le menu du compte (en bas à gauche) dit « Plan Essentiel ». Dans Widgets, « Créer un widget » est actif : clique dessus ; dans l'éditeur qui s'ouvre, choisis le type « Carrousel », puis reviens à la liste. Recommence avec le type « Badge ». Il y a trois widgets en tout : le mur, le carrousel, le badge.
 6. Retour à /app/facturation. Clique sur « Passer à l'annuel » : une fenêtre « Passer à l'annuel le … ? » dit « Jusque-là, rien ne change. Ensuite, 99 € par an. ». Confirme. Bandeau « Le …, votre plan Essentiel passe au paiement annuel. » et dans la carte « Jusqu'au … » / « À partir du … ». Clique sur « Annuler ce changement » : le bandeau disparaît.
 7. Dans « Changer de plan », en Mensuel, clique sur « Passer au plan Pro » : la fenêtre dit « Vous payez aujourd'hui … : la différence jusqu'au …, au prorata. Ensuite, 19,99 € par mois. » Relève le montant. Confirme. Bandeau « Bienvenue dans Pro. » ; « Plan Pro » 19,99 € ; une ligne « Mention « Propulsé par PULSACITY » ».
 8. Clique sur « Passer au plan Essentiel » : fenêtre « Passer au plan Essentiel le … ? ». Confirme. Bandeau « Le …, votre espace passe du plan Pro au plan Essentiel. » avec « Jusque-là, vous gardez le Pro. Ensuite, la mention « Propulsé par PULSACITY » revient sous vos widgets. » ; dans la carte, « Jusqu'au … : Plan Pro · 19,99 € par mois » et « À partir du … : Plan Essentiel · 9,99 € par mois, prix de lancement gardé à vie ».
-9. Clique sur « Gérer mon paiement et mes factures » : la page de Stripe montre la carte, les factures (Essentiel, puis le prorata de Pro), la résiliation, et AUCUN changement de plan. Ouvre une facture en PDF : relève l'émetteur, le logo et ce qui est écrit sous les montants (taxe ou non). Reviens avec le lien de retour de Stripe.
+9. Clique sur « Gérer mon paiement et mes factures » : la page de Stripe montre la carte, les factures (Essentiel, puis le prorata de Pro), la résiliation, et AUCUN changement de plan. Ouvre une facture en PDF : relève l'émetteur (en test, « environnement de test PULSACITY » est attendu), le logo et ce qui est écrit sous les montants (taxe ou non). Reviens avec le lien de retour de Stripe.
 10. Clique sur « Passer au plan Gratuit » (colonne Gratuit) : la page de résiliation de Stripe s'ouvre. Choisis un motif, confirme. De retour : bandeau « Votre plan Pro s'arrête le … » avec « Reprendre mon abonnement » ; Prochaine échéance : « Aucune : l'abonnement s'arrête le … ». Le changement vers Essentiel programmé au point 8 n'apparaît plus.
 11. Clique sur « Reprendre mon abonnement » : le bandeau disparaît ; Plan Pro, Prochaine échéance revenue.
 12. Ouvre l'accueil de l'espace (/app) : aucun bandeau de paiement.
@@ -448,7 +455,7 @@ Compte A, le retour au plan Gratuit :
 10. Avance l'horloge du compte A jusqu'au lendemain de cette date. Attends 2 minutes.
 11. Demande-moi de recharger /app/facturation : bandeau « Votre espace est repassé au plan Gratuit le … » : « Un widget reste affiché : « Mur · Toutes les offres ». Les 2 autres sont en pause… » avec « Choisir le widget affiché » ; « Plan Gratuit » ; jauge Widgets « 3 sur 1 » et « 1 affiché, 2 en pause » ; « Voir mes widgets » ; « Paiement et factures » : « Vos factures passées restent sur la page de paiement sécurisée de Stripe. » avec le bouton.
 12. Puis Widgets : bandeau « Au plan Gratuit, un widget s'affiche. » ; le mur « Affiché » (« C'est le plus ancien : il reste affiché. »), les deux autres « En pause » avec « Afficher celui-ci à la place ». Demande-moi de cliquer sur « Afficher celui-ci à la place » sous le carrousel : le carrousel passe « Affiché », le mur « En pause ».
-13. Demande-moi d'ouvrir le carrousel (« Modifier ») et de copier l'identifiant à la fin de son adresse (/app/widgets/<identifiant>), puis d'ouvrir <aperçu>/api/widget/<identifiant> : du JSON avec les témoignages. Même chose pour le mur : {"error":"not-found"}.
+13. Demande-moi d'ouvrir le carrousel (« Modifier ») et de copier l'identifiant à la fin de son adresse (/app/widgets/<identifiant>), puis d'ouvrir <aperçu>/api/widget/<identifiant> : du JSON avec les témoignages. Même chose pour le mur : {"error":"not-found"}. La réponse est gardée une minute en cache : si l'une des deux montre encore l'ancien état, attends une minute et recharge deux fois.
 
 Compte rendu à me donner : chaque point (OK ou l'écart exact), les dates avancées de chaque horloge, ce que dit l'e-mail du point 2. Aucun identifiant Stripe (clock_, cus_, sub_, in_), aucune adresse e-mail.
 ```
