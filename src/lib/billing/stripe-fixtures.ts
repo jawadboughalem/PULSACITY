@@ -18,7 +18,7 @@ export const buildStripePrice = (key: StripePriceKey, overrides: Partial<Stripe.
     unit_amount: readStripePriceAmount(key),
     lookup_key: readStripeLookupKey(key),
     recurring: { interval: key.period === "monthly" ? "month" : "year", interval_count: 1 },
-    tax_behavior: "inclusive",
+    tax_behavior: "unspecified",
     product: `prod_${key.plan}`,
     ...overrides,
   }) as Stripe.Price;

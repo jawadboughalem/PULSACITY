@@ -13,7 +13,12 @@ import {
 } from "@/lib/billing/billing-paths";
 import { describeBillingError } from "@/lib/billing/billing-notices";
 import { startCheckout } from "@/lib/billing/checkout";
-import { getStripe, isStripeConfigured, usesStripeTestClocks } from "@/lib/billing/stripe-client";
+import {
+  getStripe,
+  isStripeConfigured,
+  usesStripeLiveMode,
+  usesStripeTestClocks,
+} from "@/lib/billing/stripe-client";
 import { findOwnedSpace } from "@/lib/spaces/find-owned-space";
 import { ONBOARDING_SPACE_STEP_PATH } from "@/lib/spaces/space-paths";
 
@@ -34,8 +39,10 @@ export const GET = async (request: Request): Promise<Response> => {
   const url = new URL(request.url);
   const cookieStore = await cookies();
   const choice =
-    parsePlanChoice(url.searchParams.get("plan"), url.searchParams.get("periode")) ??
-    decodePlanChoice(cookieStore.get(PLAN_CHOICE_COOKIE)?.value);
+    parsePlanChoice(
+      url.searchParams.get("plan"),
+      url.searchParams.get("periode"),
+    ) ?? decodePlanChoice(cookieStore.get(PLAN_CHOICE_COOKIE)?.value);
   if (choice === null) {
     cookieStore.delete(PLAN_CHOICE_COOKIE);
     return redirectTo(BILLING_PATH);
@@ -43,7 +50,10 @@ export const GET = async (request: Request): Promise<Response> => {
 
   const signedInUser = await getSignedInUser();
   const database = getDb();
-  const space = signedInUser === null ? null : await findOwnedSpace(database, signedInUser.id);
+  const space =
+    signedInUser === null
+      ? null
+      : await findOwnedSpace(database, signedInUser.id);
   if (signedInUser === null || space === null) {
     cookieStore.set(PLAN_CHOICE_COOKIE, encodePlanChoice(choice), {
       httpOnly: true,
@@ -52,11 +62,16 @@ export const GET = async (request: Request): Promise<Response> => {
       path: "/",
       maxAge: CHOICE_LIFETIME_SECONDS,
     });
-    return redirectTo(signedInUser === null ? MARKETING_PATHS.signUp : ONBOARDING_SPACE_STEP_PATH);
+    return redirectTo(
+      signedInUser === null
+        ? MARKETING_PATHS.signUp
+        : ONBOARDING_SPACE_STEP_PATH,
+    );
   }
   cookieStore.delete(PLAN_CHOICE_COOKIE);
 
-  if (!isStripeConfigured()) return redirectTo(describeBillingError("checkout"));
+  if (!isStripeConfigured())
+    return redirectTo(describeBillingError("checkout"));
   try {
     const opened = await startCheckout(database, getStripe(), {
       space,
@@ -65,6 +80,7 @@ export const GET = async (request: Request): Promise<Response> => {
       period: choice.period,
       appUrl: getAppUrl(),
       withTestClock: usesStripeTestClocks(),
+      asksTermsConsent: usesStripeLiveMode(),
     });
     return redirectTo(opened.status === "opened" ? opened.url : BILLING_PATH);
   } catch (error) {

@@ -3,8 +3,9 @@
 Le compte Stripe est ouvert (2.8 a, le 15 octobre 2026), en particulier, avec contact@pulsacity.com. Rien n'y est encore réglé. Ce fichier tient, dans l'ordre, tous les prompts Claude in Chrome du lot (groupe d'onglets « PULSACITY »).
 
 Première phase, Stripe en mode test : prompts 1 à 5. Ils n'attendent pas le code : lancez-les dès maintenant, dans l'ordre.
-- Prompt 1 : le compte (image de marque, informations publiques, liens légaux, reçus, factures). C'est le 2.8 b, complété.
-- Prompt 2 : les produits et les huit prix.
+- Prompt 1 : le compte (image de marque, informations publiques, liens légaux, reçus, factures). C'est le 2.8 b, complété. Fait le 15 octobre, compte rendu sous le prompt.
+- Prompt 1 bis : le bouton de la page de paiement, remis en Soleil.
+- Prompt 2 : les produits et les huit prix. Réécrit le 15 octobre, après un premier essai arrêté avant la création.
 - Prompt 3 : le portail client, les relances des paiements échoués, les e-mails de Stripe.
 - Prompt 4 : le code des bêta-testeurs.
 - Prompt 5 : la clé de test, collée par vous dans Vercel (aperçus seulement).
@@ -13,15 +14,21 @@ Deuxième phase, la PR ouverte ([#40](https://github.com/jawadboughalem/PULSACIT
 
 Troisième phase, la recette, qui capture en même temps les vrais événements de Stripe : prompts 8 à 11, puis le relevé des événements (prompt 12) et la requête du seuil (prompt 13). Claude Code en tire les fixtures, corrige ce qui doit l'être, puis donne la contre-recette.
 
-Plus tard, le passage en mode réel : seulement quand les lots 4.4 et 4.9 sont en ligne, Vercel en Pro et le compte Stripe activé (2.8 c). Ses prompts seront écrits à ce moment-là.
+Plus tard, le passage en mode réel : seulement quand les lots 4.4 et 4.9 sont en ligne, Vercel en Pro et le compte Stripe activé (2.8 c). Ses prompts seront écrits à ce moment-là. Ils reprendront ce que le bac à sable ne laisse pas faire avant l'activation (compte rendu du prompt 1) :
+- les informations publiques : nom public PULSACITY, site, e-mail d'assistance, adresse des CGV et de la confidentialité. L'adresse des CGV est indispensable : sans elle, Stripe n'affiche pas la case des CGV de la page de paiement, que le code demande en mode réel ;
+- le libellé sur les relevés bancaires (page Paiements, en mode réel seulement) ;
+- le pied de page des factures (textes de 2.7) ;
+- les moyens de paiement du portail : la carte seulement, comme la page de paiement.
 
 Adresse de l'aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-projects.vercel.app
 
 À savoir :
 - Tout se fait dans l'environnement de test de Stripe : le « mode test », ou un « bac à sable » (sandbox), selon ce que Stripe vous a ouvert. Le prompt 1 le relève ; les suivants restent dans le même.
 - Vous vous connectez vous-même à Stripe et à Vercel. L'agent ne crée aucun compte, ne lit aucune clé et ne touche ni au mode réel, ni aux informations d'identité, ni au compte bancaire.
-- Les prix sont trouvés par le code grâce à leur « clé de recherche » (lookup key) : aucun identifiant de prix à copier dans Vercel. Le code vérifie à chaque paiement que le prix de Stripe est celui de `src/config/plans.ts` (montant, euros, mensuel ou annuel, taxe incluse), et refuse d'ouvrir le paiement sinon.
-- Aucune TVA : Stripe Tax reste désactivé, et chaque prix est « taxe incluse » (`tax_behavior: inclusive`), pour qu'aucun montant ne s'ajoute le jour où une taxe existerait.
+- Les prix sont trouvés par le code grâce à leur « clé de recherche » (lookup key) : aucun identifiant de prix à copier dans Vercel. Le code vérifie à chaque paiement que le prix de Stripe est celui de `src/config/plans.ts` (montant, euros, mensuel ou annuel, aucune taxe ajoutée par-dessus), et refuse d'ouvrir le paiement sinon.
+- Aucune TVA : Stripe Tax reste désactivé. Sans lui, le tableau de bord crée les prix sans comportement fiscal (« non spécifié ») et rien ne s'ajoute au prix : c'est voulu. Le code refuse seulement un prix « taxe exclue », qui ajouterait une taxe par-dessus le jour où Stripe Tax en calculerait une.
+- La page de paiement ne propose que la carte (Apple Pay et Google Pay compris), quels que soient les moyens activés dans Stripe.
+- Conditions générales de vente : en mode test, la page de paiement les cite sous le bouton (« En vous abonnant, vous acceptez les conditions générales de vente de PULSACITY. »). La case à cocher n'arrive qu'en mode réel : Stripe ne l'affiche que si l'adresse des CGV est dans les informations publiques, qu'un bac à sable ne laisse pas remplir.
 
 ---
 
@@ -71,46 +78,79 @@ Vérification : ouvre l'aperçu d'un reçu ou d'une facture s'il y en a un (Para
 Compte rendu à me donner : l'environnement utilisé (mode test ou bac à sable, et son nom), chaque réglage fait, la liste des moyens de paiement activés, l'état de Stripe Tax, et ce que tu n'as pas trouvé. Ni clé, ni identifiant de compte (rien qui commence par acct_, sk_, pk_ ou rk_).
 ```
 
-## 2. Stripe — les produits et les huit prix
+Compte rendu du 15 octobre :
+- Environnement : un seul bac à sable, renommé « PULSACITY » (il s'appelait « environnement de test PULSACITY ») ; bandeau « Environnement de test » visible ; rien touché en mode réel.
+- Image de marque : icône et logo déposés (« Privilégier le logo » coché par Stripe au dépôt) ; couleur de marque #FFBE3B, d'accent #16213E. Page de paiement : fond #F4F8FF, forme « Ronde », police par défaut. Pour régler le fond, « Utiliser les couleurs de la marque » a été décoché et le bouton mis en #16213E : le prompt 1 bis le remet en Soleil.
+- Reçus des paiements réussis et des remboursements : activés. Factures : numérotation déjà séquentielle pour tout le compte, préfixe, mémo et pied de page inchangés.
+- Stripe Tax : pas activé. Moyens de paiement activés, non modifiés (15) : Cartes, Amazon Pay, Apple Pay, Kakao Pay, Link, MB WAY, Naver Pay, PAYCO, Samsung Pay, Satispay, Bancontact, BLIK, EPS, Klarna, Pix. La page de paiement n'en garde que la carte (le code le demande à Stripe).
+- Pas faisable avant l'activation : les informations publiques (l'onglet demande « Activer les produits ») et le libellé sur les relevés (page Paiements, mode réel seulement). Reçus et factures de test disent donc « environnement de test PULSACITY ». Ils passent aux prompts du mode réel. Les réponses aux e-mails de Stripe vont déjà à contact@pulsacity.com.
+
+## 1 bis. Stripe — le bouton de la page de paiement, en Soleil
 
 ```
-Tu m'aides à créer les produits et les prix de PULSACITY dans Stripe, en environnement de test (le même que celui du prompt précédent : mode test, ou le même bac à sable). Je suis connecté.
+Tu m'aides à corriger un seul réglage de la page de paiement de PULSACITY dans Stripe, dans le bac à sable « PULSACITY » (environnement de test, bandeau « Environnement de test » visible). Je suis connecté.
 
-Où : https://dashboard.stripe.com/ › « Catalogue de produits » (« Product catalog »). Vérifie d'abord que tu es bien dans l'environnement de test.
+Où : https://dashboard.stripe.com/ › Paramètres › « Image de marque » (« Branding »), partie de la page de paiement (« Checkout »). Vérifie d'abord que tu es bien dans le bac à sable.
 
-Ce qu'il ne faut surtout pas toucher : le mode réel, les clés API, les webhooks, les réglages du compte, Stripe Tax (ne l'active pas, même si un prix le propose).
+Ce qu'il ne faut surtout pas toucher : le mode réel, l'activation du compte, les clés API, Stripe Tax, les moyens de paiement, le logo, l'icône, la couleur de marque (#FFBE3B), la couleur d'accent (#16213E), le fond de la page de paiement (#F4F8FF), la forme « Ronde », la police.
 
-Deux produits, quatre prix chacun. Tous les prix : récurrents (« Récurrent »), en EUR, tarification standard à l'unité (« Standard pricing » / quantité 1), et « Inclure les taxes dans le prix » sur « Oui » (« Include tax in price: Yes », c'est-à-dire « inclusive »). Pour chaque prix, ouvre les options avancées (« Plus d'options », « Advanced ») et remplis la « Clé de recherche » (« Lookup key ») et la « Description du prix » (« Price description ») exactement comme ci-dessous. Une faute dans une clé de recherche empêche le paiement : recopie-les caractère par caractère.
+1. Couleur du bouton de la page de paiement : #FFBE3B (au lieu de #16213E). C'est le bouton principal de la charte de PULSACITY : fond jaune, texte foncé.
+2. Si Stripe demande aussi une couleur pour le texte du bouton, mets #16213E. S'il la choisit lui-même, laisse-le faire.
+Enregistre.
+
+Vérification : l'aperçu de la page de paiement montre le fond #F4F8FF, le logo PULSACITY et un bouton jaune #FFBE3B, arrondi, au texte foncé et lisible. Recharge la page des réglages : les valeurs sont gardées.
+
+Compte rendu à me donner : la couleur du bouton, celle de son texte (choisie par toi ou par Stripe), le fond et la forme, relus après rechargement. Ni clé, ni identifiant.
+```
+
+## 2. Stripe — les produits et les huit prix
+
+Premier essai le 15 octobre, arrêté avant la création : sans Stripe Tax, le formulaire des prix ne propose pas « Inclure les taxes dans le prix ». Décision : les prix sont créés sans comportement fiscal (« non spécifié »), rien ne s'ajoute au prix, et le code n'exige plus « taxe incluse » (voir « À savoir » en haut). Ce prompt est la version réécrite.
+
+```
+Tu m'aides à créer les produits et les prix de PULSACITY dans Stripe, dans le bac à sable « PULSACITY » (l'environnement de test des prompts précédents, bandeau « Environnement de test » visible). Je suis connecté.
+
+Où : https://dashboard.stripe.com/ › « Catalogue de produits » (« Product catalog »). Vérifie d'abord que tu es bien dans le bac à sable.
+
+Ce qu'il ne faut surtout pas toucher : le mode réel, l'activation du compte, les clés API, les webhooks, les réglages du compte, Stripe Tax (ne clique sur aucun « Démarrer » ni « Configurer Stripe Tax », même si un formulaire le propose).
+
+Avant de commencer : si un formulaire de produit est resté ouvert d'un essai précédent, ferme-le sans l'enregistrer. Si le catalogue contient déjà un produit ou un prix PULSACITY, ne crée rien : arrête-toi et dis-moi ce qu'il contient.
+
+Deux produits, quatre prix chacun. Tous les prix : récurrents, en EUR, « Tarif fixe » (« Flat rate »), à l'unité. Pas de comportement fiscal à choisir : sans Stripe Tax, le formulaire n'en propose pas, et c'est voulu. Si un champ « Inclure les taxes dans le prix » ou « Comportement fiscal » apparaît quand même, choisis « Oui » / « Taxe incluse » (« Inclusive »), jamais « Non » / « Taxe exclue » (« Exclusive »).
+
+Pour chaque prix, ouvre les options avancées (« Avancées » ou « Plus d'options ») et remplis la « Clé de recherche » (« Lookup key ») et la « Description du tarif » (« Price description ») exactement comme ci-dessous. Une faute dans une clé de recherche empêche le paiement : recopie-les caractère par caractère, en minuscules, avec les tirets bas.
+
+Méthode : crée chaque produit avec son premier prix (celui marqué « par défaut »), puis, sur la page du produit, ajoute les trois autres un par un (« Ajouter un autre tarif » / « Add another price »).
 
 Produit 1
 - Nom : PULSACITY Essentiel
 - Description : Témoignages, demandes automatiques et widgets illimités.
 - Prix :
-  | Montant | Période | Clé de recherche | Description du prix |
+  | Montant | Période | Clé de recherche | Description du tarif |
   | 9,99 € | Mensuelle | essentiel_monthly_founder | Essentiel mensuel, prix de lancement |
   | 99,00 € | Annuelle | essentiel_yearly_founder | Essentiel annuel, prix de lancement |
   | 14,99 € | Mensuelle | essentiel_monthly_public | Essentiel mensuel |
   | 149,00 € | Annuelle | essentiel_yearly_public | Essentiel annuel |
-- Prix par défaut du produit : 9,99 € mensuel.
+- Prix par défaut du produit : 9,99 € mensuel (le premier, créé avec le produit).
 
 Produit 2
 - Nom : PULSACITY Pro
 - Description : Tout Essentiel, et la mention « Propulsé par PULSACITY » retirable.
 - Prix :
-  | Montant | Période | Clé de recherche | Description du prix |
+  | Montant | Période | Clé de recherche | Description du tarif |
   | 19,99 € | Mensuelle | pro_monthly_founder | Pro mensuel, prix de lancement |
   | 199,00 € | Annuelle | pro_yearly_founder | Pro annuel, prix de lancement |
   | 24,99 € | Mensuelle | pro_monthly_public | Pro mensuel |
   | 249,00 € | Annuelle | pro_yearly_public | Pro annuel |
-- Prix par défaut du produit : 19,99 € mensuel.
+- Prix par défaut du produit : 19,99 € mensuel (le premier, créé avec le produit).
 
 Laisse vides : l'image du produit, le code fiscal (« tax code »), le libellé d'unité, les métadonnées. Pas d'essai gratuit (« free trial ») sur aucun prix.
 
-Si « Inclure les taxes dans le prix » n'apparaît pas pour un prix, ne crée pas ce prix : arrête-toi et dis-moi ce que tu vois à la place. Si la « Clé de recherche » n'apparaît pas à la création, crée le prix, puis ajoute-la en modifiant le prix ; si elle n'existe nulle part, arrête-toi et dis-le-moi.
+Si la « Clé de recherche » n'apparaît pas à la création d'un prix, crée le prix, puis ajoute-la en modifiant le prix ; si elle n'existe nulle part, arrête-toi et dis-le-moi. Si Stripe refuse une clé (déjà utilisée), arrête-toi et dis-moi laquelle.
 
-Vérification : dans le catalogue, chaque produit a ses quatre prix, actifs ; ouvre chaque prix et relis son montant, sa période, « taxe incluse » (inclusive) et sa clé de recherche.
+Vérification : dans le catalogue, chaque produit a ses quatre prix, actifs. Ouvre chacun des huit prix et relis son montant, sa devise, sa période, son comportement fiscal (« non spécifié » attendu, ou « taxe incluse ») et sa clé de recherche.
 
-Compte rendu à me donner : pour chacun des huit prix, le montant, la période, le comportement fiscal affiché et la clé de recherche, relus sur la page du prix. Pas les identifiants (rien qui commence par price_ ou prod_).
+Compte rendu à me donner : pour chacun des huit prix, le montant, la période, le comportement fiscal affiché et la clé de recherche, relus sur la page du prix ; et le prix par défaut de chaque produit. Pas les identifiants (rien qui commence par price_ ou prod_).
 ```
 
 ## 3. Stripe — le portail client, les relances, les e-mails
@@ -306,8 +346,8 @@ Aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-project
 Ne touche à rien d'autre que ce qui est demandé. N'utilise jamais une vraie carte. Note pour chaque point : OK, ou ce que tu vois à la place (texte exact), avec une capture d'écran.
 
 1. Ouvre /tarifs. Les prix affichés sont 9,99 € par mois (Essentiel) et 19,99 € par mois (Pro), avec la ligne « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois. » En Annuel : 99 € et 199 € par an.
-2. Toujours en Mensuel, clique sur « Choisir Essentiel ». La page de paiement de Stripe (mode test) s'ouvre : « PULSACITY Essentiel », 9,99 € par mois, une case à cocher pour les conditions générales de vente avec un lien vers /cgv, et un lien « Ajouter un code promotionnel ». Relève tout ce qui y est écrit en français ou non.
-3. Paie avec 4242 4242 4242 4242, 12/34, 123, nom « Julie Test », pays France. Coche la case des conditions, puis « S'abonner ».
+2. Toujours en Mensuel, clique sur « Choisir Essentiel ». La page de paiement de Stripe (mode test) s'ouvre : « PULSACITY Essentiel », 9,99 € par mois, la carte comme seul moyen de paiement (Apple Pay ou Google Pay peuvent s'y ajouter, ce sont des cartes), un lien « Ajouter un code promotionnel », et sous le bouton « En vous abonnant, vous acceptez les conditions générales de vente de PULSACITY. » avec un lien vers /cgv (pas de case à cocher en mode test : elle arrive en mode réel). Relève tout ce qui y est écrit en français ou non.
+3. Paie avec 4242 4242 4242 4242, 12/34, 123, nom « Julie Test », pays France, puis « S'abonner ».
 4. De retour sur /app/facturation (attends jusqu'à 30 secondes, la page se met à jour seule) : bandeau vert « Bienvenue dans Essentiel. » ; « Plan Essentiel » avec le badge « Prix de lancement » ; 9,99 € par mois ; Paiement : Mensuel ; Prochaine échéance : la date dans un mois · 9,99 € ; Votre prix : « Prix de lancement : vous le gardez à vie, tant que votre abonnement continue. » ; bouton « Passer à l'annuel » et « 99 € par an : 2 mois offerts. » ; « Changer de plan » : « Votre plan » sur Essentiel, « Votre plan actuel » ; « Paiement et factures » avec « Gérer mon paiement et mes factures ».
 5. Le menu du compte (en bas à gauche) dit « Plan Essentiel ». Dans Widgets, « Créer un widget » est actif : clique dessus ; dans l'éditeur qui s'ouvre, choisis le type « Carrousel », puis reviens à la liste. Recommence avec le type « Badge ». Il y a trois widgets en tout : le mur, le carrousel, le badge.
 6. Retour à /app/facturation. Clique sur « Passer à l'annuel » : une fenêtre « Passer à l'annuel le … ? » dit « Jusque-là, rien ne change. Ensuite, 99 € par an. ». Confirme. Bandeau « Le …, votre plan Essentiel passe au paiement annuel. » et dans la carte « Jusqu'au … » / « À partir du … ». Clique sur « Annuler ce changement » : le bandeau disparaît.
@@ -334,8 +374,8 @@ N'utilise jamais une vraie carte. Note pour chaque point : OK, ou ce que tu vois
 
 1. Ouvre /app/facturation : « Plan Gratuit », 0 € pour toujours, trois jauges (Témoignages validés, Demandes automatiques ce mois, Widgets « 1 sur 1 » et « Limite atteinte »), « Paiement et factures » : « Aucun paiement pour l'instant. Vos factures apparaîtront ici dès votre premier paiement. »
 2. En Annuel, clique sur « Passer au plan Essentiel » : la page de Stripe montre 99 € par an et AUCUN lien « Ajouter un code promotionnel ». Reviens avec la flèche de retour de Stripe (en haut à gauche) : bandeau « Le paiement n'a pas été fait. » avec « Reprendre le paiement » ; toujours « Plan Gratuit ».
-3. Repasse en Mensuel, clique sur « Passer au plan Essentiel ». Paie avec la carte refusée 4000 0000 0000 0002 (12/34, 123, « Julie Test », France, conditions cochées) : Stripe dit que la carte est refusée. Relève le message. Reviens avec la flèche de retour : bandeau « Le paiement n'a pas été fait. ».
-4. Clique sur « Reprendre le paiement » : la page de Stripe s'ouvre en Essentiel mensuel. Clique sur « Ajouter un code promotionnel », tape BETA-PULSACITY, applique : le total d'aujourd'hui passe à 0,00 €, et Stripe dit combien de temps (3 mois). Paie avec 4000 0025 0000 3155 (12/34, 123, « Julie Test », France, conditions cochées). Une fenêtre de 3D Secure s'ouvre : clique sur « Complete » (ou « Autoriser »).
+3. Repasse en Mensuel, clique sur « Passer au plan Essentiel ». Paie avec la carte refusée 4000 0000 0000 0002 (12/34, 123, « Julie Test », France) : Stripe dit que la carte est refusée. Relève le message. Reviens avec la flèche de retour : bandeau « Le paiement n'a pas été fait. ».
+4. Clique sur « Reprendre le paiement » : la page de Stripe s'ouvre en Essentiel mensuel. Clique sur « Ajouter un code promotionnel », tape BETA-PULSACITY, applique : le total d'aujourd'hui passe à 0,00 €, et Stripe dit combien de temps (3 mois). Paie avec 4000 0025 0000 3155 (12/34, 123, « Julie Test », France). Une fenêtre de 3D Secure s'ouvre : clique sur « Complete » (ou « Autoriser »).
 5. De retour sur /app/facturation (jusqu'à 30 secondes) : bandeau « Merci de tester PULSACITY. » avec « rien n'est prélevé avant le … » ; « Plan Essentiel » et le badge « Bêta-testeur » ; « Offert pendant 3 mois » ; Offert jusqu'au : une date dans trois mois ; Premier prélèvement : la même date · 9,99 € par mois, prix de lancement gardé à vie ; Carte enregistrée : Visa se terminant par 3155 ; « Nous vous écrivons le …, 7 jours avant le premier prélèvement. ».
 6. Le menu du compte dit « Plan Essentiel ».
 

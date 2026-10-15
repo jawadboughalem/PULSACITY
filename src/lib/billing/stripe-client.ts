@@ -7,19 +7,31 @@ import { readRequiredEnvironmentVariable } from "@/lib/environment/read-required
  */
 export const STRIPE_API_VERSION = "2026-09-30.endive";
 
-const globalForStripe = globalThis as typeof globalThis & { pulsacityStripe?: Stripe };
+const globalForStripe = globalThis as typeof globalThis & {
+  pulsacityStripe?: Stripe;
+};
 
 /** PULSACITY's own Stripe account (subscriptions of the creators), from STRIPE_SECRET_KEY. */
 export const getStripe = (): Stripe => {
-  globalForStripe.pulsacityStripe ??= new Stripe(readRequiredEnvironmentVariable("STRIPE_SECRET_KEY"), {
-    apiVersion: STRIPE_API_VERSION,
-    maxNetworkRetries: 2,
-    appInfo: { name: "PULSACITY", url: "https://pulsacity.com" },
-  });
+  globalForStripe.pulsacityStripe ??= new Stripe(
+    readRequiredEnvironmentVariable("STRIPE_SECRET_KEY"),
+    {
+      apiVersion: STRIPE_API_VERSION,
+      maxNetworkRetries: 2,
+      appInfo: { name: "PULSACITY", url: "https://pulsacity.com" },
+    },
+  );
   return globalForStripe.pulsacityStripe;
 };
 
-export const isStripeConfigured = (): boolean => Boolean(process.env.STRIPE_SECRET_KEY);
+export const isStripeConfigured = (): boolean =>
+  Boolean(process.env.STRIPE_SECRET_KEY);
+
+/** A live key: real payments, on an activated account. */
+export const usesStripeLiveMode = (): boolean => {
+  const key = process.env.STRIPE_SECRET_KEY ?? "";
+  return key.startsWith("sk_live_") || key.startsWith("rk_live_");
+};
 
 /**
  * On a preview with a test key, every new customer gets its own Stripe test clock: the recette moves time forward in
@@ -27,5 +39,8 @@ export const isStripeConfigured = (): boolean => Boolean(process.env.STRIPE_SECR
  */
 export const usesStripeTestClocks = (): boolean => {
   const key = process.env.STRIPE_SECRET_KEY ?? "";
-  return process.env.VERCEL_ENV === "preview" && (key.startsWith("sk_test_") || key.startsWith("rk_test_"));
+  return (
+    process.env.VERCEL_ENV === "preview" &&
+    (key.startsWith("sk_test_") || key.startsWith("rk_test_"))
+  );
 };
