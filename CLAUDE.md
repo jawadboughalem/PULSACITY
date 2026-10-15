@@ -69,6 +69,7 @@ src/config/plans.ts           # plans et limites
 src/db/schema.ts
 src/lib/connectors/           # types.ts (contrat), registry.ts, moteur (réception, traitement), systeme/, universal/ (connecteur universel), upcoming-connectors.ts
 src/lib/purchases/            # record-purchase.ts : de NormalizedPurchase au client, à l'achat et à la demande
+src/lib/billing/              # Stripe Billing de PULSACITY : prix par clé de recherche, Checkout, portail, changements de plan, événements, prix fondateur, rappel des bêta-testeurs
 src/lib/requests/             # planification et envoi des demandes
 src/lib/support/              # « Écrivez-nous » : contact@pulsacity.com, champs, limites, envoi (rien gardé en base)
 src/emails/                   # templates React Email
@@ -84,7 +85,7 @@ src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées
 ## Modèle de données
 
 - Tables Better Auth : `user` (name = prénom du créateur, facultatif, « Bonjour Julie » ; Mon compte), `session`, `account`, `verification`
-- `spaces` : id, userId, name, slug (unique, modifiable dans Réglages : l'ancienne adresse cesse de marcher), logoUrl, accentColor (bouton de la page de collecte, étoiles et widgets), replyToEmail, senderPostalAddress (pied des e-mails aux clients, une ligne par ligne saisie), newTestimonialEmailEnabled (e-mail « Nouveau témoignage », vrai par défaut), incentiveDeclaredAt (« J'offre une contrepartie », depuis quand ; null = non), plan (free|essentiel|pro), stripeCustomerId, stripeSubscriptionId, referralCode, collectionLinkSharedAt, firstDayCelebratedAt, firstApprovalCelebratedAt (moments de marque déjà joués), createdAt. Supprimer l'espace (Mon compte) supprime le compte `user` et, en cascade, tout l'espace ; l'abonnement s'arrête d'abord (`src/lib/billing/stop-space-subscription.ts`, branché au lot 4.5)
+- `spaces` : id, userId, name, slug (unique, modifiable dans Réglages : l'ancienne adresse cesse de marcher), logoUrl, accentColor (bouton de la page de collecte, étoiles et widgets), replyToEmail, senderPostalAddress (pied des e-mails aux clients, une ligne par ligne saisie), newTestimonialEmailEnabled (e-mail « Nouveau témoignage », vrai par défaut), incentiveDeclaredAt (« J'offre une contrepartie », depuis quand ; null = non), plan (free|essentiel|pro), stripeCustomerId, stripeSubscriptionId, referralCode, collectionLinkSharedAt, firstDayCelebratedAt, firstApprovalCelebratedAt (moments de marque déjà joués), freeSince (repassé au plan Gratuit le …), createdAt. Supprimer l'espace (Mon compte) supprime le compte `user` et, en cascade, tout l'espace ; l'abonnement s'arrête d'abord (`src/lib/billing/stop-space-subscription.ts`, branché au lot 4.5)
 - `connections` : id, spaceId, connector (systeme|stripe|calendly|…), webhookToken (unique, secret, régénérable), status (pending|active|error), lastEventAt, config (jsonb : signingSecret), createdAt (unique spaceId + connector)
 - `products` (les « offres » : formation, accompagnement, séance…) : id, spaceId, name, slug, requestDelayDays (défaut 14), requestsEnabled (bool), createdAt
 - `product_refs` : id, productId, connectionId, externalRef — relie une offre à son identifiant dans chaque connecteur
@@ -93,12 +94,15 @@ src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées
 - `purchases` : id, spaceId, customerId, productId, connectionId (nullable), source (connector|manual|csv), eventType, externalRef, purchasedAt, createdAt (unique connectionId + externalRef : une vente reçue deux fois est enregistrée une fois ; `manual` : « Demander un avis »)
 - `review_requests` : id, purchaseId, token (unique), scheduledAt, sentAt, reminderScheduledAt, reminderSentAt, completedAt, cancelledAt, failedAt, status (scheduled|sent|reminded|completed|cancelled|failed), failedAttempts
 - `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body (original, jamais modifié), displayBody (texte affiché, null = original), displayEditedAt, status (pending|approved|hidden), source (form|manual|csv), consentAt, consentText, featured (bool), createdAt
-- `widgets` : id, spaceId, name (nullable, pour le créateur seul), type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur d'accent, nombre max, afficher photo/note/date, masquer « Propulsé par » (Pro), style des cartes), firstLoadedAt (premier affichage sur une page), createdAt
+- `widgets` : id, spaceId, name (nullable, pour le créateur seul), type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur d'accent, nombre max, afficher photo/note/date, masquer « Propulsé par » (Pro), style des cartes), firstLoadedAt (premier affichage sur une page), freePlanChosenAt (« Afficher celui-ci à la place » au plan Gratuit), createdAt
 - `webhook_events` : id, connectionId, rawPayload (jsonb), rawBody (octets reçus, pour la signature), headers (jsonb), eventType, receivedAt, processedAt, outcome, purchaseId, error — journal complet, rejouable
 - `connector_waitlist` : id, spaceId, connector, toolName, createdAt — « Me prévenir » et « Dites-nous quel outil »
 - `connector_waitlist_emails` : id, connector, email, createdAt (unique connector + email) — « Me prévenir » des pages publiques /integrations/[connector], pour un visiteur sans espace ; supprimée après l'annonce
 - `tool_suggestions` : id, toolName, createdAt — « Dites-nous quel outil » de /integrations, pour un visiteur sans espace : le nom de l'outil seulement, sans adresse
-- `stripe_events` : id, type, processedAt
+- `stripe_events` : id, type, payload (l'événement entier, gardé à l'arrivée), receivedAt, processedAt (verrou d'idempotence, null tant qu'il n'est pas traité), error — rejoué par la tâche planifiée s'il reste non traité
+- `subscriptions` : id (sub_…), spaceId, status, plan, period, priceList (founder|public), amountCents, currentPeriodEnd, cancelAt, endedAt, scheduledPlan, scheduledPeriod, scheduledPriceList, scheduledAmountCents, scheduledAt, betaTester, betaUntil, betaReminderSentAt, cardBrand, cardLast4, lastPaymentFailedAt, lastPaymentFailedAmountCents — copie de ce que Stripe dit de chaque abonnement, réécrite à chaque événement ; `spaces.plan` suit l'abonnement courant (`spaces.stripeSubscriptionId`)
+- `founder_seats` : id, spaceId (unique, null après suppression de l'espace), takenAt — une ligne par abonné payant au prix fondateur, bêta-testeurs à part ; la centième ferme le prix fondateur
+- `billing_payments` : id (in_…), spaceId (null après suppression), subscriptionId, amountCents, currency, paidAt — chaque facture payée avec de l'argent, pour le seuil de la micro-entreprise (`docs-internes/requetes/seuil-micro-entreprise.md`)
 
 ## Plans (`src/config/plans.ts`)
 
@@ -110,7 +114,7 @@ src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées
 
 Prix finaux : rien ne s'ajoute au paiement, aucune TVA n'est facturée (`docs-internes/decisions/tarifs.md`). L'annuel vaut dix mois, arrondi à l'euro inférieur (« 2 mois offerts »).
 
-Prix fondateur : les bêta-testeurs et les 100 premiers abonnés payants (`FOUNDER_PRICE_SEATS`), gardé à vie tant que l'abonnement ne s'interrompt pas. Tant qu'il est ouvert, les pages l'affichent comme le prix payé, avec la ligne « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois » ; ni prix barré, ni compteur. Au centième, elles passent aux prix publics sans nouvelle livraison : le compte des abonnés au prix fondateur arrive avec Stripe (lot 4.5, `arbitrages.md` n° 1).
+Prix fondateur : les bêta-testeurs et les 100 premiers abonnés payants (`FOUNDER_PRICE_SEATS`), gardé à vie tant que l'abonnement ne s'interrompt pas. Tant qu'il est ouvert, les pages l'affichent comme le prix payé, avec la ligne « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois » ; ni prix barré, ni compteur. Au centième, elles passent aux prix publics sans nouvelle livraison : `founder_seats` compte les abonnés au prix fondateur, et l'accueil et Tarifs se régénèrent à la centième place prise (et toutes les heures). Les prix Stripe sont trouvés par leur clé de recherche (`essentiel_monthly_founder`…, `readStripeLookupKey` dans `plans.ts`) et vérifiés contre `plans.ts` à chaque paiement.
 
 Sur tous les plans : 20 demandes saisies à la main par jour (« Demander un avis », `manualRequestsPerDay`), contre les envois en masse. Elles comptent aussi dans les demandes du mois.
 

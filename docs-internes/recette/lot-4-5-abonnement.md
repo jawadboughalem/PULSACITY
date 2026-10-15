@@ -9,7 +9,11 @@ Première phase, Stripe en mode test : prompts 1 à 5. Ils n'attendent pas le co
 - Prompt 4 : le code des bêta-testeurs.
 - Prompt 5 : la clé de test, collée par vous dans Vercel (aperçus seulement).
 
-Deuxième phase, la PR ouverte ([#40](https://github.com/jawadboughalem/PULSACITY/pull/40)) : le webhook vers l'aperçu (prompt 6), l'espace de recette (prompt 7), puis la recette, qui capture en même temps les vrais événements de Stripe (prompts suivants, ajoutés ici avec eux).
+Deuxième phase, la PR ouverte ([#40](https://github.com/jawadboughalem/PULSACITY/pull/40)) : le webhook vers l'aperçu (prompt 6), les espaces de recette (prompt 7).
+
+Troisième phase, la recette, qui capture en même temps les vrais événements de Stripe : prompts 8 à 11, puis le relevé des événements (prompt 12) et la requête du seuil (prompt 13). Claude Code en tire les fixtures, corrige ce qui doit l'être, puis donne la contre-recette.
+
+Plus tard, le passage en mode réel : seulement quand les lots 4.4 et 4.9 sont en ligne, Vercel en Pro et le compte Stripe activé (2.8 c). Ses prompts seront écrits à ce moment-là.
 
 Adresse de l'aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-projects.vercel.app
 
@@ -277,3 +281,164 @@ Compte rendu à me donner : la migration de recette (couleur, date), puis pour c
 ```
 
 Si « Recette demo space » échoue sur « tenant/user not found », réveillez d'abord la base de recette (prompt 0 bis de `lot-4-1-decisions.md`).
+
+---
+
+# Troisième phase — la recette, qui capture les vrais événements
+
+Chaque paiement de test ci-dessous envoie ses événements à l'aperçu, qui les garde entiers dans `stripe_events`. Le prompt 12 les relève : ils deviennent les fixtures des tests, comme pour un connecteur (règle n° 1 de CLAUDE.md).
+
+À savoir :
+- Cartes de test de Stripe, avec une date d'expiration future (12/34), un CVC au choix (123) et un nom fictif (« Julie Test ») : 4242 4242 4242 4242 (réussite), 4000 0025 0000 3155 (3D Secure demandé), 4000 0000 0000 0002 (refusée), 4000 0000 0000 0341 (enregistrée, puis refusée au prélèvement suivant).
+- Sur l'aperçu, chaque espace qui paie pour la première fois reçoit sa propre horloge de test Stripe (« Recette <adresse de l'espace> »). Le prompt 10 l'avance dans le temps pour voir la fin de la bêta, un renouvellement refusé et le retour au plan Gratuit, sans attendre. Stripe n'avance une horloge que de deux périodes à la fois : on avance en plusieurs fois.
+- Compte A : la première adresse du prompt 7 (le parcours principal). Compte B : la seconde (carte refusée, 3D Secure, bêta-testeur).
+- Connectez-vous vous-même à l'aperçu avec le lien reçu par e-mail ; l'agent ne lit pas vos e-mails.
+
+## 8. Aperçu — compte A : payer, changer de plan, gérer, s'arrêter
+
+Avant ce prompt : connectez-vous à l'aperçu avec l'adresse A.
+
+```
+Tu fais la recette de la page « Abonnement et factures » de PULSACITY sur l'aperçu de la PR #40, avec les cartes de test de Stripe. Je suis connecté avec le compte A.
+
+Aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-projects.vercel.app
+
+Ne touche à rien d'autre que ce qui est demandé. N'utilise jamais une vraie carte. Note pour chaque point : OK, ou ce que tu vois à la place (texte exact), avec une capture d'écran.
+
+1. Ouvre /tarifs. Les prix affichés sont 9,99 € par mois (Essentiel) et 19,99 € par mois (Pro), avec la ligne « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois. » En Annuel : 99 € et 199 € par an.
+2. Toujours en Mensuel, clique sur « Choisir Essentiel ». La page de paiement de Stripe (mode test) s'ouvre : « PULSACITY Essentiel », 9,99 € par mois, une case à cocher pour les conditions générales de vente avec un lien vers /cgv, et un lien « Ajouter un code promotionnel ». Relève tout ce qui y est écrit en français ou non.
+3. Paie avec 4242 4242 4242 4242, 12/34, 123, nom « Julie Test », pays France. Coche la case des conditions, puis « S'abonner ».
+4. De retour sur /app/facturation (attends jusqu'à 30 secondes, la page se met à jour seule) : bandeau vert « Bienvenue dans Essentiel. » ; « Plan Essentiel » avec le badge « Prix de lancement » ; 9,99 € par mois ; Paiement : Mensuel ; Prochaine échéance : la date dans un mois · 9,99 € ; Votre prix : « Prix de lancement : vous le gardez à vie, tant que votre abonnement continue. » ; bouton « Passer à l'annuel » et « 99 € par an : 2 mois offerts. » ; « Changer de plan » : « Votre plan » sur Essentiel, « Votre plan actuel » ; « Paiement et factures » avec « Gérer mon paiement et mes factures ».
+5. Le menu du compte (en bas à gauche) dit « Plan Essentiel ». Dans Widgets, « Créer un widget » est actif : clique dessus ; dans l'éditeur qui s'ouvre, choisis le type « Carrousel », puis reviens à la liste. Recommence avec le type « Badge ». Il y a trois widgets en tout : le mur, le carrousel, le badge.
+6. Retour à /app/facturation. Clique sur « Passer à l'annuel » : une fenêtre « Passer à l'annuel le … ? » dit « Jusque-là, rien ne change. Ensuite, 99 € par an. ». Confirme. Bandeau « Le …, votre plan Essentiel passe au paiement annuel. » et dans la carte « Jusqu'au … » / « À partir du … ». Clique sur « Annuler ce changement » : le bandeau disparaît.
+7. Dans « Changer de plan », en Mensuel, clique sur « Passer au plan Pro » : la fenêtre dit « Vous payez aujourd'hui … : la différence jusqu'au …, au prorata. Ensuite, 19,99 € par mois. » Relève le montant. Confirme. Bandeau « Bienvenue dans Pro. » ; « Plan Pro » 19,99 € ; une ligne « Mention « Propulsé par PULSACITY » ».
+8. Clique sur « Passer au plan Essentiel » : fenêtre « Passer au plan Essentiel le … ? ». Confirme. Bandeau « Le …, votre espace passe du plan Pro au plan Essentiel. » avec « Jusque-là, vous gardez le Pro. Ensuite, la mention « Propulsé par PULSACITY » revient sous vos widgets. » ; dans la carte, « Jusqu'au … : Plan Pro · 19,99 € par mois » et « À partir du … : Plan Essentiel · 9,99 € par mois, prix de lancement gardé à vie ».
+9. Clique sur « Gérer mon paiement et mes factures » : la page de Stripe montre la carte, les factures (Essentiel, puis le prorata de Pro), la résiliation, et AUCUN changement de plan. Ouvre une facture en PDF : relève l'émetteur, le logo et ce qui est écrit sous les montants (taxe ou non). Reviens avec le lien de retour de Stripe.
+10. Clique sur « Passer au plan Gratuit » (colonne Gratuit) : la page de résiliation de Stripe s'ouvre. Choisis un motif, confirme. De retour : bandeau « Votre plan Pro s'arrête le … » avec « Reprendre mon abonnement » ; Prochaine échéance : « Aucune : l'abonnement s'arrête le … ». Le changement vers Essentiel programmé au point 8 n'apparaît plus.
+11. Clique sur « Reprendre mon abonnement » : le bandeau disparaît ; Plan Pro, Prochaine échéance revenue.
+12. Ouvre l'accueil de l'espace (/app) : aucun bandeau de paiement.
+
+Compte rendu à me donner : chaque point (OK ou l'écart exact), le montant du point 7, ce que dit la facture PDF, et l'heure du paiement du point 3. Aucune donnée de carte, aucun identifiant Stripe (rien qui commence par cus_, sub_, in_, pi_, cs_).
+```
+
+## 9. Aperçu — compte B : carte refusée, puis bêta-testeur avec 3D Secure
+
+Avant ce prompt : déconnectez-vous du compte A, puis connectez-vous à l'aperçu avec l'adresse B.
+
+```
+Tu fais la recette du paiement refusé et du code des bêta-testeurs de PULSACITY sur l'aperçu de la PR #40. Je suis connecté avec le compte B.
+
+Aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-projects.vercel.app
+
+N'utilise jamais une vraie carte. Note pour chaque point : OK, ou ce que tu vois à la place (texte exact), avec une capture d'écran.
+
+1. Ouvre /app/facturation : « Plan Gratuit », 0 € pour toujours, trois jauges (Témoignages validés, Demandes automatiques ce mois, Widgets « 1 sur 1 » et « Limite atteinte »), « Paiement et factures » : « Aucun paiement pour l'instant. Vos factures apparaîtront ici dès votre premier paiement. »
+2. En Annuel, clique sur « Passer au plan Essentiel » : la page de Stripe montre 99 € par an et AUCUN lien « Ajouter un code promotionnel ». Reviens avec la flèche de retour de Stripe (en haut à gauche) : bandeau « Le paiement n'a pas été fait. » avec « Reprendre le paiement » ; toujours « Plan Gratuit ».
+3. Repasse en Mensuel, clique sur « Passer au plan Essentiel ». Paie avec la carte refusée 4000 0000 0000 0002 (12/34, 123, « Julie Test », France, conditions cochées) : Stripe dit que la carte est refusée. Relève le message. Reviens avec la flèche de retour : bandeau « Le paiement n'a pas été fait. ».
+4. Clique sur « Reprendre le paiement » : la page de Stripe s'ouvre en Essentiel mensuel. Clique sur « Ajouter un code promotionnel », tape BETA-PULSACITY, applique : le total d'aujourd'hui passe à 0,00 €, et Stripe dit combien de temps (3 mois). Paie avec 4000 0025 0000 3155 (12/34, 123, « Julie Test », France, conditions cochées). Une fenêtre de 3D Secure s'ouvre : clique sur « Complete » (ou « Autoriser »).
+5. De retour sur /app/facturation (jusqu'à 30 secondes) : bandeau « Merci de tester PULSACITY. » avec « rien n'est prélevé avant le … » ; « Plan Essentiel » et le badge « Bêta-testeur » ; « Offert pendant 3 mois » ; Offert jusqu'au : une date dans trois mois ; Premier prélèvement : la même date · 9,99 € par mois, prix de lancement gardé à vie ; Carte enregistrée : Visa se terminant par 3155 ; « Nous vous écrivons le …, 7 jours avant le premier prélèvement. ».
+6. Le menu du compte dit « Plan Essentiel ».
+
+Compte rendu à me donner : chaque point, le message de refus du point 3, ce que Stripe dit du code au point 4, et les dates du point 5. Aucune donnée de carte, aucun identifiant Stripe.
+```
+
+## 10. Stripe puis l'aperçu — avancer le temps : fin de la bêta, renouvellement refusé, retour au Gratuit
+
+Avant ce prompt : connectez-vous à Stripe ; ayez sous la main votre boîte de l'adresse B.
+
+```
+Tu m'aides à avancer le temps dans Stripe (environnement de test) pour faire la recette de PULSACITY sur l'aperçu de la PR #40. Je suis connecté à Stripe ; je me connecte moi-même à l'aperçu quand tu me le demandes.
+
+Aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-projects.vercel.app
+
+Ce qu'il ne faut surtout pas toucher : le mode réel, les produits, les prix, le portail, le webhook, les réglages. Tu n'avances que les deux horloges des comptes A et B, jamais une autre.
+
+Les horloges : Stripe › Billing › « Horloges de test » (« Test clocks »), ou Développeurs › « Horloges de test ». Chacune s'appelle « Recette julie-nutrition… » et porte un client ; ouvre-les pour savoir laquelle est celle du compte B (abonnement Essentiel avec la remise « Bêta-testeur ») et celle du compte A (abonnement Pro). Stripe n'avance une horloge que de deux mois à la fois : avance en plusieurs fois si besoin, et attends à chaque fois qu'elle soit « Prête » (« Ready »).
+
+Compte B, la fin de la bêta :
+1. Avance l'horloge du compte B jusqu'à 6 jours avant la date « Offert jusqu'au » relevée au prompt 9 (en deux fois). Attends 2 minutes.
+2. Demande-moi de regarder la boîte de l'adresse B : un e-mail « Votre plan Essentiel devient payant le … » doit être arrivé (expéditeur PULSACITY), avec le jour, 9,99 €, la carte se terminant par 3155, et comment arrêter avant. Je te dis ce que je vois.
+3. Avance l'horloge jusqu'au lendemain de la date « Offert jusqu'au ». Attends 2 minutes. Dans Stripe, la facture de ce jour-là est payée, 9,99 €.
+4. Demande-moi de me connecter à l'aperçu avec le compte B et d'ouvrir /app/facturation : plus de bandeau « Merci de tester » ; « Plan Essentiel », badge « Prix de lancement », 9,99 € par mois, Prochaine échéance un mois plus tard · 9,99 €.
+
+Compte A, un renouvellement refusé :
+5. Demande-moi de me connecter à l'aperçu avec le compte A, d'ouvrir /app/facturation, « Gérer mon paiement et mes factures », et de remplacer la carte par 4000 0000 0000 0341 (12/34, 123), mise par défaut. Attends mon OK.
+6. Avance l'horloge du compte A jusqu'au lendemain de la « Prochaine échéance ». Attends 2 minutes. Dans Stripe, la facture du renouvellement est « Échec » ou « Ouverte », l'abonnement « En retard » (« Past due »).
+7. Demande-moi de recharger l'accueil de l'espace A (/app) : bandeau rouge « Votre dernier paiement a échoué. » « Mettez à jour votre carte pour garder le plan Pro. » avec « Mettre à jour ma carte » ; le même en haut de Témoignages et de Widgets. Sur /app/facturation : le même bandeau, et « Dernier paiement : … · 19,99 € · refusé par votre banque ». Le plan reste Pro.
+8. Demande-moi de cliquer sur « Mettre à jour ma carte », de mettre 4242 4242 4242 4242 par défaut, puis de revenir. Si le bandeau reste, avance l'horloge de 3 jours (Stripe réessaie) et attends 2 minutes. Le bandeau disparaît partout ; Prochaine échéance revenue.
+
+Compte A, le retour au plan Gratuit :
+9. Demande-moi de cliquer sur « Passer au plan Gratuit », de confirmer la résiliation chez Stripe, puis de revenir : bandeau « Votre plan Pro s'arrête le … ».
+10. Avance l'horloge du compte A jusqu'au lendemain de cette date. Attends 2 minutes.
+11. Demande-moi de recharger /app/facturation : bandeau « Votre espace est repassé au plan Gratuit le … » : « Un widget reste affiché : « Mur · Toutes les offres ». Les 2 autres sont en pause… » avec « Choisir le widget affiché » ; « Plan Gratuit » ; jauge Widgets « 3 sur 1 » et « 1 affiché, 2 en pause » ; « Voir mes widgets » ; « Paiement et factures » : « Vos factures passées restent sur la page de paiement sécurisée de Stripe. » avec le bouton.
+12. Puis Widgets : bandeau « Au plan Gratuit, un widget s'affiche. » ; le mur « Affiché » (« C'est le plus ancien : il reste affiché. »), les deux autres « En pause » avec « Afficher celui-ci à la place ». Demande-moi de cliquer sur « Afficher celui-ci à la place » sous le carrousel : le carrousel passe « Affiché », le mur « En pause ».
+13. Demande-moi d'ouvrir le carrousel (« Modifier ») et de copier l'identifiant à la fin de son adresse (/app/widgets/<identifiant>), puis d'ouvrir <aperçu>/api/widget/<identifiant> : du JSON avec les témoignages. Même chose pour le mur : {"error":"not-found"}.
+
+Compte rendu à me donner : chaque point (OK ou l'écart exact), les dates avancées de chaque horloge, ce que dit l'e-mail du point 2. Aucun identifiant Stripe (clock_, cus_, sub_, in_), aucune adresse e-mail.
+```
+
+## 11. Aperçu — à 360 px
+
+Avant ce prompt : connectez-vous à l'aperçu avec le compte A.
+
+```
+Tu vérifies à 360 px de large deux pages de PULSACITY sur l'aperçu de la PR #40. Je suis connecté.
+
+Aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-projects.vercel.app
+
+1. Mets la fenêtre (ou l'outil de taille d'écran) à 360 × 800.
+2. /app/facturation : un seul bandeau en haut, sous « ‹ Plus » et le titre ; les jauges l'une sous l'autre ; « Mensuel / Annuel » puis « Annuel : 2 mois offerts » dessous ; les trois colonnes l'une sous l'autre, le bouton avant la liste ; aucun défilement horizontal ; rien caché par la barre d'onglets en bas une fois en bas de page.
+3. Touche « Annuel » puis « Mensuel » : les prix changent dans les trois colonnes.
+4. /app/widgets : le bandeau, puis chaque widget avec son badge (« Affiché » ou « En pause »), sa phrase, « Afficher celui-ci à la place » sous les widgets en pause, et « Modifier » sur toute la largeur.
+5. /tarifs : les boutons « Choisir Essentiel » et « Choisir Pro » sont sous chaque colonne, en Mensuel comme en Annuel.
+
+Compte rendu à me donner : chaque point (OK ou l'écart exact), avec une capture d'écran de chaque page.
+```
+
+## 12. Supabase — relever les événements capturés
+
+Avant ce prompt : connectez-vous à Supabase.
+
+```
+Tu m'aides à relever les événements Stripe reçus par l'aperçu de PULSACITY, sur la base de recette. Tu lances une seule requête, en lecture seule, et tu ne modifies rien.
+
+Où : https://supabase.com/dashboard/projects, organisation PULSACITY, projet « pulsacity-recette » (jamais le projet « PULSACITY », la production), puis « SQL Editor ».
+
+1. Ouvre un nouvel onglet de requête et colle exactement :
+
+select type, count(*) as nombre,
+       count(*) filter (where processed_at is not null) as traites,
+       max(error) as une_erreur
+from stripe_events
+group by type
+order by type;
+
+2. Clique sur « Run ». Recopie le tableau en entier.
+3. Ouvre un autre onglet de requête et colle exactement :
+
+select id, type, received_at, payload
+from stripe_events
+order by received_at;
+
+4. Clique sur « Run », puis sur « Export » (ou « Download ») › « CSV ». Dis-moi : « Le fichier est téléchargé : joignez-le à la conversation avec Claude Code. » Ne l'ouvre pas, ne recopie pas son contenu.
+
+Ne touche surtout pas : aux tables, aux autres requêtes, aux réglages, au projet de production.
+
+Compte rendu à me donner : le tableau du point 2, et le nom du fichier téléchargé.
+```
+
+Le fichier contient les adresses e-mail de test et des identifiants Stripe du mode test : il n'entre pas tel quel dans le dépôt. Claude Code en tire des fixtures anonymisées (`example.com`, identifiants remplacés), rangées avec leur description dans `docs-internes/connectors/stripe-billing.md`.
+
+## 13. Supabase — la requête du seuil, sur la recette
+
+```
+Tu m'aides à vérifier une requête de PULSACITY sur la base de recette. Tu lances quatre requêtes, en lecture seule, et tu ne modifies rien.
+
+Où : https://supabase.com/dashboard/projects, organisation PULSACITY, projet « pulsacity-recette » (jamais « PULSACITY »), puis « SQL Editor ».
+
+Ouvre https://github.com/jawadboughalem/PULSACITY/blob/claude/dreamy-edison-yk9c9a/docs-internes/requetes/seuil-micro-entreprise.md : il contient quatre requêtes SQL, numérotées 1 à 4. Pour chacune, ouvre un onglet de requête, colle-la exactement, lance-la, et recopie le résultat.
+
+Ne touche surtout pas : aux tables, aux réglages, au projet de production.
+
+Compte rendu à me donner : les quatre résultats, recopiés. Ce ne sont que des nombres et des dates de test.
+```

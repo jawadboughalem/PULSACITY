@@ -67,7 +67,6 @@ export const startCheckout = async (
     ...(acceptsPromotionCodes(plan, period) ? { allow_promotion_codes: true } : {}),
     locale: "fr",
     billing_address_collection: "auto",
-    customer_update: { address: "auto", name: "auto" },
     consent_collection: { terms_of_service: "required" },
     custom_text: {
       terms_of_service_acceptance: {
