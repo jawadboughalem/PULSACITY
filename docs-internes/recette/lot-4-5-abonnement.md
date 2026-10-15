@@ -2,11 +2,12 @@
 
 Le compte Stripe est ouvert (2.8 a, le 15 octobre 2026), en particulier, avec contact@pulsacity.com. Rien n'y est encore réglé. Ce fichier tient, dans l'ordre, tous les prompts Claude in Chrome du lot (groupe d'onglets « PULSACITY »).
 
-Première phase, Stripe en mode test : prompts 1 à 5. Ils n'attendent pas le code : lancez-les dès maintenant, dans l'ordre.
+Première phase, Stripe en mode test : prompts 1 à 5. Ils n'attendent pas le code : lancez-les dès maintenant, dans l'ordre. Faits le 15 octobre (comptes rendus sous chaque prompt), sauf le 3 bis.
 - Prompt 1 : le compte (image de marque, informations publiques, liens légaux, reçus, factures). C'est le 2.8 b, complété. Fait le 15 octobre, compte rendu sous le prompt.
 - Prompt 1 bis : le bouton de la page de paiement, remis en Soleil.
 - Prompt 2 : les produits et les huit prix. Réécrit le 15 octobre, après un premier essai arrêté avant la création.
 - Prompt 3 : le portail client, les relances des paiements échoués, les e-mails de Stripe.
+- Prompt 3 bis : le lien des e-mails de Stripe vers la page hébergée par Stripe.
 - Prompt 4 : le code des bêta-testeurs.
 - Prompt 5 : la clé de test, collée par vous dans Vercel (aperçus seulement).
 
@@ -15,10 +16,11 @@ Deuxième phase, la PR ouverte ([#40](https://github.com/jawadboughalem/PULSACIT
 Troisième phase, la recette, qui capture en même temps les vrais événements de Stripe : prompts 8 à 11, puis le relevé des événements (prompt 12) et la requête du seuil (prompt 13). Claude Code en tire les fixtures, corrige ce qui doit l'être, puis donne la contre-recette.
 
 Plus tard, le passage en mode réel : seulement quand les lots 4.4 et 4.9 sont en ligne, Vercel en Pro et le compte Stripe activé (2.8 c). Ses prompts seront écrits à ce moment-là. Ils reprendront ce que le bac à sable ne laisse pas faire avant l'activation (compte rendu du prompt 1) :
-- les informations publiques : nom public PULSACITY, site, e-mail d'assistance, adresse des CGV et de la confidentialité. L'adresse des CGV est indispensable : sans elle, Stripe n'affiche pas la case des CGV de la page de paiement, que le code demande en mode réel ;
+- les informations publiques : nom public PULSACITY, site, e-mail d'assistance, adresse des CGV et de la confidentialité. L'adresse des CGV est indispensable : sans elle, Stripe n'affiche pas la case des CGV de la page de paiement, que le code demande en mode réel. Ces deux adresses donnent aussi les liens du portail client (« Aucun lien défini » en test) ;
 - le libellé sur les relevés bancaires (page Paiements, en mode réel seulement) ;
 - le pied de page des factures (textes de 2.7) ;
-- les moyens de paiement du portail : la carte seulement, comme la page de paiement.
+- les moyens de paiement du portail : la carte seulement, comme la page de paiement ;
+- en mode réel, les réglages des prompts 1 à 4 sont à refaire : un bac à sable ne partage rien avec le compte réel.
 
 Adresse de l'aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-projects.vercel.app
 
@@ -103,6 +105,8 @@ Vérification : l'aperçu de la page de paiement montre le fond #F4F8FF, le logo
 Compte rendu à me donner : la couleur du bouton, celle de son texte (choisie par toi ou par Stripe), le fond et la forme, relus après rechargement. Ni clé, ni identifiant.
 ```
 
+Compte rendu du 15 octobre : bouton #FFBE3B, texte choisi par Stripe (aucun réglage), foncé et lisible ; fond #F4F8FF, forme « Ronde », police système ; « Utiliser les couleurs de la marque » reste décoché.
+
 ## 2. Stripe — les produits et les huit prix
 
 Premier essai le 15 octobre, arrêté avant la création : sans Stripe Tax, le formulaire des prix ne propose pas « Inclure les taxes dans le prix ». Décision : les prix sont créés sans comportement fiscal (« non spécifié »), rien ne s'ajoute au prix, et le code n'exige plus « taxe incluse » (voir « À savoir » en haut). Ce prompt est la version réécrite.
@@ -153,6 +157,8 @@ Vérification : dans le catalogue, chaque produit a ses quatre prix, actifs. Ouv
 Compte rendu à me donner : pour chacun des huit prix, le montant, la période, le comportement fiscal affiché et la clé de recherche, relus sur la page du prix ; et le prix par défaut de chaque produit. Pas les identifiants (rien qui commence par price_ ou prod_).
 ```
 
+Compte rendu du 15 octobre : les deux produits et leurs huit prix créés, actifs, en EUR, récurrents, tarif fixe, sans essai ; montants, périodes, clés de recherche et descriptions exactement ceux du tableau ; prix par défaut 9,99 € et 19,99 € par mois. La page d'un prix n'affiche pas le comportement fiscal : relu en lecture seule dans l'inspecteur du Workbench, « non spécifié » sur les huit. Aucun bandeau Stripe Tax cliqué.
+
 ## 3. Stripe — le portail client, les relances, les e-mails
 
 ```
@@ -188,6 +194,31 @@ Vérification : rouvre le portail client et relis chaque réglage ; Stripe propo
 Compte rendu à me donner : chaque réglage fait, tel que relu après l'enregistrement, et ce que tu n'as pas trouvé. Ni clé, ni identifiant (rien qui commence par bpc_, acct_, sk_ ou pk_).
 ```
 
+Compte rendu du 15 octobre :
+- Portail client enregistré : historique des factures ; e-mail, adresse de facturation et nom modifiables (le nom l'était déjà) ; téléphone et numéro fiscal désactivés ; moyens de paiement modifiables ; résiliation à la fin de la période (pas de prorata dans ce mode), avec les 8 motifs ; changement d'offre et de quantité désactivés ; pas d'option de pause dans ce portail ; titre « PULSACITY : votre abonnement et vos factures » ; redirection https://pulsacity.com/app/facturation ; lien de connexion désactivé. Aperçu : abonnement avec « Annuler l'abonnement », moyen de paiement, factures.
+- Liens CGV et confidentialité du portail : ils viennent des informations publiques du compte, réservées au compte activé. « Aucun lien défini » en test ; ils passent aux prompts du mode réel.
+- Relances : Smart Retries déjà à 8 tentatives en 2 semaines, puis annulation ; e-mails de carte refusée, de carte qui expire et de confirmation 3D Secure activés (Stripe a ajouté des rappels à 3, 5 et 7 jours).
+- Lien de ces e-mails : un lien personnalisé vers https://pulsacity.com était en place. Le passage à la page hébergée par Stripe est irréversible et vaut pour tous les e-mails aux clients : l'agent s'est arrêté pour confirmation. Décision : on passe à la page hébergée par Stripe (prompt 3 bis). Le client y change sa carte, paie la facture restée ouverte ou confirme le 3D Secure, sans se connecter à PULSACITY ; l'accueil de pulsacity.com ne lui permettait rien de tout ça. On ne voudra jamais revenir en arrière : notre page renverrait de toute façon vers Stripe.
+- Rappels de renouvellement aux clients : Stripe ne sait pas les limiter aux abonnements annuels, laissés désactivés. Essais gratuits inchangés.
+
+## 3 bis. Stripe — le lien des e-mails vers la page hébergée par Stripe
+
+```
+Tu m'aides à changer un seul réglage des e-mails de Stripe pour PULSACITY, dans le bac à sable « PULSACITY » (environnement de test, bandeau « Environnement de test » visible). Je suis connecté.
+
+Où : https://dashboard.stripe.com/ › Paramètres › Billing, là où tu as réglé les relances et les e-mails des paiements échoués au prompt précédent : le réglage du lien mis dans les e-mails aux clients (aujourd'hui un lien personnalisé vers https://pulsacity.com). Vérifie d'abord que tu es bien dans le bac à sable.
+
+Ce qu'il ne faut surtout pas toucher : le mode réel, l'activation du compte, les informations publiques, les clés API, les produits et les prix, le portail client, les nouvelles tentatives (Smart Retries), les rappels de renouvellement, Stripe Tax.
+
+1. Passe le lien des e-mails aux clients sur la page hébergée par Stripe (« Stripe-hosted page »). Stripe prévient que ce changement est irréversible et qu'il vaut pour tous les e-mails aux clients : je le confirme, c'est voulu. Accepte l'avertissement.
+2. Vérifie que les e-mails de paiement par carte refusé, de carte qui expire et de confirmation 3D Secure (avec ses rappels) sont toujours activés.
+Enregistre si Stripe le demande.
+
+Vérification : recharge la page. Le lien des e-mails est la page hébergée par Stripe ; les trois e-mails sont activés ; les nouvelles tentatives restent à 8 en 2 semaines, puis annulation de l'abonnement. Si Stripe propose l'aperçu d'un e-mail de paiement refusé, ouvre-le : son bouton mène à une page de Stripe.
+
+Compte rendu à me donner : le réglage du lien relu après rechargement, le texte exact de l'avertissement de Stripe, l'état des trois e-mails. Ni clé, ni identifiant.
+```
+
 ## 4. Stripe — le code des bêta-testeurs
 
 Les bêta-testeurs ont le plan Essentiel offert 3 mois, carte demandée, puis le prix de lancement (`decisions/tarifs.md`, arbitrage n° 3). Le code ne marche que sur Essentiel en mensuel : la page de paiement annuelle ne propose pas de code, pour qu'il n'offre jamais une année entière.
@@ -217,6 +248,8 @@ Vérification : le coupon montre 100 %, 3 mois, le produit PULSACITY Essentiel e
 Compte rendu à me donner : le coupon et le code, tels que relus sur leur page (nom, identifiant du coupon, pourcentage, durée, produit, code, restrictions). Pas d'autre identifiant (rien qui commence par promo_, sk_ ou acct_).
 ```
 
+Compte rendu du 15 octobre : coupon « Bêta-testeur : Essentiel offert 3 mois », identifiant beta-essentiel-3-mois, 100 % pendant 3 mois, PULSACITY Essentiel seulement, sans limite de date ni d'utilisations. Code BETA-PULSACITY rattaché au coupon, actif, 0 sur 30 utilisations, première commande seulement, sans montant minimum, sans expiration, sans client particulier (relu dans l'inspecteur du Workbench).
+
 ## 5. Stripe puis Vercel — la clé de test, collée par vous
 
 Le secret ne passe jamais par une conversation : c'est vous qui le copiez dans Stripe et le collez dans Vercel.
@@ -241,6 +274,8 @@ Vérification : la liste des variables montre STRIPE_SECRET_KEY, en « Preview �
 Compte rendu à me donner : « STRIPE_SECRET_KEY ajoutée en Preview seulement », et le préfixe vu dans Stripe (« sk_test_ », rien de plus). Jamais la clé.
 ```
 
+Compte rendu du 15 octobre : STRIPE_SECRET_KEY ajoutée en Preview seulement, de type secret (valeur illisible), pour toutes les branches d'aperçu ; préfixe vu dans Stripe : « sk_test_ ». Le bouton « Redeploy » proposé par Vercel n'a pas été cliqué : le prompt 6 redéploie une fois les deux variables en place.
+
 ---
 
 # Deuxième phase — le webhook vers l'aperçu
@@ -260,6 +295,7 @@ Ce qu'il ne faut surtout pas toucher : le mode réel de Stripe, les produits, le
 2. Stripe, https://dashboard.stripe.com/ , environnement de test des prompts précédents (vérifie-le). Développeurs › « Webhooks » (ou Workbench › « Webhooks ») › « Ajouter une destination » (« Add destination » / « Add endpoint ») :
    - événements de : « Votre compte » (« Your account ») ;
    - version de l'API : 2026-09-30.endive. Si elle n'est pas proposée, prends la plus récente et dis-moi laquelle ;
+   - format des événements, si Stripe le demande : « Instantané » (« Snapshot »), l'événement complet. Jamais « Allégé » (« Thin ») ;
    - événements à envoyer, exactement ceux-ci (20) :
      checkout.session.completed
      checkout.session.async_payment_succeeded
@@ -288,7 +324,7 @@ Ce qu'il ne faut surtout pas toucher : le mode réel de Stripe, les produits, le
    puis arrête-toi et dis-moi : « Collez le secret de Vercel juste à la fin de l'adresse, sans espace, puis dites-moi OK. » Attends mon OK, puis crée la destination.
 4. Sur la page de la destination créée, repère le « Secret de signature » (« Signing secret », il commence par whsec_). Ne clique pas sur « Révéler » : dis-moi « Révélez et copiez le secret de signature, puis dites-moi OK. » Attends mon OK.
 5. Vercel, https://vercel.com/jawadboughalems-projects/pulsacity/settings/environment-variables : ajoute STRIPE_WEBHOOK_SECRET, environnement « Preview » SEULEMENT (ni Production, ni Development), toutes les branches d'aperçu, « Sensitive » si l'option existe. Pour la valeur, dis-moi : « Collez le secret de signature dans Value, puis dites-moi OK. » Attends mon OK, puis enregistre. Si la variable existe déjà en Preview, ne crée rien et dis-le-moi.
-6. Stripe, Paramètres › Billing › « Abonnements et e-mails » (« Subscriptions and emails ») : si un réglage « Événements de renouvellement à venir » (« Upcoming renewal events », l'envoi de invoice.upcoming) existe, mets-le à 7 jours avant. Ne change rien d'autre.
+6. Stripe, Paramètres › Billing › « Abonnements et e-mails » (« Subscriptions and emails ») : cherche le réglage « Événements de renouvellement à venir » (« Upcoming renewal events »). Il règle quand Stripe envoie l'événement invoice.upcoming à PULSACITY, et n'envoie aucun e-mail aux clients. Mets-le à 7 jours avant. Ne confonds pas avec les « Rappels de renouvellement » envoyés par e-mail aux clients : ils restent désactivés. Ne change rien d'autre. Si le réglage n'existe pas, dis-le-moi.
 7. Vercel, https://vercel.com/jawadboughalems-projects/pulsacity/deployments : ouvre le dernier déploiement de la branche claude/dreamy-edison-yk9c9a, menu « … » › « Redeploy » (garde les options par défaut). Attends l'état « Ready ». C'est indispensable : un déploiement ne lit que les variables qui existaient à sa construction.
 
 Vérification :
@@ -296,7 +332,7 @@ Vérification :
 - Vercel montre STRIPE_SECRET_KEY et STRIPE_WEBHOOK_SECRET en Preview seulement ;
 - le dernier déploiement de la branche est « Ready », construit après l'ajout des variables.
 
-Compte rendu à me donner : la version d'API choisie, le nombre d'événements, le réglage des renouvellements à venir (trouvé ou non, valeur), les deux variables vues en Preview, l'heure du déploiement « Ready ». Jamais un secret, ni l'adresse complète avec son secret, ni un identifiant (we_, whsec_, acct_).
+Compte rendu à me donner : la version d'API choisie, le format des événements, le nombre d'événements, le réglage des renouvellements à venir (trouvé ou non, valeur), les deux variables vues en Preview, l'heure du déploiement « Ready ». Jamais un secret, ni l'adresse complète avec son secret, ni un identifiant (we_, whsec_, acct_).
 ```
 
 ## 7. GitHub — l'espace de recette, depuis la branche de la PR
