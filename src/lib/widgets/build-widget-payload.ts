@@ -35,6 +35,8 @@ export type WidgetPayloadInput = {
   /** Featured first, then the most recent, already cut to this answer. */
   testimonials: WidgetTestimonialSource[];
   offset: number;
+  /** The most the plan lets a widget show (back on the free plan: 15), or null; « Voir les autres avis » stops there. */
+  shownLimit?: number | null;
 };
 
 /** A wall shows its first testimonials, then « Voir les autres avis » brings the next ones. */
@@ -86,7 +88,7 @@ export const buildWidgetPayload = (input: WidgetPayloadInput): WidgetPayload => 
     average: settings.showRating && total > 0 ? input.averageRating : null,
     testimonials: isBadge ? [] : input.testimonials.map((testimonial) => toPublicTestimonial(testimonial, settings)),
     avatars: isBadge ? input.testimonials.map((testimonial) => toBadgeAvatar(testimonial, settings)) : [],
-    next: type === "wall" && shownUntil < total ? shownUntil : null,
+    next: type === "wall" && shownUntil < Math.min(total, input.shownLimit ?? total) ? shownUntil : null,
     poweredBy: input.poweredBy,
   };
 };

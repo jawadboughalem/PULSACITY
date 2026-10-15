@@ -5,7 +5,6 @@ import {
   PLAN_COMPARISON,
   PLAN_PRESENTATIONS,
   POWERED_BY_MENTION,
-  SHOWN_PRICE_LIST,
   YEARLY_FREE_MONTHS,
   countFreeMonths,
   describeLaunchPrice,
@@ -75,10 +74,9 @@ describe("countFreeMonths", () => {
 
 describe("readPlanPrice", () => {
   it("shows the founder prices while no space pays (arbitrage n° 1)", () => {
-    expect(SHOWN_PRICE_LIST).toBe("founder");
-    expect(readPlanPrice("essentiel", "monthly")).toBe(999);
-    expect(readPlanPrice("pro", "yearly")).toBe(19900);
-    expect(readPlanPrice("free", "monthly")).toBe(0);
+    expect(readPlanPrice("essentiel", "monthly", "founder")).toBe(999);
+    expect(readPlanPrice("pro", "yearly", "founder")).toBe(19900);
+    expect(readPlanPrice("free", "monthly", "founder")).toBe(0);
   });
 
   it("reads the public prices once the founder price is closed", () => {
@@ -90,16 +88,16 @@ describe("readPlanPrice", () => {
 
 describe("describeLaunchPrice", () => {
   it("says what comes after the founder price, in the period shown", () => {
-    expect(describeLaunchPrice("essentiel", "monthly")).toMatch(
+    expect(describeLaunchPrice("essentiel", "monthly", "founder")).toMatch(
       /^Prix de lancement, gardé à vie, pour les 100 premiers abonnés\. Ensuite, 14,99\s€ par mois\.$/,
     );
-    expect(describeLaunchPrice("pro", "monthly")).toMatch(/Ensuite, 24,99\s€ par mois\.$/);
-    expect(describeLaunchPrice("essentiel", "yearly")).toMatch(/Ensuite, 149\s€ par an\.$/);
-    expect(describeLaunchPrice("pro", "yearly")).toMatch(/Ensuite, 249\s€ par an\.$/);
+    expect(describeLaunchPrice("pro", "monthly", "founder")).toMatch(/Ensuite, 24,99\s€ par mois\.$/);
+    expect(describeLaunchPrice("essentiel", "yearly", "founder")).toMatch(/Ensuite, 149\s€ par an\.$/);
+    expect(describeLaunchPrice("pro", "yearly", "founder")).toMatch(/Ensuite, 249\s€ par an\.$/);
   });
 
   it("says nothing on the free plan, nor once the public prices are shown", () => {
-    expect(describeLaunchPrice("free", "monthly")).toBeNull();
+    expect(describeLaunchPrice("free", "monthly", "founder")).toBeNull();
     expect(describeLaunchPrice("essentiel", "monthly", "public")).toBeNull();
   });
 });

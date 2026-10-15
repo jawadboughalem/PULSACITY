@@ -2,7 +2,7 @@ import { cn } from "@/lib/cn";
 import { Icon } from "./Icon";
 import type { IconName } from "./icon-paths";
 
-export type BadgeTone = "success" | "waiting" | "neutral" | "error" | "soon" | "paper" | "outline" | "dashed";
+export type BadgeTone = "success" | "waiting" | "neutral" | "error" | "soon" | "paper" | "outline" | "dashed" | "sun";
 
 /** Charte v2, Badge de statut. The colour is never alone: the icon and the word carry the state. */
 const TONE_CLASSES = {
@@ -22,6 +22,8 @@ const TONE_CLASSES = {
   outline: "border-2 border-ink bg-white text-ink",
   /** m19: will never leave. */
   dashed: "border-2 border-dashed border-gray bg-white text-gray",
+  /** 3.3, « Votre plan »: Encre on Soleil, without an icon. */
+  sun: "bg-sun text-ink",
 } as const satisfies Record<BadgeTone, string>;
 
 type ToneBadgeProps = {
