@@ -6,6 +6,7 @@ import { z } from "zod";
 import { WIDGETS_SECTION_HREF } from "@/components/space/space-sections";
 import { getDb } from "@/db";
 import { requireSignedInUser } from "@/lib/auth/require-signed-in-user";
+import { chooseDisplayedWidget } from "@/lib/widgets/free-plan-widgets";
 import { createWidget, updateWidget } from "@/lib/widgets/space-widgets";
 import { widgetChangeSchema } from "@/lib/widgets/widget-settings";
 
@@ -37,4 +38,18 @@ export const createWidgetFromList = async (): Promise<CreateWidgetResult> => {
 
   revalidatePath(WIDGETS_SECTION_HREF);
   redirect(`${WIDGETS_SECTION_HREF}/${result.widgetId}`);
+};
+
+export type ChooseDisplayedWidgetResult = { ok: true; data: null } | { ok: false; error: "widget-not-found" };
+
+/** « Afficher celui-ci à la place », on the free plan: this widget shows on its page, the one shown so far is paused. */
+export const chooseDisplayedWidgetAction = async (widgetId: string): Promise<ChooseDisplayedWidgetResult> => {
+  const signedInUser = await requireSignedInUser();
+  const parsedId = z.uuid().safeParse(widgetId);
+  if (!parsedId.success) return { ok: false, error: "widget-not-found" };
+  const result = await chooseDisplayedWidget(getDb(), signedInUser.id, parsedId.data);
+  if (result.status !== "chosen") return { ok: false, error: "widget-not-found" };
+
+  revalidatePath(WIDGETS_SECTION_HREF);
+  return { ok: true, data: null };
 };

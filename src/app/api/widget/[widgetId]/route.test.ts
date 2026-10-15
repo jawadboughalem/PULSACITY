@@ -266,6 +266,55 @@ describe("GET /api/widget/[widgetId]", () => {
     await fetchWidget(widgetId, { origin: CREATOR_PAGE });
     expect(testContext.scheduled).toHaveLength(1);
   });
+
+  it("back on the free plan, keeps one widget on its page and pauses the others, like unknown ones", async () => {
+    await insertTestTestimonial(database, { spaceId, authorName: "Nadia B.", status: "approved" });
+    const wall = await insertWidget({ createdAt: daysAgo(30) });
+    const carousel = await insertWidget({ type: "carousel", createdAt: daysAgo(10) });
+    await database.update(spaces).set({ plan: "essentiel" }).where(eq(spaces.id, spaceId));
+    expect((await fetchWidget(carousel)).status).toBe(200);
+
+    await database.update(spaces).set({ plan: "free" }).where(eq(spaces.id, spaceId));
+    expect((await fetchWidget(wall)).status).toBe(200);
+    const paused = await fetchWidget(carousel);
+    expect(paused.status).toBe(404);
+    expect(await paused.json()).toEqual({ error: "not-found" });
+
+    // « Afficher celui-ci à la place »
+    await database.update(widgets).set({ freePlanChosenAt: daysAgo(1) }).where(eq(widgets.id, carousel));
+    expect((await fetchWidget(wall)).status).toBe(404);
+    expect((await fetchWidget(carousel)).status).toBe(200);
+  });
+
+  it("back on the free plan, shows 15 testimonials, featured first, then the newest, and no more", async () => {
+    for (let day = 0; day < 20; day += 1) {
+      await insertTestTestimonial(database, {
+        spaceId,
+        authorName: `Client ${day}`,
+        status: "approved",
+        featured: day === 19,
+        createdAt: daysAgo(day),
+      });
+    }
+    const widgetId = await insertWidget({ settings: { maxItems: 12 } });
+    const first = await (await fetchWidget(widgetId)).json();
+    expect(first.testimonials).toHaveLength(12);
+    expect(first.testimonials[0].name).toBe("Client 19");
+    expect(first.total).toBe(20);
+    expect(first.next).toBe(12);
+    const rest = await (await fetchWidget(widgetId, { offset: "12" })).json();
+    // Client 19 (featured), then Client 0 to Client 10, then the last three of the fifteen.
+    expect(rest.testimonials.map((testimonial: { name: string }) => testimonial.name)).toEqual([
+      "Client 11",
+      "Client 12",
+      "Client 13",
+    ]);
+    expect(rest.next).toBeNull();
+
+    await database.update(spaces).set({ plan: "essentiel" }).where(eq(spaces.id, spaceId));
+    const paid = await (await fetchWidget(widgetId, { offset: "12" })).json();
+    expect(paid.testimonials).toHaveLength(8);
+  });
 });
 
 describe("OPTIONS /api/widget/[widgetId]", () => {

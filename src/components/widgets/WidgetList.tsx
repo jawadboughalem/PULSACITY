@@ -2,11 +2,23 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { type CreateWidgetResult, createWidgetFromList } from "@/app/app/(espace)/widgets/widget-actions";
+import {
+  type CreateWidgetResult,
+  chooseDisplayedWidgetAction,
+  createWidgetFromList,
+} from "@/app/app/(espace)/widgets/widget-actions";
 import { BILLING_HREF, widgetEditorHref, widgetGuideHref } from "@/components/space/space-sections";
-import { INLINE_LINK_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import {
+  DISCREET_BUTTON_CLASSES,
+  INLINE_LINK_CLASSES,
+  PRIMARY_BUTTON_CLASSES,
+  SECONDARY_BUTTON_CLASSES,
+  SECONDARY_COMPACT_BUTTON_CLASSES,
+} from "@/components/ui/button-styles";
 import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
+import { StatusBanner } from "@/components/ui/StatusBanner";
+import { ToneBadge } from "@/components/ui/ToneBadge";
 import { cn } from "@/lib/cn";
 import type { WidgetType } from "../../../widget/src/payload";
 import { WidgetThumbnail } from "./WidgetThumbnail";
@@ -20,7 +32,12 @@ export type ListedWidget = {
   description: string;
   /** « Sur une page depuis le 12 sept. 2026 », or null before the first display. */
   shownSince: string | null;
+  /** Back on the free plan with more widgets than it allows: shown or paused, and why. Null otherwise. */
+  display: WidgetDisplay | null;
 };
+
+/** Maquette 8.3, Widgets au retour au Gratuit: « Affiché » or « En pause », with the sentence that says what it means. */
+export type WidgetDisplay = { state: "shown" | "paused"; note: string };
 
 export type CreateLimit = {
   planName: string;
@@ -33,6 +50,8 @@ type WidgetListProps = {
   widgets: ListedWidget[];
   /** Null while the plan allows one more widget. */
   createLimit: CreateLimit | null;
+  /** Some widgets are paused by the free plan: the banner says it, once, above the list. */
+  isPausing: boolean;
 };
 
 const CREATE_ERRORS: Record<CreateWidgetResult["error"], string> = {
@@ -89,8 +108,25 @@ const EmptyState = () => (
   </section>
 );
 
+const DisplayNote = ({ widget, display }: { widget: ListedWidget; display: WidgetDisplay }) => (
+  <div className="flex flex-col items-start gap-1">
+    <p className="text-small text-gray">{display.note}</p>
+    {display.state === "paused" ? (
+      <form
+        action={async () => {
+          await chooseDisplayedWidgetAction(widget.id);
+        }}
+      >
+        <button type="submit" className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px] text-small")}>
+          Afficher celui-ci à la place
+        </button>
+      </form>
+    ) : null}
+  </div>
+);
+
 /** Maquette 18: the widgets of the space, each with its shape, what it shows and whether it is on a page yet. */
-export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
+export const WidgetList = ({ widgets, createLimit, isPausing }: WidgetListProps) => {
   const [result, createWidget, isCreating] = useActionState<CreateWidgetResult | null>(createWidgetFromList, null);
 
   return (
@@ -124,6 +160,15 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
       </div>
       {result && !result.ok ? <FieldError id="create-widget-error" message={CREATE_ERRORS[result.error]} /> : null}
 
+      {isPausing ? (
+        <StatusBanner tone="info" title="Au plan Gratuit, un widget s'affiche.">
+          <p>Les autres sont en pause : leur code reste sur vos pages, ils reviennent tout seuls avec le plan Essentiel.</p>
+          <Link href={BILLING_HREF} className={cn(SECONDARY_COMPACT_BUTTON_CLASSES, "mt-3")}>
+            Voir les plans
+          </Link>
+        </StatusBanner>
+      ) : null}
+
       {widgets.length === 0 ? (
         <EmptyState />
       ) : (
@@ -136,9 +181,13 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
               <div className="flex min-w-[0] flex-1 items-start gap-4 desktop:gap-8">
                 <WidgetThumbnail type={widget.type} className="w-[72px] desktop:w-[120px]" />
                 <div className="flex min-w-[0] flex-col gap-1">
-                  <h2 className="font-display text-h3">{widget.title}</h2>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <h2 className="font-display text-h3">{widget.title}</h2>
+                    {widget.display?.state === "shown" ? <ToneBadge tone="success" label="Affiché" icon="valid" /> : null}
+                    {widget.display?.state === "paused" ? <ToneBadge tone="neutral" label="En pause" icon="pause" /> : null}
+                  </div>
                   <p className="text-small text-gray">{widget.description}</p>
-                  <WidgetStatus widget={widget} />
+                  {widget.display ? <DisplayNote widget={widget} display={widget.display} /> : <WidgetStatus widget={widget} />}
                 </div>
               </div>
               <Link
@@ -153,7 +202,7 @@ export const WidgetList = ({ widgets, createLimit }: WidgetListProps) => {
         </ul>
       )}
 
-      {createLimit && widgets.length > 0 ? (
+      {createLimit && widgets.length > 0 && !isPausing ? (
         <aside className="flex items-start gap-[14px] rounded-card bg-sky px-5 py-4 text-ink desktop:px-6 desktop:py-5">
           <Icon name="info" size={24} className="mt-[1px] shrink-0" />
           <div className="flex min-w-[0] flex-col gap-1">

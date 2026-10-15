@@ -2,6 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   FOUNDER_PRICE_SEATS,
   PLANS,
+  STRIPE_PRICE_KEYS,
+  comparePlans,
+  parseStripeLookupKey,
+  readStripeLookupKey,
+  readStripePriceAmount,
   UNLIMITED,
   canAddTestimonial,
   canCreateWidget,
@@ -148,5 +153,47 @@ describe("canRequestManually", () => {
       expect(canRequestManually(space, 19)).toBe(true);
       expect(canRequestManually(space, 20)).toBe(false);
     }
+  });
+});
+
+describe("Stripe prices", () => {
+  it("names the eight prices the founder types in Stripe (recette, prompt 2)", () => {
+    expect(STRIPE_PRICE_KEYS.map(readStripeLookupKey).sort()).toEqual([
+      "essentiel_monthly_founder",
+      "essentiel_monthly_public",
+      "essentiel_yearly_founder",
+      "essentiel_yearly_public",
+      "pro_monthly_founder",
+      "pro_monthly_public",
+      "pro_yearly_founder",
+      "pro_yearly_public",
+    ]);
+  });
+
+  it("reads back the plan, the period and the price list of each lookup key", () => {
+    for (const key of STRIPE_PRICE_KEYS) expect(parseStripeLookupKey(readStripeLookupKey(key))).toEqual(key);
+    expect(parseStripeLookupKey("free_monthly_founder")).toBeNull();
+    expect(parseStripeLookupKey("essentiel_weekly_founder")).toBeNull();
+    expect(parseStripeLookupKey(null)).toBeNull();
+  });
+
+  it("takes every amount from the plans, the founder prices below the public ones", () => {
+    expect(readStripePriceAmount({ plan: "essentiel", period: "monthly", priceList: "founder" })).toBe(999);
+    expect(readStripePriceAmount({ plan: "essentiel", period: "yearly", priceList: "founder" })).toBe(9900);
+    expect(readStripePriceAmount({ plan: "essentiel", period: "monthly", priceList: "public" })).toBe(1499);
+    expect(readStripePriceAmount({ plan: "essentiel", period: "yearly", priceList: "public" })).toBe(14900);
+    expect(readStripePriceAmount({ plan: "pro", period: "monthly", priceList: "founder" })).toBe(1999);
+    expect(readStripePriceAmount({ plan: "pro", period: "yearly", priceList: "founder" })).toBe(19900);
+    expect(readStripePriceAmount({ plan: "pro", period: "monthly", priceList: "public" })).toBe(2499);
+    expect(readStripePriceAmount({ plan: "pro", period: "yearly", priceList: "public" })).toBe(24900);
+  });
+});
+
+describe("comparePlans", () => {
+  it("puts Pro above Essentiel, above Gratuit", () => {
+    expect(comparePlans("free", "essentiel")).toBeGreaterThan(0);
+    expect(comparePlans("essentiel", "pro")).toBeGreaterThan(0);
+    expect(comparePlans("pro", "essentiel")).toBeLessThan(0);
+    expect(comparePlans("essentiel", "essentiel")).toBe(0);
   });
 });

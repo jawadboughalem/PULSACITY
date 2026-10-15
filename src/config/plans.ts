@@ -8,6 +8,11 @@ export type Limit = number | typeof UNLIMITED;
 
 export type PlanPrices = { monthly: number; yearly: number };
 
+/** « Mensuel » or « Annuel »: how often a paid plan is charged. */
+export type BillingPeriod = keyof PlanPrices;
+
+export const BILLING_PERIODS: BillingPeriod[] = ["monthly", "yearly"];
+
 export type Plan = {
   id: PlanId;
   name: string;
@@ -65,6 +70,48 @@ export function readOpenPriceList(founderSubscribers: number): PriceList {
 
 export function readPlanPrices(plan: Plan, priceList: PriceList): PlanPrices {
   return priceList === "founder" ? plan.founderPriceCents : plan.priceCents;
+}
+
+export const PAID_PLAN_IDS = ["essentiel", "pro"] as const satisfies readonly PlanId[];
+
+export type PaidPlanId = (typeof PAID_PLAN_IDS)[number];
+
+export const PRICE_LISTS: PriceList[] = ["founder", "public"];
+
+/** One of the eight Stripe prices: a paid plan, its period, and the founder or the public amount. */
+export type StripePriceKey = { plan: PaidPlanId; period: BillingPeriod; priceList: PriceList };
+
+/**
+ * The lookup key of a Stripe price (« essentiel_monthly_founder »): the founder types it in Stripe once, and the code
+ * finds the price with it, in test and in live mode alike. The amount stays here: the code checks Stripe against it.
+ */
+export function readStripeLookupKey({ plan, period, priceList }: StripePriceKey): string {
+  return `${plan}_${period}_${priceList}`;
+}
+
+export const STRIPE_PRICE_KEYS: StripePriceKey[] = PAID_PLAN_IDS.flatMap((plan) =>
+  BILLING_PERIODS.flatMap((period) => PRICE_LISTS.map((priceList) => ({ plan, period, priceList }))),
+);
+
+/** The plan, period and price list behind a lookup key; null for a price PULSACITY does not sell. */
+export function parseStripeLookupKey(lookupKey: string | null | undefined): StripePriceKey | null {
+  return STRIPE_PRICE_KEYS.find((key) => readStripeLookupKey(key) === lookupKey) ?? null;
+}
+
+/** What a Stripe price must charge, from the plans above. */
+export function readStripePriceAmount({ plan, period, priceList }: StripePriceKey): number {
+  return readPlanPrices(PLANS[plan], priceList)[period];
+}
+
+export function isPaidPlan(id: PlanId): id is PaidPlanId {
+  return id !== "free";
+}
+
+const PLAN_RANKS: Record<PlanId, number> = { free: 0, essentiel: 1, pro: 2 };
+
+/** Pro is above Essentiel, which is above Gratuit: moving up is immediate, moving down waits for the period's end. */
+export function comparePlans(from: PlanId, to: PlanId): number {
+  return PLAN_RANKS[to] - PLAN_RANKS[from];
 }
 
 export type SpacePlan = { plan: PlanId };
