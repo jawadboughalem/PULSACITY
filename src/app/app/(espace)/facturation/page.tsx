@@ -86,7 +86,7 @@ const BillingPage = async ({ searchParams }: PageProps<"/app/facturation">) => {
         <CurrentPlanCard overview={overview} now={now} />
         {isPending ? null : (
           <PlanChanger
-            current={current ?? { plan: "free", period: "monthly" }}
+            current={current ?? { plan: overview.plan, period: "monthly" }}
             priceList={overview.priceList}
             isSubscribed={current !== null}
           />

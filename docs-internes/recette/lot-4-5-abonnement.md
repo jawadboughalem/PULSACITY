@@ -9,7 +9,9 @@ Première phase, Stripe en mode test : prompts 1 à 5. Ils n'attendent pas le co
 - Prompt 4 : le code des bêta-testeurs.
 - Prompt 5 : la clé de test, collée par vous dans Vercel (aperçus seulement).
 
-Deuxième phase, une fois la PR ouverte : le webhook vers l'aperçu (prompt 6), puis la recette. Ils seront ajoutés ici avec la PR.
+Deuxième phase, la PR ouverte ([#40](https://github.com/jawadboughalem/PULSACITY/pull/40)) : le webhook vers l'aperçu (prompt 6), l'espace de recette (prompt 7), puis la recette, qui capture en même temps les vrais événements de Stripe (prompts suivants, ajoutés ici avec eux).
+
+Adresse de l'aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-projects.vercel.app
 
 À savoir :
 - Tout se fait dans l'environnement de test de Stripe : le « mode test », ou un « bac à sable » (sandbox), selon ce que Stripe vous a ouvert. Le prompt 1 le relève ; les suivants restent dans le même.
@@ -194,3 +196,84 @@ Vérification : la liste des variables montre STRIPE_SECRET_KEY, en « Preview �
 
 Compte rendu à me donner : « STRIPE_SECRET_KEY ajoutée en Preview seulement », et le préfixe vu dans Stripe (« sk_test_ », rien de plus). Jamais la clé.
 ```
+
+---
+
+# Deuxième phase — le webhook vers l'aperçu
+
+## 6. Vercel et Stripe — le webhook de recette, et son secret collé par vous
+
+Avant ce prompt : prompts 1 à 5 faits ; connectez-vous à Vercel et à Stripe. Deux secrets passent par vos mains, jamais par une conversation : celui de « Protection Bypass for Automation » (Vercel), et celui du webhook (Stripe, « whsec_ »).
+
+```
+Tu m'aides à brancher les événements Stripe de test sur l'aperçu Vercel de la PR #40 de PULSACITY. Tu ne lis jamais un secret : c'est moi qui les copie et les colle.
+
+Adresse de l'aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-projects.vercel.app
+
+Ce qu'il ne faut surtout pas toucher : le mode réel de Stripe, les produits, les prix, le portail, les autres webhooks ; dans Vercel, « Vercel Authentication » (il reste activé), les variables de Production, les domaines, le déploiement de production.
+
+1. Vercel, https://vercel.com/jawadboughalems-projects/pulsacity/settings/deployment-protection, rubrique « Protection Bypass for Automation » : vérifie qu'un secret existe (n'en crée pas s'il y en a un ; s'il n'y en a aucun, crée-le). Arrête-toi et dis-moi : « Copiez le secret de Protection Bypass for Automation et gardez-le pour l'étape 3, puis dites-moi OK. » Attends mon OK.
+2. Stripe, https://dashboard.stripe.com/ , environnement de test des prompts précédents (vérifie-le). Développeurs › « Webhooks » (ou Workbench › « Webhooks ») › « Ajouter une destination » (« Add destination » / « Add endpoint ») :
+   - événements de : « Votre compte » (« Your account ») ;
+   - version de l'API : 2026-09-30.endive. Si elle n'est pas proposée, prends la plus récente et dis-moi laquelle ;
+   - événements à envoyer, exactement ceux-ci (20) :
+     checkout.session.completed
+     checkout.session.async_payment_succeeded
+     checkout.session.async_payment_failed
+     customer.subscription.created
+     customer.subscription.updated
+     customer.subscription.deleted
+     customer.subscription.paused
+     customer.subscription.resumed
+     customer.subscription.pending_update_applied
+     customer.subscription.pending_update_expired
+     invoice.paid
+     invoice.payment_failed
+     invoice.payment_action_required
+     invoice.upcoming
+     subscription_schedule.updated
+     subscription_schedule.released
+     subscription_schedule.canceled
+     subscription_schedule.completed
+     customer.updated
+     payment_method.attached
+   - type de destination : « Point de terminaison webhook » (« Webhook endpoint ») ;
+   - nom ou description : PULSACITY recette (aperçu de la PR 40)
+3. Adresse du point de terminaison : tape exactement
+   https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadboughalems-projects.vercel.app/api/stripe/webhook?x-vercel-protection-bypass=
+   puis arrête-toi et dis-moi : « Collez le secret de Vercel juste à la fin de l'adresse, sans espace, puis dites-moi OK. » Attends mon OK, puis crée la destination.
+4. Sur la page de la destination créée, repère le « Secret de signature » (« Signing secret », il commence par whsec_). Ne clique pas sur « Révéler » : dis-moi « Révélez et copiez le secret de signature, puis dites-moi OK. » Attends mon OK.
+5. Vercel, https://vercel.com/jawadboughalems-projects/pulsacity/settings/environment-variables : ajoute STRIPE_WEBHOOK_SECRET, environnement « Preview » SEULEMENT (ni Production, ni Development), toutes les branches d'aperçu, « Sensitive » si l'option existe. Pour la valeur, dis-moi : « Collez le secret de signature dans Value, puis dites-moi OK. » Attends mon OK, puis enregistre. Si la variable existe déjà en Preview, ne crée rien et dis-le-moi.
+6. Stripe, Paramètres › Billing › « Abonnements et e-mails » (« Subscriptions and emails ») : si un réglage « Événements de renouvellement à venir » (« Upcoming renewal events », l'envoi de invoice.upcoming) existe, mets-le à 7 jours avant. Ne change rien d'autre.
+7. Vercel, https://vercel.com/jawadboughalems-projects/pulsacity/deployments : ouvre le dernier déploiement de la branche claude/dreamy-edison-yk9c9a, menu « … » › « Redeploy » (garde les options par défaut). Attends l'état « Ready ». C'est indispensable : un déploiement ne lit que les variables qui existaient à sa construction.
+
+Vérification :
+- la destination Stripe montre l'adresse de l'aperçu (le secret, masqué ou non, à la fin), la version d'API et 20 événements ;
+- Vercel montre STRIPE_SECRET_KEY et STRIPE_WEBHOOK_SECRET en Preview seulement ;
+- le dernier déploiement de la branche est « Ready », construit après l'ajout des variables.
+
+Compte rendu à me donner : la version d'API choisie, le nombre d'événements, le réglage des renouvellements à venir (trouvé ou non, valeur), les deux variables vues en Preview, l'heure du déploiement « Ready ». Jamais un secret, ni l'adresse complète avec son secret, ni un identifiant (we_, whsec_, acct_).
+```
+
+## 7. GitHub — l'espace de recette, depuis la branche de la PR
+
+```
+Tu m'aides à remplir l'espace de démonstration de PULSACITY sur la base de recette, depuis la branche de la PR #40.
+
+Où : https://github.com/jawadboughalem/PULSACITY/actions/workflows/seed-recette.yml
+
+Étapes :
+1. Vérifie d'abord, dans https://github.com/jawadboughalem/PULSACITY/actions/workflows/db-migrate-recette.yml , que la dernière exécution sur la branche claude/dreamy-edison-yk9c9a est verte (elle applique la migration 0012). Si elle est rouge ou absente, arrête-toi et dis-le-moi.
+2. Sur « Recette demo space », clique sur « Run workflow ».
+3. « Use workflow from » : la branche claude/dreamy-edison-yk9c9a (pas main).
+4. « Adresse e-mail du compte de recette » : demande-la-moi et mets celle que je te donne.
+5. Plan : free.
+6. Clique sur « Run workflow », puis attends la fin : l'exécution doit être verte.
+7. Recommence les étapes 2 à 6 avec une seconde adresse que je te donne (elle servira au bêta-testeur et aux cartes refusées), plan free.
+
+Ne touche surtout pas aux autres workflows, ni à la branche main.
+
+Compte rendu à me donner : la migration de recette (couleur, date), puis pour chaque exécution la branche, le plan et la couleur. Pas les adresses e-mail.
+```
+
+Si « Recette demo space » échoue sur « tenant/user not found », réveillez d'abord la base de recette (prompt 0 bis de `lot-4-1-decisions.md`).

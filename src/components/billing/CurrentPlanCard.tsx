@@ -212,14 +212,23 @@ const PaidPlanCard = ({ subscription, overview, now }: PaidPlanCardProps) => {
   );
 };
 
+/** A paid plan given without a subscription (the demo space, an offer from PULSACITY): nothing to pay. */
+const GivenPlanCard = ({ overview }: { overview: BillingOverview }) => (
+  <CardSection>
+    <h2 id="current-plan" className="font-display text-h2">
+      Plan {PLANS[overview.plan].name}
+    </h2>
+    <p className="text-body">Ce plan vous est offert par PULSACITY : aucun paiement.</p>
+  </CardSection>
+);
+
 type CurrentPlanCardProps = { overview: BillingOverview; now: Date };
 
 /** The first panel of « Abonnement et factures »: the free plan and its gauges, or the paid plan and its payment. */
 export const CurrentPlanCard = ({ overview, now }: CurrentPlanCardProps) => {
   const { subscription } = overview;
-  return subscription !== null && subscription.status !== "incomplete" ? (
-    <PaidPlanCard subscription={subscription} overview={overview} now={now} />
-  ) : (
-    <FreePlanCard overview={overview} />
-  );
+  if (subscription !== null && subscription.status !== "incomplete") {
+    return <PaidPlanCard subscription={subscription} overview={overview} now={now} />;
+  }
+  return overview.plan === "free" ? <FreePlanCard overview={overview} /> : <GivenPlanCard overview={overview} />;
 };

@@ -202,7 +202,7 @@ export const WidgetList = ({ widgets, createLimit, isPausing }: WidgetListProps)
         </ul>
       )}
 
-      {createLimit && widgets.length > 0 ? (
+      {createLimit && widgets.length > 0 && !isPausing ? (
         <aside className="flex items-start gap-[14px] rounded-card bg-sky px-5 py-4 text-ink desktop:px-6 desktop:py-5">
           <Icon name="info" size={24} className="mt-[1px] shrink-0" />
           <div className="flex min-w-[0] flex-col gap-1">

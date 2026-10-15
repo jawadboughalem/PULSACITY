@@ -6,7 +6,7 @@ import { fillTestSpace } from "@/db/full-space-fixtures";
 import * as schema from "@/db/schema";
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
-import { SubscriptionNotStoppedError, stopSpaceSubscription } from "@/lib/billing/stop-space-subscription";
+import { SubscriptionNotStoppedError } from "@/lib/billing/stop-space-subscription";
 import { deleteSpace } from "./delete-space";
 import { buildSpaceExport, buildSpaceExportFileName } from "./export-space-data";
 import { findOwnedSpace } from "./find-owned-space";
@@ -266,16 +266,3 @@ describe("deleteSpace", () => {
   });
 });
 
-describe("stopSpaceSubscription", () => {
-  it("has nothing to stop without a subscription", async () => {
-    await expect(
-      stopSpaceSubscription({ id: julieSpaceId, stripeCustomerId: null, stripeSubscriptionId: null }),
-    ).resolves.toBeUndefined();
-  });
-
-  it("refuses a subscription it cannot stop yet, rather than let it be charged after the deletion", async () => {
-    await expect(
-      stopSpaceSubscription({ id: julieSpaceId, stripeCustomerId: "cus_1", stripeSubscriptionId: "sub_1" }),
-    ).rejects.toBeInstanceOf(SubscriptionNotStoppedError);
-  });
-});

@@ -7,6 +7,7 @@ import {
   POWERED_BY_MENTION,
   YEARLY_FREE_MONTHS,
   countFreeMonths,
+  describeBillingHighlights,
   describeLaunchPrice,
   describePricePeriod,
   readPlanPrice,
@@ -127,5 +128,17 @@ describe("PLAN_COMPARISON", () => {
       { kind: "included" },
       { kind: "included" },
     ]);
+  });
+});
+
+describe("describeBillingHighlights", () => {
+  it("lists what each plan allows, from plans.ts (maquettes 8.3, « Changer de plan »)", () => {
+    expect(describeBillingHighlights("free")).toEqual(["15 témoignages", "20 demandes automatiques par mois", "1 widget"]);
+    expect(describeBillingHighlights("essentiel")).toEqual([
+      "Témoignages illimités",
+      "Demandes automatiques illimitées",
+      "Tous les widgets",
+    ]);
+    expect(describeBillingHighlights("pro")).toEqual(["Tout Essentiel", "Mention PULSACITY retirable"]);
   });
 });
