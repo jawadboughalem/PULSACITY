@@ -1,4 +1,4 @@
-import { type SQL, and, avg, count, desc, eq, isNull } from "drizzle-orm";
+import { type SQL, and, avg, count, desc, eq, isNull, lt, or } from "drizzle-orm";
 import { UNLIMITED, getPlan } from "@/config/plans";
 import { BETA_TESTER_MENTION, PULSACITY_BETA_OFFER_SLUG, readPulsacitySpaceId } from "@/config/pulsacity-space";
 import type { Database } from "@/db/database";
@@ -139,10 +139,25 @@ export const loadWidgetPayload = async (
   };
 };
 
-/** The first display of a widget on a page ticks the « Coller le widget » step of the space. */
-export const markWidgetFirstLoaded = async (database: Database, widgetId: string): Promise<void> => {
+/** A page showing a widget again writes it at most once an hour. */
+const LAST_LOADED_PRECISION_MS = 60 * 60 * 1000;
+
+/**
+ * A page showed the widget: its first display ticks the « Coller le widget » step of the space, and the last one says
+ * the widget is still live (the founder's dashboard: widgets shown in the last 7 days).
+ */
+export const markWidgetLoaded = async (database: Database, widgetId: string, now: Date = new Date()): Promise<void> => {
   await database
     .update(widgets)
-    .set({ firstLoadedAt: new Date() })
+    .set({ firstLoadedAt: now })
     .where(and(eq(widgets.id, widgetId), isNull(widgets.firstLoadedAt)));
+  await database
+    .update(widgets)
+    .set({ lastLoadedAt: now })
+    .where(
+      and(
+        eq(widgets.id, widgetId),
+        or(isNull(widgets.lastLoadedAt), lt(widgets.lastLoadedAt, new Date(now.getTime() - LAST_LOADED_PRECISION_MS))),
+      ),
+    );
 };

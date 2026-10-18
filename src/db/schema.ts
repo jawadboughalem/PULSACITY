@@ -497,6 +497,8 @@ export const widgets = pgTable(
     productId: uuid("product_id").references(() => products.id, { onDelete: "cascade" }),
     settings: jsonb("settings").$type<WidgetSettings>().notNull().default({}),
     firstLoadedAt: timestamptz("first_loaded_at"),
+    /** The last time a page showed it, to the hour: « widgets chargés dans les 7 derniers jours » (lot 4.12). */
+    lastLoadedAt: timestamptz("last_loaded_at"),
     /** « Afficher celui-ci à la place »: on the free plan, the widget chosen last shows, the others are paused. */
     freePlanChosenAt: timestamptz("free_plan_chosen_at"),
     createdAt: timestamptz("created_at").notNull().defaultNow(),

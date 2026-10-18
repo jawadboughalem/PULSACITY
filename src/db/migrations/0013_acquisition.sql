@@ -37,6 +37,7 @@ ALTER TABLE "welcome_emails" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
 ALTER TABLE "spaces" ADD COLUMN "welcome_emails_unsubscribed_at" timestamp with time zone;--> statement-breakpoint
 ALTER TABLE "spaces" ADD COLUMN "referral_essentiel_until" timestamp with time zone;--> statement-breakpoint
 ALTER TABLE "subscriptions" ADD COLUMN "coupon_id" text;--> statement-breakpoint
+ALTER TABLE "widgets" ADD COLUMN "last_loaded_at" timestamp with time zone;--> statement-breakpoint
 ALTER TABLE "referrals" ADD CONSTRAINT "referrals_referrer_space_id_spaces_id_fk" FOREIGN KEY ("referrer_space_id") REFERENCES "public"."spaces"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "referrals" ADD CONSTRAINT "referrals_referee_space_id_spaces_id_fk" FOREIGN KEY ("referee_space_id") REFERENCES "public"."spaces"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "space_acquisitions" ADD CONSTRAINT "space_acquisitions_space_id_spaces_id_fk" FOREIGN KEY ("space_id") REFERENCES "public"."spaces"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
