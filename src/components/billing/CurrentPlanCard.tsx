@@ -218,7 +218,13 @@ const GivenPlanCard = ({ overview }: { overview: BillingOverview }) => (
     <h2 id="current-plan" className="font-display text-h2">
       Plan {PLANS[overview.plan].name}
     </h2>
-    <p className="text-body">Ce plan vous est offert par PULSACITY : aucun paiement.</p>
+    {overview.referralEssentielUntil !== null ? (
+      <p className="text-body">
+        {`Ce mois d'Essentiel vous est offert par le parrainage, jusqu'au ${formatLongDate(overview.referralEssentielUntil)} : aucun paiement. Ensuite, votre espace repasse au plan Gratuit, sans rien perdre.`}
+      </p>
+    ) : (
+      <p className="text-body">Ce plan vous est offert par PULSACITY : aucun paiement.</p>
+    )}
   </CardSection>
 );
 

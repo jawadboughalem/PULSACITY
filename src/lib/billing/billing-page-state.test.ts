@@ -39,6 +39,7 @@ const overview = (values: Partial<BillingOverview> = {}): BillingOverview => ({
   subscription: subscription(),
   hasCustomer: true,
   freeSince: null,
+  referralEssentielUntil: null,
   usage: { approvedTestimonials: 12, requestsThisMonth: 3, widgets: 1, pausedWidgets: 0, widgetsWithoutMention: 0 },
   priceList: "founder",
   ...values,

@@ -1,14 +1,16 @@
 import * as Sentry from "@sentry/nextjs";
 import type Stripe from "stripe";
 import type { Database } from "@/db/database";
+import { endReferralMonths } from "@/lib/referrals/reward-referrer";
 import { sendDueBetaReminders } from "./beta-reminders";
 import { listEventsToReplay, processStripeEvent } from "./stripe-events";
 
-export type BillingTasksSummary = { replayedEvents: number; betaReminders: number };
+export type BillingTasksSummary = { replayedEvents: number; betaReminders: number; endedReferralMonths: number };
 
 /**
  * The billing part of the cron task: the Stripe events left unprocessed are replayed, the beta testers' reminders due
- * are sent. A failure is reported and does not stop the review requests that follow.
+ * are sent, the months of Essentiel offered by referrals end. A failure is reported and does not stop the review
+ * requests that follow.
  */
 export const runBillingTasks = async (
   database: Database,
@@ -32,5 +34,11 @@ export const runBillingTasks = async (
   } catch (error) {
     Sentry.captureException(error);
   }
-  return { replayedEvents, betaReminders };
+  let endedReferralMonths = 0;
+  try {
+    endedReferralMonths = await endReferralMonths(database, now);
+  } catch (error) {
+    Sentry.captureException(error);
+  }
+  return { replayedEvents, betaReminders, endedReferralMonths };
 };

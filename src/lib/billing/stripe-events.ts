@@ -6,6 +6,7 @@ import {
   type ApplySubscriptionResult,
   syncSubscription,
 } from "./apply-subscription";
+import { rewardReferrer } from "@/lib/referrals/reward-referrer";
 import { BETA_REMINDER_DAYS, sendDueBetaReminders } from "./beta-reminders";
 
 /** Keeps a verified event whole, before anything else: « duplicate » when Stripe sends it again. */
@@ -30,12 +31,15 @@ const readId = (
       ? value
       : value.id;
 
-/** Every invoice paid with money is kept for the threshold of the micro-entreprise (fin-v0/seuil-micro-entreprise.md). */
+/**
+ * Every invoice paid with money is kept for the threshold of the micro-entreprise (fin-v0/seuil-micro-entreprise.md).
+ * Answers the space that paid, if known.
+ */
 const recordPayment = async (
   database: Database,
   invoice: Stripe.Invoice,
-): Promise<void> => {
-  if (invoice.amount_paid <= 0) return;
+): Promise<string | null> => {
+  if (invoice.amount_paid <= 0) return null;
   const subscriptionId = readId(
     invoice.parent?.subscription_details?.subscription,
   );
@@ -64,6 +68,7 @@ const recordPayment = async (
       ),
     })
     .onConflictDoNothing({ target: billingPayments.id });
+  return space?.id ?? null;
 };
 
 const findSubscriptionOfCustomer = async (
@@ -167,13 +172,23 @@ export const processStripeEvent = async (
   if (recorded.processedAt !== null) return { status: "already-processed" };
   const event = recorded.payload as Stripe.Event;
   try {
-    if (event.type === "invoice.paid")
-      await recordPayment(database, event.data.object);
+    const payingSpaceId =
+      event.type === "invoice.paid"
+        ? await recordPayment(database, event.data.object)
+        : null;
     const subscriptionId = await findEventSubscription(database, event);
     const subscription =
       subscriptionId === null
         ? null
         : await syncSubscription(database, stripe, subscriptionId, now);
+    if (payingSpaceId !== null && event.type === "invoice.paid") {
+      // A referee's first payment with money earns its referrer a month of Essentiel (lot 4.12).
+      await rewardReferrer(database, stripe, {
+        refereeSpaceId: payingSpaceId,
+        invoiceId: event.data.object.id,
+        now,
+      });
+    }
     if (event.type === "invoice.upcoming" && subscriptionId !== null) {
       await remindBetaTester(database, event.data.object, subscriptionId);
     }
