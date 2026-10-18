@@ -1,5 +1,6 @@
 import { type SpacePlan, canHideBadge } from "@/config/plans";
 import { getInitials } from "@/lib/spaces/get-initials";
+import { buildBadgeReferralUrl } from "@/lib/referrals/referral-links";
 import {
   WIDGET_PAYLOAD_VERSION,
   type BadgeAvatar,
@@ -48,7 +49,7 @@ export const countTestimonialsForAnswer = (type: WidgetType, maxItems: number, o
 
 /** pulsacity.com with the space's referral code, as « Propulsé par PULSACITY » links to it. */
 export const buildReferralUrl = (appUrl: string, referralCode: string): string =>
-  `${appUrl}/?ref=${encodeURIComponent(referralCode)}`;
+  buildBadgeReferralUrl(appUrl, referralCode, "widget");
 
 export const buildPoweredByUrl = (
   appUrl: string,

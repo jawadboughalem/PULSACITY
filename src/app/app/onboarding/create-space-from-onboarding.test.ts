@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Database } from "@/db/database";
-import { spaces } from "@/db/schema";
+import { spaceAcquisitions, spaces } from "@/db/schema";
 import { insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import { buildLogoKey } from "@/lib/uploads/upload-keys";
@@ -79,6 +79,17 @@ describe("createSpaceFromOnboarding", () => {
         accentColor: "#A3243B",
         logoUrl: `https://photos.pulsacity.com/${logoKey}`,
       }),
+    ]);
+  });
+
+  it("records the source of the sign-up sent back by the form, from the sign-in link to the space", async () => {
+    await expect(submit({ utm_source: "youtube", utm_medium: "video", connu: "youtube" })).rejects.toThrow(
+      new RedirectedError("/app/onboarding/formations"),
+    );
+
+    const [space] = await findSpaceOf(testContext.signedInUser.id);
+    expect(await testContext.database?.select().from(spaceAcquisitions)).toEqual([
+      expect.objectContaining({ spaceId: space.id, utmSource: "youtube", utmMedium: "video", heardFrom: "youtube" }),
     ]);
   });
 

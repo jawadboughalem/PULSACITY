@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
+import { SignUpLink } from "@/components/acquisition/SignUpLink";
 import {
   FOCUS_RING,
   ICON_BUTTON_CLASSES,
@@ -69,9 +70,7 @@ export const MarketingNav = () => {
             </li>
           ))}
         </ul>
-        <Link href={MARKETING_PATHS.signUp} className={SECONDARY_BUTTON_CLASSES}>
-          Créer mon espace gratuit
-        </Link>
+        <SignUpLink className={SECONDARY_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
       </nav>
 
       <button
@@ -117,9 +116,9 @@ export const MarketingNav = () => {
             </li>
           ))}
         </ul>
-        <Link href={MARKETING_PATHS.signUp} onClick={close} className={cn(PRIMARY_BUTTON_CLASSES, "mt-4 w-full")}>
+        <SignUpLink onClick={close} className={cn(PRIMARY_BUTTON_CLASSES, "mt-4 w-full")}>
           Créer mon espace gratuit
-        </Link>
+        </SignUpLink>
       </nav>
     </>
   );

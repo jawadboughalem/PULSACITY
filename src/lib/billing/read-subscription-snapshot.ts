@@ -38,6 +38,8 @@ export type SubscriptionSnapshot = {
   scheduled: ScheduledChange | null;
   betaTester: boolean;
   betaUntil: Date | null;
+  /** The coupon of the promotion code typed at Checkout (« partenaire-… » for a partner), while its discount runs. */
+  couponId: string | null;
   card: { brand: string; last4: string } | null;
   lastPaymentFailed: { at: Date; amountCents: number } | null;
 };
@@ -82,6 +84,18 @@ const readBetaDiscount = (discounts: Stripe.Subscription["discounts"]): Stripe.D
     (discount): discount is Stripe.Discount =>
       typeof discount !== "string" && readId(discount.source.coupon) === BETA_COUPON_ID,
   ) ?? null;
+
+/** Partners' codes (lot 4.12) are promotion codes of coupons named « partenaire-<nom> », one per partner. */
+export const PARTNER_COUPON_PREFIX = "partenaire-";
+
+const readCouponId = (discounts: Stripe.Subscription["discounts"]): string | null => {
+  for (const discount of discounts) {
+    if (typeof discount === "string") continue;
+    const couponId = readId(discount.source.coupon);
+    if (couponId !== null) return couponId;
+  }
+  return null;
+};
 
 const readLastPaymentFailed = (
   status: string,
@@ -142,6 +156,7 @@ export const readSubscriptionSnapshot = (subscription: Stripe.Subscription): Sub
     scheduled: ended || cancelAt !== null ? null : readScheduledChange(subscription.schedule, key),
     betaTester: betaDiscount !== null,
     betaUntil: toDate(betaDiscount?.end),
+    couponId: readCouponId(subscription.discounts),
     card: readCard(subscription.default_payment_method) ?? readCustomerCard(subscription.customer),
     lastPaymentFailed: readLastPaymentFailed(subscription.status, subscription.latest_invoice),
   };

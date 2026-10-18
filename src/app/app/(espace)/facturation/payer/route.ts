@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/nextjs";
 import { cookies } from "next/headers";
 import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { getDb } from "@/db";
+import { readSignupSource, withSignupSource } from "@/lib/acquisition/signup-source";
 import { getAppUrl } from "@/lib/app-url";
 import { getSignedInUser } from "@/lib/auth/get-signed-in-user";
 import {
@@ -62,10 +63,12 @@ export const GET = async (request: Request): Promise<Response> => {
       path: "/",
       maxAge: CHOICE_LIFETIME_SECONDS,
     });
+    // The source of the visit (Tarifs reached from a tracked link) goes on to the sign-up.
     return redirectTo(
-      signedInUser === null
-        ? MARKETING_PATHS.signUp
-        : ONBOARDING_SPACE_STEP_PATH,
+      withSignupSource(
+        signedInUser === null ? MARKETING_PATHS.signUp : ONBOARDING_SPACE_STEP_PATH,
+        readSignupSource(url.searchParams),
+      ),
     );
   }
   cookieStore.delete(PLAN_CHOICE_COOKIE);

@@ -34,6 +34,8 @@ export type SubscriptionFixture = {
   cancelAtPeriodEnd?: boolean;
   endedAt?: Date | null;
   betaUntil?: Date | null;
+  /** Another coupon's promotion code typed at Checkout (a partner's), its discount running. */
+  couponId?: string | null;
   schedule?: Stripe.SubscriptionSchedule | null;
   card?: { brand: string; last4: string } | null;
   latestInvoice?: Partial<Stripe.Invoice> | null;
@@ -51,6 +53,7 @@ export const buildSubscription = ({
   cancelAtPeriodEnd = false,
   endedAt = null,
   betaUntil = null,
+  couponId = null,
   schedule = null,
   card = { brand: "visa", last4: "4242" },
   latestInvoice = null,
@@ -64,8 +67,8 @@ export const buildSubscription = ({
     cancel_at: cancelAtPeriodEnd ? seconds(periodEnd) : null,
     cancel_at_period_end: cancelAtPeriodEnd,
     ended_at: endedAt === null ? null : seconds(endedAt),
-    discounts:
-      betaUntil === null
+    discounts: [
+      ...(betaUntil === null
         ? []
         : [
             {
@@ -75,7 +78,11 @@ export const buildSubscription = ({
               start: seconds(new Date(betaUntil.getTime() - 92 * 24 * 60 * 60 * 1000)),
               source: { type: "coupon", coupon: { id: BETA_COUPON_ID, object: "coupon" } },
             },
-          ],
+          ]),
+      ...(couponId === null
+        ? []
+        : [{ id: "di_partner", object: "discount", end: null, start: 0, source: { type: "coupon", coupon: couponId } }]),
+    ],
     items: {
       object: "list",
       data: [

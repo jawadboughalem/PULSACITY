@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
+import { SignUpLink } from "@/components/acquisition/SignUpLink";
 import { ConnectorLogo } from "@/components/connectors/ConnectorLogo";
 import { CheckList } from "@/components/marketing/CheckList";
 import { FaqList } from "@/components/marketing/FaqList";
@@ -113,9 +114,7 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
     <JsonLd data={buildFaqPageData(integration.faq)} />
     <Hero integration={integration}>
       <div className="mt-8 flex flex-col items-center gap-4 desktop:flex-row desktop:gap-8">
-        <Link href={MARKETING_PATHS.signUp} className={LARGE_BUTTON_CLASSES}>
-          Créer mon espace gratuit
-        </Link>
+        <SignUpLink className={LARGE_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
         <Link href="#installation" className={TEXT_LINK_CLASSES}>
           Voir le guide d&apos;installation
         </Link>
@@ -188,9 +187,7 @@ const UpcomingPage = ({ integration }: { integration: UpcomingIntegration }) => 
       tone="paper"
     >
       <MeanwhileList items={[describeMeanwhile(integration).item, ...MEANWHILE]} layout="rows" />
-      <Link href={MARKETING_PATHS.signUp} className={cn(LARGE_BUTTON_CLASSES, "mt-8")}>
-        Créer mon espace gratuit
-      </Link>
+      <SignUpLink className={cn(LARGE_BUTTON_CLASSES, "mt-8")}>Créer mon espace gratuit</SignUpLink>
     </SplitSection>
   </>
 );

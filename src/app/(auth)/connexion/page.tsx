@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { SignUpLink } from "@/components/acquisition/SignUpLink";
 import { MagicLinkForm } from "@/components/auth/MagicLinkForm";
 import { DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { StatusBanner } from "@/components/ui/StatusBanner";
@@ -31,9 +31,7 @@ const SignInPage = async ({ searchParams }: PageProps<"/connexion">) => {
       <MagicLinkForm />
       <p className="flex flex-wrap items-center gap-x-2 pt-6 text-body">
         Pas encore d&apos;espace ?
-        <Link href="/inscription" className={DISCREET_BUTTON_CLASSES}>
-          Créer mon espace gratuit
-        </Link>
+        <SignUpLink className={DISCREET_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
       </p>
     </>
   );

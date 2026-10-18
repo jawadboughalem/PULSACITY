@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getDb } from "@/db";
+import { readHeardFrom, readSignupSource } from "@/lib/acquisition/signup-source";
 import { requireSignedInUser } from "@/lib/auth/require-signed-in-user";
 import { createSpace } from "@/lib/spaces/create-space";
 import { type NewSpaceFieldErrors, collectFirstFieldErrors, newSpaceFormSchema } from "@/lib/spaces/new-space-form-schema";
@@ -30,10 +31,12 @@ export const createSpaceFromOnboarding = async (
     return { ok: false, error: "invalid-input", fieldErrors: { logoKey: LOGO_NOT_RECEIVED } };
   }
 
-  const result = await createSpace(getDb(), signedInUser.id, {
-    ...fields,
-    logoUrl: logoKey ? getUploadPublicUrl(logoKey) : null,
-  });
+  const result = await createSpace(
+    getDb(),
+    signedInUser.id,
+    { ...fields, logoUrl: logoKey ? getUploadPublicUrl(logoKey) : null },
+    { source: readSignupSource(formData), heardFrom: readHeardFrom(formData) },
+  );
   if (result.status === "slug-taken") return { ok: false, error: "slug-taken", suggestedSlug: result.suggestedSlug };
 
   redirect(ONBOARDING_FORMATIONS_STEP_PATH);

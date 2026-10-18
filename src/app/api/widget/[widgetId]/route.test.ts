@@ -210,10 +210,10 @@ describe("GET /api/widget/[widgetId]", () => {
   it("keeps « Propulsé par PULSACITY » with the referral link, except on a Pro space that removed it", async () => {
     const widgetId = await insertWidget({ settings: { hidePoweredBy: true } });
 
-    expect((await (await fetchWidget(widgetId)).json()).poweredBy).toBe("https://pulsacity.com/?ref=julie42");
+    expect((await (await fetchWidget(widgetId)).json()).poweredBy).toBe("https://pulsacity.com/?utm_source=badge&utm_medium=widget&ref=julie42");
 
     await database.update(spaces).set({ plan: "essentiel" }).where(eq(spaces.id, spaceId));
-    expect((await (await fetchWidget(widgetId)).json()).poweredBy).toBe("https://pulsacity.com/?ref=julie42");
+    expect((await (await fetchWidget(widgetId)).json()).poweredBy).toBe("https://pulsacity.com/?utm_source=badge&utm_medium=widget&ref=julie42");
 
     await database.update(spaces).set({ plan: "pro" }).where(eq(spaces.id, spaceId));
     expect((await (await fetchWidget(widgetId)).json()).poweredBy).toBeNull();

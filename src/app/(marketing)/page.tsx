@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SignUpLink } from "@/components/acquisition/SignUpLink";
 import { FaqList } from "@/components/marketing/FaqList";
 import { FinalCall } from "@/components/marketing/FinalCall";
 import { PlanSummary } from "@/components/marketing/home/PlanSummary";
@@ -65,9 +66,7 @@ const HomePage = async () => {
           </p>
         </div>
         <div className="mt-8 flex flex-col items-center gap-6 desktop:flex-row desktop:gap-6">
-          <Link href={MARKETING_PATHS.signUp} className={LARGE_BUTTON_CLASSES}>
-            Créer mon espace gratuit
-          </Link>
+          <SignUpLink className={LARGE_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
           <Link
             href={MARKETING_PATHS.integrations}
             className={cn(

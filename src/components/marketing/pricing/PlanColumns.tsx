@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { SignUpLink } from "@/components/acquisition/SignUpLink";
 import { CheckList } from "@/components/marketing/CheckList";
 import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { PlanPrice } from "@/components/marketing/PlanPrice";
@@ -80,12 +80,12 @@ export const PlanColumns = ({ priceList }: { priceList: PriceList }) => (
         <div className="order-last w-full desktop:order-none desktop:mt-6 desktop:self-center">
           {(["monthly", "yearly"] as const).map((period) => (
             <div key={period} className={PERIOD_VISIBILITY[period]}>
-              <Link
+              <SignUpLink
                 href={readCallHref(plan.id, period)}
                 className={cn(plan.isRecommended ? PRIMARY_BUTTON_CLASSES : SECONDARY_BUTTON_CLASSES, "w-full")}
               >
                 {CALLS_TO_ACTION[plan.id]}
-              </Link>
+              </SignUpLink>
             </div>
           ))}
         </div>
