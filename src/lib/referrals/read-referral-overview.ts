@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { REFERRAL_REWARD_MONTHS } from "@/config/plans";
 import type { Database } from "@/db/database";
 import { referrals, spaces } from "@/db/schema";
@@ -21,7 +21,7 @@ export type ReferralOverview = {
   monthsOffered: number;
 };
 
-/** The referees of a space, newest first. A deleted referee leaves the list, the month it earned stays counted. */
+/** The referees of a space, in the order they came. A deleted referee leaves the list, its month stays counted. */
 export const readReferralOverview = async (database: Database, spaceId: string): Promise<ReferralOverview> => {
   const rows = await database
     .select({
@@ -34,7 +34,7 @@ export const readReferralOverview = async (database: Database, spaceId: string):
     .from(referrals)
     .leftJoin(spaces, eq(spaces.id, referrals.refereeSpaceId))
     .where(eq(referrals.referrerSpaceId, spaceId))
-    .orderBy(desc(referrals.createdAt), desc(referrals.id));
+    .orderBy(asc(referrals.createdAt), asc(referrals.id));
   const shown = rows.flatMap((row) =>
     row.spaceName === null
       ? []

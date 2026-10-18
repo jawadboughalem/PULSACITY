@@ -3,8 +3,9 @@ import { and, asc, count, eq } from "drizzle-orm";
 import { PULSACITY_SHOWCASE_MIN_TESTIMONIALS, readPulsacitySpaceId } from "@/config/pulsacity-space";
 import { getDb } from "@/db";
 import type { Database } from "@/db/database";
-import { testimonials, widgets } from "@/db/schema";
+import { spaces, testimonials, widgets } from "@/db/schema";
 import type { WidgetType } from "../../../widget/src/payload";
+import { isWidgetDisplayed } from "./free-plan-widgets";
 import { shownTestimonialsFilter } from "./load-widget-payload";
 
 export type PulsacityShowcase = {
@@ -15,7 +16,7 @@ export type PulsacityShowcase = {
 
 const NO_SHOWCASE: PulsacityShowcase = { wallWidgetId: null, badgeWidgetId: null };
 
-/** The space's oldest widget of a type, when it shows enough validated testimonials. */
+/** The space's oldest widget of a type, when it is displayed (not paused by the plan) with enough testimonials. */
 const findShownWidget = async (database: Database, spaceId: string, type: WidgetType): Promise<string | null> => {
   const [widget] = await database
     .select({ id: widgets.id, productId: widgets.productId })
@@ -24,6 +25,10 @@ const findShownWidget = async (database: Database, spaceId: string, type: Widget
     .orderBy(asc(widgets.createdAt), asc(widgets.id))
     .limit(1);
   if (widget === undefined) return null;
+  const [space] = await database.select({ plan: spaces.plan }).from(spaces).where(eq(spaces.id, spaceId)).limit(1);
+  if (space === undefined || !(await isWidgetDisplayed(database, { widgetId: widget.id, spaceId, plan: space.plan }))) {
+    return null;
+  }
   const [shown] = await database
     .select({ value: count() })
     .from(testimonials)

@@ -155,13 +155,17 @@ await sql.begin(async (tx) => {
     await tx`insert into "user" (id, name, email, email_verified) values (${userId}, 'Julie', ${email}, true)`;
   }
 
+  // The referees of the demo space (Parrainage, lot 4.12): their own users, named after the demo user, reset each time.
+  const refereeEmail = (name) => `${name}.${userId.slice(0, 8)}@pulsacity.local`;
+  await tx`delete from "user" where email in (${refereeEmail("atelier-sophie")}, ${refereeEmail("coaching-karim")})`;
+
   const [slugTaken] = await tx`select id from spaces where slug = 'julie-nutrition'`;
   const slug = slugTaken ? `julie-nutrition-${randomUUID().slice(0, 6)}` : "julie-nutrition";
   const [space] = await tx`
     insert into spaces (user_id, name, slug, accent_color, reply_to_email, plan, referral_code,
-      collection_link_shared_at, first_day_celebrated_at, first_approval_celebrated_at, sender_postal_address)
+      collection_link_shared_at, first_day_celebrated_at, first_approval_celebrated_at, sender_postal_address, created_at)
     values (${userId}, 'Julie Nutrition', ${slug}, '#4F6F52', ${email}, ${plan}, ${randomUUID().slice(0, 8)},
-      ${daysAgo(130)}, ${daysAgo(130)}, ${daysAgo(120)}, ${"Julie Martin\n12 rue des Lilas\n69003 Lyon"})
+      ${daysAgo(130)}, ${daysAgo(130)}, ${daysAgo(120)}, ${"Julie Martin\n12 rue des Lilas\n69003 Lyon"}, ${daysAgo(130)})
     returning id`;
   await tx`insert into widgets (space_id, type) values (${space.id}, 'wall')`;
 
@@ -263,6 +267,25 @@ await sql.begin(async (tx) => {
       values (${connection.id}, ${sql.json(payload)}, ${body},
         ${sql.json(buildSystemeHeaders("SALE_NEW", body, signingSecret, receivedAt))},
         'SALE_NEW', ${receivedAt}, ${receivedAt}, ${event.outcome}, ${purchaseId})`;
+  }
+
+  // Two referees: Atelier Sophie subscribed, her first payment gave Julie a month; Coaching Karim only signed up.
+  for (const [name, spaceName, isSubscribed, signedUp, rewarded] of [
+    ["atelier-sophie", "Atelier Sophie", true, 16, 9],
+    ["coaching-karim", "Coaching Karim", false, 10, null],
+  ]) {
+    const refereeId = randomUUID();
+    await tx`insert into "user" (id, name, email, email_verified) values (${refereeId}, '', ${refereeEmail(name)}, true)`;
+    const [referee] = await tx`
+      insert into spaces (user_id, name, slug, reply_to_email, plan, referral_code, stripe_subscription_id, created_at)
+      values (${refereeId}, ${spaceName}, ${`${name}-${randomUUID().slice(0, 6)}`}, ${refereeEmail(name)},
+        ${isSubscribed ? "essentiel" : "free"}, ${randomUUID().slice(0, 8)},
+        ${isSubscribed ? `sub_demo_${randomUUID().slice(0, 8)}` : null}, ${daysAgo(signedUp)})
+      returning id`;
+    await tx`
+      insert into referrals (referrer_space_id, referee_space_id, created_at, rewarded_at, reward)
+      values (${space.id}, ${referee.id}, ${daysAgo(signedUp)}, ${rewarded === null ? null : daysAgo(rewarded)},
+        ${rewarded === null ? null : "credit"})`;
   }
 
   console.log(`Espace « Julie Nutrition » prêt pour ${email} (plan ${plan}), adresse /t/${slug}.`);

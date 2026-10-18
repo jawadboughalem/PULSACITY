@@ -16,9 +16,12 @@ import { cn } from "@/lib/cn";
 type ImageFormat = "portrait" | "paysage";
 
 const FORMATS: Array<{ value: ImageFormat; label: string; width: number; height: number }> = [
-  { value: "portrait", label: "Portrait 1080 × 1350", width: 1080, height: 1350 },
-  { value: "paysage", label: "Paysage 1200 × 630", width: 1200, height: 630 },
+  { value: "portrait", label: "Portrait", width: 1080, height: 1350 },
+  { value: "paysage", label: "Paysage", width: 1200, height: 630 },
 ];
+
+/** « 1080 × 1350 »: on a computer, after the format's name; a phone has no room for it. */
+const describeSize = ({ width, height }: { width: number; height: number }) => `${width} × ${height}`;
 
 type ShareTestimonialDialogProps = {
   testimonialId: string;
@@ -93,11 +96,12 @@ export const ShareTestimonialButton = ({ testimonialId, authorName, hasPurchase 
                 onClick={() => setFormat(option.value)}
                 className={cn(
                   SEGMENTED_OPTION_CLASSES,
-                  "px-3 max-desktop:text-small",
+                  "px-3",
                   format === option.value ? SEGMENTED_OPTION_CHOSEN_CLASSES : SEGMENTED_OPTION_IDLE_CLASSES,
                 )}
               >
                 {option.label}
+                <span className="max-desktop:hidden">&nbsp;{describeSize(option)}</span>
               </button>
             ))}
           </div>
@@ -107,7 +111,7 @@ export const ShareTestimonialButton = ({ testimonialId, authorName, hasPurchase 
               <img
                 key={format}
                 src={imageUrl(false)}
-                alt={`Aperçu de l'image ${chosen.label}`}
+                alt={`Aperçu de l'image ${chosen.label.toLowerCase()} ${describeSize(chosen)}`}
                 width={chosen.width}
                 height={chosen.height}
                 className={cn(

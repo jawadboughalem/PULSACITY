@@ -10,7 +10,7 @@ const countWords = (count: number, singular: string, plural: string) => `${count
 type FigureTileProps = { value: number; label: string; isHighlighted?: boolean };
 
 const FigureTile = ({ value, label, isHighlighted = false }: FigureTileProps) => (
-  <div className={cn("flex min-w-[0] flex-col gap-3 rounded-panel p-6", isHighlighted ? "bg-sun" : "bg-white")}>
+  <div className={cn("flex min-w-[0] flex-col gap-3 rounded-panel p-5 desktop:p-6", isHighlighted ? "bg-sun" : "bg-white")}>
     <span className="font-display text-figure">{value}</span>
     <span className="text-body">{label}</span>
   </div>

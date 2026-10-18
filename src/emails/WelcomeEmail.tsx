@@ -110,11 +110,11 @@ const CONTENTS: Record<WelcomeEmailStep, WelcomeContent> = {
     subject: () => "Votre première demande d'avis",
     preview: "Demandez un avis à un client récent, sans attendre la prochaine vente.",
     intro: () =>
-      "En attendant votre prochaine vente, demandez un avis à un client récent : son nom et son adresse e-mail suffisent.",
+      "En attendant votre prochaine vente, demandez un avis à un client récent : son nom et son adresse e-⁠mail suffisent.",
     after: ["Son avis arrivera dans votre espace, prêt à valider."],
     button: { label: "Demander un avis", path: ASK_FOR_REVIEW_HREF },
     extra: () => (
-      <Text style={creatorSmallStyle}>C&apos;est le dernier e-mail d&apos;accueil. Une question ? Répondez à cet e-mail.</Text>
+      <Text style={creatorSmallStyle}>C&apos;est le dernier e-⁠mail d&apos;accueil. Une question ? Répondez à cet e-⁠mail.</Text>
     ),
   },
 };
@@ -208,11 +208,11 @@ export const WelcomeEmail = ({ step, spaceCreatedAt, progress, appUrl, unsubscri
         </Container>
         <Container className="creator-email-legal" style={creatorLegalStyle}>
           <Text style={creatorLegalLineStyle}>
-            {`Vous recevez cet e-mail parce que vous avez créé votre espace PULSACITY le ${formatDayMonthYear(spaceCreatedAt)}. Ces e-mails s'arrêtent dès que l'étape est faite.`}
+            {`Vous recevez cet e-⁠mail parce que vous avez créé votre espace PULSACITY le ${formatDayMonthYear(spaceCreatedAt)}. Ces e-⁠mails s'arrêtent dès que l'étape est faite.`}
           </Text>
           <Text style={creatorLegalLineStyle}>
             <Link href={unsubscribeUrl} style={creatorLinkStyle}>
-              Ne plus recevoir les e-mails d&apos;accueil
+              Ne plus recevoir les e-⁠mails d&apos;accueil
             </Link>
           </Text>
           <Text style={creatorLegalLineStyle}>PULSACITY</Text>

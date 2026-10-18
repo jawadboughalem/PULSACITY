@@ -1,6 +1,7 @@
+import { eq } from "drizzle-orm";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Database } from "@/db/database";
-import { widgets } from "@/db/schema";
+import { spaces, widgets } from "@/db/schema";
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import { insertTestTestimonial } from "@/db/testimonial-fixtures";
@@ -48,6 +49,18 @@ describe("readPulsacityShowcase", () => {
     await approve(5);
 
     expect(await readPulsacityShowcase(database)).toEqual({ wallWidgetId: wall.id, badgeWidgetId: badge.id });
+  });
+
+  it("leaves out a widget the plan pauses, as it would answer like an unknown one", async () => {
+    await database.update(spaces).set({ plan: "free" }).where(eq(spaces.id, spaceId));
+    const [wall] = await database
+      .insert(widgets)
+      .values([{ spaceId, type: "wall" }])
+      .returning({ id: widgets.id });
+    await database.insert(widgets).values({ spaceId, type: "badge", createdAt: new Date(Date.now() + 1000) });
+    await approve(5);
+
+    expect(await readPulsacityShowcase(database)).toEqual({ wallWidgetId: wall.id, badgeWidgetId: null });
   });
 
   it("shows nothing in an environment without PULSACITY's space", async () => {

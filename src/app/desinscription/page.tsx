@@ -51,9 +51,9 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
               <Icon name="valid" size={32} />
             </span>
             <h1 className="font-display text-h2">Désinscription confirmée</h1>
-            <p className="text-body">Vous ne recevrez plus les e-mails d&apos;accueil de PULSACITY.</p>
+            <p className="text-body">Vous ne recevrez plus les e-⁠mails d&apos;accueil de PULSACITY.</p>
             <p className="text-body text-gray">
-              Les autres e-mails de votre espace continuent : liens de connexion, nouveaux témoignages, abonnement.
+              Les autres e-⁠mails de votre espace continuent : liens de connexion, nouveaux témoignages, abonnement.
             </p>
           </div>
         </main>
@@ -64,7 +64,7 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
     return (
       <Problem
         title="La désinscription n'a pas abouti"
-        detail="Rien n'a changé de notre côté. Ouvrez à nouveau le lien de l'e-mail dans quelques minutes."
+        detail="Rien n'a changé de notre côté. Ouvrez à nouveau le lien de l'e-⁠mail dans quelques minutes."
       />
     );
   }
@@ -75,7 +75,7 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
     return (
       <Problem
         title="Ce lien de désinscription ne fonctionne pas"
-        detail="Il a peut-être été coupé par votre messagerie. Ouvrez à nouveau le lien en bas de l'e-mail, ou répondez à l'e-mail pour demander la désinscription."
+        detail="Il a peut-être été coupé par votre messagerie. Ouvrez à nouveau le lien en bas de l'e-⁠mail, ou répondez à l'e-⁠mail pour demander la désinscription."
       />
     );
   }

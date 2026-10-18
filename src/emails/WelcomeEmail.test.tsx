@@ -52,14 +52,14 @@ describe("WelcomeEmail", () => {
     expect(j3).toContain("Vos ventes arrivent. Dernière étape");
     expect(j3).toContain('href="https://pulsacity.com/guides/ajouter-des-temoignages-sur-une-page-systeme-io"');
     expect(j7).toContain('href="https://pulsacity.com/app/demandes?demander=1"');
-    expect(j7).toContain("C&#x27;est le dernier e-mail d&#x27;accueil.");
+    expect(j7).toContain("C&#x27;est le dernier e-\u2060mail d&#x27;accueil.");
   });
 
   it("says why it arrives and how to stop it, with no installation time", async () => {
     for (const step of ["j0", "j1", "j3", "j7"] as const) {
       const text = await renderWelcome(step, NOTHING_DONE, true);
       expect(text).toContain("parce que vous avez créé votre espace PULSACITY le 12 oct. 2026");
-      expect(text).toContain("Ne plus recevoir les e-mails d'accueil");
+      expect(text).toContain("Ne plus recevoir les e-\u2060mails d'accueil");
       expect(text).toContain("https://pulsacity.com/api/unsubscribe/accueil?token=abc");
       expect(text).not.toMatch(/minute|seconde/);
     }
