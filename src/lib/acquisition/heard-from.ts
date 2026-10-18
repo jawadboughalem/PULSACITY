@@ -5,7 +5,7 @@
 export const HEARD_FROM_OPTIONS = [
   { value: "communaute", label: "Un groupe Facebook ou une communauté" },
   { value: "partenaire", label: "Un formateur ou un partenaire" },
-  { value: "badge", label: "Le badge « Propulsé par PULSACITY » sur une page" },
+  { value: "badge", label: "Le badge « Propulsé par PULSACITY » sur une page" },
   { value: "bouche-a-oreille", label: "Un créateur qui m'en a parlé" },
   { value: "linkedin", label: "LinkedIn" },
   { value: "instagram", label: "Instagram" },

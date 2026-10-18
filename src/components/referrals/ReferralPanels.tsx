@@ -55,7 +55,7 @@ export const ReferralList = ({ overview, url }: { overview: ReferralOverview; ur
     {overview.referrals.length === 0 ? (
       <>
         <p className="text-body">
-          Pas encore de filleul. Partagez votre lien : chaque créateur qui passe à un plan payant vous offre un mois
+          Pas encore de filleul. Partagez votre lien : chaque créateur qui passe à un plan payant vous offre un mois
           d&apos;Essentiel.
         </p>
         <CopyReferralLinkButton url={url} />
@@ -100,7 +100,7 @@ export const ReferralList = ({ overview, url }: { overview: ReferralOverview; ur
                 <StatusBadge referral={referral} />
               </div>
               <p className="text-small text-gray">{`Inscrit le ${formatDayMonthYear(referral.signedUpAt)}`}</p>
-              <p className="text-small">{`Votre mois : ${describeMonth(referral).replace(/^Q/, "q")}`}</p>
+              <p className="text-small">{`Votre mois : ${describeMonth(referral).replace(/^Q/, "q")}`}</p>
             </li>
           ))}
         </ul>
@@ -114,7 +114,7 @@ const STEPS = [
   { title: "Partagez votre lien", text: "Dans un groupe, un message, une formation que vous donnez." },
   {
     title: "Le créateur crée son espace",
-    text: "Il apparaît dans « Vos filleuls », avec la date de son inscription.",
+    text: "Il apparaît dans « Vos filleuls », avec la date de son inscription.",
   },
   {
     title: "Il passe à un plan payant",

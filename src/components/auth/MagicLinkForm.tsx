@@ -47,7 +47,7 @@ export const MagicLinkForm = ({ source = {}, asksHeardFrom = false }: MagicLinkF
           Nous l&apos;avons envoyé à {email}. Il est valable {MAGIC_LINK_LIFETIME_MINUTES} minutes.
         </StatusBanner>
         <p className="text-small text-gray">
-          Rien reçu ? Regardez dans vos courriers indésirables.
+          Rien reçu ? Regardez dans vos courriers indésirables.
         </p>
         <button type="button" onClick={handleUseAnotherAddress} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
           Utiliser une autre adresse
@@ -83,7 +83,7 @@ export const MagicLinkForm = ({ source = {}, asksHeardFrom = false }: MagicLinkF
       {asksHeardFrom ? (
         <div className="flex flex-col gap-2">
           <label htmlFor={HEARD_FROM_FIELD_ID} className={FIELD_LABEL_CLASSES}>
-            Comment avez-vous connu PULSACITY ? <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
+            Comment avez-vous connu PULSACITY ? <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
           </label>
           <SelectControl
             id={HEARD_FROM_FIELD_ID}

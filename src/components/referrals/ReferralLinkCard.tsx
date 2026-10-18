@@ -57,7 +57,7 @@ export const ReferralLinkCard = ({ url, shownUrl }: ReferralLinkCardProps) => {
           {isCopied ? "Le lien est copié." : ""}
         </p>
         <p className={FIELD_HINT_CLASSES}>
-          Le créateur qui ouvre ce lien crée son espace comme tout le monde : même plan Gratuit, mêmes prix.
+          Le créateur qui ouvre ce lien crée son espace comme tout le monde : même plan Gratuit, mêmes prix.
         </p>
       </div>
     </SettingsSection>

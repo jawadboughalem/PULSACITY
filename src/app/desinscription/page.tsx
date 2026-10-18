@@ -53,7 +53,7 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
             <h1 className="font-display text-h2">Désinscription confirmée</h1>
             <p className="text-body">Vous ne recevrez plus les e-mails d&apos;accueil de PULSACITY.</p>
             <p className="text-body text-gray">
-              Les autres e-mails de votre espace continuent : liens de connexion, nouveaux témoignages, abonnement.
+              Les autres e-mails de votre espace continuent : liens de connexion, nouveaux témoignages, abonnement.
             </p>
           </div>
         </main>
@@ -90,7 +90,7 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
           </span>
           <h1 className="font-display text-h2">Désinscription confirmée</h1>
           <p className="text-body">{`Vous ne recevrez plus de demande d'avis de ${customer.spaceName}.`}</p>
-          <p className="text-body text-gray">Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.</p>
+          <p className="text-body text-gray">Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.</p>
         </div>
         <a
           href={`mailto:${customer.replyToEmail}`}

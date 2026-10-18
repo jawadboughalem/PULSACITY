@@ -25,7 +25,7 @@ export const PulsacityWall = ({ widgetId }: { widgetId: string }) => (
       <PulsacityWidget widgetId={widgetId} type="wall" />
     </div>
     <p className="mt-6 text-small text-gray">
-      Sélection de PULSACITY : avis mis en avant, puis les plus récents.
+      Sélection de PULSACITY : avis mis en avant, puis les plus récents.
       <br />
       {COUNTERPART_NOTE}
     </p>

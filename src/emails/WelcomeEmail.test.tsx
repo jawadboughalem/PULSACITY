@@ -24,15 +24,15 @@ describe("WelcomeEmail", () => {
     expect(html).toContain("Bienvenue dans PULSACITY.");
     expect(html.match(/href="https:\/\/pulsacity\.com\/app\/offres"/g)).toHaveLength(2);
     expect(html).toContain("Créer mon offre");
-    expect(html).not.toContain(": fait");
+    expect(html).not.toContain("\u00a0: fait");
     expect(html).toContain('lang="fr"');
   });
 
   it("J1 ticks the offer done and leads to the connectors, with the way of the collection link", async () => {
     const html = await renderWelcome("j1", { ...NOTHING_DONE, offer: true });
 
-    expect(html).toContain("Votre offre est prête. Prochaine étape : l&#x27;outil où vous encaissez.");
-    expect(html).toContain("Créer votre offre : fait");
+    expect(html).toContain("Votre offre est prête. Prochaine étape\u00a0: l&#x27;outil où vous encaissez.");
+    expect(html).toContain("Créer votre offre\u00a0: fait");
     expect(html).toContain("Connecter mon outil");
     expect(html).toContain('href="https://pulsacity.com/app/connecteurs"');
     expect(html).toContain('href="https://pulsacity.com/app"');
@@ -42,7 +42,7 @@ describe("WelcomeEmail", () => {
     const html = await renderWelcome("j1");
 
     expect(html).not.toContain("Votre offre est prête");
-    expect(html).toContain("Prochaine étape : l&#x27;outil où vous encaissez.");
+    expect(html).toContain("Prochaine étape\u00a0: l&#x27;outil où vous encaissez.");
   });
 
   it("J3 leads to the widgets and to the guide of Systeme.io; J7 opens « Demander un avis »", async () => {

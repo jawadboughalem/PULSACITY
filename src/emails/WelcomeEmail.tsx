@@ -59,9 +59,9 @@ type WelcomeContent = {
 const CONTENTS: Record<WelcomeEmailStep, WelcomeContent> = {
   j0: {
     subject: (spaceName) => `Votre espace ${spaceName} est prêt`,
-    preview: "Première étape : votre offre, pour que chaque vente demande un avis.",
-    intro: () => "Bienvenue dans PULSACITY. Trois étapes, et les demandes d'avis partent seules après chaque vente :",
-    after: ["Commencez par votre offre : c'est elle qui décide quand part la demande, après l'achat ou après la séance."],
+    preview: "Première étape : votre offre, pour que chaque vente demande un avis.",
+    intro: () => "Bienvenue dans PULSACITY. Trois étapes, et les demandes d'avis partent seules après chaque vente :",
+    after: ["Commencez par votre offre : c'est elle qui décide quand part la demande, après l'achat ou après la séance."],
     button: { label: "Créer mon offre", path: OFFERS_SECTION_HREF },
   },
   j1: {
@@ -69,8 +69,8 @@ const CONTENTS: Record<WelcomeEmailStep, WelcomeContent> = {
     preview: "Chaque vente déclenchera une demande d'avis, à votre nom.",
     intro: (progress) =>
       progress.offer
-        ? "Votre offre est prête. Prochaine étape : l'outil où vous encaissez."
-        : "Prochaine étape : l'outil où vous encaissez.",
+        ? "Votre offre est prête. Prochaine étape : l'outil où vous encaissez."
+        : "Prochaine étape : l'outil où vous encaissez.",
     after: [
       "Vous collez une adresse dans votre outil, une fois. Ensuite, chaque vente arrive toute seule.",
       "Fonctionne avec Systeme.io et, grâce au connecteur universel, avec Zapier, Make ou n8n.",
@@ -78,7 +78,7 @@ const CONTENTS: Record<WelcomeEmailStep, WelcomeContent> = {
     button: { label: "Connecter mon outil", path: CONNECTORS_SECTION_HREF },
     extra: (appUrl) => (
       <Text style={creatorSmallStyle}>
-        Pas encore d&apos;outil ?{" "}
+        Pas encore d&apos;outil ?{" "}
         <Link href={`${appUrl}${SPACE_HOME_PATH}`} style={creatorLinkStyle}>
           Envoyez votre lien de collecte
         </Link>{" "}
@@ -88,18 +88,18 @@ const CONTENTS: Record<WelcomeEmailStep, WelcomeContent> = {
   },
   j3: {
     subject: () => "Vos avis sur votre page de vente",
-    preview: "Un code à coller une fois : les nouveaux avis s'ajoutent seuls.",
+    preview: "Un code à coller une fois : les nouveaux avis s'ajoutent seuls.",
     intro: (progress) =>
       progress.tool
-        ? "Vos ventes arrivent. Dernière étape : montrer vos avis là où se décide l'achat."
-        : "Troisième étape : montrer vos avis là où se décide l'achat.",
+        ? "Vos ventes arrivent. Dernière étape : montrer vos avis là où se décide l'achat."
+        : "Troisième étape : montrer vos avis là où se décide l'achat.",
     after: [
       "Le widget affiche vos témoignages validés sur votre page de vente, à vos couleurs. Vous collez son code une seule fois.",
     ],
     button: { label: "Choisir mon widget", path: WIDGETS_SECTION_HREF },
     extra: (appUrl) => (
       <Text style={creatorSmallStyle}>
-        Le guide pas à pas :{" "}
+        Le guide pas à pas :{" "}
         <Link href={`${appUrl}${guidePath(WIDGET_GUIDE_SLUG)}`} style={creatorLinkStyle}>
           Coller le widget dans Systeme.io
         </Link>
@@ -110,11 +110,11 @@ const CONTENTS: Record<WelcomeEmailStep, WelcomeContent> = {
     subject: () => "Votre première demande d'avis",
     preview: "Demandez un avis à un client récent, sans attendre la prochaine vente.",
     intro: () =>
-      "En attendant votre prochaine vente, demandez un avis à un client récent : son nom et son adresse e-mail suffisent.",
+      "En attendant votre prochaine vente, demandez un avis à un client récent : son nom et son adresse e-mail suffisent.",
     after: ["Son avis arrivera dans votre espace, prêt à valider."],
     button: { label: "Demander un avis", path: ASK_FOR_REVIEW_HREF },
     extra: () => (
-      <Text style={creatorSmallStyle}>C&apos;est le dernier e-mail d&apos;accueil. Une question ? Répondez à cet e-mail.</Text>
+      <Text style={creatorSmallStyle}>C&apos;est le dernier e-mail d&apos;accueil. Une question ? Répondez à cet e-mail.</Text>
     ),
   },
 };
@@ -146,7 +146,7 @@ const StepsList = ({ progress }: { progress: WelcomeProgress }) => (
             )}
           </Column>
           <Column style={{ ...stepTextCellStyle, ...(isDone ? doneStepTextStyle : {}) }}>
-            {isDone ? `${step.label} : fait` : step.label}
+            {isDone ? `${step.label} : fait` : step.label}
           </Column>
         </Row>
       );
@@ -199,7 +199,7 @@ export const WelcomeEmail = ({ step, spaceCreatedAt, progress, appUrl, unsubscri
             {content.button.label}
           </Button>
           <Text style={creatorFallbackStyle}>
-            Le bouton ne s&apos;affiche pas ? Ouvrez ce lien :{" "}
+            Le bouton ne s&apos;affiche pas ? Ouvrez ce lien :{" "}
             <Link href={buttonUrl} style={creatorLinkStyle}>
               {buttonUrl}
             </Link>
