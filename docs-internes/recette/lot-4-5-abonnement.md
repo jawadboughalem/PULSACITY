@@ -29,7 +29,7 @@ Adresse de l'aperçu : https://pulsacity-git-claude-dreamy-edi-e47f0f-jawadbough
 - Vous vous connectez vous-même à Stripe et à Vercel. L'agent ne crée aucun compte, ne lit aucune clé et ne touche ni au mode réel, ni aux informations d'identité, ni au compte bancaire.
 - Les prix sont trouvés par le code grâce à leur « clé de recherche » (lookup key) : aucun identifiant de prix à copier dans Vercel. Le code vérifie à chaque paiement que le prix de Stripe est celui de `src/config/plans.ts` (montant, euros, mensuel ou annuel, aucune taxe ajoutée par-dessus), et refuse d'ouvrir le paiement sinon.
 - Aucune TVA : Stripe Tax reste désactivé. Sans lui, le tableau de bord crée les prix sans comportement fiscal (« non spécifié ») et rien ne s'ajoute au prix : c'est voulu. Le code refuse seulement un prix « taxe exclue », qui ajouterait une taxe par-dessus le jour où Stripe Tax en calculerait une.
-- La page de paiement ne propose que la carte (Apple Pay et Google Pay compris), quels que soient les moyens activés dans Stripe.
+- La page de paiement ne propose que la carte (Apple Pay, Google Pay et Link compris : ils paient par carte), quels que soient les moyens activés dans Stripe.
 - Conditions générales de vente : en mode test, la page de paiement les cite sous le bouton (« En vous abonnant, vous acceptez les conditions générales de vente de PULSACITY. »). La case à cocher n'arrive qu'en mode réel : Stripe ne l'affiche que si l'adresse des CGV est dans les informations publiques, qu'un bac à sable ne laisse pas remplir.
 
 ---
@@ -404,7 +404,17 @@ Ne touche à rien d'autre que ce qui est demandé. N'utilise jamais une vraie ca
 Compte rendu à me donner : chaque point (OK ou l'écart exact), le montant du point 7, ce que dit la facture PDF, et l'heure du paiement du point 3. Aucune donnée de carte, aucun identifiant Stripe (rien qui commence par cus_, sub_, in_, pi_, cs_).
 ```
 
+Compte rendu du 16 octobre : les 12 points OK, 29 captures (gardées hors du dépôt : elles montrent une adresse e-mail). Toutes les livraisons du webhook ont répondu 200, du premier paiement à la fin. Paiement à 14 h 40 (heure de Paris), prochaine échéance le 16 novembre · 9,99 € ; passage au Pro : « Vous payez aujourd'hui 10 € », facture de 10,00 € (19,99 € moins 9,99 € non utilisés). Plan inférieur programmé, résiliation et reprise conformes. Écarts, tous dans les pages de Stripe, rien à changer chez nous :
+- Link est proposé à côté de la carte et d'Apple Pay : c'est le portefeuille de cartes de Stripe, il paie par carte. Gardé.
+- Le bouton dit « Payer et s'abonner » ; la phrase des CGV est au-dessus, suivie de la phrase de Stripe « En vous abonnant, vous autorisez environnement de test PULSACITY à vous débiter… » (le nom public viendra avec l'activation).
+- La page annuelle n'a pas « Ajouter un code promotionnel » : voulu (le code des bêta-testeurs ne vaut que pour Essentiel mensuel).
+- Portail : « mis à jour le16 novembre » sans espace, et « Reason » en anglais dans le menu des motifs de résiliation ; facture : « après le 16 Oct 2026 » dans les lignes de prorata. Textes de Stripe.
+- Facture : émetteur « environnement de test PULSACITY », aucune ligne de taxe, aucune mention sous les montants. Le pied de page (textes de 2.7) se règle avec le mode réel.
+- Le PDF de la facture s'est téléchargé sans être ouvert : non relu.
+
 ## 9. Aperçu — compte B : carte refusée, puis bêta-testeur avec 3D Secure
+
+Le 16 octobre, arrêté au point 1 : la session de l'aperçu était encore celle du compte A (plan Pro), pas celle du compte B. Le prompt 10 n'a donc trouvé ni client, ni abonnement, ni horloge pour B, et s'est arrêté sans rien avancer. Ce n'est pas un défaut du code. Le fondateur a décidé, le 18 octobre, de ne pas reprendre les prompts 9, 10 et 11 (voir « Recette arrêtée » en fin de fichier).
 
 Avant ce prompt : déconnectez-vous du compte A, puis connectez-vous à l'aperçu avec l'adresse B.
 
@@ -525,3 +535,54 @@ Ne touche surtout pas : aux tables, aux réglages, au projet de production.
 
 Compte rendu à me donner : les quatre résultats, recopiés. Ce ne sont que des nombres et des dates de test.
 ```
+
+---
+
+# Recette arrêtée le 18 octobre
+
+Décision du fondateur : les prompts 9, 10 et 11 ne sont pas repris. Le prompt 8 a validé le parcours principal sur l'aperçu, avec le vrai Stripe (paiement, webhook, plan supérieur au prorata, plan inférieur programmé, portail, résiliation, reprise). Les prompts 12 et 13, deux relevés en lecture seule dans Supabase, sont réunis en un seul prompt (« 12 et 13 ») : ils vérifient ce que la page ne montre pas, chaque événement traité sans erreur et chaque paiement compté pour le seuil de la micro-entreprise, et donnent les vrais événements pour les fixtures.
+
+Pas vu sur l'aperçu, couvert par les tests automatiques seulement :
+- carte refusée et 3D Secure à la page de paiement ;
+- code des bêta-testeurs, fin de la bêta et e-mail de rappel ;
+- renouvellement refusé et bandeau « Votre dernier paiement a échoué » ;
+- retour au plan Gratuit, widgets en pause, « Afficher celui-ci à la place » ;
+- les écrans à 360 px (vérifiés dans le conteneur, à côté des maquettes).
+
+## 12 et 13. Supabase — les événements reçus et la requête du seuil, en un prompt
+
+Avant ce prompt : connectez-vous à Supabase. À la fin, joignez le fichier CSV à la conversation avec Claude Code : il contient vos adresses de test et des identifiants Stripe de test, anonymisés avant d'entrer dans le dépôt.
+
+```
+Tu m'aides à relever, en lecture seule, ce que l'aperçu de PULSACITY a enregistré dans la base de recette. Tu ne modifies rien.
+
+Où : https://supabase.com/dashboard/projects, organisation PULSACITY, projet « pulsacity-recette » (jamais le projet « PULSACITY », la production), puis « SQL Editor ».
+
+Ne touche surtout pas : aux tables, aux requêtes enregistrées, aux réglages, au projet de production. Ne lance que les requêtes ci-dessous, telles quelles.
+
+1. Ouvre un nouvel onglet de requête et colle exactement :
+
+select type, count(*) as nombre,
+       count(*) filter (where processed_at is not null) as traites,
+       max(error) as une_erreur
+from stripe_events
+group by type
+order by type;
+
+Clique sur « Run » et recopie le tableau en entier.
+
+2. Ouvre un autre onglet de requête et colle exactement :
+
+select id, type, received_at, payload
+from stripe_events
+order by received_at;
+
+Clique sur « Run », puis sur « Export » (ou « Download ») › « CSV ». Dis-moi : « Le fichier est téléchargé : joignez-le à la conversation avec Claude Code. » Ne l'ouvre pas, ne recopie pas son contenu.
+
+3. Ouvre https://github.com/jawadboughalem/PULSACITY/blob/claude/dreamy-edison-yk9c9a/docs-internes/requetes/seuil-micro-entreprise.md : il contient quatre requêtes SQL, numérotées 1 à 4. Pour chacune, ouvre un onglet de requête dans Supabase, colle-la exactement, lance-la et recopie le résultat.
+
+Compte rendu à me donner : le tableau du point 1, le nom du fichier du point 2, les quatre résultats du point 3. Ce ne sont que des types d'événements, des nombres et des dates de test.
+```
+
+En mode réel, les cartes de test et les horloges n'existent plus. La vérification de production du lot (après le passage en mode réel) prendra le code des bêta-testeurs avec une vraie carte, à 0 € ce jour-là, puis l'arrêtera aussitôt : rien n'est prélevé.
+
