@@ -5,6 +5,7 @@ import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { MarketingSection, SectionTitle } from "@/components/marketing/MarketingSection";
 import { PlanColumns } from "@/components/marketing/pricing/PlanColumns";
 import { PlanComparison } from "@/components/marketing/pricing/PlanComparison";
+import { PulsacityBadge } from "@/components/marketing/PulsacityTestimonials";
 import { PLAN_IDS, PLANS } from "@/config/plans";
 import { BILLING_FAQ } from "@/content/faq";
 import { RECOMMENDED_PLAN, YEARLY_FREE_MONTHS, readPlanPrice } from "@/content/plan-offer";
@@ -12,6 +13,7 @@ import { readShownPriceList } from "@/lib/billing/read-shown-price-list";
 import { formatPrice } from "@/lib/french/format-price";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { buildFaqPageData } from "@/lib/seo/structured-data";
+import { readPulsacityShowcase } from "@/lib/widgets/read-pulsacity-showcase";
 
 /** Rebuilt every hour, and at once when the hundredth founder seat is taken (lib/billing/revalidate-shown-prices.ts). */
 export const revalidate = 3600;
@@ -34,7 +36,7 @@ const PLAN_OPTIONS = PLAN_IDS.map((id) => ({ value: id, label: PLANS[id].name })
 
 /** Maquette 8, Tarifs. */
 const PricingPage = async () => {
-  const priceList = await readShownPriceList();
+  const [priceList, showcase] = await Promise.all([readShownPriceList(), readPulsacityShowcase()]);
   return (
     <>
       <JsonLd data={buildFaqPageData(BILLING_FAQ)} />
@@ -68,9 +70,10 @@ const PricingPage = async () => {
       </ChoiceScope>
 
       <div className="px-page-gutter">
-        <p className="mx-auto max-w-content text-small text-gray desktop:pt-6">
-          Sans engagement · Changez de plan à tout moment · Paiement par carte
-        </p>
+        <div className="mx-auto flex max-w-content flex-col gap-6 desktop:pt-6">
+          <p className="text-small text-gray">Sans engagement · Changez de plan à tout moment · Paiement par carte</p>
+          {showcase.badgeWidgetId !== null ? <PulsacityBadge widgetId={showcase.badgeWidgetId} /> : null}
+        </div>
       </div>
 
       <MarketingSection labelledBy="compare-title">

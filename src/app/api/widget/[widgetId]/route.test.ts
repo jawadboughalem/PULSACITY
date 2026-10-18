@@ -324,4 +324,30 @@ describe("OPTIONS /api/widget/[widgetId]", () => {
     expect(response.status).toBe(204);
     expect(response.headers.get("access-control-allow-origin")).toBe("*");
   });
+
+  it("says « Bêta-testeur » under the beta testers of PULSACITY's own space, and nowhere else", async () => {
+    const [beta] = await database
+      .insert(products)
+      .values({ spaceId, name: "Bêta PULSACITY", slug: "beta-pulsacity" })
+      .returning({ id: products.id });
+    await insertTestTestimonial(database, { spaceId, productId: beta.id, authorName: "Inès K.", status: "approved" });
+    await insertTestTestimonial(database, { spaceId, productId: programmeId, authorName: "Amel M.", status: "approved" });
+    const widgetId = await insertWidget();
+
+    const mentions = async () =>
+      ((await (await fetchWidget(widgetId)).json()).testimonials as Array<{ name: string; mention?: string }>).map(
+        (testimonial) => [testimonial.name, testimonial.mention ?? null],
+      );
+
+    expect(await mentions()).toEqual(expect.arrayContaining([["Inès K.", null], ["Amel M.", null]]));
+
+    vi.stubEnv("PULSACITY_SPACE_ID", spaceId);
+    expect(await mentions()).toEqual(
+      expect.arrayContaining([
+        ["Inès K.", "Bêta-testeur · plan Essentiel offert pendant la bêta"],
+        ["Amel M.", null],
+      ]),
+    );
+    vi.unstubAllEnvs();
+  });
 });

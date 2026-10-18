@@ -82,6 +82,7 @@ export const wallCard = (testimonial: PublicTestimonial): HTMLElement =>
         { class: "who" },
         h("span", { class: "name" }, testimonial.name),
         testimonial.title ? h("span", { class: "meta" }, testimonial.title) : null,
+        testimonial.mention ? h("span", { class: "meta" }, testimonial.mention) : null,
       ),
     ),
     testimonial.rating === null ? null : stars(testimonial.rating, describeRating(testimonial.rating)),
@@ -106,6 +107,7 @@ export const carouselCard = (testimonial: PublicTestimonial): HTMLElement => {
         { class: "who" },
         h("span", { class: "name" }, testimonial.name),
         meta ? h("span", { class: "meta" }, meta) : null,
+        testimonial.mention ? h("span", { class: "meta" }, testimonial.mention) : null,
       ),
     ),
   );

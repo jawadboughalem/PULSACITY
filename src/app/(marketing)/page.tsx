@@ -9,6 +9,7 @@ import { IntegrationRows } from "@/components/marketing/integrations/Integration
 import { JsonLd } from "@/components/marketing/JsonLd";
 import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { MarketingSection, SectionTitle } from "@/components/marketing/MarketingSection";
+import { PulsacityWall } from "@/components/marketing/PulsacityTestimonials";
 import { LARGE_BUTTON_CLASSES, TEXT_LINK_CLASSES } from "@/components/marketing/marketing-styles";
 import { FOCUS_RING } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
@@ -19,6 +20,7 @@ import { cn } from "@/lib/cn";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { buildFaqPageData, buildOrganizationData } from "@/lib/seo/structured-data";
 import { readSiteUrl } from "@/lib/site-url";
+import { readPulsacityShowcase } from "@/lib/widgets/read-pulsacity-showcase";
 
 export const generateMetadata = () =>
   buildPageMetadata({
@@ -43,12 +45,15 @@ const HOW_IT_WORKS = [
   },
 ];
 
-/** Rebuilt every hour, and at once when the hundredth founder seat is taken (lib/billing/revalidate-shown-prices.ts). */
+/**
+ * Rebuilt every hour, and at once when the hundredth founder seat is taken (lib/billing/revalidate-shown-prices.ts).
+ * PULSACITY's own wall appears at the first rebuild after its fifth validated testimonial.
+ */
 export const revalidate = 3600;
 
 /** Maquette 7, pulsacity.com. */
 const HomePage = async () => {
-  const priceList = await readShownPriceList();
+  const [priceList, showcase] = await Promise.all([readShownPriceList(), readPulsacityShowcase()]);
   return (
     <>
       <JsonLd data={buildOrganizationData(readSiteUrl())} />
@@ -140,6 +145,8 @@ const HomePage = async () => {
           Voir le détail des tarifs
         </Link>
       </MarketingSection>
+
+      {showcase.wallWidgetId !== null ? <PulsacityWall widgetId={showcase.wallWidgetId} /> : null}
 
       <MarketingSection id="questions" tone="paper" labelledBy="your-questions">
         <div className="grid gap-8 desktop:grid-cols-[448px_1fr]">

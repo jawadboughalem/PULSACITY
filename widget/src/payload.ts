@@ -25,6 +25,8 @@ export type PublicTestimonial = {
   text: string;
   /** Day of reception in Paris, YYYY-MM-DD. Null when the widget hides dates. */
   date: string | null;
+  /** A line under the author: on PULSACITY's own wall, « Bêta-testeur · plan Essentiel offert pendant la bêta ». */
+  mention?: string;
 };
 
 export type BadgeAvatar = {

@@ -24,6 +24,8 @@ export type WidgetTestimonialSource = {
   text: string;
   /** Day of reception in Paris, YYYY-MM-DD. */
   receivedOn: string;
+  /** A line under the author (PULSACITY's beta testers), when there is one. */
+  mention?: string | null;
 };
 
 export type WidgetPayloadInput = {
@@ -68,6 +70,7 @@ const toPublicTestimonial = (
   rating: settings.showRating ? testimonial.rating : null,
   text: testimonial.text,
   date: settings.showDate ? testimonial.receivedOn : null,
+  ...(testimonial.mention ? { mention: testimonial.mention } : {}),
 });
 
 const toBadgeAvatar = (testimonial: WidgetTestimonialSource, settings: ResolvedWidgetSettings): BadgeAvatar => ({
