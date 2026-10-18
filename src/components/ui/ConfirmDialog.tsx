@@ -4,6 +4,7 @@ import { useEffect, useId, useRef } from "react";
 import { cn } from "@/lib/cn";
 import { DANGER_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "./button-styles";
 import { DialogCloseButton } from "./DialogCloseButton";
+import { Spinner } from "./Spinner";
 import { DIALOG_ACTIONS_CLASSES, DIALOG_CLASSES, DIALOG_TITLE_CLASSES, isClickOnVeil } from "./dialog-styles";
 
 /** m5: on a computer, « Annuler » becomes the charter's discreet button: no border, underlined. */
@@ -22,6 +23,8 @@ type ConfirmDialogProps = {
   isDestructive?: boolean;
   /** m5: on a computer, « Annuler » as a discreet button beside the action; a full button on a phone. */
   isCancelDiscreet?: boolean;
+  /** While the action runs (charte v2, Fenêtre de dialogue): « Envoi… », « Annuler » disabled, the veil stays. */
+  isPending?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 };
@@ -38,6 +41,7 @@ export const ConfirmDialog = ({
   cancelLabel = "Annuler",
   isDestructive = false,
   isCancelDiscreet = false,
+  isPending = false,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) => {
@@ -58,10 +62,10 @@ export const ConfirmDialog = ({
       data-ouvert={isOpen}
       onCancel={(event) => {
         event.preventDefault();
-        onCancel();
+        if (!isPending) onCancel();
       }}
       onClick={(event) => {
-        if (isClickOnVeil(event)) onCancel();
+        if (isClickOnVeil(event) && !isPending) onCancel();
       }}
       aria-labelledby={titleId}
       aria-describedby={messageId}
@@ -73,7 +77,7 @@ export const ConfirmDialog = ({
             <h2 id={titleId} className={DIALOG_TITLE_CLASSES}>
               {title}
             </h2>
-            <DialogCloseButton onClick={onCancel} />
+            <DialogCloseButton onClick={onCancel} isDisabled={isPending} />
           </div>
           <div id={messageId} className="flex flex-col gap-2 text-body">
             {(Array.isArray(message) ? message : [message]).map((paragraph) => (
@@ -86,16 +90,19 @@ export const ConfirmDialog = ({
             type="button"
             autoFocus
             onClick={onCancel}
+            disabled={isPending}
             className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto", isCancelDiscreet && DISCREET_ON_DESKTOP)}
           >
             {cancelLabel}
           </button>
           <button
             type="button"
-            onClick={onConfirm}
+            onClick={isPending ? undefined : onConfirm}
+            aria-busy={isPending || undefined}
             className={cn(isDestructive ? DANGER_BUTTON_CLASSES : PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}
           >
-            {confirmLabel}
+            {isPending ? <Spinner size={20} /> : null}
+            {isPending ? "Envoi…" : confirmLabel}
           </button>
         </div>
       </div>

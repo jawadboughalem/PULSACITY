@@ -1,0 +1,176 @@
+{
+  "id": "evt_recette14",
+  "data": {
+    "object": {
+      "id": "sub_sched_recette2",
+      "object": "subscription_schedule",
+      "phases": [
+        {
+          "items": [
+            {
+              "plan": "price_recette3",
+              "price": "price_recette3",
+              "metadata": {},
+              "quantity": 1,
+              "discounts": [],
+              "tax_rates": [],
+              "billing_thresholds": null
+            }
+          ],
+          "currency": "eur",
+          "end_date": 1794832571,
+          "metadata": {},
+          "discounts": [],
+          "trial_end": null,
+          "start_date": 1792154171,
+          "description": null,
+          "on_behalf_of": null,
+          "transfer_data": null,
+          "invoice_settings": null,
+          "add_invoice_items": [],
+          "collection_method": null,
+          "default_tax_rates": [],
+          "billing_thresholds": null,
+          "proration_behavior": "none",
+          "billing_cycle_anchor": null,
+          "default_payment_method": null,
+          "application_fee_percent": null
+        },
+        {
+          "items": [
+            {
+              "plan": "price_recette1",
+              "price": "price_recette1",
+              "metadata": {},
+              "quantity": 1,
+              "discounts": [],
+              "tax_rates": [],
+              "billing_thresholds": null
+            }
+          ],
+          "currency": "eur",
+          "end_date": 1797424571,
+          "metadata": {},
+          "discounts": [],
+          "trial_end": null,
+          "start_date": 1794832571,
+          "description": null,
+          "on_behalf_of": null,
+          "transfer_data": null,
+          "invoice_settings": null,
+          "add_invoice_items": [],
+          "collection_method": null,
+          "default_tax_rates": [],
+          "billing_thresholds": null,
+          "proration_behavior": "none",
+          "billing_cycle_anchor": null,
+          "default_payment_method": null,
+          "application_fee_percent": null
+        }
+      ],
+      "status": "active",
+      "created": 1792154171,
+      "customer": "cus_recette1",
+      "livemode": false,
+      "metadata": {},
+      "test_clock": "clock_recette1",
+      "application": null,
+      "canceled_at": null,
+      "released_at": null,
+      "billing_mode": {
+        "type": "flexible",
+        "flexible": {
+          "proration_discounts": "included"
+        },
+        "updated_at": 1792154171
+      },
+      "completed_at": null,
+      "end_behavior": "release",
+      "subscription": "sub_recette1",
+      "current_phase": {
+        "end_date": 1794832571,
+        "start_date": 1792154171
+      },
+      "pause_schedules": [],
+      "customer_account": null,
+      "default_settings": {
+        "description": null,
+        "on_behalf_of": null,
+        "automatic_tax": {
+          "enabled": false,
+          "liability": null,
+          "disabled_reason": null
+        },
+        "transfer_data": null,
+        "default_source": null,
+        "invoice_settings": {
+          "footer": null,
+          "issuer": {
+            "type": "self"
+          },
+          "description": null,
+          "custom_fields": null,
+          "days_until_due": null,
+          "account_tax_ids": null
+        },
+        "collection_method": "charge_automatically",
+        "billing_thresholds": null,
+        "billing_cycle_anchor": "automatic",
+        "default_payment_method": "pm_recette1",
+        "application_fee_percent": null
+      },
+      "renewal_interval": null,
+      "released_subscription": null
+    },
+    "previous_attributes": {
+      "phases": [
+        {
+          "items": [
+            {
+              "plan": "price_recette3",
+              "price": "price_recette3",
+              "metadata": {},
+              "quantity": 1,
+              "discounts": [],
+              "tax_rates": [],
+              "billing_thresholds": null
+            }
+          ],
+          "currency": "eur",
+          "end_date": 1794832571,
+          "metadata": {},
+          "discounts": [],
+          "trial_end": null,
+          "start_date": 1792154171,
+          "description": null,
+          "on_behalf_of": null,
+          "automatic_tax": {
+            "enabled": false,
+            "liability": null,
+            "disabled_reason": null
+          },
+          "transfer_data": null,
+          "invoice_settings": null,
+          "add_invoice_items": [],
+          "collection_method": null,
+          "default_tax_rates": [],
+          "billing_thresholds": null,
+          "proration_behavior": "create_prorations",
+          "billing_cycle_anchor": null,
+          "default_payment_method": null,
+          "application_fee_percent": null
+        }
+      ]
+    }
+  },
+  "type": "subscription_schedule.updated",
+  "object": "event",
+  "created": 1792154732,
+  "request": {
+    "id": "req_recette6",
+    "idempotency_key": "idempotency-recette"
+  },
+  "livemode": false,
+  "api_version": "2026-09-30.endive",
+  "pending_webhooks": 1
+}

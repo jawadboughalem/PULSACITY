@@ -14,7 +14,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { WIDGET_TYPES, type WidgetCardStyle, type WidgetTheme } from "../../widget/src/payload";
-import { PLAN_IDS } from "../config/plans";
+import { type BillingPeriod, PLAN_IDS, type PriceList } from "../config/plans";
 import type { ConnectionConfig, WebhookHeaders } from "../lib/connectors/types";
 import type { WebhookEventError, WebhookEventOutcome } from "../lib/connectors/webhook-event-states";
 import { DEFAULT_REQUEST_DELAY_DAYS } from "../lib/requests/request-timing";
@@ -157,6 +157,8 @@ export const spaces = pgTable(
     newTestimonialEmailEnabled: boolean("new_testimonial_email_enabled").notNull().default(true),
     /** Réglages, « J'offre une contrepartie à mes clients »: since when it is declared. Null: no counterpart. */
     incentiveDeclaredAt: timestamptz("incentive_declared_at"),
+    /** When the space went back to the free plan after a subscription: « repassé au plan Gratuit le … ». */
+    freeSince: timestamptz("free_since"),
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
   (table) => [index("spaces_user_id_idx").on(table.userId)],
@@ -425,6 +427,8 @@ export const widgets = pgTable(
     productId: uuid("product_id").references(() => products.id, { onDelete: "cascade" }),
     settings: jsonb("settings").$type<WidgetSettings>().notNull().default({}),
     firstLoadedAt: timestamptz("first_loaded_at"),
+    /** « Afficher celui-ci à la place »: on the free plan, the widget chosen last shows, the others are paused. */
+    freePlanChosenAt: timestamptz("free_plan_chosen_at"),
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
   (table) => [index("widgets_space_id_idx").on(table.spaceId)],
@@ -456,11 +460,99 @@ export const webhookEvents = pgTable(
   ],
 ).enableRLS();
 
-export const stripeEvents = pgTable("stripe_events", {
-  id: text("id").primaryKey(),
-  type: text("type").notNull(),
-  processedAt: timestamptz("processed_at").notNull().defaultNow(),
+/**
+ * The Stripe events of PULSACITY's own subscriptions, kept whole on arrival (the captures of lot 4.5), then processed
+ * once: `processedAt` is the idempotency lock. One still unprocessed is replayed by the task of /api/cron/requests.
+ */
+export const stripeEvents = pgTable(
+  "stripe_events",
+  {
+    id: text("id").primaryKey(),
+    type: text("type").notNull(),
+    payload: jsonb("payload"),
+    receivedAt: timestamptz("received_at").defaultNow(),
+    processedAt: timestamptz("processed_at"),
+    error: text("error"),
+  },
+  (table) => [index("stripe_events_processed_at_received_at_idx").on(table.processedAt, table.receivedAt)],
+).enableRLS();
+
+/** Stripe's status of a subscription, as it says it: « active », « past_due », « canceled »… */
+export type StripeSubscriptionStatus = string;
+
+/**
+ * A subscription of a space to PULSACITY, as Stripe last described it (rewritten from Stripe at each event, never
+ * edited by hand). The space's plan follows it; spaces.stripe_subscription_id points to the current one.
+ */
+export const subscriptions = pgTable(
+  "subscriptions",
+  {
+    /** Stripe's id of the subscription (sub_…). */
+    id: text("id").primaryKey(),
+    spaceId: uuid("space_id")
+      .notNull()
+      .references(() => spaces.id, { onDelete: "cascade" }),
+    status: text("status").$type<StripeSubscriptionStatus>().notNull(),
+    plan: planEnum("plan").notNull(),
+    period: text("period").$type<BillingPeriod>().notNull(),
+    priceList: text("price_list").$type<PriceList>().notNull(),
+    amountCents: integer("amount_cents").notNull(),
+    /** « Prochaine échéance »: when the paid period ends, and the next payment is due. */
+    currentPeriodEnd: timestamptz("current_period_end"),
+    /** A stop is programmed (« Votre plan Essentiel s'arrête le … »): the date it takes effect. */
+    cancelAt: timestamptz("cancel_at"),
+    endedAt: timestamptz("ended_at"),
+    /** A change programmed for the end of the period (lower plan, other period): what comes next, and when. */
+    scheduledPlan: planEnum("scheduled_plan"),
+    scheduledPeriod: text("scheduled_period").$type<BillingPeriod>(),
+    scheduledPriceList: text("scheduled_price_list").$type<PriceList>(),
+    scheduledAmountCents: integer("scheduled_amount_cents"),
+    scheduledAt: timestamptz("scheduled_at"),
+    /** Subscribed with the beta testers' code: Essentiel offered until `betaUntil`, then the founder price. */
+    betaTester: boolean("beta_tester").notNull().default(false),
+    betaUntil: timestamptz("beta_until"),
+    /** The e-mail sent 7 days before the first payment of a beta tester. */
+    betaReminderSentAt: timestamptz("beta_reminder_sent_at"),
+    cardBrand: text("card_brand"),
+    cardLast4: text("card_last4"),
+    /** The last payment refused, while it stays unpaid: « Dernier paiement : … · refusé par votre banque ». */
+    lastPaymentFailedAt: timestamptz("last_payment_failed_at"),
+    lastPaymentFailedAmountCents: integer("last_payment_failed_amount_cents"),
+    createdAt: timestamptz("created_at").notNull().defaultNow(),
+    syncedAt: timestamptz("synced_at").notNull().defaultNow(),
+  },
+  (table) => [index("subscriptions_space_id_idx").on(table.spaceId)],
+).enableRLS();
+
+/**
+ * The founder price is open to the first FOUNDER_PRICE_SEATS paying subscribers (plans.ts): one row per space that took
+ * a seat, beta testers apart. A deleted space keeps its seat, without anything left to name it.
+ */
+export const founderSeats = pgTable("founder_seats", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  spaceId: uuid("space_id")
+    .unique()
+    .references(() => spaces.id, { onDelete: "set null" }),
+  takenAt: timestamptz("taken_at").notNull().defaultNow(),
 }).enableRLS();
+
+/**
+ * Every invoice of PULSACITY paid by a space, for the threshold of the micro-entreprise (fin-v0/seuil-micro-entreprise.md):
+ * paying clients, months in a row with a payment, total received. Billing records outlive a deleted space, anonymous.
+ */
+export const billingPayments = pgTable(
+  "billing_payments",
+  {
+    /** Stripe's id of the invoice (in_…). */
+    id: text("id").primaryKey(),
+    spaceId: uuid("space_id").references(() => spaces.id, { onDelete: "set null" }),
+    subscriptionId: text("subscription_id"),
+    amountCents: integer("amount_cents").notNull(),
+    currency: text("currency").notNull(),
+    paidAt: timestamptz("paid_at").notNull(),
+  },
+  (table) => [index("billing_payments_paid_at_idx").on(table.paidAt)],
+).enableRLS();
 
 export const rateLimits = pgTable("rate_limits", {
   key: text("key").primaryKey(),

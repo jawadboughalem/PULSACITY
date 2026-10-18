@@ -1,6 +1,7 @@
 import { CheckList } from "@/components/marketing/CheckList";
 import { PlanPrice } from "@/components/marketing/PlanPrice";
 import { PLAN_PRESENTATIONS, describeLaunchPrice, describePricePeriod, readPlanPrice } from "@/content/plan-offer";
+import type { PriceList } from "@/config/plans";
 import { cn } from "@/lib/cn";
 
 /**
@@ -9,10 +10,10 @@ import { cn } from "@/lib/cn";
  * On a computer, the four parts of each column share the rows of the others, so that the taglines and the lists stay
  * aligned.
  */
-export const PlanSummary = () => (
+export const PlanSummary = ({ priceList }: { priceList: PriceList }) => (
   <ul className="grid gap-5 desktop:grid-cols-3">
     {PLAN_PRESENTATIONS.map((plan) => {
-      const launchPrice = describeLaunchPrice(plan.id, "monthly");
+      const launchPrice = describeLaunchPrice(plan.id, "monthly", priceList);
       return (
         <li
           key={plan.id}
@@ -27,7 +28,7 @@ export const PlanSummary = () => (
           </div>
           <div className="flex flex-col gap-2">
             <p className="flex flex-wrap items-baseline gap-x-2">
-              <PlanPrice amountCents={readPlanPrice(plan.id, "monthly")} />
+              <PlanPrice amountCents={readPlanPrice(plan.id, "monthly", priceList)} />
               <span className="text-small text-gray">{describePricePeriod(plan.id, "monthly")}</span>
             </p>
             {launchPrice ? <p className="text-small text-gray">{launchPrice}</p> : null}

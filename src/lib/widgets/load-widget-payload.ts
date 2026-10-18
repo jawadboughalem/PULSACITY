@@ -1,4 +1,5 @@
 import { type SQL, and, avg, count, desc, eq, isNull } from "drizzle-orm";
+import { UNLIMITED, getPlan } from "@/config/plans";
 import type { Database } from "@/db/database";
 import { spaces, testimonials, widgets } from "@/db/schema";
 import { toParisIsoDay } from "@/lib/dates/paris-date";
@@ -10,6 +11,7 @@ import {
   buildWidgetPayload,
   countTestimonialsForAnswer,
 } from "./build-widget-payload";
+import { isWidgetDisplayed } from "./free-plan-widgets";
 import { resolveWidgetSettings } from "./widget-settings";
 
 export type LoadedWidgetPayload = {
@@ -84,9 +86,15 @@ export const loadWidgetPayload = async (
     .where(eq(widgets.id, widgetId))
     .limit(1);
   if (!widget) return null;
+  // A widget paused by the free plan answers like an unknown one: nothing shows on the page.
+  if (!(await isWidgetDisplayed(database, { widgetId, spaceId: widget.spaceId, plan: widget.plan }))) return null;
 
   const settings = resolveWidgetSettings(widget.settings);
   const start = widget.type === "wall" ? offset : 0;
+  // Over the plan's testimonials (back on the free plan), the widget shows that many: featured first, then the newest.
+  const shownLimit = getPlan(widget.plan).limits.testimonials;
+  const answerSize = countTestimonialsForAnswer(widget.type, settings.maxItems, start);
+  const rowLimit = shownLimit === UNLIMITED ? answerSize : Math.max(0, Math.min(answerSize, shownLimit - start));
   const shown = shownTestimonialsFilter(widget.spaceId, widget.productId);
   const [[summary], rows] = await Promise.all([
     database.select({ total: count(), averageRating: avg(testimonials.rating) }).from(testimonials).where(shown),
@@ -95,7 +103,7 @@ export const loadWidgetPayload = async (
       .from(testimonials)
       .where(shown)
       .orderBy(...SHOWN_TESTIMONIALS_ORDER)
-      .limit(countTestimonialsForAnswer(widget.type, settings.maxItems, start))
+      .limit(rowLimit)
       .offset(start),
   ]);
 
@@ -110,6 +118,7 @@ export const loadWidgetPayload = async (
       averageRating: summary.averageRating === null ? null : Number(summary.averageRating),
       testimonials: rows.map(toWidgetTestimonialSource),
       offset: start,
+      shownLimit,
     }),
   };
 };

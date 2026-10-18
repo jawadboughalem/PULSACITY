@@ -1,0 +1,68 @@
+{
+  "id": "evt_recette3",
+  "data": {
+    "object": {
+      "id": "pm_recette1",
+      "card": {
+        "brand": "visa",
+        "last4": "4242",
+        "checks": {
+          "cvc_check": "pass",
+          "address_line1_check": null,
+          "address_postal_code_check": null
+        },
+        "wallet": null,
+        "country": "US",
+        "funding": "credit",
+        "exp_year": 2026,
+        "networks": {
+          "available": [
+            "visa"
+          ],
+          "preferred": null
+        },
+        "exp_month": 12,
+        "fingerprint": "fingerprintrecette",
+        "display_brand": "visa",
+        "generated_from": null,
+        "regulated_status": "unregulated",
+        "three_d_secure_usage": {
+          "supported": true
+        }
+      },
+      "type": "card",
+      "object": "payment_method",
+      "created": 1792154430,
+      "customer": "cus_recette1",
+      "livemode": false,
+      "metadata": {},
+      "allow_redisplay": "limited",
+      "billing_details": {
+        "name": "Julie Test",
+        "email": "julie@example.com",
+        "phone": null,
+        "tax_id": null,
+        "address": {
+          "city": null,
+          "line1": null,
+          "line2": null,
+          "state": null,
+          "country": "FR",
+          "postal_code": null
+        }
+      },
+      "customer_account": null,
+      "shared_payment_granted_token": null
+    }
+  },
+  "type": "payment_method.attached",
+  "object": "event",
+  "created": 1792154431,
+  "request": {
+    "id": null,
+    "idempotency_key": "idempotency-recette"
+  },
+  "livemode": false,
+  "api_version": "2026-09-30.endive",
+  "pending_webhooks": 1
+}

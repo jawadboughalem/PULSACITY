@@ -3,6 +3,7 @@ import { GET } from "./route";
 
 const processMissedEvents = vi.fn();
 const sendDueReviewEmails = vi.fn();
+const runBillingTasks = vi.fn();
 
 vi.mock("@/db", () => ({ getDb: () => ({}) }));
 vi.mock("@sentry/nextjs", () => ({ captureException: vi.fn() }));
@@ -12,6 +13,9 @@ vi.mock("@/lib/connectors/process-webhook-event", () => ({
 vi.mock("@/lib/requests/send-review-emails", () => ({
   sendDueReviewEmails: (...args: unknown[]) => sendDueReviewEmails(...args),
 }));
+vi.mock("@/lib/billing/run-billing-tasks", () => ({
+  runBillingTasks: (...args: unknown[]) => runBillingTasks(...args),
+}));
 
 const call = (authorization?: string) =>
   GET(new Request("https://pulsacity.com/api/cron/requests", { headers: authorization ? { authorization } : {} }));
@@ -19,6 +23,7 @@ const call = (authorization?: string) =>
 beforeEach(() => {
   processMissedEvents.mockReset().mockResolvedValue(0);
   sendDueReviewEmails.mockReset().mockResolvedValue({ sent: 2, reminded: 1, cancelled: 0, spacesAtPlanLimit: 0, failed: 0 });
+  runBillingTasks.mockReset().mockResolvedValue({ replayedEvents: 1, betaReminders: 0 });
 });
 
 afterEach(() => {
@@ -35,8 +40,18 @@ describe("GET /api/cron/requests", () => {
 
     const response = await call("Bearer secret-du-cron");
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ missedEvents: 0, sent: 2, reminded: 1, cancelled: 0, spacesAtPlanLimit: 0, failed: 0 });
+    expect(await response.json()).toEqual({
+      missedEvents: 0,
+      billing: { replayedEvents: 1, betaReminders: 0 },
+      sent: 2,
+      reminded: 1,
+      cancelled: 0,
+      spacesAtPlanLimit: 0,
+      failed: 0,
+    });
     expect(processMissedEvents).toHaveBeenCalledOnce();
+    // Without a Stripe key (local, CI), the billing tasks still send the reminders, without replaying events.
+    expect(runBillingTasks).toHaveBeenCalledWith(expect.anything(), null);
   });
 
   it("runs for nobody when the secret is not set", async () => {

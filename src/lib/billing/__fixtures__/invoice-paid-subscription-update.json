@@ -1,0 +1,232 @@
+{
+  "id": "evt_recette11",
+  "data": {
+    "object": {
+      "id": "in_recette2",
+      "lines": {
+        "url": "/v1/invoices/in_recette2/lines",
+        "data": [
+          {
+            "id": "il_recette2",
+            "taxes": [],
+            "amount": -999,
+            "object": "line_item",
+            "parent": {
+              "type": "subscription_item_details",
+              "invoice_item_details": null,
+              "subscription_item_details": {
+                "proration": true,
+                "invoice_item": "ii_recette1",
+                "subscription": "sub_recette1",
+                "proration_details": {
+                  "credited_items": {
+                    "invoice": "in_recette1",
+                    "invoice_line_items": [
+                      "il_recette1"
+                    ]
+                  }
+                },
+                "subscription_item": "si_recette1"
+              }
+            },
+            "period": {
+              "end": 1794832571,
+              "start": 1792154171
+            },
+            "invoice": "in_recette2",
+            "pricing": {
+              "type": "price_details",
+              "price_details": {
+                "price": "price_recette1",
+                "product": "prod_recette1"
+              },
+              "unit_amount_decimal": null
+            },
+            "currency": "eur",
+            "livemode": false,
+            "metadata": {},
+            "quantity": 1,
+            "subtotal": -999,
+            "discounts": [],
+            "description": "Temps non utilisé sur PULSACITY Essentiel après le 16 Oct 2026",
+            "discountable": false,
+            "discount_amounts": [],
+            "quantity_decimal": "1",
+            "pretax_credit_amounts": []
+          },
+          {
+            "id": "il_recette3",
+            "taxes": [],
+            "amount": 1999,
+            "object": "line_item",
+            "parent": {
+              "type": "subscription_item_details",
+              "invoice_item_details": null,
+              "subscription_item_details": {
+                "proration": true,
+                "invoice_item": "ii_recette2",
+                "subscription": "sub_recette1",
+                "proration_details": {
+                  "credited_items": null
+                },
+                "subscription_item": "si_recette1"
+              }
+            },
+            "period": {
+              "end": 1794832571,
+              "start": 1792154171
+            },
+            "invoice": "in_recette2",
+            "pricing": {
+              "type": "price_details",
+              "price_details": {
+                "price": "price_recette3",
+                "product": "prod_recette2"
+              },
+              "unit_amount_decimal": null
+            },
+            "currency": "eur",
+            "livemode": false,
+            "metadata": {},
+            "quantity": 1,
+            "subtotal": 1999,
+            "discounts": [],
+            "description": "Temps restant sur PULSACITY Pro après le 16 Oct 2026",
+            "discountable": false,
+            "discount_amounts": [],
+            "quantity_decimal": "1",
+            "pretax_credit_amounts": []
+          }
+        ],
+        "object": "list",
+        "has_more": false,
+        "total_count": 2
+      },
+      "total": 1000,
+      "footer": null,
+      "issuer": {
+        "type": "self"
+      },
+      "number": "RECETTE0-0002",
+      "object": "invoice",
+      "parent": {
+        "type": "subscription_details",
+        "quote_details": null,
+        "subscription_details": {
+          "metadata": {
+            "space_id": "00000000-0000-4000-8000-000000000001"
+          },
+          "subscription": "sub_recette1"
+        }
+      },
+      "status": "paid",
+      "created": 1792154171,
+      "currency": "eur",
+      "customer": "cus_recette1",
+      "due_date": null,
+      "livemode": false,
+      "metadata": {},
+      "subtotal": 1000,
+      "attempted": true,
+      "discounts": [],
+      "rendering": null,
+      "amount_due": 1000,
+      "period_end": 1792154171,
+      "test_clock": "clock_recette1",
+      "amount_paid": 1000,
+      "application": null,
+      "description": null,
+      "invoice_pdf": "https://invoice.stripe.com/i/acct_recette/test_recette",
+      "total_taxes": [],
+      "account_name": "environnement de test PULSACITY",
+      "auto_advance": false,
+      "effective_at": 1792154171,
+      "from_invoice": null,
+      "on_behalf_of": null,
+      "period_start": 1792154171,
+      "attempt_count": 1,
+      "automatic_tax": {
+        "status": null,
+        "enabled": false,
+        "provider": null,
+        "liability": null,
+        "disabled_reason": null
+      },
+      "custom_fields": null,
+      "customer_name": "Julie Nutrition",
+      "shipping_cost": null,
+      "billing_reason": "subscription_update",
+      "customer_email": "julie@example.com",
+      "customer_phone": null,
+      "default_source": null,
+      "ending_balance": 0,
+      "receipt_number": null,
+      "account_country": "FR",
+      "account_tax_ids": null,
+      "amount_overpaid": 0,
+      "amount_shipping": 0,
+      "latest_revision": null,
+      "amount_remaining": 0,
+      "customer_account": null,
+      "customer_address": null,
+      "customer_tax_ids": [],
+      "payment_settings": {
+        "default_mandate": null,
+        "payment_method_types": [
+          "card"
+        ],
+        "payment_method_options": {
+          "pix": null,
+          "upi": null,
+          "blik": null,
+          "card": {
+            "request_three_d_secure": "automatic"
+          },
+          "payto": null,
+          "billie": null,
+          "konbini": null,
+          "acss_debit": null,
+          "bancontact": null,
+          "sepa_debit": null,
+          "us_bank_account": null,
+          "customer_balance": null
+        }
+      },
+      "shipping_details": null,
+      "starting_balance": 0,
+      "collection_method": "charge_automatically",
+      "customer_shipping": null,
+      "default_tax_rates": [],
+      "hosted_invoice_url": "https://invoice.stripe.com/i/acct_recette/test_recette",
+      "status_transitions": {
+        "paid_at": 1792154171,
+        "voided_at": null,
+        "finalized_at": 1792154171,
+        "marked_uncollectible_at": null
+      },
+      "customer_tax_exempt": "none",
+      "total_excluding_tax": 1000,
+      "next_payment_attempt": null,
+      "statement_descriptor": null,
+      "webhooks_delivered_at": 1792154171,
+      "default_payment_method": null,
+      "subtotal_excluding_tax": 1000,
+      "total_discount_amounts": [],
+      "last_finalization_error": null,
+      "automatically_finalizes_at": null,
+      "total_pretax_credit_amounts": [],
+      "pre_payment_credit_notes_amount": 0,
+      "post_payment_credit_notes_amount": 0
+    }
+  },
+  "type": "invoice.paid",
+  "object": "event",
+  "created": 1792154707,
+  "request": {
+    "id": "req_recette4",
+    "idempotency_key": "idempotency-recette"
+  },
+  "livemode": false,
+  "api_version": "2026-09-30.endive",
+  "pending_webhooks": 1
+}
