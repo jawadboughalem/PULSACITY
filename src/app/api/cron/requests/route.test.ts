@@ -4,6 +4,7 @@ import { GET } from "./route";
 const processMissedEvents = vi.fn();
 const sendDueReviewEmails = vi.fn();
 const runBillingTasks = vi.fn();
+const sendDueWelcomeEmails = vi.fn();
 
 vi.mock("@/db", () => ({ getDb: () => ({}) }));
 vi.mock("@sentry/nextjs", () => ({ captureException: vi.fn() }));
@@ -12,6 +13,9 @@ vi.mock("@/lib/connectors/process-webhook-event", () => ({
 }));
 vi.mock("@/lib/requests/send-review-emails", () => ({
   sendDueReviewEmails: (...args: unknown[]) => sendDueReviewEmails(...args),
+}));
+vi.mock("@/lib/welcome-emails/send-welcome-emails", () => ({
+  sendDueWelcomeEmails: (...args: unknown[]) => sendDueWelcomeEmails(...args),
 }));
 vi.mock("@/lib/billing/run-billing-tasks", () => ({
   runBillingTasks: (...args: unknown[]) => runBillingTasks(...args),
@@ -24,6 +28,7 @@ beforeEach(() => {
   processMissedEvents.mockReset().mockResolvedValue(0);
   sendDueReviewEmails.mockReset().mockResolvedValue({ sent: 2, reminded: 1, cancelled: 0, spacesAtPlanLimit: 0, failed: 0 });
   runBillingTasks.mockReset().mockResolvedValue({ replayedEvents: 1, betaReminders: 0 });
+  sendDueWelcomeEmails.mockReset().mockResolvedValue({ welcomeEmailsSent: 3, welcomeEmailsSkipped: 1 });
 });
 
 afterEach(() => {
@@ -48,6 +53,8 @@ describe("GET /api/cron/requests", () => {
       cancelled: 0,
       spacesAtPlanLimit: 0,
       failed: 0,
+      welcomeEmailsSent: 3,
+      welcomeEmailsSkipped: 1,
     });
     expect(processMissedEvents).toHaveBeenCalledOnce();
     // Without a Stripe key (local, CI), the billing tasks still send the reminders, without replaying events.

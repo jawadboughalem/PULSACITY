@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { type Mock, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Database } from "@/db/database";
 import { spaceAcquisitions, spaces } from "@/db/schema";
 import { insertTestUser } from "@/db/space-fixtures";
@@ -10,9 +10,10 @@ import { createSpaceFromOnboarding } from "./create-space-from-onboarding";
 type TestContext = {
   database: Database | null;
   signedInUser: { id: string; email: string };
+  after: Mock;
 };
 
-const testContext = vi.hoisted((): TestContext => ({ database: null, signedInUser: { id: "", email: "" } }));
+const testContext = vi.hoisted((): TestContext => ({ database: null, signedInUser: { id: "", email: "" }, after: vi.fn() }));
 
 const { RedirectedError } = vi.hoisted(() => ({
   RedirectedError: class RedirectedError extends Error {
@@ -27,6 +28,7 @@ vi.mock("@/db", () => ({ getDb: () => testContext.database }));
 vi.mock("@/lib/auth/require-signed-in-user", () => ({
   requireSignedInUser: async () => testContext.signedInUser,
 }));
+vi.mock("next/server", () => ({ after: testContext.after }));
 vi.mock("next/navigation", () => ({
   redirect: (path: string) => {
     throw new RedirectedError(path);
@@ -80,6 +82,14 @@ describe("createSpaceFromOnboarding", () => {
         logoUrl: `https://photos.pulsacity.com/${logoKey}`,
       }),
     ]);
+  });
+
+  it("sends the welcome e-mail J0 once the page has answered", async () => {
+    testContext.after.mockClear();
+
+    await expect(submit({})).rejects.toThrow(new RedirectedError("/app/onboarding/formations"));
+
+    expect(testContext.after).toHaveBeenCalledTimes(1);
   });
 
   it("records the source of the sign-up sent back by the form, from the sign-in link to the space", async () => {

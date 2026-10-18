@@ -5,11 +5,12 @@ import { runBillingTasks } from "@/lib/billing/run-billing-tasks";
 import { getStripe, isStripeConfigured } from "@/lib/billing/stripe-client";
 import { processMissedEvents } from "@/lib/connectors/process-webhook-event";
 import { sendDueReviewEmails } from "@/lib/requests/send-review-emails";
+import { sendDueWelcomeEmails } from "@/lib/welcome-emails/send-welcome-emails";
 
 /**
  * The workflow « Send review requests » calls every 15 minutes, Vercel Cron once a day (the most the Hobby plan allows).
- * A run also replays the Stripe events left behind and sends the beta testers' reminders. It stops sending in time to
- * answer.
+ * A run also replays the Stripe events left behind, sends the beta testers' reminders and the welcome e-mails due. It
+ * stops sending in time to answer.
  */
 export const maxDuration = 60;
 
@@ -35,7 +36,8 @@ export const GET = async (request: Request): Promise<Response> => {
     const missedEvents = await processMissedEvents(database);
     const billing = await runBillingTasks(database, isStripeConfigured() ? getStripe() : null);
     const summary = await sendDueReviewEmails(database, { deadline: startedAt + SENDING_TIME_MS });
-    return Response.json({ missedEvents, billing, ...summary }, { headers: NO_CACHE });
+    const welcome = await sendDueWelcomeEmails(database, { deadline: startedAt + SENDING_TIME_MS });
+    return Response.json({ missedEvents, billing, ...summary, ...welcome }, { headers: NO_CACHE });
   } catch (error) {
     Sentry.captureException(error);
     return Response.json({ error: "run-failed" }, { status: 500, headers: NO_CACHE });

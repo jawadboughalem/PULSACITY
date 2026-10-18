@@ -68,3 +68,9 @@ export const toParisIsoDay = (date: Date): string => {
   const { year, month, day } = readParisDate(date);
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 };
+
+/** The instant when the clock in Paris reads `hour`:00 on a calendar day (days past the month's end roll over). */
+export const atParisHour = ({ year, month, day }: CalendarDate, hour: number): Date => {
+  const wallClockUtc = Date.UTC(year, month - 1, day, hour);
+  return new Date(wallClockUtc - readParisOffsetMs(new Date(wallClockUtc)));
+};

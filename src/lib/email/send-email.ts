@@ -28,6 +28,17 @@ export type SupportEmail = {
   replyTo: string;
 };
 
+/** An e-mail PULSACITY sends a creator unasked (the welcome e-mails): answers to our address, a way out in each. */
+export type CreatorEmail = {
+  to: string;
+  subject: string;
+  body: ReactElement;
+  replyTo: string;
+  unsubscribeUrl: string;
+  /** Sent twice within a day, it reaches the creator once. */
+  idempotencyKey: string;
+};
+
 /** An e-mail to a creator's customer: in the creator's name, with a way out in every message. */
 export type CustomerEmail = {
   to: string;
@@ -84,6 +95,18 @@ export const sendAccountEmail = ({ to, subject, body }: AccountEmail): Promise<v
 
 export const sendSupportEmail = ({ to, subject, body, replyTo }: SupportEmail): Promise<void> =>
   deliver({ senderName: SUPPORT_SENDER_NAME, senderLocalPart: ACCOUNT_SENDER_LOCAL_PART, to, subject, body, replyTo });
+
+export const sendCreatorEmail = ({ to, subject, body, replyTo, unsubscribeUrl, idempotencyKey }: CreatorEmail): Promise<void> =>
+  deliver({
+    senderName: ACCOUNT_SENDER_NAME,
+    senderLocalPart: ACCOUNT_SENDER_LOCAL_PART,
+    to,
+    subject,
+    body,
+    replyTo,
+    headers: { "List-Unsubscribe": `<${unsubscribeUrl}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" },
+    idempotencyKey,
+  });
 
 export const sendCustomerEmail = ({
   to,
