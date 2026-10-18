@@ -1,0 +1,212 @@
+{
+  "id": "evt_recette13",
+  "data": {
+    "object": {
+      "id": "sub_recette1",
+      "plan": {
+        "id": "price_recette3",
+        "meter": null,
+        "active": true,
+        "amount": 1999,
+        "object": "plan",
+        "created": 1792085743,
+        "product": "prod_recette2",
+        "currency": "eur",
+        "interval": "month",
+        "livemode": false,
+        "metadata": {},
+        "nickname": "Pro mensuel, prix de lancement",
+        "tiers_mode": null,
+        "usage_type": "licensed",
+        "amount_decimal": "1999",
+        "billing_scheme": "per_unit",
+        "interval_count": 1,
+        "transform_usage": null,
+        "trial_period_days": null
+      },
+      "items": {
+        "url": "/v1/subscription_items?subscription=sub_recette1",
+        "data": [
+          {
+            "id": "si_recette1",
+            "plan": {
+              "id": "price_recette3",
+              "meter": null,
+              "active": true,
+              "amount": 1999,
+              "object": "plan",
+              "created": 1792085743,
+              "product": "prod_recette2",
+              "currency": "eur",
+              "interval": "month",
+              "livemode": false,
+              "metadata": {},
+              "nickname": "Pro mensuel, prix de lancement",
+              "tiers_mode": null,
+              "usage_type": "licensed",
+              "amount_decimal": "1999",
+              "billing_scheme": "per_unit",
+              "interval_count": 1,
+              "transform_usage": null,
+              "trial_period_days": null
+            },
+            "price": {
+              "id": "price_recette3",
+              "type": "recurring",
+              "active": true,
+              "object": "price",
+              "created": 1792085743,
+              "product": "prod_recette2",
+              "currency": "eur",
+              "livemode": false,
+              "metadata": {},
+              "nickname": "Pro mensuel, prix de lancement",
+              "recurring": {
+                "meter": null,
+                "interval": "month",
+                "usage_type": "licensed",
+                "interval_count": 1,
+                "trial_period_days": null
+              },
+              "lookup_key": "pro_monthly_founder",
+              "tiers_mode": null,
+              "unit_amount": 1999,
+              "tax_behavior": "unspecified",
+              "billing_scheme": "per_unit",
+              "custom_unit_amount": null,
+              "transform_quantity": null,
+              "unit_amount_decimal": "1999"
+            },
+            "object": "subscription_item",
+            "created": 1792154171,
+            "metadata": {},
+            "quantity": 1,
+            "discounts": [],
+            "tax_rates": [],
+            "subscription": "sub_recette1",
+            "current_trial": null,
+            "billing_thresholds": null,
+            "current_period_end": 1794832571,
+            "current_period_start": 1792154171
+          }
+        ],
+        "object": "list",
+        "has_more": false,
+        "total_count": 1
+      },
+      "object": "subscription",
+      "status": "active",
+      "created": 1792154171,
+      "currency": "eur",
+      "customer": "cus_recette1",
+      "ended_at": null,
+      "livemode": false,
+      "metadata": {
+        "space_id": "00000000-0000-4000-8000-000000000001"
+      },
+      "quantity": 1,
+      "schedule": "sub_sched_recette2",
+      "cancel_at": null,
+      "discounts": [],
+      "trial_end": null,
+      "start_date": 1792154171,
+      "test_clock": "clock_recette1",
+      "application": null,
+      "canceled_at": null,
+      "description": null,
+      "trial_start": null,
+      "billing_mode": {
+        "type": "flexible",
+        "flexible": {
+          "proration_discounts": "included"
+        },
+        "updated_at": 1792154266
+      },
+      "on_behalf_of": null,
+      "automatic_tax": {
+        "enabled": false,
+        "liability": null,
+        "disabled_reason": null
+      },
+      "transfer_data": null,
+      "days_until_due": null,
+      "default_source": null,
+      "latest_invoice": "in_recette2",
+      "pending_update": null,
+      "trial_settings": {
+        "end_behavior": {
+          "billing_cycle_anchor": "now",
+          "missing_payment_method": "create_invoice"
+        }
+      },
+      "customer_account": null,
+      "invoice_settings": {
+        "footer": null,
+        "issuer": {
+          "type": "self"
+        },
+        "description": null,
+        "custom_fields": null,
+        "account_tax_ids": null
+      },
+      "managed_payments": {
+        "enabled": false
+      },
+      "pause_collection": null,
+      "payment_settings": {
+        "payment_method_types": [
+          "card"
+        ],
+        "payment_method_options": {
+          "pix": null,
+          "upi": null,
+          "blik": null,
+          "card": {
+            "network": null,
+            "request_three_d_secure": "automatic"
+          },
+          "payto": null,
+          "billie": null,
+          "konbini": null,
+          "acss_debit": null,
+          "bancontact": null,
+          "sepa_debit": null,
+          "us_bank_account": null,
+          "customer_balance": null
+        },
+        "save_default_payment_method": "off"
+      },
+      "billing_schedules": [],
+      "collection_method": "charge_automatically",
+      "default_tax_rates": [],
+      "billing_thresholds": null,
+      "billing_cycle_anchor": 1792154171,
+      "cancel_at_period_end": false,
+      "cancellation_details": {
+        "reason": null,
+        "comment": null,
+        "feedback": null,
+        "feedback_option": null
+      },
+      "pending_setup_intent": null,
+      "default_payment_method": "pm_recette1",
+      "application_fee_percent": null,
+      "billing_cycle_anchor_config": null,
+      "pending_invoice_item_interval": null,
+      "next_pending_invoice_item_invoice": null
+    },
+    "previous_attributes": {
+      "schedule": null
+    }
+  },
+  "type": "customer.subscription.updated",
+  "object": "event",
+  "created": 1792154732,
+  "request": {
+    "id": "req_recette5",
+    "idempotency_key": "idempotency-recette"
+  },
+  "livemode": false,
+  "api_version": "2026-09-30.endive",
+  "pending_webhooks": 1
+}

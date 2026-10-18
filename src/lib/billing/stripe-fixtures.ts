@@ -3,8 +3,9 @@ import { type StripePriceKey, readStripeLookupKey, readStripePriceAmount } from 
 import { BETA_COUPON_ID } from "./read-subscription-snapshot";
 
 /**
- * Stripe objects for the tests, in the shape of the API 2026-09-30.endive (only the fields PULSACITY reads). The real
- * events captured on the preview (docs-internes/connectors/stripe-billing.md) are checked against the same code.
+ * Stripe objects for the tests, in the shape of the API 2026-09-30.endive (only the fields PULSACITY reads), for the
+ * cases the recette did not capture (failed payment, beta discount, end of a subscription). The real events captured
+ * on the preview are in __fixtures__ (docs-internes/connectors/stripe-billing.md).
  */
 
 const seconds = (date: Date): number => Math.floor(date.getTime() / 1000);

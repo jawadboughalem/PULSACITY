@@ -584,5 +584,7 @@ Clique sur « Run », puis sur « Export » (ou « Download ») › « CSV ». D
 Compte rendu à me donner : le tableau du point 1, le nom du fichier du point 2, les quatre résultats du point 3. Ce ne sont que des types d'événements, des nombres et des dates de test.
 ```
 
+Compte rendu du 18 octobre, sur « pulsacity-recette » seulement : 20 événements, tous traités, aucune erreur (le détail par type est dans `docs-internes/connectors/stripe-billing.md`). Seuil : 1 client payant ; 1 mois de suite (2026-10) ; 19,99 € en 2 paiements, le premier le 16 octobre à 12 h 36 UTC ; 0 carte de bêta-testeur. Le fichier CSV a donné les fixtures anonymisées de `src/lib/billing/__fixtures__/` ; il n'entre pas dans le dépôt. L'éditeur SQL de Supabase a gardé de lui-même une requête privée « Untitled query » : sans effet, à supprimer quand on veut.
+
 En mode réel, les cartes de test et les horloges n'existent plus. La vérification de production du lot (après le passage en mode réel) prendra le code des bêta-testeurs avec une vraie carte, à 0 € ce jour-là, puis l'arrêtera aussitôt : rien n'est prélevé.
 

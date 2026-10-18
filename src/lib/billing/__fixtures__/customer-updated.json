@@ -1,0 +1,51 @@
+{
+  "id": "evt_recette1",
+  "data": {
+    "object": {
+      "id": "cus_recette1",
+      "name": "Julie Nutrition",
+      "email": "julie@example.com",
+      "phone": null,
+      "object": "customer",
+      "address": null,
+      "balance": 0,
+      "created": 1792154171,
+      "currency": "eur",
+      "discount": null,
+      "livemode": false,
+      "metadata": {
+        "space_id": "00000000-0000-4000-8000-000000000001"
+      },
+      "shipping": null,
+      "delinquent": false,
+      "tax_exempt": "none",
+      "test_clock": "clock_recette1",
+      "description": null,
+      "default_source": null,
+      "invoice_prefix": "RECETTE0",
+      "customer_account": null,
+      "invoice_settings": {
+        "footer": null,
+        "custom_fields": null,
+        "rendering_options": null,
+        "default_payment_method": null
+      },
+      "preferred_locales": [
+        "fr"
+      ]
+    },
+    "previous_attributes": {
+      "currency": null
+    }
+  },
+  "type": "customer.updated",
+  "object": "event",
+  "created": 1792154430,
+  "request": {
+    "id": null,
+    "idempotency_key": "idempotency-recette"
+  },
+  "livemode": false,
+  "api_version": "2026-09-30.endive",
+  "pending_webhooks": 1
+}

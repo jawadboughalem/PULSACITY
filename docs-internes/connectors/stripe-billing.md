@@ -13,7 +13,7 @@ Un événement ne sert qu'à savoir quel abonnement relire chez Stripe (`findEve
 | `subscription` (`customer.subscription.*`) | son `id` |
 | `checkout.session` (`checkout.session.*`, en mode `subscription`) | `subscription` |
 | `invoice` (`invoice.paid`, `invoice.payment_failed`, `invoice.payment_action_required`, `invoice.upcoming`) | `parent.subscription_details.subscription` |
-| `subscription_schedule` (`subscription_schedule.*`) | `subscription` |
+| `subscription_schedule` (`subscription_schedule.*`) | `subscription`, ou `released_subscription` une fois le changement programmé annulé |
 | `customer` (`customer.updated`) et `payment_method` (`payment_method.attached`) | l'abonnement courant de l'espace de ce client |
 
 L'abonnement relu (`subscriptions.retrieve`, développé : `default_payment_method`, `latest_invoice`, `discounts`, `schedule.phases.items.price`, `customer.invoice_settings.default_payment_method`) est lu par `readSubscriptionSnapshot` :
@@ -30,6 +30,32 @@ L'abonnement relu (`subscriptions.retrieve`, développé : `default_payment_meth
 
 ## Les captures
 
-À faire avec la recette (prompts 8 à 12) : chaque paiement de test envoie ses événements à l'aperçu ; le prompt 12 les exporte. Les fixtures en sont tirées, anonymisées (adresses `example.com`, identifiants remplacés), et remplacent ou complètent celles de `src/lib/billing/stripe-fixtures.ts`, écrites d'après les types du paquet `stripe` en attendant.
+Recette du 16 octobre 2026, compte A (prompt 8 de `recette/lot-4-5-abonnement.md`), relevée le 18 octobre (prompts 12 et 13) : 20 événements reçus, tous traités, aucune erreur.
 
-Relevé des captures : à compléter après le prompt 12.
+| Type | Nombre |
+| --- | --- |
+| `checkout.session.completed` | 1 |
+| `customer.subscription.created` | 1 |
+| `customer.subscription.updated` | 8 |
+| `customer.updated` | 1 |
+| `invoice.paid` | 2 |
+| `payment_method.attached` | 1 |
+| `subscription_schedule.released` | 2 |
+| `subscription_schedule.updated` | 4 |
+
+Le parcours : paiement d'Essentiel au prix de lancement (9,99 €), passage à l'annuel programmé puis annulé, passage au Pro (10 € au prorata), retour à Essentiel programmé puis annulé par l'arrêt, arrêt depuis la page de Stripe, reprise. Seuil, sur la recette : 1 client payant, 1 mois avec des paiements, 19,99 € en 2 paiements.
+
+Pas capturés (prompts 9 à 11 non faits) : `invoice.payment_failed`, `invoice.payment_action_required`, `invoice.upcoming`, `customer.subscription.deleted`, une remise de bêta-testeur. Ils restent couverts par `src/lib/billing/stripe-fixtures.ts`, écrites d'après les types du paquet `stripe`.
+
+Les fixtures : `src/lib/billing/__fixtures__/`, 14 des 20 événements, testés par `src/lib/billing/stripe-recette-events.test.ts`. Anonymisées avant d'entrer dans le dépôt :
+- adresses e-mail : `julie@example.com` ;
+- identifiants Stripe (ils contiennent un morceau de l'identifiant du compte) : `<préfixe>_recette<n>`, les mêmes d'un fichier à l'autre ;
+- liens des factures (`hosted_invoice_url`, `invoice_pdf`), empreinte de la carte, clés d'idempotence, numéros de facture : remplacés ;
+- l'espace : `00000000-0000-4000-8000-000000000001` ; l'adresse de l'aperçu : `https://pulsacity.com`.
+
+Ce que les captures ont appris :
+- l'arrêt depuis la page de Stripe pose `cancel_at` (la fin de la période) et laisse `cancel_at_period_end` à `false` : le code lit les deux ;
+- un changement programmé puis annulé (`subscription_schedule.released`, puis `subscription_schedule.updated` au statut `released`) n'a plus de `subscription`, seulement `released_subscription` : le code le lit désormais ;
+- la facture garde `space_id` dans `parent.subscription_details.metadata` ; `status_transitions.paid_at` vaut l'heure de l'horloge de test ;
+- les prix sont au comportement fiscal `unspecified` ; la page de paiement ne propose que `card` (Link et Apple Pay en font partie) ;
+- les lignes de facture sont écrites par Stripe : « 1 × PULSACITY Essentiel (à €9.99 / mois) », « Temps restant sur PULSACITY Pro après le 16 Oct 2026 ».
