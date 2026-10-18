@@ -71,7 +71,7 @@ const HomePage = async () => {
           </p>
         </div>
         <div className="mt-8 flex flex-col items-center gap-6 desktop:flex-row desktop:gap-6">
-          <SignUpLink className={LARGE_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
+          <SignUpLink place="accueil" className={LARGE_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
           <Link
             href={MARKETING_PATHS.integrations}
             className={cn(

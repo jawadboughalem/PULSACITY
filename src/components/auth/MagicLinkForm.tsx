@@ -1,5 +1,6 @@
 "use client";
 
+import { trackEvent } from "@/components/analytics/track-event";
 import { PRIMARY_BUTTON_CLASSES, DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { FIELD_LABEL_CLASSES, OPTIONAL_MARK_CLASSES } from "@/components/ui/field-styles";
 import { SelectControl } from "@/components/ui/SelectControl";
@@ -33,7 +34,11 @@ export const MagicLinkForm = ({ source = {}, asksHeardFrom = false }: MagicLinkF
     handleChangeEmail,
     handleChangeHeardFrom,
     handleUseAnotherAddress,
-  } = useMagicLinkRequest();
+  } = useMagicLinkRequest(
+    asksHeardFrom
+      ? (answer) => trackEvent("inscription-lien-demande", { connu: answer === "" ? "sans-reponse" : answer })
+      : undefined,
+  );
 
   if (isSent) {
     return (

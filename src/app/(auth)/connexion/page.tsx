@@ -31,7 +31,7 @@ const SignInPage = async ({ searchParams }: PageProps<"/connexion">) => {
       <MagicLinkForm />
       <p className="flex flex-wrap items-center gap-x-2 pt-6 text-body">
         Pas encore d&apos;espace ?
-        <SignUpLink className={DISCREET_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
+        <SignUpLink place="connexion" className={DISCREET_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
       </p>
     </>
   );

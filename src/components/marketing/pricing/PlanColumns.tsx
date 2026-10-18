@@ -82,6 +82,8 @@ export const PlanColumns = ({ priceList }: { priceList: PriceList }) => (
             <div key={period} className={PERIOD_VISIBILITY[period]}>
               <SignUpLink
                 href={readCallHref(plan.id, period)}
+                place="tarifs"
+                event={{ name: "choisir-un-plan", data: { plan: plan.id, periode: period } }}
                 className={cn(plan.isRecommended ? PRIMARY_BUTTON_CLASSES : SECONDARY_BUTTON_CLASSES, "w-full")}
               >
                 {CALLS_TO_ACTION[plan.id]}

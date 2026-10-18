@@ -70,7 +70,9 @@ export const MarketingNav = () => {
             </li>
           ))}
         </ul>
-        <SignUpLink className={SECONDARY_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
+        <SignUpLink place="en-tete" className={SECONDARY_BUTTON_CLASSES}>
+          Créer mon espace gratuit
+        </SignUpLink>
       </nav>
 
       <button
@@ -116,7 +118,7 @@ export const MarketingNav = () => {
             </li>
           ))}
         </ul>
-        <SignUpLink onClick={close} className={cn(PRIMARY_BUTTON_CLASSES, "mt-4 w-full")}>
+        <SignUpLink place="menu" onClick={close} className={cn(PRIMARY_BUTTON_CLASSES, "mt-4 w-full")}>
           Créer mon espace gratuit
         </SignUpLink>
       </nav>

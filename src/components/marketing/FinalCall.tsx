@@ -15,6 +15,6 @@ export const FinalCall = ({ title, text }: FinalCallProps) => (
       {title}
     </h2>
     <p className="mt-8 text-body text-gray">{text}</p>
-    <SignUpLink className={cn(LARGE_BUTTON_CLASSES, "mt-8 desktop:mb-14")}>Créer mon espace gratuit</SignUpLink>
+    <SignUpLink place="appel-final" className={cn(LARGE_BUTTON_CLASSES, "mt-8 desktop:mb-14")}>Créer mon espace gratuit</SignUpLink>
   </MarketingSection>
 );

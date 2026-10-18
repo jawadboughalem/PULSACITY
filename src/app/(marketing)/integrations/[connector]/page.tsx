@@ -114,7 +114,7 @@ const AvailablePage = ({ integration }: { integration: AvailableIntegration }) =
     <JsonLd data={buildFaqPageData(integration.faq)} />
     <Hero integration={integration}>
       <div className="mt-8 flex flex-col items-center gap-4 desktop:flex-row desktop:gap-8">
-        <SignUpLink className={LARGE_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
+        <SignUpLink place="integration" className={LARGE_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
         <Link href="#installation" className={TEXT_LINK_CLASSES}>
           Voir le guide d&apos;installation
         </Link>
@@ -187,7 +187,7 @@ const UpcomingPage = ({ integration }: { integration: UpcomingIntegration }) => 
       tone="paper"
     >
       <MeanwhileList items={[describeMeanwhile(integration).item, ...MEANWHILE]} layout="rows" />
-      <SignUpLink className={cn(LARGE_BUTTON_CLASSES, "mt-8")}>Créer mon espace gratuit</SignUpLink>
+      <SignUpLink place="integration-en-attendant" className={cn(LARGE_BUTTON_CLASSES, "mt-8")}>Créer mon espace gratuit</SignUpLink>
     </SplitSection>
   </>
 );

@@ -85,6 +85,8 @@ export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistF
               type="submit"
               disabled={isPending}
               aria-label={`Me prévenir à la sortie de ${connectorName}`}
+              data-umami-event="me-prevenir"
+              data-umami-event-outil={connector}
               className={cn(PRIMARY_BUTTON_CLASSES, "w-full shrink-0 desktop:mt-[30px] desktop:w-auto")}
             >
               Me prévenir
