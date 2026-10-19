@@ -1,3 +1,4 @@
+import { guidePath, integrationPath } from "@/components/marketing/marketing-paths";
 import { CALENDLY } from "./calendly";
 import { CAL_COM } from "./cal-com";
 import { EVENTBRITE } from "./eventbrite";
@@ -14,7 +15,7 @@ import { SCHOOLMAKER } from "./schoolmaker";
 import { SHOPIFY } from "./shopify";
 import { STRIPE } from "./stripe";
 import { SYSTEME_IO } from "./systeme-io";
-import type { Integration } from "./types";
+import type { Integration, UpcomingIntegration } from "./types";
 import { UNIVERSAL } from "./universal";
 import { WEEZEVENT } from "./weezevent";
 import { WOOCOMMERCE } from "./woocommerce";
@@ -57,6 +58,22 @@ export const readMeanwhileLine = (connectorId: string): string | null => {
   const integration = INTEGRATIONS.find((page) => page.status === "soon" && page.connector === connectorId);
   return integration?.status === "soon" ? describeMeanwhile(integration).line : null;
 };
+
+/** Where « voir le guide », « Zapier » or « Make » lead: the guide step by step, or the universal connector's page. */
+const readGuideHref = (integration: UpcomingIntegration) =>
+  integration.guideSlug ? guidePath(integration.guideSlug) : integrationPath(UNIVERSAL.slug);
+
+/**
+ * The line under a tool to come in the space (charte v2, Carte d'outil; maquettes 3.4): « Déjà possible avec le
+ * connecteur universel : voir le guide » for a tool served by a guide, « En attendant : avec Zapier ou Make » otherwise,
+ * each name leading to its guide.
+ */
+export type MeanwhileLinks = { guideHref: string } | { zapierHref: string; makeHref: string };
+
+export const readMeanwhileLinks = (integration: UpcomingIntegration): MeanwhileLinks =>
+  integration.guideSlug
+    ? { guideHref: readGuideHref(integration) }
+    : { zapierHref: readGuideHref(ZAPIER), makeHref: readGuideHref(MAKE) };
 
 export { describeMeanwhile } from "./meanwhile";
 export { UNIVERSAL_GUIDE_LINKS } from "./universal";

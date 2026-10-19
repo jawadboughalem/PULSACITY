@@ -426,8 +426,14 @@ export const RequestReviewDialog = ({
                   </div>
                   <p className={FIELD_HINT_CLASSES}>{describeEmailReason(offer?.name ?? null, spaceName, purchaseDay)}</p>
                 </div>
-                <div className="flex flex-col gap-2 pt-2">
-                  <label className="flex cursor-pointer items-start gap-3 text-body">
+                {/* Charte v2, Case à cocher: the attestation on Nuage, radius-card, padding 16; in error, Erreur fond. */}
+                <div
+                  className={cn(
+                    "flex flex-col gap-2 rounded-card p-4",
+                    attestationError ? "border-2 border-error bg-error-surface" : "bg-cloud",
+                  )}
+                >
+                  <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-body font-bold">
                     <Checkbox
                       name="isAttested"
                       hasError={attestationError !== null}

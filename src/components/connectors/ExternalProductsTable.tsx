@@ -111,7 +111,7 @@ const ExternalProductRow = ({ product, offers }: RowProps) => {
   const isDelayDisabled = !offer || !offer.requestsEnabled || isSaving;
 
   return (
-    <li className="flex flex-col gap-4 rounded-card bg-white p-4 desktop:grid desktop:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)_minmax(0,2fr)] desktop:items-center desktop:gap-6 desktop:rounded-field desktop:px-4 desktop:py-[18px]">
+    <li className="flex flex-col gap-4 rounded-card bg-cloud p-4 desktop:grid desktop:bg-white desktop:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,4fr)_minmax(0,2fr)] desktop:items-center desktop:gap-6 desktop:rounded-field desktop:px-4 desktop:py-[18px]">
       <div className="flex items-start justify-between gap-3 desktop:block">
         <div className="flex min-w-[0] flex-col gap-1">
           <p className="text-body font-bold">{product.name}</p>

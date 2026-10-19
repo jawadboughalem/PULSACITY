@@ -2,8 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { suggestTool } from "@/app/app/(espace)/connecteurs/connector-actions";
+import { ActionDoneMessage } from "@/components/ui/ActionDoneMessage";
 import { INLINE_LINK_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
-import { Icon } from "@/components/ui/Icon";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
 
@@ -12,7 +12,10 @@ const ERRORS = {
   "not-saved": "Votre message n'a pas été enregistré. Vérifiez votre connexion, puis réessayez.",
 } as const;
 
-/** « Dites-nous quel outil »: the creator names the tool, kept with the space for the next connectors. */
+/**
+ * « Dites-nous quel outil »: the creator names the tool, kept with the space for the next connectors. Maquettes 3.4:
+ * on its white card, under the families.
+ */
 export const SuggestTool = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [toolName, setToolName] = useState("");
@@ -35,20 +38,15 @@ export const SuggestTool = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="max-w-text text-body text-gray">
+    <div className="flex flex-col gap-4 rounded-card bg-white p-5 desktop:px-8 desktop:py-6">
+      <p className="text-body">
         Vous vendez ailleurs ?{" "}
         <button type="button" onClick={() => setIsOpen(true)} className={cn(INLINE_LINK_CLASSES, "cursor-pointer")} aria-expanded={isOpen}>
           Dites-nous quel outil
         </button>
         . En attendant, votre lien de collecte fonctionne partout.
       </p>
-      {isSent ? (
-        <p role="status" className="flex items-center gap-2 text-small font-semibold text-success">
-          <Icon name="valid" size={20} />
-          Merci, c&apos;est noté. Nous vous préviendrons s&apos;il arrive.
-        </p>
-      ) : null}
+      <ActionDoneMessage message={isSent ? "Merci, c'est noté. Nous vous préviendrons s'il arrive." : null} />
       {isOpen && !isSent ? (
         <form onSubmit={handleSubmit} className="flex max-w-[400px] flex-col gap-3">
           <TextField
@@ -61,7 +59,11 @@ export const SuggestTool = () => {
             onChange={(event) => setToolName(event.target.value)}
             error={error ? ERRORS[error] : undefined}
           />
-          <button type="submit" disabled={isSaving} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto desktop:self-start")}>
+          <button
+            type="submit"
+            disabled={isSaving}
+            className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:h-[44px] desktop:w-auto desktop:self-start desktop:px-[18px]")}
+          >
             Envoyer
           </button>
         </form>

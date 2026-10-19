@@ -1,9 +1,9 @@
 import { AudienceMeasurement } from "@/components/analytics/AudienceMeasurement";
-import { TextColumnPage } from "@/components/ui/TextColumnPage";
+import { AuthCardPage } from "@/components/auth/AuthCardPage";
 
 const AuthLayout = ({ children }: LayoutProps<"/">) => (
   <>
-    <TextColumnPage>{children}</TextColumnPage>
+    <AuthCardPage>{children}</AuthCardPage>
     <AudienceMeasurement />
   </>
 );

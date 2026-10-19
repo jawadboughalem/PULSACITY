@@ -129,13 +129,13 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
   return (
     <>
       <SpaceMobileHeader account={buildSpaceAccount(signedInUser, space)} />
-      <SpacePage>
+      <SpacePage className="desktop:gap-6">
         {/* m20: the confirmation sits above the title on a phone, under it on a desktop. */}
         <div className="flex flex-col-reverse gap-6 desktop:flex-col">
-          <header className="flex flex-col gap-6 desktop:flex-row desktop:items-start desktop:justify-between">
+          <header className="flex flex-col gap-4 desktop:flex-row desktop:items-end desktop:justify-between desktop:gap-6">
             <div className="flex flex-col gap-2">
               <h1 className="font-display text-h1">Demandes</h1>
-              <p className="max-w-text text-body text-gray">
+              <p className="max-w-[760px] text-body">
                 Une demande d&apos;avis part après chaque vente, au délai réglé dans Offres. Vous pouvez l&apos;envoyer plus
                 tôt ou l&apos;annuler.
               </p>
@@ -179,7 +179,7 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
         </div>
 
         {counts.all === 0 ? (
-          <section className="flex flex-col gap-4 rounded-panel bg-sky p-6 desktop:p-10">
+          <section className="flex flex-col gap-4 rounded-panel bg-sky p-5 desktop:p-8">
             <h2 className="font-display text-h3 desktop:text-h2">Aucune demande pour l&apos;instant</h2>
             <p className="max-w-text text-body">
               Dès qu&apos;une vente nous arrive de votre outil, la demande d&apos;avis se prépare ici, avec sa date de départ. Vous
@@ -188,6 +188,7 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
             <div className="flex flex-col gap-3 desktop:flex-row">
               {isConnected ? null : (
                 <Link href={CONNECTORS_SECTION_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
+                  <Icon name="connection" size={20} />
                   Connecter mon outil
                 </Link>
               )}
@@ -197,7 +198,7 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
         ) : (
           <>
             <section aria-label="Vos demandes" className={FIGURE_ROW_CLASSES}>
-              <Figure value={String(counts.scheduled)}>
+              <Figure value={String(counts.scheduled)} tone="sky">
                 {counts.scheduled > 1 ? "planifiées" : "planifiée"}
               </Figure>
               <Figure value={String(counts.sentThisMonth)}>
@@ -260,7 +261,7 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
               </nav>
 
               {list.total === 0 ? (
-                <div className="flex flex-col items-start gap-2">
+                <div className="flex flex-col items-start gap-2 rounded-panel bg-white p-5 desktop:px-6">
                   <p className="text-body">Aucune demande avec ce statut.</p>
                   <Link href={REQUESTS_SECTION_HREF} className={DISCREET_BUTTON_CLASSES}>
                     Voir toutes les demandes
@@ -271,36 +272,42 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
                   {list.requests.map((request) => (
                     <li
                       key={request.id}
-                      className="flex items-start gap-4 rounded-card bg-white p-4 desktop:items-center desktop:gap-6 desktop:px-6"
+                      className="flex flex-col gap-3 rounded-card bg-white p-4 desktop:flex-row desktop:items-center desktop:gap-6 desktop:px-6"
                     >
-                      <SpaceAvatar name={request.customerName} logoUrl={null} size={44} background="sky" />
-                      <div className="flex min-w-[0] flex-1 flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-6">
-                        <div className="flex min-w-[0] flex-1 flex-col gap-1">
-                          <p className="text-body">
-                            <strong className="font-bold">{request.customerName}</strong>
-                            {` · ${request.productName}`}
-                          </p>
-                          <p className={cn("text-small", request.status === "failed" ? "text-error" : "text-gray")}>
-                            <KeepHyphenatedWords text={describeRequest(request, { now, heldUntil })} />
-                          </p>
+                      {/* Maquettes 3.4: on a phone, the badge and the actions under the whole row, side by side when they fit. */}
+                      <div className="flex min-w-[0] flex-1 items-start gap-4 desktop:items-center desktop:gap-6">
+                        <SpaceAvatar name={request.customerName} logoUrl={null} size={44} background="sky" />
+                        <div className="flex min-w-[0] flex-1 flex-col gap-2 desktop:flex-row desktop:items-center desktop:gap-6">
+                          <div className="flex min-w-[0] flex-1 flex-col gap-1">
+                            <p className="text-body">
+                              <strong className="font-bold">{request.customerName}</strong>
+                              {` · ${request.productName}`}
+                            </p>
+                            <p className={cn("text-small", request.status === "failed" ? "text-error" : "text-gray")}>
+                              <KeepHyphenatedWords text={describeRequest(request, { now, heldUntil })} />
+                            </p>
+                          </div>
+                          <span className="hidden shrink-0 desktop:block desktop:w-[160px]">
+                            <ToneBadge {...REQUEST_BADGES[request.status]} />
+                          </span>
                         </div>
-                        <span className="shrink-0 desktop:w-[160px]">
+                      </div>
+                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 desktop:w-[280px] desktop:shrink-0 desktop:justify-end">
+                        <span className="desktop:hidden">
                           <ToneBadge {...REQUEST_BADGES[request.status]} />
                         </span>
-                        <div className="shrink-0 empty:hidden desktop:flex desktop:w-[280px] desktop:justify-end desktop:empty:flex">
-                          <RequestActions
-                            requestId={request.id}
-                            status={request.status}
-                            hasPendingReminder={request.reminderScheduledAt !== null && request.reminderSentAt === null}
-                            canSendNow={heldUntil === null}
-                            customerName={request.customerName}
-                            customerEmail={request.customerEmail}
-                            productName={request.productName}
-                            testimonialHref={
-                              request.testimonialId ? `${TESTIMONIALS_SECTION_HREF}/${request.testimonialId}` : null
-                            }
-                          />
-                        </div>
+                        <RequestActions
+                          requestId={request.id}
+                          status={request.status}
+                          hasPendingReminder={request.reminderScheduledAt !== null && request.reminderSentAt === null}
+                          canSendNow={heldUntil === null}
+                          customerName={request.customerName}
+                          customerEmail={request.customerEmail}
+                          productName={request.productName}
+                          testimonialHref={
+                            request.testimonialId ? `${TESTIMONIALS_SECTION_HREF}/${request.testimonialId}` : null
+                          }
+                        />
                       </div>
                     </li>
                   ))}
@@ -317,7 +324,7 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
                   <Link
                     href={filterHref(filterValue, list.requests.length + nextCount)}
                     scroll={false}
-                    className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto desktop:self-start")}
+                    className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:h-[44px] desktop:w-auto desktop:self-start desktop:px-[18px]")}
                   >
                     {nextCount > 1 ? `Afficher les ${nextCount} suivantes` : "Afficher la suivante"}
                   </Link>

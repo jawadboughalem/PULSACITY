@@ -3,6 +3,7 @@
 import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { FieldError } from "@/components/ui/FieldError";
 import { FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES, OPTIONAL_MARK_CLASSES } from "@/components/ui/field-styles";
+import { Icon } from "@/components/ui/Icon";
 import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
 import type { ImageUpload } from "@/components/uploads/useImageUpload";
 import { cn } from "@/lib/cn";
@@ -30,13 +31,18 @@ export const LogoField = ({ upload, spaceName, serverError }: LogoFieldProps) =>
       <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>
         Votre logo <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
       </legend>
+      {/* Maquettes 3.4: a dashed circle with the camera until a logo is chosen, then the logo in its round. */}
       <div className="flex items-center gap-4">
-        <SpaceAvatar
-          name={spaceName || "?"}
-          logoUrl={state.status === "uploaded" ? state.image.previewUrl : null}
-          size={64}
-          background="sky"
-        />
+        {state.status === "uploaded" ? (
+          <SpaceAvatar name={spaceName || "?"} logoUrl={state.image.previewUrl} size={64} background="sky" />
+        ) : (
+          <span
+            aria-hidden="true"
+            className="flex size-[64px] shrink-0 items-center justify-center rounded-full border-2 border-dashed border-gray bg-cloud text-gray"
+          >
+            <Icon name="photo" size={24} />
+          </span>
+        )}
         <div className="flex flex-wrap items-center gap-3">
           <label
             className={cn(
@@ -44,6 +50,7 @@ export const LogoField = ({ upload, spaceName, serverError }: LogoFieldProps) =>
               "cursor-pointer has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink",
             )}
           >
+            <Icon name="upload" size={20} />
             {state.status === "uploaded" ? "Changer de logo" : "Choisir un logo"}
             <input
               type="file"

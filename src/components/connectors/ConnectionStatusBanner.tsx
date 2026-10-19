@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCopyLink } from "@/components/space/useCopyLink";
-import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES, SECONDARY_COMPACT_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { StatusBanner } from "@/components/ui/StatusBanner";
 import { cn } from "@/lib/cn";
@@ -80,7 +80,7 @@ export const ConnectionStatusBanner = ({
           {/* Charte v2: an error banner's action is a secondary button; the page keeps its one main button. */}
           <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center">
             <button type="button" onClick={handleCopy} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
-              <Icon name={isCopied ? "valid" : "copy"} size={20} />
+              <Icon name={isCopied ? "check" : "copy"} size={20} />
               {isCopied ? "Clé secrète copiée" : "Copier la clé secrète"}
             </button>
             <Link href={`#${stepTwoId}`} className={cn(DISCREET_BUTTON_CLASSES, "self-start desktop:self-auto")}>
@@ -92,28 +92,24 @@ export const ConnectionStatusBanner = ({
     );
   }
 
+  // Maquettes 3.4: the waiting banner on Attente fond, « Vérifier la connexion » under its text.
   return (
-    <div
-      role="status"
-      className="flex flex-col gap-4 rounded-card bg-sky px-5 py-4 text-ink desktop:flex-row desktop:items-center desktop:justify-between desktop:px-6 desktop:py-5"
-    >
-      <div className="flex items-start gap-[14px]">
-        <Icon name="clock" size={24} className="mt-[1px] shrink-0" />
-        <div className="flex min-w-[0] flex-col gap-1">
-          <p className="text-body font-bold">En attente de votre première vente…</p>
-          <p className="text-small">
-            {hasChecked ? CHECK_HINT : "Rien à faire si les étapes 1 et 2 sont faites. Pour vérifier tout de suite, faites un achat test."}
-          </p>
-        </div>
+    <div role="status" className="flex items-start gap-[14px] rounded-card bg-waiting-surface px-5 py-4 text-ink desktop:px-6 desktop:py-5">
+      <Icon name="clock" size={24} className="mt-[1px] shrink-0 text-waiting" />
+      <div className="flex min-w-[0] flex-col gap-1">
+        <p className="text-body font-bold">En attente de votre première vente…</p>
+        <p className="text-small">
+          {hasChecked ? CHECK_HINT : "Rien à faire si les étapes 1 et 2 sont faites. Pour vérifier tout de suite, faites un achat test."}
+        </p>
+        <button
+          type="button"
+          onClick={check}
+          disabled={isChecking}
+          className={cn(SECONDARY_COMPACT_BUTTON_CLASSES, "mt-2 self-start")}
+        >
+          Vérifier la connexion
+        </button>
       </div>
-      <button
-        type="button"
-        onClick={check}
-        disabled={isChecking}
-        className={cn(SECONDARY_BUTTON_CLASSES, "w-full shrink-0 desktop:w-auto")}
-      >
-        Vérifier la connexion
-      </button>
     </div>
   );
 };

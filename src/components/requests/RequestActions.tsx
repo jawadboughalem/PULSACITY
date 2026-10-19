@@ -153,6 +153,7 @@ export const RequestActions = ({
         }
         confirmLabel={isPlanned ? "Annuler la demande" : "Annuler la relance"}
         cancelLabel="Garder"
+        isDestructive
         onConfirm={() => {
           setIsConfirming(false);
           run(async () => {

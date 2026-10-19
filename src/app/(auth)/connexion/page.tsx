@@ -16,23 +16,32 @@ const SignInPage = async ({ searchParams }: PageProps<"/connexion">) => {
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <h1 className="font-display text-h1">Retrouvez votre espace</h1>
-        <p className="text-body text-gray">
-          Indiquez l&apos;adresse e-mail de votre espace. Vous recevrez un lien pour entrer, sans mot de passe.
-        </p>
-      </div>
-      {error ? (
-        <StatusBanner tone="error" title="Ce lien de connexion n'est plus valable.">
-          Il a peut-être déjà servi, ou ses {MAGIC_LINK_LIFETIME_MINUTES} minutes sont passées. Demandez-en un
-          nouveau ci-dessous.
-        </StatusBanner>
-      ) : null}
-      <MagicLinkForm />
-      <p className="flex flex-wrap items-center gap-x-2 pt-6 text-body">
-        Pas encore d&apos;espace ?
-        <SignUpLink place="connexion" className={DISCREET_BUTTON_CLASSES}>Créer mon espace gratuit</SignUpLink>
-      </p>
+      <MagicLinkForm
+        heading={
+          <>
+            <div className="flex flex-col gap-2">
+              <h1 className="font-display text-h1">Retrouvez votre espace</h1>
+              <p className="text-body">
+                Indiquez l&apos;adresse e-mail de votre espace. Vous recevrez un lien pour entrer, sans mot de passe.
+              </p>
+            </div>
+            {error ? (
+              <StatusBanner tone="error" title="Ce lien de connexion n'est plus valable.">
+                Il a peut-être déjà servi, ou ses {MAGIC_LINK_LIFETIME_MINUTES} minutes sont passées. Demandez-en un
+                nouveau ci-dessous.
+              </StatusBanner>
+            ) : null}
+          </>
+        }
+        footer={
+          <p className="flex flex-wrap items-center gap-x-2 text-small">
+            Pas encore d&apos;espace ?
+            <SignUpLink place="connexion" className={DISCREET_BUTTON_CLASSES}>
+              Créer mon espace gratuit
+            </SignUpLink>
+          </p>
+        }
+      />
     </>
   );
 };

@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ConnectionEventList } from "@/components/connectors/ConnectionEventList";
-import { BackBar, Breadcrumb } from "@/components/space/BackBar";
+import { Breadcrumb } from "@/components/space/BackBar";
+import { buildSpaceAccount } from "@/components/space/build-space-account";
+import { MobileBackLink } from "@/components/space/MobileBackLink";
+import { SpaceMobileHeader } from "@/components/space/SpaceMobileHeader";
 import { connectorHistoryHref, connectorHref } from "@/components/space/space-sections";
 import { SpacePage } from "@/components/space/SpacePage";
-import { SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { SECONDARY_COMPACT_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { getDb } from "@/db";
 import { findConnection } from "@/lib/connectors/connections";
 import {
@@ -30,7 +33,7 @@ const ConnectorHistoryPage = async ({ params, searchParams }: PageProps<"/app/co
   const { connector: slug } = await params;
   const connector = getConnectorBySlug(slug);
   if (!connector) notFound();
-  const { space } = await getCurrentSpace();
+  const { signedInUser, space } = await getCurrentSpace();
   const database = getDb();
   const connection = await findConnection(database, space.id, connector.id);
   if (!connection) notFound();
@@ -45,14 +48,17 @@ const ConnectorHistoryPage = async ({ params, searchParams }: PageProps<"/app/co
 
   return (
     <>
-      <BackBar href={connectorHref(connector.slug)} label={connector.name} />
-      <SpacePage className="desktop:max-w-[1128px]">
-        <Breadcrumb parentHref={connectorHref(connector.slug)} parentLabel={connector.name} current="Historique" />
-        <div className="flex flex-col gap-2">
-          <h1 className="font-display text-h1">Historique des événements</h1>
-          <p className="max-w-text text-body text-gray">
-            {`Tout ce que ${connector.name} nous a envoyé, du plus récent au plus ancien.`}
-          </p>
+      <SpaceMobileHeader account={buildSpaceAccount(signedInUser, space)} />
+      <SpacePage className="desktop:gap-6">
+        <div className="flex flex-col gap-4">
+          <Breadcrumb parentHref={connectorHref(connector.slug)} parentLabel={connector.name} current="Historique" />
+          <MobileBackLink href={connectorHref(connector.slug)} label={connector.name} />
+          <div className="flex flex-col gap-2">
+            <h1 className="font-display text-h1">Historique des événements</h1>
+            <p className="max-w-text text-body">
+              {`Tout ce que ${connector.name} nous a envoyé, du plus récent au plus ancien.`}
+            </p>
+          </div>
         </div>
         {events.length > 0 ? (
           <ConnectionEventList
@@ -67,12 +73,12 @@ const ConnectorHistoryPage = async ({ params, searchParams }: PageProps<"/app/co
         {page > 1 || !isLastPage ? (
           <nav aria-label="Pages de l'historique" className="flex flex-col gap-3 desktop:flex-row">
             {page > 1 ? (
-              <Link href={pageHref(page - 1)} className={SECONDARY_BUTTON_CLASSES}>
+              <Link href={pageHref(page - 1)} className={SECONDARY_COMPACT_BUTTON_CLASSES}>
                 Voir les plus récents
               </Link>
             ) : null}
             {isLastPage ? null : (
-              <Link href={pageHref(page + 1)} className={SECONDARY_BUTTON_CLASSES}>
+              <Link href={pageHref(page + 1)} className={SECONDARY_COMPACT_BUTTON_CLASSES}>
                 Voir les plus anciens
               </Link>
             )}

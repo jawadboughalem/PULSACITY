@@ -1,6 +1,6 @@
 "use client";
 
-import { DISCREET_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { PRIMARY_BUTTON_CLASSES, SECONDARY_COMPACT_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { TextField } from "@/components/ui/TextField";
 import type { HeardFrom } from "@/lib/acquisition/heard-from";
 import { HEARD_FROM_PARAMETER, type SignupSource, SOURCE_PARAMETERS } from "@/lib/acquisition/signup-source";
@@ -59,7 +59,7 @@ export const SpaceForm = ({ defaultReplyToEmail, collectionAddressPrefix, source
           error={form.suggestedSlug ? "Cette adresse est déjà prise par un autre espace." : form.fieldErrors.slug}
         />
         {form.suggestedSlug ? (
-          <button type="button" onClick={form.handleUseSuggestedSlug} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
+          <button type="button" onClick={form.handleUseSuggestedSlug} className={cn(SECONDARY_COMPACT_BUTTON_CLASSES, "self-start")}>
             {`Prendre ${form.suggestedSlug}`}
           </button>
         ) : null}

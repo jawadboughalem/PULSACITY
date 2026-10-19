@@ -43,8 +43,8 @@ export const AccentColorField = ({ value, onChange }: AccentColorFieldProps) => 
         Elle colore les étoiles de vos widgets. Sans choix, ils reprennent la couleur des liens de votre page de vente.
       </p>
       {isHardToRead ? (
-        <p role="status" className="flex items-start gap-2 text-small text-waiting">
-          <Icon name="alert" size={20} />
+        <p role="status" className="flex items-start gap-3 rounded-card bg-waiting-surface p-4 text-body font-bold text-waiting desktop:p-5">
+          <Icon name="alert" size={24} className="shrink-0" />
           <span>Cette couleur ressort peu sur fond blanc : vos étoiles seraient peu lisibles. Choisissez-la plus foncée.</span>
         </p>
       ) : null}

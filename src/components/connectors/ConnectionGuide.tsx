@@ -149,15 +149,15 @@ export const ConnectionOptionalStep = ({ connectorId }: { connectorId: string })
   const guide = OPTIONAL_GUIDES[connectorId];
   if (!guide) return null;
   return (
-    <section aria-labelledby="optional-step" className="flex gap-4 py-8 desktop:gap-6 desktop:py-10">
+    <section aria-labelledby="optional-step" className="flex gap-3 pt-3 desktop:gap-4">
       <span
         aria-hidden="true"
-        className="flex size-[32px] shrink-0 items-center justify-center rounded-full border-2 border-ink bg-white desktop:size-[40px]"
+        className="flex size-[36px] shrink-0 items-center justify-center rounded-full border-2 border-ink bg-white"
       >
         <Icon name="plus" size={20} />
       </span>
-      <div className="flex min-w-[0] flex-1 flex-col gap-6">
-        <div className="flex flex-col gap-1">
+      <div className="flex min-w-[0] flex-1 flex-col gap-4">
+        <div className="flex flex-col gap-1 pt-[4px]">
           <h3 id="optional-step" className="font-display text-h3">
             {guide.title}
           </h3>
