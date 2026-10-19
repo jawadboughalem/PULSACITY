@@ -130,7 +130,7 @@ export const DisplayedTextSection = ({ testimonial }: { testimonial: Testimonial
     mode === "reading" && !isWaiting && !isAccepted ? (
       <div className="flex flex-col gap-4">
         {notice === "masked" ? (
-          <p role="status" className="flex items-center gap-2 text-small font-bold text-success">
+          <p className="flex items-center gap-2 text-small font-bold text-success">
             <Icon name="valid" size={20} />
             Passage masqué. L&apos;original reste gardé.
           </p>
@@ -272,6 +272,9 @@ export const DisplayedTextSection = ({ testimonial }: { testimonial: Testimonial
       ) : null}
 
       {actions}
+      <p role="status" className="sr-only">
+        {notice === "masked" ? "Passage masqué. L'original reste gardé." : ""}
+      </p>
       {failure ? (
         <div role="alert">
           <FieldError id="displayed-text-failure" message={failure} />

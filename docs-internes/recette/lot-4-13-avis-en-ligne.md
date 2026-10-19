@@ -279,6 +279,8 @@ Expliqués, sans changement :
 
 ## 10 bis. Contre-recette des corrections du 19 octobre
 
+Validée le 19 octobre : 8 points sur 8. Après : « vérifier » retiré de « D'où viennent les avis » (« Pour ces avis, aucune vente n'est reçue de l'outil du créateur. »), « Passage masqué » annoncé aux lecteurs d'écran.
+
 Avant ce prompt : le dernier déploiement de l'aperçu est « Ready » (commentaire de Vercel sur la PR #43) ; connecté avec A, fenêtre en grand.
 
 ```

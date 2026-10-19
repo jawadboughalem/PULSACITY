@@ -50,9 +50,8 @@ export const ABOUT_REVIEWS_SECTIONS: AboutReviewsSection[] = [
           ]}
         />
         <Paragraph>
-          Pour ces avis, aucune vente n&apos;est reçue de l&apos;outil du créateur : PULSACITY ne peut pas vérifier
-          l&apos;achat. Pour une demande envoyée à la main, l&apos;achat et sa date sont ceux indiqués par le créateur. La
-          provenance de chaque avis est gardée.
+          Pour ces avis, aucune vente n&apos;est reçue de l&apos;outil du créateur. Pour une demande envoyée à la main,
+          l&apos;achat et sa date sont ceux indiqués par le créateur. La provenance de chaque avis est gardée.
         </Paragraph>
       </>
     ),
