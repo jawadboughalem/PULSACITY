@@ -235,7 +235,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
             <FieldError id={`${FIELD_IDS.body}-error`} message={bodyError} />
           ) : (
             <p id={`${FIELD_IDS.body}-hint`} className={FIELD_HINT_CLASSES}>
-              Recopiez le message tel quel. Vous pourrez corriger une faute plus tard.
+              Recopiez le message tel quel : le texte d&apos;un avis ne se corrige ensuite qu&apos;avec l&apos;accord de son auteur.
             </p>
           )}
         </div>

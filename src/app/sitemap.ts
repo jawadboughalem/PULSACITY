@@ -5,11 +5,13 @@ import { INTEGRATIONS } from "@/content/integrations";
 import { isLegalValidated } from "@/lib/legal/is-legal-validated";
 import { readSiteUrl } from "@/lib/site-url";
 
+/** « À propos de ces avis » waits for the same reading by a lawyer (positionnement.md, point 8). */
 const LEGAL_PATHS = [
   MARKETING_PATHS.legalNotice,
   MARKETING_PATHS.terms,
   MARKETING_PATHS.salesTerms,
   MARKETING_PATHS.privacy,
+  MARKETING_PATHS.aboutReviews,
 ];
 
 /** The public pages only. The legal texts join once validated: until then, they ask not to be indexed. */

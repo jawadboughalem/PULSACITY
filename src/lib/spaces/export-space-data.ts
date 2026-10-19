@@ -8,12 +8,15 @@ import {
   purchases,
   reviewRequests,
   spaces,
+  testimonialCorrections,
   testimonials,
   user,
   widgets,
 } from "@/db/schema";
 import { readConnectorName } from "@/lib/connectors/registry";
 import { toParisIsoDay } from "@/lib/dates/paris-date";
+import { describeHiddenReason } from "@/lib/testimonials/hidden-reasons";
+import { readTestimonialProvenance } from "@/lib/testimonials/testimonial-provenance";
 
 /** Raised when the format of the file changes, so that a program reading it knows which one it has. */
 export const SPACE_EXPORT_VERSION = 1;
@@ -21,6 +24,16 @@ export const SPACE_EXPORT_VERSION = 1;
 const TESTIMONIAL_STATUSES = { pending: "en_attente", approved: "valide", hidden: "masque" } as const;
 
 const TESTIMONIAL_SOURCES = { form: "formulaire", manual: "ajout_manuel", csv: "import_csv" } as const;
+
+const PROVENANCES = {
+  sale: "vente_recue",
+  request: "demande_manuelle",
+  added: "ajout",
+  import: "import",
+  "public-link": "lien_public",
+} as const;
+
+const CORRECTION_OUTCOMES = { accepted: "acceptee", refused: "refusee", cancelled: "annulee" } as const;
 
 const PURCHASE_SOURCES = { connector: "connecteur", manual: "saisie_manuelle", csv: "import_csv" } as const;
 
@@ -90,6 +103,29 @@ export const buildSpaceExport = async (
         .where(eq(testimonials.spaceId, space.id))
         .orderBy(asc(testimonials.createdAt)),
     ]);
+  const spaceCorrections = await database
+    .select({
+      testimonialId: testimonialCorrections.testimonialId,
+      fromBody: testimonialCorrections.fromBody,
+      body: testimonialCorrections.body,
+      createdAt: testimonialCorrections.createdAt,
+      answeredAt: testimonialCorrections.answeredAt,
+      outcome: testimonialCorrections.outcome,
+    })
+    .from(testimonialCorrections)
+    .innerJoin(testimonials, eq(testimonials.id, testimonialCorrections.testimonialId))
+    .where(eq(testimonials.spaceId, space.id))
+    .orderBy(asc(testimonialCorrections.createdAt));
+  const correctionsOf = (testimonialId: string) =>
+    spaceCorrections
+      .filter((correction) => correction.testimonialId === testimonialId)
+      .map((correction) => ({
+        proposee_le: toIso(correction.createdAt),
+        texte_avant: correction.fromBody,
+        texte_propose: correction.body,
+        reponse: correction.outcome ? CORRECTION_OUTCOMES[correction.outcome] : "en_attente",
+        repondu_le: toIso(correction.answeredAt),
+      }));
 
   const productNames = new Map(spaceProducts.map((product) => [product.id, product.name]));
   const customerEmails = new Map(spaceCustomers.map((customer) => [customer.id, customer.email]));
@@ -176,6 +212,8 @@ export const buildSpaceExport = async (
       texte_affiche_modifie_le: toIso(testimonial.displayEditedAt),
       statut: TESTIMONIAL_STATUSES[testimonial.status],
       source: TESTIMONIAL_SOURCES[testimonial.source],
+      provenance: PROVENANCES[readTestimonialProvenance(testimonial)],
+      achat_le: toIso(testimonial.purchasedAt),
       offre: readProduct(testimonial.productId),
       client: readCustomer(testimonial.customerId),
       mis_en_avant: testimonial.featured,
@@ -183,6 +221,15 @@ export const buildSpaceExport = async (
       consentement: testimonial.consentAt
         ? { donne_le: toIso(testimonial.consentAt), texte: testimonial.consentText }
         : null,
+      masquage:
+        testimonial.status === "hidden" && testimonial.hiddenReason
+          ? {
+              le: toIso(testimonial.hiddenAt),
+              motif: describeHiddenReason(testimonial),
+              motif_envoye_le: toIso(testimonial.hiddenReasonSentAt),
+            }
+          : null,
+      corrections: correctionsOf(testimonial.id),
     })),
   };
   return { spaceSlug: space.slug, data };

@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Database } from "@/db/database";
 import { insertTestReviewRequest } from "@/db/review-request-fixtures";
-import { products, reviewRequests, spaces, testimonials } from "@/db/schema";
+import { connections, products, purchases, reviewRequests, spaces, testimonials } from "@/db/schema";
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import { buildTestimonialPhotoKey } from "@/lib/uploads/upload-keys";
@@ -100,6 +100,55 @@ describe("submitTestimonial", () => {
       .where(eq(reviewRequests.token, request.token));
     expect(closedRequest.status).toBe("completed");
     expect(closedRequest.completedAt).toBeInstanceOf(Date);
+  });
+
+  it("says where each review came from: a sale received, a request sent by hand, the public link", async () => {
+    const [connection] = await database
+      .insert(connections)
+      .values({ spaceId, connector: "systeme", webhookToken: "jeton-0123456789abcdefghij" })
+      .returning({ id: connections.id });
+    const fromSale = await insertTestReviewRequest(database, {
+      spaceId,
+      productName: "Programme 30 jours",
+      firstName: "Manon",
+      lastName: "Girard",
+    });
+    const saleDay = new Date("2026-08-31T22:30:00Z");
+    await database
+      .update(purchases)
+      .set({ source: "connector", connectionId: connection.id, purchasedAt: saleDay })
+      .where(eq(purchases.customerId, fromSale.customerId));
+    const byHand = await insertTestReviewRequest(database, {
+      spaceId,
+      productName: "Suivi individuel",
+      firstName: "Nadia",
+      lastName: "Bernard",
+    });
+
+    await submitTestimonial(database, { ...CAMILLE, authorName: "Manon G.", requestToken: fromSale.token });
+    await submitTestimonial(database, { ...CAMILLE, authorName: "Nadia B.", requestToken: byHand.token });
+    await submitTestimonial(database, { ...CAMILLE, authorName: "Hugo P." });
+
+    const received = await findTestimonials();
+    const byAuthor = (name: string) => received.find((testimonial) => testimonial.authorName === name);
+    expect(byAuthor("Manon G.")).toMatchObject({
+      provenance: "sale",
+      reviewRequestId: fromSale.id,
+      purchasedAt: saleDay,
+      purchaseConnector: "systeme",
+    });
+    expect(byAuthor("Nadia B.")).toMatchObject({
+      provenance: "request",
+      reviewRequestId: byHand.id,
+      purchasedAt: expect.any(Date),
+      purchaseConnector: null,
+    });
+    expect(byAuthor("Hugo P.")).toMatchObject({
+      provenance: "public-link",
+      reviewRequestId: null,
+      purchasedAt: null,
+      purchaseConnector: null,
+    });
   });
 
   it("accepts a request link only once, even when sent twice at the same time", async () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readAccentButtonColors } from "./accent-button-colors";
+import { readAccentButtonColors, readAccentTint } from "./accent-button-colors";
 
 describe("readAccentButtonColors", () => {
   it("writes in white on a dark accent, and darkens it by 8 % when hovered", () => {
@@ -13,5 +13,17 @@ describe("readAccentButtonColors", () => {
   it("keeps Soleil and Encre without an accent", () => {
     expect(readAccentButtonColors(null)).toBeNull();
     expect(readAccentButtonColors("vert")).toBeNull();
+  });
+});
+
+describe("readAccentTint", () => {
+  it("tints white with 9 % of the accent, for the background of the collect page", () => {
+    expect(readAccentTint("#4F6F52")).toBe("#EFF2EF");
+    expect(readAccentTint("#FFBE3B")).toBe("#FFF9ED");
+  });
+
+  it("has no tint without an accent, or with a colour it cannot read", () => {
+    expect(readAccentTint(null)).toBeNull();
+    expect(readAccentTint("vert")).toBeNull();
   });
 });

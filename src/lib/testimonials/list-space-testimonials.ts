@@ -1,6 +1,7 @@
 import { type SQL, and, count, desc, eq, ilike, isNull, or, sql } from "drizzle-orm";
 import type { Database } from "@/db/database";
-import { products, testimonials } from "@/db/schema";
+import { customers, products, testimonials } from "@/db/schema";
+import type { AuthorReach } from "./load-author-contact";
 import { type TestimonialFilters, type TestimonialStatus, WITHOUT_PRODUCT } from "./testimonial-filters";
 
 export const TESTIMONIALS_PAGE_SIZE = 50;
@@ -20,6 +21,10 @@ export type SpaceTestimonial = {
   createdAt: Date;
   productId: string | null;
   productName: string | null;
+  /** « Masquer » says whether its reason reaches the author by e-mail. */
+  authorReach: AuthorReach;
+  /** A reason was already sent for this review: a new one stays with it. */
+  isReasonAlreadySent: boolean;
 };
 
 export type SpaceTestimonialPage = {
@@ -68,9 +73,12 @@ const selectSpaceTestimonials = (database: Database) =>
       createdAt: testimonials.createdAt,
       productId: testimonials.productId,
       productName: products.name,
+      authorReach: sql<AuthorReach>`case when ${customers.email} is null then 'no-address' when ${customers.unsubscribedAt} is not null then 'unsubscribed' else 'reachable' end`,
+      isReasonAlreadySent: sql<boolean>`${testimonials.hiddenReasonSentAt} is not null`,
     })
     .from(testimonials)
-    .leftJoin(products, eq(products.id, testimonials.productId));
+    .leftJoin(products, eq(products.id, testimonials.productId))
+    .leftJoin(customers, eq(customers.id, testimonials.customerId));
 
 export const LATEST_TESTIMONIALS_LIMIT = 4;
 

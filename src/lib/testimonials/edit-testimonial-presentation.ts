@@ -5,32 +5,28 @@ import { findOwnedTestimonial } from "./find-owned-testimonial";
 import type { TestimonialChangeResult } from "./set-testimonial-status";
 
 export type TestimonialPresentation = {
-  displayBody: string;
   authorName: string;
   authorTitle: string | null;
 };
 
-const normalize = (text: string) => text.replace(/\r\n?/g, "\n").trim();
-
-/** The original body never changes: only what the widgets show does. */
+/**
+ * The name and the title the widgets show. The text itself is no longer edited here (positionnement.md, point 4): a
+ * correction goes to the author for agreement, and only a name or a coordinate may be masked without it.
+ */
 export const editTestimonialPresentation = async (
   database: Database,
   userId: string,
   testimonialId: string,
   presentation: TestimonialPresentation,
-  now = new Date(),
 ): Promise<TestimonialChangeResult> => {
   const testimonial = await findOwnedTestimonial(database, userId, testimonialId);
   if (!testimonial) return { status: "testimonial-not-found" };
 
-  const displayBody = normalize(presentation.displayBody);
-  const isOriginal = displayBody === normalize(testimonial.body);
   await database
     .update(testimonials)
     .set({
       authorName: presentation.authorName.trim(),
       authorTitle: presentation.authorTitle?.trim() || null,
-      ...(isOriginal ? { displayBody: null, displayEditedAt: null } : { displayBody, displayEditedAt: now }),
     })
     .where(and(eq(testimonials.id, testimonial.id), eq(testimonials.spaceId, testimonial.spaceId)));
   return { status: "updated" };

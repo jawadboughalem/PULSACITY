@@ -25,7 +25,7 @@ export const describeEmailReason = (productName: string | null, spaceName: strin
     purchasedAt ? formatDayMonthYear(purchasedAt) : "[date]"
   } ».`;
 
-const ONE_REQUEST = "Une seule demande par client et par offre : ainsi, personne ne reçoit plus de deux e-mails.";
+const ONE_REQUEST = "Une seule demande par client et par offre : ainsi, personne ne reçoit plus de deux e-mails de demande.";
 
 /** m20, « déjà une demande »: what became of the first request, and what the creator can still do. */
 export const describeExistingRequest = (existing: ExistingRequest, now: Date): { detail: string; todo: string } => {

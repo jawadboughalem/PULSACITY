@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { prefixWithDe } from "./prefix-with-de";
+import { prefixPersonWithDe, prefixWithDe } from "./prefix-with-de";
 
 describe("prefixWithDe", () => {
   it("keeps « de » before a consonant", () => {
@@ -12,5 +12,14 @@ describe("prefixWithDe", () => {
     expect(prefixWithDe("Élodie")).toBe("d'Élodie");
     expect(prefixWithDe("atelier zen")).toBe("d'atelier zen");
     expect(prefixWithDe("Œuvre Vive")).toBe("d'Œuvre Vive");
+  });
+});
+
+describe("prefixPersonWithDe", () => {
+  it("elides it before a vowel or the mute h of a first name", () => {
+    expect(prefixPersonWithDe("Inès V.")).toBe("d'Inès V.");
+    expect(prefixPersonWithDe("Hugo P.")).toBe("d'Hugo P.");
+    expect(prefixPersonWithDe("Hélène")).toBe("d'Hélène");
+    expect(prefixPersonWithDe("Clara T.")).toBe("de Clara T.");
   });
 });

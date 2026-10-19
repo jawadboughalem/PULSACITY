@@ -12,30 +12,17 @@ const PulsacityWidget = ({ widgetId, type }: { widgetId: string; type: WidgetTyp
 );
 
 /**
- * Said where the testimonials show (decisions/positionnement.md, points 5 and 7): the selection, and the counterpart
- * of the beta testers (Essentiel offered). To leave to the widget once it says them itself (lots 4.8 and 4.13).
+ * Maquette 3.6, « Le mur de PULSACITY »: on the home page, the testimonials of the first creators, all real. The widget
+ * itself announces its selection and the beta testers' counterpart (lot 4.13).
  */
-const COUNTERPART_NOTE = "Certains clients ont reçu une contrepartie pour leur avis.";
-
-/** Maquette 3.6, « Le mur de PULSACITY »: on the home page, the testimonials of the first creators, all real. */
 export const PulsacityWall = ({ widgetId }: { widgetId: string }) => (
   <MarketingSection labelledBy="first-creators">
     <SectionTitle id="first-creators">Les avis des premiers créateurs</SectionTitle>
     <div className="mt-8 desktop:mt-10">
       <PulsacityWidget widgetId={widgetId} type="wall" />
     </div>
-    <p className="mt-6 text-small text-gray">
-      Sélection de PULSACITY : avis mis en avant, puis les plus récents.
-      <br />
-      {COUNTERPART_NOTE}
-    </p>
   </MarketingSection>
 );
 
 /** Maquette 3.6, « Le badge de PULSACITY sur Tarifs ». */
-export const PulsacityBadge = ({ widgetId }: { widgetId: string }) => (
-  <div className="flex flex-col gap-2">
-    <PulsacityWidget widgetId={widgetId} type="badge" />
-    <p className="text-small text-gray">{COUNTERPART_NOTE}</p>
-  </div>
-);
+export const PulsacityBadge = ({ widgetId }: { widgetId: string }) => <PulsacityWidget widgetId={widgetId} type="badge" />;

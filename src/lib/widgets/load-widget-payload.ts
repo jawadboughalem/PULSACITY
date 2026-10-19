@@ -1,10 +1,14 @@
-import { type SQL, and, avg, count, desc, eq, isNull, lt, or } from "drizzle-orm";
+import { type SQL, and, avg, count, desc, eq, isNull, lt, or, sql } from "drizzle-orm";
+import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { UNLIMITED, getPlan } from "@/config/plans";
 import { BETA_TESTER_MENTION, PULSACITY_BETA_OFFER_SLUG, readPulsacitySpaceId } from "@/config/pulsacity-space";
 import type { Database } from "@/db/database";
 import { products, spaces, testimonials, widgets } from "@/db/schema";
 import { toParisIsoDay } from "@/lib/dates/paris-date";
 import { getDisplayedBody } from "@/lib/testimonials/displayed-body";
+import { countsInRating } from "@/lib/testimonials/rated-testimonials";
+import { hasKnownPurchase, readTestimonialProvenance } from "@/lib/testimonials/testimonial-provenance";
+import type { TestimonialProvenance } from "@/lib/testimonials/testimonial-provenance";
 import type { WidgetPayload } from "../../../widget/src/payload";
 import {
   type WidgetTestimonialSource,
@@ -34,6 +38,17 @@ export const shownTestimonialsFilter = (spaceId: string, productId: string | nul
     productId ? eq(testimonials.productId, productId) : undefined,
   );
 
+/** The testimonials of the rating of a widget: received for its offer, or for the whole space, but those refused. */
+export const ratedTestimonialsFilter = (spaceId: string, productId: string | null): SQL | undefined =>
+  and(eq(testimonials.spaceId, spaceId), countsInRating, productId ? eq(testimonials.productId, productId) : undefined);
+
+/** One pass over the rated testimonials: those a widget can show (validated), and the count and average of the rating. */
+export const RATING_SUMMARY_COLUMNS = {
+  total: sql<number>`count(*) filter (where ${testimonials.status} = 'approved')`.mapWith(Number),
+  ratedCount: count(),
+  averageRating: avg(testimonials.rating),
+};
+
 export const SHOWN_TESTIMONIALS_ORDER = [desc(testimonials.featured), desc(testimonials.createdAt), desc(testimonials.id)];
 
 export const SHOWN_TESTIMONIAL_COLUMNS = {
@@ -45,6 +60,9 @@ export const SHOWN_TESTIMONIAL_COLUMNS = {
   body: testimonials.body,
   displayBody: testimonials.displayBody,
   createdAt: testimonials.createdAt,
+  source: testimonials.source,
+  provenance: testimonials.provenance,
+  purchasedAt: testimonials.purchasedAt,
 };
 
 type ShownTestimonialRow = {
@@ -55,6 +73,9 @@ type ShownTestimonialRow = {
   body: string;
   displayBody: string | null;
   createdAt: Date;
+  source: "form" | "manual" | "csv";
+  provenance: TestimonialProvenance | null;
+  purchasedAt: Date | null;
 };
 
 /** On PULSACITY's own space, the beta testers' offer: its testimonials carry the counterpart under their author. */
@@ -75,7 +96,12 @@ export const toWidgetTestimonialSource = (row: ShownTestimonialRow): WidgetTesti
   rating: row.rating,
   text: getDisplayedBody(row),
   receivedOn: toParisIsoDay(row.createdAt),
+  purchasedIn:
+    row.purchasedAt && hasKnownPurchase(readTestimonialProvenance(row)) ? toParisIsoDay(row.purchasedAt).slice(0, 7) : null,
 });
+
+/** « À propos de ces avis », on pulsacity.com. */
+export const buildAboutReviewsUrl = (appUrl: string): string => `${appUrl}${MARKETING_PATHS.aboutReviews}`;
 
 export const loadWidgetPayload = async (
   database: Database,
@@ -92,6 +118,8 @@ export const loadWidgetPayload = async (
       plan: spaces.plan,
       referralCode: spaces.referralCode,
       spaceAccentColor: spaces.accentColor,
+      spaceName: spaces.name,
+      incentiveDeclaredAt: spaces.incentiveDeclaredAt,
     })
     .from(widgets)
     .innerJoin(spaces, eq(spaces.id, widgets.spaceId))
@@ -109,7 +137,10 @@ export const loadWidgetPayload = async (
   const rowLimit = shownLimit === UNLIMITED ? answerSize : Math.max(0, Math.min(answerSize, shownLimit - start));
   const shown = shownTestimonialsFilter(widget.spaceId, widget.productId);
   const [[summary], rows, betaOfferId] = await Promise.all([
-    database.select({ total: count(), averageRating: avg(testimonials.rating) }).from(testimonials).where(shown),
+    database
+      .select(RATING_SUMMARY_COLUMNS)
+      .from(testimonials)
+      .where(ratedTestimonialsFilter(widget.spaceId, widget.productId)),
     database
       .select(SHOWN_TESTIMONIAL_COLUMNS)
       .from(testimonials)
@@ -128,7 +159,11 @@ export const loadWidgetPayload = async (
       spaceAccentColor: widget.spaceAccentColor,
       poweredBy: buildPoweredByUrl(appUrl, widget, settings),
       total: summary.total,
+      ratedCount: summary.ratedCount,
       averageRating: summary.averageRating === null ? null : Number(summary.averageRating),
+      spaceName: widget.spaceName,
+      incentive: widget.incentiveDeclaredAt !== null || betaOfferId !== null,
+      aboutUrl: buildAboutReviewsUrl(appUrl),
       testimonials: rows.map((row) => ({
         ...toWidgetTestimonialSource(row),
         mention: betaOfferId !== null && row.productId === betaOfferId ? BETA_TESTER_MENTION : null,

@@ -1069,3 +1069,354 @@ Note de la planche :
 - « Valable 15 minutes » (lien de connexion) : règle de sécurité, pas une durée d'installation ; gardé comme en 3.4.
 - Libellés de Systeme.io gardés : « Code HTML », « Modifier le code ».
 - Espaces insécables du français et « e-mail » sans coupure, appliqués à toutes les planches.
+
+
+## Le site public — prompt 3.5 (rangés au lot 4.13, 19 octobre 2026)
+
+> Rangement dans le dépôt : le ZIP du prompt 3.5 (`PULSACITY-v2-site-3-5.zip`) est rangé tel quel. Ses PNG sont dans ce dossier ; sa `charte-v2.md` (ajouts 3.4 et 3.5) est déjà reprise dans `../charte.md`, celle de 3.6, qui la contient. Ses titres sont descendus de deux niveaux ci-dessous. `v2-site-integrations-desktop-01-catalogue.png` existait (3.3, 8.5) : la version de 3.5 la remplace, seule une espace insécable change (« universel : »). Le lot 4.13 se sert de « À propos de ces avis » ; le lot 4.7, du reste.
+
+
+Tous les fichiers listés ici sont dans `maquettes/` : PNG à l'échelle 2x, un état par fichier, nommés `v2-<famille>-<écran>-<desktop ou mobile>-<numéro>-<état>.png` (famille `site`). Chaque écran de la partie 1 de l'inventaire est dessiné à 1440 px et à 360 px, avec chacun de ses états ; les images de partage sont à 1200 × 630 px, avec un aperçu à 360 px. Les pages longues du téléphone sont découpées en deux planches (« 1 sur 2 », « 2 sur 2 »). Valeurs : `charte-v2.md` (rubrique « Ajouts 3.5 »).
+
+Canvas « PULSACITY v2 », pages « Site · Accueil », « Site · Tarifs », « Site · À propos de ces avis », « Site · Intégrations », « Site · Guides », « Site · Pages légales », « Site · Introuvable, erreur, menu », « Site · Images de partage ». Chaque écran porte à sa gauche une note jaune « Note de la v2 » : ce qui a bougé et pourquoi.
+
+Sources des contenus : pour l'accueil, positionnement.md (douze sections, dans l'ordre), corrigé par arbitrages.md ; pour Tarifs, le code en ligne corrigé par tarifs.md et arbitrages.md ; pour les intégrations, le code (plus récent que m21) et connecteurs.md ; pour les guides et les pages légales, les textes du code (les guides de la maquette m22 n'existent pas) ; pour les erreurs, m14 et le code. Toute phrase changée l'est dans la note de sa planche.
+
+### Site · Accueil
+
+#### Accueil v2 — / : douze sections de positionnement.md
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-accueil-desktop-01-page-entiere.png | Accueil · 1440 · page entière |
+| v2-site-accueil-mobile-01-page-entiere-1-sur-2.png | Accueil · 360 · page entière (1 sur 2) |
+| v2-site-accueil-mobile-02-page-entiere-2-sur-2.png | Accueil · 360 · page entière (2 sur 2) |
+
+Note de la planche :
+- Douze sections et textes de positionnement.md, dans leur ordre. Corrections d'arbitrages.md : prix fondateur avec « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois. » (24,99 € pour Pro) ; « vous payez le prix affiché » à la place de « TVA comprise » ; 3 mois offerts aux premiers testeurs.
+- Libellé figé de 3.1 : les boutons disent « Créer mon espace gratuit » (positionnement.md écrit « Créer mon espace »), toujours avec « Gratuit, sans carte bancaire » dessous.
+- Un bouton principal par section où il y a un appel (haut de page, widget, tarifs, appel final) : chacun occupe son propre écran.
+- Démo en quatre temps : les dessins de la v1, redessinés ; textes de positionnement.md ; « Donner mon avis » sans « (1 minute) ». Étapes numérotées : vraie séquence.
+- À publier quand les fonctions existent (positionnement.md) : « Chaque témoignage porte sa date, et celle de l'achat. » et « La note du badge compte tous les avis reçus. »
+- Téléphone : la page entière est découpée en deux planches.
+
+#### Démo à manipuler « Écrire un avis de test » (section 4) : rien n'est enregistré
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-accueil-desktop-02-avis-de-test-saisie.png | Avis de test · 1440 · saisie |
+| v2-site-accueil-mobile-03-avis-de-test-saisie.png | Avis de test · 360 · saisie |
+| v2-site-accueil-desktop-03-avis-de-test-erreur.png | Avis de test · 1440 · erreur |
+| v2-site-accueil-mobile-04-avis-de-test-erreur.png | Avis de test · 360 · erreur |
+| v2-site-accueil-desktop-04-avis-de-test-avis-sur-le-mur.png | Avis de test · 1440 · avis-sur-le-mur |
+| v2-site-accueil-mobile-05-avis-de-test-avis-sur-le-mur.png | Avis de test · 360 · avis-sur-le-mur |
+
+Note de la planche :
+- Nouveau composant : la note, l'avis, le prénom (facultatif), puis « Envoyer mon avis » (libellé figé de la page de collecte).
+- Rien n'est envoyé au serveur : l'avis arrive sur un mur de démonstration, marqué d'un liseré Soleil, et disparaît quand on quitte la page.
+- Erreurs : une note et quelques mots sont demandés ; pas de consentement, puisque rien n'est publié.
+
+#### Exemple de widget réel (section 5) : Mur, Carrousel, Badge ; Clair, Sombre
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-accueil-desktop-05-widget-carrousel-clair.png | Widget réel · 1440 · carrousel-clair |
+| v2-site-accueil-mobile-06-widget-carrousel-clair.png | Widget réel · 360 · carrousel-clair |
+| v2-site-accueil-desktop-06-widget-badge-clair.png | Widget réel · 1440 · badge-clair |
+| v2-site-accueil-mobile-07-widget-badge-clair.png | Widget réel · 360 · badge-clair |
+| v2-site-accueil-desktop-07-widget-mur-sombre.png | Widget réel · 1440 · mur-sombre |
+| v2-site-accueil-mobile-08-widget-mur-sombre.png | Widget réel · 360 · mur-sombre |
+| v2-site-accueil-desktop-08-widget-carrousel-sombre.png | Widget réel · 1440 · carrousel-sombre |
+| v2-site-accueil-mobile-09-widget-carrousel-sombre.png | Widget réel · 360 · carrousel-sombre |
+
+Note de la planche :
+- Sélecteur nouveau en v2 (positionnement.md, section 5) : Mur, Carrousel, Badge ; Clair, Sombre. Le mur clair est dans la page entière.
+- Exemples fictifs de positionnement.md (Camille, Karim à 4 étoiles, Léa), note d'exemple 4,7/5 · 23 avis, « Exemple, avis fictifs » dessous.
+- Thème sombre : la page d'exemple passe aussi en sombre ; les étoiles prennent Soleil (le vert de Julie ressort trop peu sur carte sombre).
+
+#### Tarifs de l'accueil (section 9) : prix de lancement, puis prix publics
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-accueil-desktop-09-tarifs-prix-de-lancement.png | Accueil, tarifs · 1440 · prix de lancement |
+| v2-site-accueil-mobile-14-tarifs-prix-de-lancement.png | Accueil, tarifs · 360 · prix de lancement |
+| v2-site-accueil-desktop-10-tarifs-prix-publics.png | Accueil, tarifs · 1440 · prix publics |
+| v2-site-accueil-mobile-15-tarifs-prix-publics.png | Accueil, tarifs · 360 · prix publics |
+
+Note de la planche :
+- Jusqu'au 100e abonné payant : prix de lancement 9,99 € et 19,99 €, avec la ligne « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois. » (24,99 € pour Pro). Ni prix barré, ni compteur.
+- Après : prix publics 14,99 € et 24,99 €, la ligne disparaît. Le titre « moins de 10 € ensuite » devient faux : proposé, « Gratuit pour commencer, 14,99 € par mois ensuite » (à valider, arbitrages.md n° 1 dit seulement qu'il change).
+- Le passage se fait sans nouvelle livraison : les deux jeux de prix sont dans le code.
+
+#### Barre fixe du téléphone : quand elle apparaît, quand elle disparaît
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-accueil-mobile-10-barre-fixe-haut-de-page.png | Barre fixe · 360 · Haut de page : le bouton du haut de page est visible, pas de barre. |
+| v2-site-accueil-mobile-11-barre-fixe-en-defilant.png | Barre fixe · 360 · En défilant : la barre apparaît dès que le bouton du haut de page sort de l'écran. |
+| v2-site-accueil-mobile-12-barre-fixe-clavier-ouvert.png | Barre fixe · 360 · Clavier ouvert (avis de test) : la barre disparaît. |
+| v2-site-accueil-mobile-13-barre-fixe-appel-final.png | Barre fixe · 360 · Sur l'appel final : la barre disparaît, le bouton de la section la remplace. |
+
+Note de la planche :
+- « Gratuit, sans carte bancaire » au-dessus du bouton « Créer mon espace gratuit » (48 px), sur fond Blanc, ombre de la barre d'onglets.
+- Apparaît quand le bouton « Créer mon espace gratuit » du haut de page sort de l'écran (positionnement.md dit « de l'en-tête » : sur téléphone, l'en-tête n'a que le menu).
+- Disparaît quand l'appel final entre à l'écran, et quand le clavier est ouvert (champ de l'avis de test, par exemple). Ne revient pas par-dessus le pied de page.
+- Ne masque rien : la page garde en bas une marge égale à la hauteur de la barre (98 px).
+- Ordinateur : pas de barre.
+
+### Site · Tarifs
+
+#### Tarifs — /tarifs : mensuel, prix de lancement, comparatif, Facturation
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-tarifs-desktop-01-mensuel-prix-de-lancement.png | Tarifs · 1440 · mensuel, prix de lancement (page entière) |
+| v2-site-tarifs-mobile-01-mensuel-prix-de-lancement-1-sur-2.png | Tarifs · 360 · mensuel, prix de lancement (1 sur 2) |
+| v2-site-tarifs-mobile-02-mensuel-comparatif-essentiel-2-sur-2.png | Tarifs · 360 · comparatif sur Essentiel et Facturation (2 sur 2) |
+
+Note de la planche :
+- Prix de lancement affichés comme prix payé (arbitrages.md n° 1), avec la ligne « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois. » (24,99 € pour Pro). Ni prix barré, ni compteur.
+- Sous le titre : « Prix finaux : rien ne s'ajoute au paiement. » (tarifs.md). « TVA comprise » retiré du texte et de la description de la page.
+- Pro sans « Témoignages vidéo, bientôt » : en V0, Pro = Essentiel plus le retrait du badge (tarifs.md, arbitrages.md n° 7).
+- Comparatif : lignes ajoutées, toutes vraies aujourd'hui ou décidées : demandes saisies à la main (20 par jour), corriger avec l'accord du client, lien « À propos de ces avis », connecteur universel. « Témoignages conservés et affichés » devient « Témoignages validés » : au-delà de 15, rien n'est perdu.
+- Facturation : réponse TVA de tarifs.md ; « Que deviennent mes témoignages » et « mensuel vers annuel » corrigées selon les règles de changement de plan ; trois questions ajoutées (prix de lancement, changement de plan, demandes au-delà de 20, arbitrages.md n° 4).
+- Pas de filet : les lignes du comparatif sont des bandes Blanc espacées, la colonne Essentiel en Ciel.
+
+#### Tarifs — annuel
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-tarifs-desktop-02-annuel-prix-de-lancement.png | Tarifs · 1440 · annuel, prix de lancement |
+| v2-site-tarifs-mobile-03-annuel-prix-de-lancement.png | Tarifs · 360 · annuel, prix de lancement |
+
+Note de la planche :
+- Seuls les prix et les périodes changent. « Annuel : 2 mois offerts » reste vrai aux deux jeux de prix.
+- Ligne annuelle « Ensuite, 149 € par an. » (249 € pour Pro) : déduite des prix publics de tarifs.md, la phrase exacte n'est pas écrite dans les décisions. À confirmer.
+
+#### Tarifs — prix publics, après le 100e abonné
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-tarifs-desktop-03-mensuel-prix-publics.png | Tarifs · 1440 · mensuel, prix publics |
+| v2-site-tarifs-desktop-04-annuel-prix-publics.png | Tarifs · 1440 · annuel, prix publics |
+| v2-site-tarifs-mobile-04-mensuel-prix-publics.png | Tarifs · 360 · mensuel, prix publics |
+| v2-site-tarifs-mobile-05-annuel-prix-publics.png | Tarifs · 360 · annuel, prix publics |
+
+Note de la planche :
+- Les pages passent aux prix publics : Essentiel 14,99 € par mois ou 149 € par an, Pro 24,99 € ou 249 €. La ligne de lancement disparaît, rien d'autre ne bouge.
+- Les abonnés au prix de lancement le gardent. Le passage se fait sans nouvelle livraison.
+- Le badge de PULSACITY lui-même viendra ici quand il y aura assez de vrais avis (commercialisation.md) : pas dessiné, aucun avis inventé.
+
+#### Comparatif sur téléphone : un plan à la fois
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-tarifs-mobile-06-comparatif-gratuit.png | Comparatif · 360 · Gratuit |
+| v2-site-tarifs-mobile-07-comparatif-pro.png | Comparatif · 360 · Pro |
+
+Note de la planche :
+- Un plan à la fois, état initial Essentiel (planche 2 sur 2 de la page). Annonce aux lecteurs d'écran : « Plan Gratuit affiché. »…
+- Le choix Mensuel ou Annuel n'a aucun effet ici : pas de prix dans le tableau.
+
+### Site · À propos de ces avis
+
+#### À propos de ces avis — /a-propos-des-avis
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-a-propos-des-avis-desktop-01-page.png | À propos de ces avis · 1440 |
+| v2-site-a-propos-des-avis-mobile-01-page.png | À propos de ces avis · 360 |
+| v2-site-a-propos-des-avis-mobile-02-sommaire-ouvert.png | À propos de ces avis · 360 · sommaire ouvert |
+
+Note de la planche :
+- Page nouvelle (positionnement.md, point 3) : contrôle, dates, contrepartie, modification, ordre d'affichage, motifs de refus. Liée depuis chaque widget, sur tous les plans, Pro compris, à part du badge.
+- Chaque phrase reprend une règle décidée (points 1 à 7) ; les six motifs sont ceux du dialogue « Masquer » de 3.4, écrits ici du point de vue du lecteur.
+- Jamais « avis vérifiés » : seule la vente reçue relie un avis à un achat, et la page le dit sans promettre de contrôle.
+- À faire relire par un juriste avant la mise en ligne (point 8, avec les CGV en 6.7). La forme des motifs reste à confirmer.
+- Ordinateur : sommaire « Sur cette page » fixe à droite. Téléphone : sommaire replié en haut de page.
+
+### Site · Intégrations
+
+#### Intégrations — /integrations : le catalogue de 3.3
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-integrations-desktop-01-catalogue.png | Intégrations · 1440 · catalogue |
+| v2-site-integrations-mobile-01-catalogue.png | Intégrations · 360 · catalogue |
+| v2-site-integrations-desktop-02-filtre-famille.png | Intégrations · 1440 · filtre par famille |
+| v2-site-integrations-mobile-02-filtre-famille.png | Intégrations · 360 · filtre par famille |
+| v2-site-integrations-desktop-03-dites-nous-quel-outil.png | Intégrations · 1440 · Dites-nous quel outil |
+| v2-site-integrations-mobile-03-dites-nous-quel-outil.png | Intégrations · 360 · Dites-nous quel outil |
+
+Note de la planche :
+- Le catalogue de 3.3, tel quel : six familles, Systeme.io et le connecteur universel « Disponible », les autres « Bientôt » avec « En attendant : avec Zapier ou Make ».
+- Filtre par famille, « Dites-nous quel outil » et ses cinq états, « Compatible avec votre site ».
+- Titre de la page à revoir : « Intégrations : Systeme.io, Stripe, Calendly » suppose l'ancienne liste. Proposé : « Intégrations : l'outil où vous encaissez ».
+
+#### Une intégration disponible — /integrations/systeme-io
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-integration-systeme-io-desktop-01-page-entiere.png | Systeme.io · 1440 · page entière |
+| v2-site-integration-systeme-io-mobile-01-page-entiere-1-sur-2.png | Systeme.io · 360 · page entière (1 sur 2) |
+| v2-site-integration-systeme-io-mobile-02-page-entiere-2-sur-2.png | Systeme.io · 360 · page entière (2 sur 2) |
+
+Note de la planche :
+- Textes du code (plus récents que la maquette m21) : les dessins des réglages Systeme.io et du collage du widget, avec leurs légendes.
+- Durées retirées : « Deux minutes, depuis votre ordinateur » devient « depuis votre ordinateur » ; l'appel final dit « Connectez Systeme.io une fois : chaque vente suivante fait le reste. »
+- Mots techniques : seuls restent les libellés réels de Systeme.io à cliquer (« Webhooks », « Appeler un webhook »). « activez le webhook » devient « activez Actif(ve) » ; « adresse technique » devient « adresse de PULSACITY ».
+- Le panneau « Un souci à une étape ? Écrivez-nous » de la maquette est gardé : il mène à la page Aide, rubrique contact, dessinée en 3.3.
+- Ordinateur : la colonne de gauche (titre, aide) reste à l'écran pendant la lecture des étapes.
+
+#### Une intégration « Bientôt » — /integrations/stripe
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-integration-stripe-desktop-01-page-entiere-vide.png | Stripe · 1440 · page entière, cadre vide |
+| v2-site-integration-stripe-mobile-01-page-entiere-vide.png | Stripe · 360 · page entière, cadre vide |
+
+Note de la planche :
+- Même gabarit pour les 17 outils « Bientôt » : seuls le nom, l'initiale et les phrases changent. Remplace la page Calendly de 3.3, avec les textes du code.
+- Ajout décidé (connecteurs.md) : « En attendant : avec Zapier ou Make », avant « Ou, sans aucun outil » (le bloc « En attendant, sans connecteur » du code, renommé pour ne pas répéter « En attendant »).
+- « Elle fonctionnera comme celle de Systeme.io » devient « Une fois installée, plus rien à faire » : Stripe s'installera autrement (connecteurs.md), et Systeme.io n'est plus la référence.
+- « L'avis se laisse en deux minutes » devient « L'avis se laisse depuis un téléphone » (aucune durée de saisie).
+- Pas de date promise : « le jour de la sortie ».
+
+#### « Me prévenir » : adresse incomplète, trop de demandes, inscrit
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-integration-stripe-desktop-02-adresse-incomplete.png | Stripe · 1440 · adresse incomplete |
+| v2-site-integration-stripe-mobile-02-adresse-incomplete.png | Stripe · 360 · adresse incomplete |
+| v2-site-integration-stripe-desktop-03-trop-de-demandes.png | Stripe · 1440 · trop de demandes |
+| v2-site-integration-stripe-mobile-03-trop-de-demandes.png | Stripe · 360 · trop de demandes |
+| v2-site-integration-stripe-desktop-04-inscrit.png | Stripe · 1440 · inscrit |
+| v2-site-integration-stripe-mobile-04-inscrit.png | Stripe · 360 · inscrit |
+
+Note de la planche :
+- Adresse incomplète : l'adresse tapée reste, le message dit ce qui manque, la ligne d'aide disparaît. Autres messages du code : « @ » manquant, champ vide, adresse invalide.
+- Trop de demandes : bandeau au-dessus du champ, l'adresse est gardée.
+- Inscrit : le formulaire laisse place à la confirmation, dans le même cadre. Même confirmation si l'adresse était déjà inscrite.
+- Téléphone : champ, bouton pleine largeur, puis la ligne d'aide (ordre du code).
+
+### Site · Guides
+
+#### Guides — /guides
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-guides-desktop-01-liste.png | Guides · 1440 · liste |
+| v2-site-guides-mobile-01-liste.png | Guides · 360 · liste |
+
+Note de la planche :
+- Les trois guides du code, en deux groupes (la maquette m22 en montrait six, qui n'existent pas).
+- Bande de la maquette gardée : « Une question sans réponse ici ? » et « Nous écrire », vers la page Aide, rubrique contact.
+- Appel final sans durée ni Systeme.io : « Reliez l'outil où vous encaissez : chaque vente suivante fait le reste. »
+- Lignes de guide : bandes Blanc espacées, sans filet. Le temps de lecture reste : ce n'est ni une durée d'installation ni de saisie.
+
+#### Un guide — /guides/ajouter-des-temoignages-sur-une-page-systeme-io
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-guides-desktop-02-guide.png | Un guide · 1440 |
+| v2-site-guides-mobile-02-guide.png | Un guide · 360 · sommaire replié |
+| v2-site-guides-desktop-03-guide-titre-en-cours.png | Un guide · 1440 · en lisant, titre en cours marqué |
+| v2-site-guides-mobile-03-guide-sommaire-ouvert.png | Un guide · 360 · sommaire ouvert |
+
+Note de la planche :
+- Le guide de la maquette (« Coller le widget dans Systeme.io ») n'existe pas en ligne : celui-ci est son plus proche, texte du code.
+- Les quatre étapes du collage sont dessinées comme sur la page Systeme.io, avec les légendes du code.
+- Trois phrases corrigées : « en ligne en cinq minutes » devient « en ligne tout de suite » (aucune durée) ; le badge d'exemple passe à « 4,7/5 · 23 avis » ; « raccourcir un texte » devient « ne changez pas un texte sans l'accord de son auteur » (positionnement.md, point 4).
+- Sommaire « Dans ce guide » : les titres de niveau 2. Ordinateur : fixe à droite, titre en cours sur fond Ciel. Téléphone : replié, sans titre en cours.
+
+### Site · Pages légales
+
+#### Pages légales — /mentions-legales, /cgu, /cgv, /confidentialite
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-legal-desktop-01-mentions-legales.png | Mentions légales · 1440 |
+| v2-site-legal-mobile-01-mentions-legales.png | Mentions légales · 360 |
+| v2-site-legal-desktop-02-cgu.png | Conditions générales d'utilisation · 1440 |
+| v2-site-legal-mobile-02-cgu.png | Conditions générales d'utilisation · 360 |
+| v2-site-legal-desktop-03-cgv.png | Conditions générales de vente · 1440 |
+| v2-site-legal-mobile-03-cgv.png | Conditions générales de vente · 360 |
+| v2-site-legal-desktop-04-confidentialite.png | Politique de confidentialité · 1440 |
+| v2-site-legal-mobile-04-confidentialite.png | Politique de confidentialité · 360 |
+| v2-site-legal-mobile-05-confidentialite-sommaire-ouvert.png | Politique de confidentialité · 360 · sommaire ouvert |
+
+Note de la planche :
+- Textes du code, version du 4 octobre 2026, bandeau « Brouillon en cours de relecture » tant qu'ils ne sont pas validés ; champs « [À COMPLÉTER : …] » surlignés.
+- Sommaire « Sur cette page » sur chacune : fixe à droite sur ordinateur, replié sur téléphone.
+- Corrigé selon les décisions : CGV, article 2, « TVA comprise » et l'autoliquidation deviennent « prix finaux », avec les prix publics et le prix de lancement (tarifs.md) ; CGV, article 5, les règles de changement de plan ; CGU, article 6, une correction seulement avec l'accord de l'auteur.
+- À reprendre au lot 2.7 avec un juriste : tout le reste, dont l'évolution des prix (CGV, article 9).
+- Seul mot technique gardé : le nom du cookie de session, que la loi oblige à donner.
+
+### Site · Introuvable, erreur, menu
+
+#### Page introuvable, affichage impossible
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-erreurs-desktop-01-page-introuvable.png | Page introuvable · 1440 |
+| v2-site-erreurs-mobile-01-page-introuvable.png | Page introuvable · 360 |
+| v2-site-erreurs-desktop-02-affichage-impossible.png | Affichage impossible · 1440 |
+| v2-site-erreurs-mobile-02-affichage-impossible.png | Affichage impossible · 360 |
+
+Note de la planche :
+- En-tête réduit au logo, ni menu ni pied de page. Pictogramme dans un rond Ciel, titre, texte, une action principale et un lien (maquette m14).
+- Introuvable : texte du code, qui dit quoi faire (« Vérifiez le lien que vous avez reçu, puis ouvrez-le à nouveau. »), et les deux actions de m14 : « Revenir à l'accueil », « Écrire à l'équipe ».
+- Erreur : texte de m14 (« … et vos données ne sont pas touchées. Réessayez dans un instant. »), plus rassurant que celui du code ; « Réessayer » relance l'affichage.
+- « Écrire à l'équipe » mène à la page Aide, rubrique contact (3.3). Il n'y a pas de page d'erreur racine en français aujourd'hui : à créer avec ce modèle.
+
+#### Menu du téléphone
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-menu-mobile-01-ferme.png | Menu du téléphone · 360 · fermé |
+| v2-site-menu-mobile-02-ouvert.png | Menu du téléphone · 360 · ouvert |
+
+Note de la planche :
+- Ouvert depuis Intégrations : la page en cours sur fond Ciel, lien par lien sur des lignes de 56 px, sans filet. Puis « Créer mon espace gratuit » pleine largeur et « Gratuit, sans carte bancaire. »
+- Voile Encre à 48 % sous le panneau : le toucher ferme le menu ; un lien aussi ; Échap ferme et rend le focus au bouton.
+- Le bouton passe de « Ouvrir le menu » (trois traits) à « Fermer le menu » (croix).
+
+### Site · Images de partage
+
+#### Images de partage, 1200 × 630
+| Fichier | Planche · état |
+| --- | --- |
+| v2-site-partage-desktop-01-accueil.png | Image de partage · 1200 × 630 · accueil |
+| v2-site-partage-desktop-02-integration-systeme-io.png | Image de partage · 1200 × 630 · integration systeme io |
+| v2-site-partage-desktop-03-guide.png | Image de partage · 1200 × 630 · guide |
+| v2-site-partage-mobile-01-apercu-messagerie.png | Images de partage · 360 · aperçu dans une conversation |
+
+Note de la planche :
+- 1200 × 630 px. À gauche sur Blanc : le logo, le titre de la page (Bricolage, 72 px, 60 px au-delà de 48 caractères), la promesse « Vos ventes deviennent des témoignages, automatiquement. » (positionnement.md). À droite, une colonne Soleil avec le symbole.
+- Accueil : le grand titre. Page d'intégration : le titre de la page, et le symbole « avec » l'initiale de l'outil (pas de logo de marque). Guide : le titre du guide et « Guide ».
+- Ni dégradé, ni étiquette au-dessus du titre, ni filet. Même modèle pour Tarifs, Intégrations, Guides et les pages légales : seul le titre change.
+- Lisible à 292 px de large dans une messagerie (aperçu ci-dessous) : titre sur trois lignes au plus.
+
+### Ce que les décisions changent
+
+#### Prix (tarifs.md, arbitrages.md n° 1 et 2)
+- Jusqu'au 100e abonné payant, l'accueil et Tarifs affichent le prix de lancement comme prix payé : Essentiel 9,99 € par mois ou 99 € par an, Pro 19,99 € par mois ou 199 € par an, avec « Prix de lancement, gardé à vie, pour les 100 premiers abonnés. Ensuite, 14,99 € par mois. » (24,99 € pour Pro). Ni prix barré, ni compteur.
+- Après le 100e : prix publics 14,99 € / 149 € et 24,99 € / 249 €, la ligne disparaît (planches « prix publics »).
+- « TVA comprise » disparaît partout : « Prix finaux : rien ne s'ajoute au paiement. » sous le titre de Tarifs, « vous payez le prix affiché » ailleurs, nouvelle réponse à « Les prix incluent-ils la TVA ? ».
+- Pro = Essentiel plus le retrait du badge : « Témoignages vidéo » retiré de Tarifs.
+
+#### Accueil (positionnement.md)
+- Douze sections, dans l'ordre : en-tête, bande des outils, problème, démo en quatre temps, widget réel, le bon moment, connecteurs par familles, preuves, tarifs, offre aux premiers testeurs, questions, appel final.
+- Démo à manipuler « Écrire un avis de test » : saisie, erreur, avis arrivé sur le mur ; rien n'est enregistré.
+- Widget réel : sélecteur Mur, Carrousel, Badge ; Clair, Sombre ; « Exemple, avis fictifs » sous chaque exemple, note d'exemple 4,7/5.
+- Catalogue par familles : Systeme.io est un outil parmi les autres, dans la famille « Formations et tunnels de vente ».
+- Barre fixe du téléphone : apparaît quand le bouton du haut de page sort de l'écran, disparaît sur l'appel final et quand le clavier est ouvert, ne masque rien (marge de 98 px en bas de page).
+- Offre aux premiers testeurs : 3 mois (arbitrages.md n° 3).
+
+#### « À propos de ces avis » (positionnement.md, point 3)
+- Page nouvelle, liée depuis chaque widget, sur tous les plans : d'où viennent les avis (lien unique envoyé à l'adresse reçue avec la vente), dates, contrepartie, modification, ordre d'affichage et note du badge, motifs de refus.
+
+#### Intégrations (connecteurs.md)
+- Le catalogue de 3.3 (six familles) ; page Systeme.io ; page « Bientôt » (Stripe) avec « En attendant : avec Zapier ou Make » ; aucune date promise.
+
+### À trancher
+- Titre de l'accueil après le 100e abonné : « moins de 10 € ensuite » devient faux. Proposé : « Gratuit pour commencer, 14,99 € par mois ensuite ».
+- Ligne annuelle du prix de lancement (« Ensuite, 149 € par an. », 249 € pour Pro) : déduite des prix publics, la phrase n'est pas écrite dans les décisions.
+- Titre et description de la page Intégrations : ils citent encore « Systeme.io, Stripe, Calendly ». Proposé : « Intégrations : l'outil où vous encaissez ».
+- Bouton de la barre fixe : positionnement.md écrit « Créer mon espace », le libellé figé de 3.1 est « Créer mon espace gratuit ». Les planches gardent le libellé figé.
+- Page introuvable : texte du code (il dit quoi faire) avec les deux actions de m14. Erreur : texte de m14 (« vos données ne sont pas touchées »).
+
+### Textes changés, à reporter dans le code
+- Durées retirées (positionnement.md, Incitations) : « Deux minutes, depuis votre ordinateur. » (Systeme.io), « Deux minutes pour connecter Systeme.io, et la prochaine vente fait le reste. » (appels finaux, remplacé par un texte sans durée), « L'avis se laisse en deux minutes. » (devient « depuis un téléphone »), « c'est en ligne en cinq minutes » (guide, devient « tout de suite »).
+- Guide Systeme.io : badge d'exemple « 4,8/5 · 47 avis » devient « 4,7/5 · 23 avis » ; « raccourcir un texte, jamais en changer le sens » devient « ne changez pas un texte sans l'accord de son auteur » (positionnement.md, point 4).
+- Pages légales, en attendant le lot 2.7 : CGV article 2 (prix finaux, prix publics et prix de lancement, plus d'autoliquidation), CGV article 5 (règles de changement de plan de tarifs.md), CGU article 6 (correction seulement avec l'accord de l'auteur). Tout le reste est le texte du code, avec ses 20 champs « [À COMPLÉTER] ».
+- Facturation : « Que deviennent mes témoignages si j'arrête ? » et « Puis-je passer du mensuel à l'annuel ? » corrigées selon les règles de changement de plan ; trois questions ajoutées.
+- Comparatif : « Témoignages conservés et affichés » devient « Témoignages validés » ; lignes ajoutées : demandes saisies à la main (20 par jour), corriger avec l'accord du client, lien « À propos de ces avis », connecteur universel.
+- Systeme.io : « activez le webhook » devient « activez Actif(ve) » ; « adresse technique » devient « adresse de PULSACITY ».
+
+### Textes à surveiller
+- Libellés de Systeme.io gardés parce que la créatrice doit les trouver à l'écran : « Webhooks », « Appeler un webhook ». Nom du cookie de session gardé dans la politique de confidentialité (obligation légale).
+- « À propos de ces avis », motifs de refus, règles de correction : à relire par un juriste avant la mise en ligne (positionnement.md, point 8).
+- Les pages légales deviendront celles d'un vendeur particulier (lot 4.9) : leur mise en page ne change pas.
+- Espaces insécables du français (avant « : ; ? ! », dans « », avant « € » et « % ») et « e-mail » sans coupure : appliqués à toutes les planches, comme dans le code.

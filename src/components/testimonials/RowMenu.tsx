@@ -7,6 +7,7 @@ import { Icon } from "@/components/ui/Icon";
 import { MENU_ITEM_CLASSES, MENU_ITEM_DANGER_CLASSES, MENU_PANEL_CLASSES } from "@/components/ui/menu-styles";
 import { useMenu } from "@/components/ui/useMenu";
 import { cn } from "@/lib/cn";
+import { prefixPersonWithDe } from "@/lib/french/prefix-with-de";
 
 /** The menu sits 4 px from its trigger. */
 const GAP_PX = 4;
@@ -48,7 +49,7 @@ export const RowMenu = ({ authorName, detailHref, onDelete }: RowMenuProps) => {
       <button
         ref={triggerRef}
         type="button"
-        aria-label={`Autres actions pour l'avis de ${authorName}`}
+        aria-label={`Autres actions pour l'avis ${prefixPersonWithDe(authorName)}`}
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
         onClick={toggle}

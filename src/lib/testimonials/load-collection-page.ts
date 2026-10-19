@@ -13,6 +13,8 @@ export type CollectionSpace = {
   accentColor: string | null;
   replyToEmail: string;
   referralCode: string;
+  /** Réglages, « J'offre une contrepartie à mes clients »: said before the form, so the customer knows before writing. */
+  incentiveDeclaredAt: Date | null;
 };
 
 export type CollectionProduct = {
@@ -39,6 +41,7 @@ const findCollectionSpace = async (database: Database, spaceSlug: string): Promi
       accentColor: spaces.accentColor,
       replyToEmail: spaces.replyToEmail,
       referralCode: spaces.referralCode,
+      incentiveDeclaredAt: spaces.incentiveDeclaredAt,
     })
     .from(spaces)
     .where(eq(spaces.slug, spaceSlug))

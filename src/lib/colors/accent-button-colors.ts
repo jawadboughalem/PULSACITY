@@ -35,3 +35,15 @@ export const readAccentButtonColors = (accentColor: string | null): AccentButton
     hover: darken(background, HOVER_DARKENING),
   };
 };
+
+/** Charte v2, ajouts 3.6, Page de collecte: the creator's identity on a tint of their accent, the accent at 9 % on Blanc. */
+const TINT_STRENGTH = 0.09;
+
+export const readAccentTint = (accentColor: string | null): string | null => {
+  if (!accentColor || !HEX_COLOR_PATTERN.test(accentColor)) return null;
+  return `#${[1, 3, 5]
+    .map((start) => Math.round(255 - (255 - Number.parseInt(accentColor.slice(start, start + 2), 16)) * TINT_STRENGTH))
+    .map((channel) => channel.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase()}`;
+};

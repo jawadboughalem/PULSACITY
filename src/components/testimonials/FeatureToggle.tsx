@@ -1,6 +1,7 @@
 import { ICON_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
+import { prefixPersonWithDe } from "@/lib/french/prefix-with-de";
 
 type FeatureToggleProps = {
   isFeatured: boolean;
@@ -14,7 +15,7 @@ export const FeatureToggle = ({ isFeatured, authorName, onToggle, className }: F
   <button
     type="button"
     aria-pressed={isFeatured}
-    aria-label={`Mettre en avant l'avis de ${authorName}`}
+    aria-label={`Mettre en avant l'avis ${prefixPersonWithDe(authorName)}`}
     onClick={onToggle}
     className={cn(
       ICON_BUTTON_CLASSES,

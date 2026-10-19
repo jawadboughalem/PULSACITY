@@ -27,6 +27,9 @@ export const insertTestReviewRequest = async (
     .values({ spaceId, customerId: customer.id, productId: product.id, source: "manual", purchasedAt: new Date() })
     .returning({ id: purchases.id });
   const token = randomUUID();
-  await database.insert(reviewRequests).values({ purchaseId: purchase.id, token, scheduledAt: new Date(), status });
-  return { token, customerId: customer.id, productId: product.id, productSlug: product.slug };
+  const [request] = await database
+    .insert(reviewRequests)
+    .values({ purchaseId: purchase.id, token, scheduledAt: new Date(), status })
+    .returning({ id: reviewRequests.id });
+  return { id: request.id, token, customerId: customer.id, productId: product.id, productSlug: product.slug };
 };

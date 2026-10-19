@@ -11,10 +11,11 @@ import { getDisplayedBody } from "@/lib/testimonials/displayed-body";
 import type { SpaceTestimonial } from "@/lib/testimonials/list-space-testimonials";
 import { FeatureToggle } from "./FeatureToggle";
 import { RatingStars } from "./RatingStars";
-import { PLAN_LIMIT_MESSAGE, REVIEW_ERROR_MESSAGES, buildDeleteConfirmation, buildHideConfirmation } from "./review-messages";
+import { PLAN_LIMIT_MESSAGE, REVIEW_ERROR_MESSAGES, buildDeleteConfirmation } from "./review-messages";
 import { RowMenu } from "./RowMenu";
 import { StatusBadge } from "./StatusBadge";
 import { useTestimonialDeletion } from "./useTestimonialDeletion";
+import { HideTestimonialDialog } from "./HideTestimonialDialog";
 import { useTestimonialReview } from "./useTestimonialReview";
 
 /** Charte v2, Tableau: rows on white, padding 18 16, no rule between them; Nuage under the pointer, radius-field ends. */
@@ -88,9 +89,12 @@ export const TestimonialTableRow = ({ testimonial, detailHref, isApprovalAllowed
           ) : null}
           <RowMenu authorName={testimonial.authorName} detailHref={detailHref} onDelete={deletion.askToDelete} />
         </div>
-        <ConfirmDialog
+        <HideTestimonialDialog
           isOpen={review.isHideConfirmationOpen}
-          {...buildHideConfirmation(testimonial.authorName)}
+          authorName={testimonial.authorName}
+          authorReach={testimonial.authorReach}
+          isReasonAlreadySent={testimonial.isReasonAlreadySent}
+          isPending={review.isHiding}
           onConfirm={review.hide}
           onCancel={review.cancelHide}
         />

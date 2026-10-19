@@ -1,6 +1,6 @@
 import type { LayoutContext } from "./context";
 import { h, svg } from "./dom";
-import { carouselCard, poweredBy } from "./parts";
+import { carouselCard, notes } from "./parts";
 import type { WidgetPayload } from "./payload";
 
 const CHEVRON_LEFT = "M15 6l-6 6 6 6";
@@ -48,17 +48,17 @@ export const renderCarousel = (payload: WidgetPayload, context: LayoutContext): 
   const next = arrowButton("next", "Avis suivant", CHEVRON_RIGHT);
   const dots = h("div", { class: "dots" });
   const announcer = h("p", { class: "sr-only", "aria-live": "polite" });
-  const footer = h("div", { class: "carousel-footer" }, dots, payload.poweredBy ? poweredBy(payload.poweredBy) : null);
-  const carousel = h("div", { class: "carousel" }, track, previous, next, footer, announcer);
+  const footer = h("div", { class: "carousel-footer" }, dots);
+  const carousel = h("div", { class: "carousel" }, track, previous, next, footer, notes(payload), announcer);
 
   let position = 0;
   const visibleCount = () => (context.isWide() ? 3 : 1);
   const positionCount = () => Math.max(1, total - visibleCount() + 1);
   const step = () => (slides[1] ? slides[1].offsetLeft - slides[0].offsetLeft : (slides[0]?.offsetWidth ?? 0));
 
-  /** Wide, the points share their row with « Propulsé par »; narrow, they sit between the arrows. */
+  /** Wide, the points sit under the track; narrow, between the arrows. */
   const dotsFit = (count: number) => {
-    const room = context.isWide() ? track.clientWidth / 2 : carousel.clientWidth - 2 * ARROW_ZONE;
+    const room = context.isWide() ? track.clientWidth : carousel.clientWidth - 2 * ARROW_ZONE;
     return room <= 0 || count * DOT_ZONE <= room;
   };
 

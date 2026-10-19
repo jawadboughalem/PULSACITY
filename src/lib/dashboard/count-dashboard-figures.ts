@@ -2,6 +2,7 @@ import { eq, sql } from "drizzle-orm";
 import type { Database } from "@/db/database";
 import { purchases, reviewRequests, testimonials } from "@/db/schema";
 import { startOfParisMonth } from "@/lib/dates/paris-date";
+import { countsInRating } from "@/lib/testimonials/rated-testimonials";
 
 export type DashboardFigures = {
   approved: number;
@@ -23,7 +24,8 @@ export const countDashboardFigures = async (
       .select({
         approved: sql<number>`count(*) filter (where ${testimonials.status} = 'approved')`.mapWith(Number),
         pending: sql<number>`count(*) filter (where ${testimonials.status} = 'pending')`.mapWith(Number),
-        averageRating: sql<number | null>`avg(${testimonials.rating}) filter (where ${testimonials.status} = 'approved')`,
+        // The same rating as the badge of the widgets (lot 4.13): every testimonial received but those refused.
+        averageRating: sql<number | null>`avg(${testimonials.rating}) filter (where ${countsInRating})`,
       })
       .from(testimonials)
       .where(eq(testimonials.spaceId, spaceId)),

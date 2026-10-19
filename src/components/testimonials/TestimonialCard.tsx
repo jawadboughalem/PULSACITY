@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { DISCREET_BUTTON_CLASSES, FOCUS_RING, SECONDARY_COMPACT_BUTTON_CLASSES } from "@/components/ui/button-styles";
-import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { FieldError } from "@/components/ui/FieldError";
 import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
 import { cn } from "@/lib/cn";
@@ -11,9 +10,10 @@ import { getDisplayedBody } from "@/lib/testimonials/displayed-body";
 import type { SpaceTestimonial } from "@/lib/testimonials/list-space-testimonials";
 import { FeatureToggle } from "./FeatureToggle";
 import { RatingStars } from "./RatingStars";
-import { PLAN_LIMIT_MESSAGE, REVIEW_ERROR_MESSAGES, buildHideConfirmation } from "./review-messages";
+import { PLAN_LIMIT_MESSAGE, REVIEW_ERROR_MESSAGES } from "./review-messages";
 import { StatusBadge } from "./StatusBadge";
 import { TestimonialQuote } from "./TestimonialQuote";
+import { HideTestimonialDialog } from "./HideTestimonialDialog";
 import { useTestimonialReview } from "./useTestimonialReview";
 
 type TestimonialCardProps = {
@@ -165,9 +165,12 @@ const ReviewActions = ({ className, review, testimonial, detailHref, isDashboard
         </p>
       ) : null}
       {review.error ? <FieldError id={errorId} message={REVIEW_ERROR_MESSAGES[review.error]} /> : null}
-      <ConfirmDialog
+      <HideTestimonialDialog
         isOpen={review.isHideConfirmationOpen}
-        {...buildHideConfirmation(testimonial.authorName)}
+        authorName={testimonial.authorName}
+        authorReach={testimonial.authorReach}
+        isReasonAlreadySent={testimonial.isReasonAlreadySent}
+        isPending={review.isHiding}
         onConfirm={review.hide}
         onCancel={review.cancelHide}
       />

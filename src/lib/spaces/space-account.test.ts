@@ -1,4 +1,4 @@
-import { is, sql } from "drizzle-orm";
+import { eq, is, sql } from "drizzle-orm";
 import { PgTable, getTableConfig } from "drizzle-orm/pg-core";
 import { assert, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Database } from "@/db/database";
@@ -182,6 +182,59 @@ describe("buildSpaceExport", () => {
         consentement: { donne_le: "2026-10-16T09:00:00.000Z", texte: "J'accepte que mon témoignage soit publié." },
       }),
     ]);
+  });
+
+  it("keeps where each review came from, why it is hidden, and the corrections proposed to its author", async () => {
+    const hiddenAt = new Date("2026-10-17T08:00:00Z");
+    await database
+      .update(schema.testimonials)
+      .set({
+        provenance: "sale",
+        purchasedAt: new Date("2026-10-01T10:00:00Z"),
+        status: "hidden",
+        hiddenAt,
+        hiddenReason: "other",
+        hiddenReasonDetail: "Il parle d'un autre programme.",
+        hiddenReasonSentAt: hiddenAt,
+      })
+      .where(eq(schema.testimonials.spaceId, julieSpaceId));
+    const [testimonial] = await database
+      .select({ id: schema.testimonials.id, body: schema.testimonials.body })
+      .from(schema.testimonials)
+      .where(eq(schema.testimonials.spaceId, julieSpaceId));
+    await database.insert(schema.testimonialCorrections).values({
+      testimonialId: testimonial.id,
+      fromBody: testimonial.body,
+      body: "J'ai arrêté de grignoter le soir.",
+      token: "secret-correction-julie",
+      createdAt: new Date("2026-10-16T10:00:00Z"),
+      answeredAt: new Date("2026-10-16T12:00:00Z"),
+      outcome: "refused",
+    });
+
+    const exported = (await buildSpaceExport(database, julieId, { buildCollectionUrl }))?.data;
+    assert(exported);
+
+    expect(exported.temoignages[0]).toMatchObject({
+      provenance: "vente_recue",
+      achat_le: "2026-10-01T10:00:00.000Z",
+      statut: "masque",
+      masquage: {
+        le: "2026-10-17T08:00:00.000Z",
+        motif: "Il parle d'un autre programme.",
+        motif_envoye_le: "2026-10-17T08:00:00.000Z",
+      },
+      corrections: [
+        {
+          proposee_le: "2026-10-16T10:00:00.000Z",
+          texte_avant: testimonial.body,
+          texte_propose: "J'ai arrêté de grignoter le soir.",
+          reponse: "refusee",
+          repondu_le: "2026-10-16T12:00:00.000Z",
+        },
+      ],
+    });
+    expect(JSON.stringify(exported)).not.toContain("secret-correction-julie");
   });
 
   it("holds nothing of another space, and none of the secrets", async () => {

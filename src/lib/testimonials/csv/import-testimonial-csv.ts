@@ -100,6 +100,7 @@ export const importTestimonialCsv = (
           body: row.body,
           status: row.isPending ? ("pending" as const) : ("approved" as const),
           source: "csv" as const,
+          provenance: "import" as const,
           consentAt: now,
           consentText: CSV_CONSENT_TEXT,
           createdAt: row.date ?? now,

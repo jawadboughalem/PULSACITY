@@ -64,7 +64,13 @@ describe("loadWidgetPreview", () => {
       createdAt: daysAgo(30),
     });
     await insertTestTestimonial(database, { spaceId, authorName: "Sophie D.", status: "pending", createdAt: daysAgo(1) });
-    await insertTestTestimonial(database, { spaceId, authorName: "Arthur B.", status: "hidden", createdAt: daysAgo(1) });
+    await insertTestTestimonial(database, {
+      spaceId,
+      authorName: "Arthur B.",
+      status: "hidden",
+      hiddenReason: "not-a-customer",
+      createdAt: daysAgo(1),
+    });
     await insertTestTestimonial(database, { spaceId: otherSpaceId, authorName: "Paul G.", status: "approved" });
 
     const preview = await loadWidgetPreview(database, spaceId);
@@ -81,13 +87,15 @@ describe("loadWidgetPreview", () => {
       rating: 5,
       text: "Les recettes sont rapides et le groupe motive vraiment.",
       receivedOn: "2026-09-20",
+      purchasedIn: null,
       productId: programmeId,
     });
+    // The rating counts the pending testimonial of Sophie D. too, not Arthur B.'s, hidden for a reason.
     expect(preview.summaries).toEqual({
-      all: { total: 3, averageRating: 4 },
+      all: { total: 3, ratedCount: 4, averageRating: 4.25 },
       byOffer: {
-        [programmeId]: { total: 2, averageRating: 4 },
-        [suiviId]: { total: 1, averageRating: 4 },
+        [programmeId]: { total: 2, ratedCount: 2, averageRating: 4 },
+        [suiviId]: { total: 1, ratedCount: 1, averageRating: 4 },
       },
     });
   });

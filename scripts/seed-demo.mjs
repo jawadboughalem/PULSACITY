@@ -1,5 +1,6 @@
 // Fills a demo space, "Julie Nutrition", for the given e-mail address: offers, testimonials of every
-// status, sales and requests of the month. Run again, it starts the space over.
+// status and provenance (a hidden one with its reason, a correction waiting, one accepted, a masked name),
+// sales and requests of the month. Run again, it starts the space over.
 //
 //   pnpm db:seed                         demo@pulsacity.local, plan Gratuit, on the local database
 //   pnpm db:seed vous@exemple.fr         your address, to sign in with your magic link
@@ -48,8 +49,11 @@ const PRODUCTS = [
   { key: "atelier", name: "Atelier cuisine", slug: "atelier-cuisine" },
 ];
 
+const PROVENANCES = { form: "public-link", manual: "added", csv: "import" };
 const FORM_CONSENT = "J'accepte que ce témoignage soit publié sur les supports de Julie Nutrition.";
 const MANUAL_CONSENT = "J'ai l'accord de cette personne pour publier son témoignage.";
+const CSV_CONSENT = "J'ai l'accord de chacune de ces personnes pour publier son témoignage.";
+const CONSENTS = { form: FORM_CONSENT, manual: MANUAL_CONSENT, csv: CSV_CONSENT };
 
 const TESTIMONIALS = [
   ["Sophie D.", "Maman de 3 enfants", 5, "Toute la famille mange mieux. Les menus de la semaine m'ont sauvé la vie.", "pending", "programme", 3],
@@ -58,14 +62,41 @@ const TESTIMONIALS = [
   ["Thomas L.", "Développeur", 5, "Les recettes sont rapides et le groupe motive vraiment. J'ai perdu 4 kg sans me priver.", "approved", "programme", 27],
   ["Inès V.", "Pharmacienne", 5, "Un suivi attentif, des messages toujours bienveillants. Je recommande sans hésiter.", "approved", "suivi", 35],
   ["Hugo P.", "Étudiant", 4, "Des idées simples pour un petit budget. L'atelier m'a donné envie de cuisiner.", "approved", "atelier", 41],
-  ["Manon G.", "Architecte", 5, "J'ai enfin compris comment composer une assiette. Fini les fringales de 17 h.", "approved", "programme", 52],
+  ["Manon G.", "Architecte", 5, "J'ai enfin compris comment composé une assiette. Fini les fringales de 17 h.", "approved", "programme", 52],
   ["Lucas M.", "Comptable", 4, "Très bon programme, un peu dense la première semaine.", "approved", "programme", 60],
   ["Chloé T.", "Coach sportive", 5, "Je l'ai conseillé à toutes mes clientes. Les résultats parlent d'eux-mêmes.", "approved", "suivi", 71],
-  ["Emma S.", "Maman solo", 5, "Des repas prêts en 20 minutes, que mes enfants mangent. Merci Julie.", "approved", "atelier", 85],
+  ["Emma S.", "Maman solo", 5, "Des repas prêts en 20 minutes, que mes enfants mangent. Ma fille Léna en redemande. Merci Julie.", "approved", "atelier", 85],
   ["Louis F.", "Cheffe de projet", 5, "Le format court est parfait quand on manque de temps.", "approved", "programme", 96],
   ["Jade K.", "Graphiste", 4, "Bonne ambiance dans le groupe, et des recettes que je refais encore.", "approved", "atelier", 110],
   ["Arthur B.", "Retraité", 3, "Intéressant, mais j'aurais voulu plus de suivi personnalisé.", "hidden", "programme", 120],
+  ["Kévin R.", "", 4, "Livraison rapide, colis bien emballé. Je recommande ce vendeur.", "hidden", "atelier", 7],
 ];
+
+// « Masquer » with a reason (lot 4.13): Arthur asked for his review to be removed, and left no address, so the
+// reason could not reach him; Kévin's review speaks of another seller, and the reason was sent to him.
+const HIDDEN = {
+  "Arthur B.": { reason: "author-request", hiddenAgo: 100, isSent: false },
+  "Kévin R.": { reason: "off-topic", hiddenAgo: 6, isSent: true },
+};
+
+// The displayed text (lot 4.13): Manon accepted a correction, one waits for Camille's answer, and the first name of
+// Emma's daughter is masked.
+const ACCEPTED_CORRECTION = {
+  author: "Manon G.",
+  body: "J'ai enfin compris comment composer une assiette. Fini les fringales de 17 h.",
+  proposedAgo: 50,
+  answeredAgo: 49,
+};
+const WAITING_CORRECTION = {
+  author: "Camille R.",
+  body: "En 30 jours, j'ai arrêté de grignoter le soir. Julie explique sans culpabiliser : c'est la première fois qu'un programme tient dans ma vraie vie.",
+  proposedAgo: 1,
+};
+const MASKED = {
+  author: "Emma S.",
+  displayBody: "Des repas prêts en 20 minutes, que mes enfants mangent. Ma fille [nom masqué] en redemande. Merci Julie.",
+  maskedAgo: 80,
+};
 
 const SALES = [
   // first name, last name, product, days since the sale, days since the request, answered, reminder in days, other state
@@ -73,6 +104,7 @@ const SALES = [
   ["Sophie", "Durand", "programme", 20, 6, true, null],
   ["Nadia", "Bernard", "suivi", 18, 5, true, null],
   ["Camille", "Robert", "programme", 16, 2, true, null],
+  ["Kévin", "Roux", "atelier", 24, 8, true, null],
   ["Noé", "Fabre", "atelier", 15, 1, false, 3],
   ["Rose", "Blanc", "programme", 17, 3, false, 1],
   ["Adam", "Henry", "suivi", 19, 5, false, null],
@@ -177,13 +209,17 @@ await sql.begin(async (tx) => {
   }
 
   for (const [authorName, authorTitle, rating, body, status, product, age] of TESTIMONIALS) {
-    const isManual = authorName === "Thomas L.";
+    // Thomas's review was added by hand and Jade's imported from a file; every review left by the form came from the
+    // public link, until a request it answers says otherwise below.
+    const source = authorName === "Thomas L." ? "manual" : authorName === "Jade K." ? "csv" : "form";
+    const hidden = HIDDEN[authorName] ?? null;
     await tx`
       insert into testimonials (space_id, product_id, author_name, author_title, rating, body, status, source,
-        consent_at, consent_text, featured, created_at)
-      values (${space.id}, ${productIds[product]}, ${authorName}, ${authorTitle}, ${rating}, ${body}, ${status},
-        ${isManual ? "manual" : "form"}, ${daysAgo(age)}, ${isManual ? MANUAL_CONSENT : FORM_CONSENT},
-        ${authorName === "Camille R."}, ${daysAgo(age)})`;
+        provenance, consent_at, consent_text, featured, hidden_at, hidden_reason, created_at)
+      values (${space.id}, ${productIds[product]}, ${authorName}, ${authorTitle || null}, ${rating}, ${body}, ${status},
+        ${source}, ${PROVENANCES[source]}, ${daysAgo(age)}, ${CONSENTS[source]},
+        ${authorName === "Camille R."},
+        ${hidden ? daysAgo(hidden.hiddenAgo) : null}, ${hidden?.reason ?? null}, ${daysAgo(age)})`;
   }
 
   for (const [firstName, lastName, product, saleAge, requestAge, isAnswered, reminderIn, state = null] of SALES) {
@@ -201,19 +237,26 @@ await sql.begin(async (tx) => {
     const status = state ?? (isAnswered ? "completed" : isSent ? "sent" : "scheduled");
     // A reminded request got its reminder four days after the request, or now if that day is still to come.
     const remindedAt = state === "reminded" ? new Date(Math.min(now, sentAt.getTime() + 4 * DAY_MS)) : null;
-    await tx`
+    const [request] = await tx`
       insert into review_requests (purchase_id, token, scheduled_at, sent_at, reminder_scheduled_at, reminder_sent_at,
         completed_at, cancelled_at, failed_at, failed_attempts, status)
       values (${purchase.id}, ${randomUUID()}, ${sentAt ?? daysAgo(saleAge - 14)}, ${sentAt},
         ${remindedAt ?? (reminderIn === null ? null : daysAgo(-reminderIn))}, ${remindedAt},
         ${isAnswered ? sentThisMonth(requestAge - 1) : null}, ${state === "cancelled" ? daysAgo(2) : null},
-        ${state === "failed" ? daysAgo(1) : null}, ${state === "failed" ? 3 : 0}, ${status})`;
+        ${state === "failed" ? daysAgo(1) : null}, ${state === "failed" ? 3 : 0}, ${status})
+      returning id`;
     if (isAnswered) {
-      // The testimonial is the answer to this request: it was received the day the request was completed.
+      // The testimonial is the answer to this request: it was received the day the request was completed, and its
+      // provenance is a request sent by hand, the sale entered by Julie.
       const answeredAt = sentThisMonth(requestAge - 1);
+      const authorName = `${firstName} ${lastName[0]}.`;
+      const hidden = HIDDEN[authorName] ?? null;
       await tx`
-        update testimonials set customer_id = ${customer.id}, created_at = ${answeredAt}, consent_at = ${answeredAt}
-        where space_id = ${space.id} and author_name = ${`${firstName} ${lastName[0]}.`}`;
+        update testimonials set customer_id = ${customer.id}, created_at = ${answeredAt}, consent_at = ${answeredAt},
+          provenance = 'request', review_request_id = ${request.id}, purchased_at = ${daysAgo(saleAge)},
+          hidden_at = ${hidden ? new Date(answeredAt.getTime() + DAY_MS / 2) : null},
+          hidden_reason_sent_at = ${hidden?.isSent ? new Date(answeredAt.getTime() + DAY_MS / 2 + 10 * MINUTE_MS) : null}
+        where space_id = ${space.id} and author_name = ${authorName}`;
     }
   }
 
@@ -234,6 +277,48 @@ await sql.begin(async (tx) => {
         values (${productIds[product.product]}, ${connection.id}, ${product.ref})`;
     }
   }
+
+  // Manon's review answers a sale received from Systeme.io: the only provenance that ties a review to a sale.
+  {
+    const saleAt = daysAgo(70);
+    const [customer] = await tx`
+      insert into customers (space_id, email, first_name, last_name)
+      values (${space.id}, 'manon.girard@exemple.fr', 'Manon', 'Girard')
+      returning id`;
+    const [purchase] = await tx`
+      insert into purchases (space_id, customer_id, product_id, connection_id, source, event_type, external_ref,
+        purchased_at, created_at)
+      values (${space.id}, ${customer.id}, ${productIds.programme}, ${connection.id}, 'connector', 'sale',
+        'order-item:15460090', ${saleAt}, ${saleAt})
+      returning id`;
+    const [request] = await tx`
+      insert into review_requests (purchase_id, token, scheduled_at, sent_at, reminder_scheduled_at, completed_at, status)
+      values (${purchase.id}, ${randomUUID()}, ${daysAgo(56)}, ${daysAgo(56)}, ${daysAgo(52)}, ${daysAgo(52)}, 'completed')
+      returning id`;
+    await tx`
+      update testimonials set customer_id = ${customer.id}, provenance = 'sale', review_request_id = ${request.id},
+        purchased_at = ${saleAt}, purchase_connector = 'systeme'
+      where space_id = ${space.id} and author_name = 'Manon G.'`;
+  }
+
+  for (const correction of [ACCEPTED_CORRECTION, WAITING_CORRECTION]) {
+    const isAccepted = correction === ACCEPTED_CORRECTION;
+    const [testimonial] = await tx`
+      select id, body from testimonials where space_id = ${space.id} and author_name = ${correction.author}`;
+    await tx`
+      insert into testimonial_corrections (testimonial_id, from_body, body, token, created_at, sent_at, answered_at, outcome)
+      values (${testimonial.id}, ${testimonial.body}, ${correction.body}, ${randomBytes(24).toString("base64url")},
+        ${daysAgo(correction.proposedAgo)}, ${daysAgo(correction.proposedAgo)},
+        ${isAccepted ? daysAgo(correction.answeredAgo) : null}, ${isAccepted ? "accepted" : null})`;
+    if (isAccepted) {
+      await tx`
+        update testimonials set display_body = ${correction.body}, display_edited_at = ${daysAgo(correction.answeredAgo)}
+        where id = ${testimonial.id}`;
+    }
+  }
+  await tx`
+    update testimonials set display_body = ${MASKED.displayBody}, display_edited_at = ${daysAgo(MASKED.maskedAgo)}
+    where space_id = ${space.id} and author_name = ${MASKED.author}`;
 
   let orderId = 0;
   for (const event of SYSTEME_EVENTS) {

@@ -4,8 +4,9 @@ import { useOptimistic, useState, useTransition } from "react";
 import {
   approveTestimonial,
   featureTestimonial,
-  hideTestimonial,
+  hideTestimonialWithReason,
 } from "@/app/app/(espace)/temoignages/testimonial-actions";
+import type { HidingReason } from "@/lib/testimonials/hide-testimonial";
 import type { TestimonialStatus } from "@/lib/testimonials/testimonial-filters";
 import { useCelebrateFirstApproval } from "./FirstApprovalCelebration";
 import type { ReviewError } from "./review-messages";
@@ -24,6 +25,7 @@ export const useTestimonialReview = (testimonial: ReviewedTestimonial, isApprova
   const [error, setError] = useState<ReviewError | null>(null);
   const [isJustApproved, setIsJustApproved] = useState(false);
   const [isHideConfirmationOpen, setIsHideConfirmationOpen] = useState(false);
+  const [isHiding, setIsHiding] = useState(false);
   const celebrateFirstApproval = useCelebrateFirstApproval();
 
   const run = (change: () => Promise<void>) => {
@@ -49,12 +51,18 @@ export const useTestimonialReview = (testimonial: ReviewedTestimonial, isApprova
       }
     });
 
-  const hide = () => {
-    setIsHideConfirmationOpen(false);
+  /** The window stays open while the reason leaves to the author (charte v2: « Envoi… »), then closes. */
+  const hide = (hiding: HidingReason) => {
+    setIsHiding(true);
     run(async () => {
-      setOptimisticStatus("hidden");
-      const result = await hideTestimonial(testimonial.id);
-      if (!result.ok) setError(result.error === "testimonial-not-found" ? "testimonial-not-found" : "not-saved");
+      try {
+        const result = await hideTestimonialWithReason(testimonial.id, hiding);
+        if (result.ok) setOptimisticStatus("hidden");
+        else setError(result.error === "testimonial-not-found" ? "testimonial-not-found" : "not-saved");
+      } finally {
+        setIsHiding(false);
+        setIsHideConfirmationOpen(false);
+      }
     });
   };
 
@@ -73,9 +81,12 @@ export const useTestimonialReview = (testimonial: ReviewedTestimonial, isApprova
     isOverPlanLimit: !isApprovalAllowed && status !== "approved",
     isJustApproved,
     isHideConfirmationOpen,
+    isHiding,
     approve,
     askToHide: () => setIsHideConfirmationOpen(true),
-    cancelHide: () => setIsHideConfirmationOpen(false),
+    cancelHide: () => {
+      if (!isHiding) setIsHideConfirmationOpen(false);
+    },
     hide,
     toggleFeatured,
   };

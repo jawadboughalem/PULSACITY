@@ -5,11 +5,13 @@ import { BackBar } from "@/components/space/BackBar";
 import { WIDGETS_SECTION_HREF, widgetGuideHref } from "@/components/space/space-sections";
 import { WidgetEditor } from "@/components/widgets/WidgetEditor";
 import { canHideBadge } from "@/config/plans";
+import { readPulsacitySpaceId } from "@/config/pulsacity-space";
 import { getDb } from "@/db";
 import { getAppUrl } from "@/lib/app-url";
 import { getCurrentSpace } from "@/lib/spaces/get-current-space";
 import { listSpaceProducts } from "@/lib/spaces/list-space-products";
 import { buildReferralUrl } from "@/lib/widgets/build-widget-payload";
+import { buildAboutReviewsUrl } from "@/lib/widgets/load-widget-payload";
 import { loadWidgetPreview } from "@/lib/widgets/load-widget-preview";
 import { findOwnedWidget } from "@/lib/widgets/space-widgets";
 import { toEditableWidget } from "@/lib/widgets/widget-settings";
@@ -44,6 +46,9 @@ const WidgetEditorPage = async ({ params }: PageProps<"/app/widgets/[widgetId]">
             spaceAccentColor: space.accentColor,
             poweredByUrl: buildReferralUrl(appUrl, space.referralCode),
             canHideBadge: canHideBadge(space),
+            spaceName: space.name,
+            incentive: space.incentiveDeclaredAt !== null || space.id === readPulsacitySpaceId(),
+            aboutUrl: buildAboutReviewsUrl(appUrl),
           }}
           spaceName={space.name}
           appUrl={appUrl}

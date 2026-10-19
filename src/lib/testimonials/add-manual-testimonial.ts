@@ -72,6 +72,7 @@ export const addManualTestimonial = (
         body: testimonial.body,
         status: isWithinPlan ? "approved" : "pending",
         source: "manual",
+        provenance: "added",
         consentAt: now,
         consentText: MANUAL_CONSENT_TEXT,
         createdAt: testimonial.receivedAt ?? now,

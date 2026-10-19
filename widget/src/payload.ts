@@ -23,8 +23,10 @@ export type PublicTestimonial = {
   /** Null when the widget hides ratings. */
   rating: number | null;
   text: string;
-  /** Day of reception in Paris, YYYY-MM-DD. Null when the widget hides dates. */
+  /** Day of reception in Paris, YYYY-MM-DD: « Avis du 12 sept. 2026 ». Null only in an answer from before lot 4.13. */
   date: string | null;
+  /** Month of the purchase in Paris, YYYY-MM, when PULSACITY knows it: « achat en août 2026 ». */
+  purchase?: string;
   /** A line under the author: on PULSACITY's own wall, « Bêta-testeur · plan Essentiel offert pendant la bêta ». */
   mention?: string;
 };
@@ -43,7 +45,12 @@ export type WidgetPayload = {
   cardStyle: WidgetCardStyle;
   /** Validated testimonials the widget can show, all of them, not only those in this answer. */
   total: number;
-  /** Null when the widget hides ratings. */
+  /**
+   * Testimonials received, all of them but those hidden for a declared reason: the « 23 avis » of the rating (lot
+   * 4.13). Absent from an answer of before, where the rating counted `total`.
+   */
+  count?: number;
+  /** The average of those `count` testimonials. Null when the widget hides ratings. */
   average: number | null;
   testimonials: PublicTestimonial[];
   /** The badge shows three faces, never names nor texts. */
@@ -52,4 +59,10 @@ export type WidgetPayload = {
   next: number | null;
   /** The « Propulsé par PULSACITY » link, null only when a Pro space removed it. */
   poweredBy: string | null;
+  /** The space's name: « Sélection de Julie Nutrition : avis mis en avant, puis les plus récents. » */
+  space?: string;
+  /** The creator declared a counterpart for the reviews (Réglages), or they are PULSACITY's beta testers. */
+  incentive?: boolean;
+  /** « À propos de ces avis », on every plan, Pro included. */
+  about?: string;
 };

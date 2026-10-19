@@ -7,6 +7,9 @@ import { appendSlugSuffix, slugify } from "./slugify";
 const FALLBACK_PRODUCT_SLUG = "formation";
 const MAX_NUMBERED_SLUG = 50;
 
+/** Pages of the space under /t/<espace>/ that an offer's collection page cannot take: the answer to a correction. */
+const RESERVED_PRODUCT_SLUGS = new Set(["correction"]);
+
 export type SpaceProduct = {
   id: string;
   name: string;
@@ -28,6 +31,7 @@ export const addProduct = async (
 
   const baseSlug = slugify(name) || FALLBACK_PRODUCT_SLUG;
   for (let attempt = 1; attempt <= MAX_NUMBERED_SLUG; attempt += 1) {
+    if (RESERVED_PRODUCT_SLUGS.has(buildCandidateSlug(baseSlug, attempt))) continue;
     const [product] = await database
       .insert(products)
       .values({ spaceId, name, slug: buildCandidateSlug(baseSlug, attempt) })

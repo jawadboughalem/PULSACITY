@@ -6,12 +6,10 @@ import { useState, useTransition } from "react";
 import {
   type TestimonialPresentationField,
   linkTestimonialProduct,
-  restoreTestimonialDisplay,
   saveTestimonialPresentation,
 } from "@/app/app/(espace)/temoignages/testimonial-actions";
 import {
   DISCREET_BUTTON_CLASSES,
-  FOCUS_RING,
   PRIMARY_BUTTON_CLASSES,
   SECONDARY_BUTTON_CLASSES,
 } from "@/components/ui/button-styles";
@@ -19,42 +17,37 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import { Breadcrumb } from "@/components/space/BackBar";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { FieldError } from "@/components/ui/FieldError";
-import { FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES, TEXTAREA_CLASSES } from "@/components/ui/field-styles";
+import { FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
 import { SelectControl } from "@/components/ui/SelectControl";
 import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
+import { StatusBanner } from "@/components/ui/StatusBanner";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
 import { formatDateTime, formatDayMonthYear } from "@/lib/dates/format-french-date";
-import { prefixWithDe } from "@/lib/french/prefix-with-de";
 import { quoteInFrench } from "@/lib/french/typography";
-import { getFirstName } from "@/lib/testimonials/format-customer-name";
 import type { TestimonialDetail } from "@/lib/testimonials/load-testimonial-detail";
-import {
-  MAX_AUTHOR_NAME_LENGTH,
-  MAX_AUTHOR_TITLE_LENGTH,
-  MAX_TESTIMONIAL_LENGTH,
-} from "@/lib/testimonials/testimonial-form-schema";
+import { MAX_AUTHOR_NAME_LENGTH, MAX_AUTHOR_TITLE_LENGTH } from "@/lib/testimonials/testimonial-form-schema";
+import { describeHiding } from "./describe-hiding";
 import { describeTestimonialSource } from "./describe-testimonial-source";
+import { DisplayedTextSection } from "./DisplayedTextSection";
+import { HideTestimonialDialog } from "./HideTestimonialDialog";
 import { RatingStars } from "./RatingStars";
-import {
-  PLAN_LIMIT_MESSAGE,
-  REVIEW_ERROR_MESSAGES,
-  buildDeleteConfirmation,
-  buildHideConfirmation,
-} from "./review-messages";
+import { PLAN_LIMIT_MESSAGE, REVIEW_ERROR_MESSAGES, buildDeleteConfirmation } from "./review-messages";
 import { StatusBadge } from "./StatusBadge";
 import { ShareTestimonialButton } from "./ShareTestimonialDialog";
 import { useTestimonialDeletion } from "./useTestimonialDeletion";
 import { useTestimonialReview } from "./useTestimonialReview";
 
 const FIELD_ERRORS: Record<TestimonialPresentationField, string> = {
-  displayBody: `Le texte affiché doit compter de 1 à ${MAX_TESTIMONIAL_LENGTH} caractères.`,
   authorName: `Le nom affiché doit compter de 1 à ${MAX_AUTHOR_NAME_LENGTH} caractères.`,
   authorTitle: `Le titre affiché dépasse ${MAX_AUTHOR_TITLE_LENGTH} caractères. Raccourcissez-le.`,
 };
 
 const WITHOUT_OFFER = "";
+
+/** Charte v2: white panels on the Nuage of the space, radius-panel. */
+const PANEL_CLASSES = "rounded-panel bg-white p-4 desktop:p-8";
 
 type TestimonialDetailViewProps = {
   testimonial: TestimonialDetail;
@@ -66,6 +59,10 @@ type TestimonialDetailViewProps = {
 
 type SaveState = "idle" | "saving" | "saved" | "failed";
 
+/**
+ * Maquettes 3.4, « Fiche d'un témoignage » (lot 4.13): provenance and date of purchase, « Masquer » with its reason,
+ * the displayed text corrected only with the author's agreement, a name or a coordinate masked without it.
+ */
 export const TestimonialDetailView = ({
   testimonial,
   products,
@@ -76,9 +73,7 @@ export const TestimonialDetailView = ({
   const router = useRouter();
   const review = useTestimonialReview(testimonial, isApprovalAllowed);
   const deletion = useTestimonialDeletion(testimonial.id, () => router.push(listHref));
-  const displayedBody = testimonial.displayBody ?? testimonial.body;
   const [presentation, setPresentation] = useState({
-    displayBody: displayedBody,
     authorName: testimonial.authorName,
     authorTitle: testimonial.authorTitle ?? "",
   });
@@ -87,13 +82,11 @@ export const TestimonialDetailView = ({
   const [productId, setProductId] = useState(testimonial.productId ?? WITHOUT_OFFER);
   const [productState, setProductState] = useState<SaveState>("idle");
   const [isSaving, startSaving] = useTransition();
-  const firstName = getFirstName(testimonial.authorName) || testimonial.authorName;
   const source = describeTestimonialSource(testimonial);
   const isChanged =
-    presentation.displayBody !== displayedBody ||
-    presentation.authorName !== testimonial.authorName ||
-    presentation.authorTitle !== (testimonial.authorTitle ?? "");
+    presentation.authorName !== testimonial.authorName || presentation.authorTitle !== (testimonial.authorTitle ?? "");
   const error = review.error ?? deletion.error;
+  const hiding = review.status === "hidden" && testimonial.status === "hidden" ? describeHiding(testimonial) : null;
 
   const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -103,22 +96,6 @@ export const TestimonialDetailView = ({
         const result = await saveTestimonialPresentation(testimonial.id, presentation);
         setInvalidFields(result.ok || result.error !== "invalid-input" ? [] : result.fields);
         setSaveState(result.ok ? "saved" : "failed");
-      } catch {
-        setSaveState("failed");
-      }
-    });
-  };
-
-  const handleRestore = () => {
-    startSaving(async () => {
-      try {
-        const result = await restoreTestimonialDisplay(testimonial.id);
-        if (result.ok) {
-          setPresentation((current) => ({ ...current, displayBody: testimonial.body }));
-          setSaveState("saved");
-        } else {
-          setSaveState("failed");
-        }
       } catch {
         setSaveState("failed");
       }
@@ -151,7 +128,7 @@ export const TestimonialDetailView = ({
         <ShareTestimonialButton
           testimonialId={testimonial.id}
           authorName={testimonial.authorName}
-          hasPurchase={testimonial.request !== null}
+          hasPurchase={testimonial.purchasedAt !== null}
         />
       ) : null}
       {review.status !== "approved" ? (
@@ -199,43 +176,27 @@ export const TestimonialDetailView = ({
       </header>
       {review.isOverPlanLimit ? <p className="text-small text-gray">{PLAN_LIMIT_MESSAGE}</p> : null}
       {error ? <FieldError id="testimonial-error" message={REVIEW_ERROR_MESSAGES[error]} /> : null}
+      {hiding ? (
+        <StatusBanner tone="neutral" title={hiding.title}>
+          {hiding.detail}
+        </StatusBanner>
+      ) : null}
 
-      <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-[minmax(0,1fr)_380px] desktop:gap-12">
-        <div className="flex min-w-[0] flex-col gap-8">
+      <div className="flex flex-col gap-6 desktop:grid desktop:grid-cols-[minmax(0,1fr)_380px] desktop:items-start desktop:gap-7">
+        <div className={cn(PANEL_CLASSES, "flex min-w-[0] flex-col gap-8")}>
           <div className="flex flex-col gap-2">
             <h2 className={FIELD_LABEL_CLASSES}>Note</h2>
             <p className="flex flex-wrap items-center gap-3 text-small text-gray">
               <RatingStars rating={testimonial.rating} size={20} />
-              <span className="desktop:hidden">non modifiable</span>
+              <span className="desktop:hidden">{`${testimonial.rating} sur 5 · non modifiable`}</span>
               <span className="hidden desktop:inline">{`${testimonial.rating} sur 5 · donnée à l'envoi, non modifiable`}</span>
             </p>
           </div>
 
+          <DisplayedTextSection key={testimonial.correction?.createdAt.getTime() ?? 0} testimonial={testimonial} />
+
           <form onSubmit={handleSave} className="flex flex-col gap-8">
-            <div className="flex flex-col gap-2">
-              <label htmlFor="display-body" className={FIELD_LABEL_CLASSES}>
-                Texte affiché
-              </label>
-              <textarea
-                id="display-body"
-                value={presentation.displayBody}
-                maxLength={MAX_TESTIMONIAL_LENGTH}
-                aria-describedby="display-body-hint"
-                aria-invalid={invalidFields.includes("displayBody") || undefined}
-                onChange={(event) => setPresentation({ ...presentation, displayBody: event.target.value })}
-                className={cn(TEXTAREA_CLASSES, "min-h-[176px]")}
-              />
-              <p id="display-body-hint" className={FIELD_HINT_CLASSES}>
-                <span className="desktop:hidden">Corrigez une faute ou raccourcissez, sans changer le sens.</span>
-                <span className="hidden desktop:inline">
-                  {`Vous pouvez corriger une faute ou raccourcir, sans changer le sens : le témoignage reste signé par ${testimonial.authorName.replace(/\.$/, "")}.`}
-                </span>
-              </p>
-              {invalidFields.includes("displayBody") ? (
-                <FieldError id="display-body-error" message={FIELD_ERRORS.displayBody} />
-              ) : null}
-            </div>
-            <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-2 desktop:gap-8">
+            <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-2 desktop:gap-6">
               <TextField
                 id="author-name"
                 label="Nom affiché"
@@ -253,7 +214,7 @@ export const TestimonialDetailView = ({
                 error={invalidFields.includes("authorTitle") ? FIELD_ERRORS.authorTitle : undefined}
               />
             </div>
-            <div className="flex flex-col gap-3 desktop:order-last desktop:flex-row desktop:items-center desktop:gap-6">
+            <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-6">
               <button
                 type="submit"
                 disabled={isSaving}
@@ -268,37 +229,10 @@ export const TestimonialDetailView = ({
                 {saveMessage}
               </p>
             </div>
-            <details className="group" open={testimonial.displayBody !== null}>
-              <summary
-                className={cn(
-                  "flex min-h-[44px] cursor-pointer list-none items-center gap-3 text-body font-bold [&::-webkit-details-marker]:hidden",
-                  FOCUS_RING,
-                )}
-              >
-                <Icon name="chevronRight" size={20} className="group-open:rotate-90" />
-                {`Texte original ${prefixWithDe(firstName)}`}
-              </summary>
-              <div className="mt-4 flex flex-col gap-3 rounded-panel bg-sky p-6">
-                <p className="max-w-quote text-quote whitespace-pre-line text-ink">{testimonial.body}</p>
-                <p className="text-small text-gray">
-                  {`Envoyé le ${formatDateTime(testimonial.createdAt)} · conservé tel quel, non modifiable`}
-                </p>
-                {testimonial.displayBody !== null ? (
-                  <button
-                    type="button"
-                    onClick={handleRestore}
-                    disabled={isSaving}
-                    className={cn(DISCREET_BUTTON_CLASSES, "self-start")}
-                  >
-                    Afficher le texte original
-                  </button>
-                ) : null}
-              </div>
-            </details>
           </form>
         </div>
 
-        <aside className="flex flex-col gap-8 rounded-card bg-white p-4 desktop:self-start desktop:p-6">
+        <aside className={cn(PANEL_CLASSES, "flex flex-col gap-8 desktop:px-7")}>
           <section className="flex flex-col gap-3">
             <label htmlFor="testimonial-offer" className={FIELD_LABEL_CLASSES}>
               Offre associée
@@ -321,25 +255,30 @@ export const TestimonialDetailView = ({
             </p>
           </section>
 
-          <section className="flex flex-col gap-2">
-            <h2 className={FIELD_LABEL_CLASSES}>Source</h2>
-            <p className="flex items-center gap-3 text-body">
-              <Icon name={source.icon} size={20} className="hidden desktop:block" />
-              {source.label}
-            </p>
-            {source.details ? (
-              <p className="text-small text-gray">
-                <span className="desktop:hidden">{source.shortDetails ?? source.details}</span>
-                <span className="hidden desktop:inline">{source.details}</span>
-              </p>
-            ) : null}
+          <section className="flex flex-col gap-3">
+            <h2 className={FIELD_LABEL_CLASSES}>Provenance</h2>
+            <div className="flex items-start gap-4">
+              <span className="flex size-[40px] shrink-0 items-center justify-center rounded-full bg-sky text-ink">
+                <Icon name={source.icon} size={20} />
+              </span>
+              <div className="flex min-w-[0] flex-col gap-1">
+                <p className="text-body font-bold">{source.label}</p>
+                {source.details ? (
+                  <p className="text-small">
+                    <span className="desktop:hidden">{source.shortDetails ?? source.details}</span>
+                    <span className="hidden desktop:inline">{source.details}</span>
+                  </p>
+                ) : null}
+                <p className="text-small text-gray">{source.widgetLine}</p>
+              </div>
+            </div>
           </section>
 
           <section className="flex flex-col gap-2">
             <h2 className={FIELD_LABEL_CLASSES}>Consentement</h2>
             {testimonial.consentAt ? (
               <>
-                <p className="flex items-center gap-3 text-body text-success">
+                <p className="flex items-center gap-3 text-body font-bold text-success">
                   <Icon name="valid" size={20} />
                   {testimonial.source === "form"
                     ? `Accordé le ${formatDateTime(testimonial.consentAt)}`
@@ -356,7 +295,7 @@ export const TestimonialDetailView = ({
                 Aucun consentement enregistré
               </p>
             )}
-            <a href={proofHref} download className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
+            <a href={proofHref} download className={cn(DISCREET_BUTTON_CLASSES, "self-start -ml-[10px]")}>
               <span className="desktop:hidden">Télécharger la preuve</span>
               <span className="hidden desktop:inline">Télécharger la preuve de consentement</span>
             </a>
@@ -382,7 +321,7 @@ export const TestimonialDetailView = ({
             <label className="flex min-h-[44px] cursor-pointer items-start gap-3">
               <Checkbox checked={review.featured} onChange={review.toggleFeatured} />
               <span className="flex flex-col">
-                <span className="text-body">Mettre en avant dans les widgets</span>
+                <span className="text-body font-bold">Mettre en avant dans les widgets</span>
                 <span className="hidden text-small text-gray desktop:block">
                   Affiché en premier dans le mur et le carrousel.
                 </span>
@@ -403,9 +342,12 @@ export const TestimonialDetailView = ({
         </aside>
       </div>
 
-      <ConfirmDialog
+      <HideTestimonialDialog
         isOpen={review.isHideConfirmationOpen}
-        {...buildHideConfirmation(testimonial.authorName)}
+        authorName={testimonial.authorName}
+        authorReach={testimonial.authorReach}
+        isReasonAlreadySent={testimonial.hiddenReasonSentAt !== null}
+        isPending={review.isHiding}
         onConfirm={review.hide}
         onCancel={review.cancelHide}
       />

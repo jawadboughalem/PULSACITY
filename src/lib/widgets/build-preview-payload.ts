@@ -7,9 +7,12 @@ export type PreviewLook = {
   spaceAccentColor: string | null;
   poweredByUrl: string;
   canHideBadge: boolean;
+  spaceName: string;
+  incentive: boolean;
+  aboutUrl: string;
 };
 
-const NO_TESTIMONIAL: ShownSummary = { total: 0, averageRating: null };
+const NO_TESTIMONIAL: ShownSummary = { total: 0, ratedCount: 0, averageRating: null };
 
 /** The payload the public JSON would send once these settings are saved, built from the data the editor holds. */
 export const buildPreviewPayload = (
@@ -29,7 +32,11 @@ export const buildPreviewPayload = (
     spaceAccentColor: look.spaceAccentColor,
     poweredBy: settings.hidePoweredBy && look.canHideBadge ? null : look.poweredByUrl,
     total: summary.total,
+    ratedCount: summary.ratedCount,
     averageRating: summary.averageRating,
+    spaceName: look.spaceName,
+    incentive: look.incentive,
+    aboutUrl: look.aboutUrl,
     testimonials: shown.slice(start, start + countTestimonialsForAnswer(type, settings.maxItems, start)),
     offset: start,
   });
