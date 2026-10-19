@@ -2,7 +2,7 @@ import { StarIcon } from "@/components/collect/StarIcon";
 import { FieldError } from "@/components/ui/FieldError";
 import { FIELD_HINT_CLASSES, FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 import { cn } from "@/lib/cn";
-import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
+import { RATINGS } from "@/lib/testimonials/ratings";
 
 type RatingInputProps = {
   id: string;

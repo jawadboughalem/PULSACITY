@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { FIELD_CLASSES, FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
-import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
+import { RATINGS } from "@/lib/testimonials/ratings";
 import {
   MAX_SEARCH_LENGTH,
   STATUS_SEARCH_VALUES,

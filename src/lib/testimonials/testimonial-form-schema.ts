@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { HONEYPOT_FIELD_NAME } from "@/lib/forms/honeypot";
+import { RATINGS } from "./ratings";
 
 export const MAX_TESTIMONIAL_LENGTH = 2000;
 export const MAX_AUTHOR_NAME_LENGTH = 80;
 export const MAX_AUTHOR_TITLE_LENGTH = 80;
-export const RATINGS = [1, 2, 3, 4, 5] as const;
-export { HONEYPOT_FIELD_NAME };
+export { HONEYPOT_FIELD_NAME, RATINGS };
 
 const optionalText = (maxLength: number) =>
   z

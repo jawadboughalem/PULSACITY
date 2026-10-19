@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RATINGS } from "./testimonial-form-schema";
+import { RATINGS } from "./ratings";
 
 export const TESTIMONIAL_STATUSES = ["pending", "approved", "hidden"] as const;
 
