@@ -24,6 +24,8 @@ export type BillingOverview = {
   /** A Stripe customer: past invoices to see on Stripe's page. */
   hasCustomer: boolean;
   freeSince: Date | null;
+  /** Parrainage, on the free plan: Essentiel offered until this date. */
+  referralEssentielUntil: Date | null;
   usage: BillingUsage;
   /** The prices of « Changer de plan »: the space's own while subscribed, else those a new subscriber gets. */
   priceList: PriceList;
@@ -35,6 +37,7 @@ type BillingSpace = {
   stripeCustomerId: string | null;
   stripeSubscriptionId: string | null;
   freeSince: Date | null;
+  referralEssentielUntil: Date | null;
 };
 
 const countUsage = async (database: Database, space: BillingSpace): Promise<BillingUsage> => {
@@ -75,6 +78,7 @@ export const readBillingOverview = async (database: Database, space: BillingSpac
     subscription,
     hasCustomer: space.stripeCustomerId !== null,
     freeSince: space.freeSince,
+    referralEssentielUntil: space.referralEssentielUntil,
     usage,
     priceList: subscription?.priceList ?? openPriceList,
   };

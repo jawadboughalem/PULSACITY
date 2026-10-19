@@ -12,6 +12,7 @@ import {
   UNSUBSCRIBE_TOKEN_PARAMETER,
   readUnsubscribeToken,
 } from "@/lib/requests/unsubscribe-token";
+import { WELCOME_UNSUBSCRIBED_STATE } from "@/lib/welcome-emails/welcome-unsubscribe";
 
 export const metadata: Metadata = {
   title: "Désinscription · PULSACITY",
@@ -40,11 +41,30 @@ const Problem = ({ title, detail }: { title: string; detail: string }) => (
 /** After « Ne plus recevoir ces e-mails »: the link has already unsubscribed, this page says so (m1, « Désinscription confirmée »). */
 const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) => {
   const parameters = await searchParams;
+  if (readParameter(parameters[UNSUBSCRIBE_STATE_PARAMETER]) === WELCOME_UNSUBSCRIBED_STATE) {
+    // « Ne plus recevoir les e-mails d'accueil », a creator's own e-mails: the page of m1, in PULSACITY's name.
+    return (
+      <div className={PAGE_CLASSES}>
+        <main className={MAIN_CLASSES}>
+          <div className="mt-10 flex flex-col gap-4">
+            <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink bg-white">
+              <Icon name="valid" size={32} />
+            </span>
+            <h1 className="font-display text-h2">Désinscription confirmée</h1>
+            <p className="text-body">Vous ne recevrez plus les e-⁠mails d&apos;accueil de PULSACITY.</p>
+            <p className="text-body text-gray">
+              Les autres e-⁠mails de votre espace continuent : liens de connexion, nouveaux témoignages, abonnement.
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
   if (readParameter(parameters[UNSUBSCRIBE_STATE_PARAMETER]) === "failed") {
     return (
       <Problem
         title="La désinscription n'a pas abouti"
-        detail="Rien n'a changé de notre côté. Ouvrez à nouveau le lien de l'e-mail dans quelques minutes."
+        detail="Rien n'a changé de notre côté. Ouvrez à nouveau le lien de l'e-⁠mail dans quelques minutes."
       />
     );
   }
@@ -55,7 +75,7 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
     return (
       <Problem
         title="Ce lien de désinscription ne fonctionne pas"
-        detail="Il a peut-être été coupé par votre messagerie. Ouvrez à nouveau le lien en bas de l'e-mail, ou répondez à l'e-mail pour demander la désinscription."
+        detail="Il a peut-être été coupé par votre messagerie. Ouvrez à nouveau le lien en bas de l'e-⁠mail, ou répondez à l'e-⁠mail pour demander la désinscription."
       />
     );
   }
@@ -70,7 +90,7 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
           </span>
           <h1 className="font-display text-h2">Désinscription confirmée</h1>
           <p className="text-body">{`Vous ne recevrez plus de demande d'avis de ${customer.spaceName}.`}</p>
-          <p className="text-body text-gray">Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.</p>
+          <p className="text-body text-gray">Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.</p>
         </div>
         <a
           href={`mailto:${customer.replyToEmail}`}

@@ -100,7 +100,7 @@ describe("CollectionView", () => {
     expect(find<HTMLInputElement>("#author-title").placeholder).toBe("Enseignante, Lyon");
     expect(container.textContent).toContain(JULIE_NUTRITION.consentText);
     expect(find<HTMLAnchorElement>('a[href^="https://pulsacity.com"]').href).toBe(
-      "https://pulsacity.com/?ref=k7m2xq9p",
+      "https://pulsacity.com/?utm_source=badge&utm_medium=collecte&ref=k7m2xq9p",
     );
   });
 

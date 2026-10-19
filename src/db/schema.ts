@@ -17,6 +17,9 @@ import { WIDGET_TYPES, type WidgetCardStyle, type WidgetTheme } from "../../widg
 import { type BillingPeriod, PLAN_IDS, type PriceList } from "../config/plans";
 import type { ConnectionConfig, WebhookHeaders } from "../lib/connectors/types";
 import type { WebhookEventError, WebhookEventOutcome } from "../lib/connectors/webhook-event-states";
+import type { HeardFrom } from "../lib/acquisition/heard-from";
+import type { ReferralReward } from "../lib/referrals/referral-reward";
+import type { WelcomeEmailStep } from "../lib/welcome-emails/welcome-email-steps";
 import { DEFAULT_REQUEST_DELAY_DAYS } from "../lib/requests/request-timing";
 
 function timestamptz(name: string) {
@@ -159,9 +162,76 @@ export const spaces = pgTable(
     incentiveDeclaredAt: timestamptz("incentive_declared_at"),
     /** When the space went back to the free plan after a subscription: « repassé au plan Gratuit le … ». */
     freeSince: timestamptz("free_since"),
+    /** « Ne plus recevoir les e-mails d'accueil »: none of J0 to J7 leaves after this. */
+    welcomeEmailsUnsubscribedAt: timestamptz("welcome_emails_unsubscribed_at"),
+    /** Parrainage, on the free plan: the months of Essentiel offered by paying referees run until this date. */
+    referralEssentielUntil: timestamptz("referral_essentiel_until"),
     createdAt: timestamptz("created_at").notNull().defaultNow(),
   },
   (table) => [index("spaces_user_id_idx").on(table.userId)],
+).enableRLS();
+
+/**
+ * Where a space came from, recorded once when it is created (lot 4.12): the words of the address the creator signed
+ * up from, carried through the sign-in link, and the answer to « Comment avez-vous connu PULSACITY ? ». Nothing about
+ * the person: the source, never who.
+ */
+export const spaceAcquisitions = pgTable("space_acquisitions", {
+  spaceId: uuid("space_id")
+    .primaryKey()
+    .references(() => spaces.id, { onDelete: "cascade" }),
+  heardFrom: text("heard_from").$type<HeardFrom>(),
+  utmSource: text("utm_source"),
+  utmMedium: text("utm_medium"),
+  utmCampaign: text("utm_campaign"),
+  utmContent: text("utm_content"),
+  utmTerm: text("utm_term"),
+  /** The referral code of the address (badge « Propulsé par », referral link), as received, known or not. */
+  referralCode: text("referral_code"),
+  createdAt: timestamptz("created_at").notNull().defaultNow(),
+}).enableRLS();
+
+/**
+ * A space created from another space's referral link or badge. The referrer earns a month of Essentiel at the
+ * referee's first payment with money, once: `rewardedAt` is the lock. A deleted referee keeps the reward it earned.
+ */
+export const referrals = pgTable(
+  "referrals",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    referrerSpaceId: uuid("referrer_space_id")
+      .notNull()
+      .references(() => spaces.id, { onDelete: "cascade" }),
+    refereeSpaceId: uuid("referee_space_id")
+      .unique()
+      .references(() => spaces.id, { onDelete: "set null" }),
+    createdAt: timestamptz("created_at").notNull().defaultNow(),
+    rewardedAt: timestamptz("rewarded_at"),
+    /** « credit »: a month of Essentiel taken off the next payments; « free-month »: Essentiel for a month, on the free plan. */
+    reward: text("reward").$type<ReferralReward>(),
+    /** The referee's invoice (in_…) whose payment earned the month. */
+    rewardInvoiceId: text("reward_invoice_id"),
+  },
+  (table) => [index("referrals_referrer_space_id_idx").on(table.referrerSpaceId)],
+).enableRLS();
+
+/**
+ * The welcome e-mails J0, J1, J3 and J7 of a space: a row is written before the e-mail leaves (the lock), so that each
+ * goes once at most. `skippedAt`: its step was done before it was due, it never leaves.
+ */
+export const welcomeEmails = pgTable(
+  "welcome_emails",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    spaceId: uuid("space_id")
+      .notNull()
+      .references(() => spaces.id, { onDelete: "cascade" }),
+    step: text("step").$type<WelcomeEmailStep>().notNull(),
+    claimedAt: timestamptz("claimed_at").notNull().defaultNow(),
+    sentAt: timestamptz("sent_at"),
+    skippedAt: timestamptz("skipped_at"),
+  },
+  (table) => [unique("welcome_emails_space_id_step_unique").on(table.spaceId, table.step)],
 ).enableRLS();
 
 export const connections = pgTable(
@@ -427,6 +497,8 @@ export const widgets = pgTable(
     productId: uuid("product_id").references(() => products.id, { onDelete: "cascade" }),
     settings: jsonb("settings").$type<WidgetSettings>().notNull().default({}),
     firstLoadedAt: timestamptz("first_loaded_at"),
+    /** The last time a page showed it, to the hour: « widgets chargés dans les 7 derniers jours » (lot 4.12). */
+    lastLoadedAt: timestamptz("last_loaded_at"),
     /** « Afficher celui-ci à la place »: on the free plan, the widget chosen last shows, the others are paused. */
     freePlanChosenAt: timestamptz("free_plan_chosen_at"),
     createdAt: timestamptz("created_at").notNull().defaultNow(),
@@ -513,6 +585,11 @@ export const subscriptions = pgTable(
     betaUntil: timestamptz("beta_until"),
     /** The e-mail sent 7 days before the first payment of a beta tester. */
     betaReminderSentAt: timestamptz("beta_reminder_sent_at"),
+    /**
+     * The coupon of the promotion code typed at Checkout (« partenaire-… » for a partner's code), kept once the discount
+     * is over: who brought the subscription.
+     */
+    couponId: text("coupon_id"),
     cardBrand: text("card_brand"),
     cardLast4: text("card_last4"),
     /** The last payment refused, while it stays unpaid: « Dernier paiement : … · refusé par votre banque ». */

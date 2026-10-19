@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { SignupSourceCapture } from "@/components/acquisition/SignupSourceCapture";
 import { readSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -41,7 +42,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={`${bricolage.variable} ${figtree.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <SignupSourceCapture />
+      </body>
     </html>
   );
 }

@@ -151,6 +151,14 @@ describe("applySubscription", () => {
     expect(await countFounderSeats(database)).toBe(0);
   });
 
+  it("keeps the coupon of a partner's promotion code once its discount is over", async () => {
+    await apply({ couponId: "partenaire-marie-coach" });
+    expect(await readSubscriptionRow()).toMatchObject({ couponId: "partenaire-marie-coach" });
+
+    await apply();
+    expect(await readSubscriptionRow()).toMatchObject({ couponId: "partenaire-marie-coach" });
+  });
+
   it("founder price: the hundredth seat closes it, for the pages and the next subscribers", async () => {
     await database.insert(founderSeats).values(Array.from({ length: FOUNDER_PRICE_SEATS - 1 }, () => ({ spaceId: null })));
     expect(await readCurrentPriceList(database)).toBe("founder");

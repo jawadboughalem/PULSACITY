@@ -3,7 +3,7 @@ import { after } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/db";
 import { getAppUrl } from "@/lib/app-url";
-import { loadWidgetPayload, markWidgetFirstLoaded } from "@/lib/widgets/load-widget-payload";
+import { loadWidgetPayload, markWidgetLoaded } from "@/lib/widgets/load-widget-payload";
 
 const MAX_OFFSET = 10_000;
 
@@ -55,10 +55,10 @@ export const GET = async (request: Request, { params }: RouteContext<"/api/widge
   }
   if (!loaded) return answer({ error: "not-found" }, 404, EDGE_CACHE);
 
-  if (loaded.firstLoadedAt === null && isPastedPage(request.headers.get("origin"), appUrl)) {
+  if (isPastedPage(request.headers.get("origin"), appUrl)) {
     after(async () => {
       try {
-        await markWidgetFirstLoaded(database, widgetId);
+        await markWidgetLoaded(database, widgetId);
       } catch (error) {
         Sentry.captureException(error);
       }

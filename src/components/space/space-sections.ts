@@ -26,6 +26,7 @@ export const MORE_SECTIONS = [OFFERS, WIDGETS, CONNECTORS, SETTINGS];
 export const ACCOUNT_SECTIONS: SpaceSection[] = [
   { label: "Mon compte", href: ACCOUNT_PATH, icon: "user" },
   { label: "Abonnement et factures", href: "/app/facturation", icon: "card" },
+  { label: "Parrainage", href: "/app/parrainage", icon: "gift" },
   { label: "Aide et contact", href: MARKETING_PATHS.help, icon: "help" },
 ];
 
@@ -63,6 +64,9 @@ export const CONNECTORS_SECTION_HREF = CONNECTORS.href;
 export const MORE_SECTION_HREF = MORE.href;
 
 export const BILLING_HREF = "/app/facturation";
+
+/** Parrainage (3.3): the link to share, the referees, the months offered. */
+export const REFERRAL_HREF = "/app/parrainage";
 
 const isWithin = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
 

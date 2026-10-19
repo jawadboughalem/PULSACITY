@@ -44,6 +44,7 @@ import {
   buildHideConfirmation,
 } from "./review-messages";
 import { StatusBadge } from "./StatusBadge";
+import { ShareTestimonialButton } from "./ShareTestimonialDialog";
 import { useTestimonialDeletion } from "./useTestimonialDeletion";
 import { useTestimonialReview } from "./useTestimonialReview";
 
@@ -146,6 +147,13 @@ export const TestimonialDetailView = ({
 
   const statusButtons = (
     <>
+      {review.status === "approved" ? (
+        <ShareTestimonialButton
+          testimonialId={testimonial.id}
+          authorName={testimonial.authorName}
+          hasPurchase={testimonial.request !== null}
+        />
+      ) : null}
       {review.status !== "approved" ? (
         <button
           type="button"

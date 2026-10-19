@@ -1,7 +1,8 @@
-import { type SQL, and, avg, count, desc, eq, isNull } from "drizzle-orm";
+import { type SQL, and, avg, count, desc, eq, isNull, lt, or } from "drizzle-orm";
 import { UNLIMITED, getPlan } from "@/config/plans";
+import { BETA_TESTER_MENTION, PULSACITY_BETA_OFFER_SLUG, readPulsacitySpaceId } from "@/config/pulsacity-space";
 import type { Database } from "@/db/database";
-import { spaces, testimonials, widgets } from "@/db/schema";
+import { products, spaces, testimonials, widgets } from "@/db/schema";
 import { toParisIsoDay } from "@/lib/dates/paris-date";
 import { getDisplayedBody } from "@/lib/testimonials/displayed-body";
 import type { WidgetPayload } from "../../../widget/src/payload";
@@ -56,6 +57,17 @@ type ShownTestimonialRow = {
   createdAt: Date;
 };
 
+/** On PULSACITY's own space, the beta testers' offer: its testimonials carry the counterpart under their author. */
+const findBetaOfferId = async (database: Database, spaceId: string): Promise<string | null> => {
+  if (spaceId !== readPulsacitySpaceId()) return null;
+  const [offer] = await database
+    .select({ id: products.id })
+    .from(products)
+    .where(and(eq(products.spaceId, spaceId), eq(products.slug, PULSACITY_BETA_OFFER_SLUG)))
+    .limit(1);
+  return offer?.id ?? null;
+};
+
 export const toWidgetTestimonialSource = (row: ShownTestimonialRow): WidgetTestimonialSource => ({
   authorName: row.authorName,
   authorTitle: row.authorTitle,
@@ -96,7 +108,7 @@ export const loadWidgetPayload = async (
   const answerSize = countTestimonialsForAnswer(widget.type, settings.maxItems, start);
   const rowLimit = shownLimit === UNLIMITED ? answerSize : Math.max(0, Math.min(answerSize, shownLimit - start));
   const shown = shownTestimonialsFilter(widget.spaceId, widget.productId);
-  const [[summary], rows] = await Promise.all([
+  const [[summary], rows, betaOfferId] = await Promise.all([
     database.select({ total: count(), averageRating: avg(testimonials.rating) }).from(testimonials).where(shown),
     database
       .select(SHOWN_TESTIMONIAL_COLUMNS)
@@ -105,6 +117,7 @@ export const loadWidgetPayload = async (
       .orderBy(...SHOWN_TESTIMONIALS_ORDER)
       .limit(rowLimit)
       .offset(start),
+    findBetaOfferId(database, widget.spaceId),
   ]);
 
   return {
@@ -116,17 +129,35 @@ export const loadWidgetPayload = async (
       poweredBy: buildPoweredByUrl(appUrl, widget, settings),
       total: summary.total,
       averageRating: summary.averageRating === null ? null : Number(summary.averageRating),
-      testimonials: rows.map(toWidgetTestimonialSource),
+      testimonials: rows.map((row) => ({
+        ...toWidgetTestimonialSource(row),
+        mention: betaOfferId !== null && row.productId === betaOfferId ? BETA_TESTER_MENTION : null,
+      })),
       offset: start,
       shownLimit,
     }),
   };
 };
 
-/** The first display of a widget on a page ticks the « Coller le widget » step of the space. */
-export const markWidgetFirstLoaded = async (database: Database, widgetId: string): Promise<void> => {
+/** A page showing a widget again writes it at most once an hour. */
+const LAST_LOADED_PRECISION_MS = 60 * 60 * 1000;
+
+/**
+ * A page showed the widget: its first display ticks the « Coller le widget » step of the space, and the last one says
+ * the widget is still live (the founder's dashboard: widgets shown in the last 7 days).
+ */
+export const markWidgetLoaded = async (database: Database, widgetId: string, now: Date = new Date()): Promise<void> => {
   await database
     .update(widgets)
-    .set({ firstLoadedAt: new Date() })
+    .set({ firstLoadedAt: now })
     .where(and(eq(widgets.id, widgetId), isNull(widgets.firstLoadedAt)));
+  await database
+    .update(widgets)
+    .set({ lastLoadedAt: now })
+    .where(
+      and(
+        eq(widgets.id, widgetId),
+        or(isNull(widgets.lastLoadedAt), lt(widgets.lastLoadedAt, new Date(now.getTime() - LAST_LOADED_PRECISION_MS))),
+      ),
+    );
 };

@@ -182,6 +182,8 @@ type PlanChangerProps = {
   priceList: PriceList;
   /** A Stripe subscription to change; without one, a paid plan opens Checkout. */
   isSubscribed: boolean;
+  /** At the free plan, Essentiel given by the referral until this day (lot 4.12). */
+  referralEssentielUntil: Date | null;
 };
 
 /** The plan just above the current one carries the main button (one per screen); Pro has none above it. */
@@ -192,7 +194,13 @@ const readNextPlan = (current: PlanId): PlanId | null =>
  * Maquettes 8.3, « Changer de plan »: Mensuel or Annuel, three columns, the current plan on Ciel with « Votre plan ».
  * A higher plan is taken at once, the rest at the end of the period paid (the rules written under the columns).
  */
-export const PlanChanger = ({ current, priceList, isSubscribed }: PlanChangerProps) => {
+/** A plan given without a subscription (referral month, plan offered by PULSACITY) has nothing to stop. */
+const describeGivenPlanEnd = (referralEssentielUntil: Date | null): string =>
+  referralEssentielUntil === null
+    ? "Votre plan est offert\u00a0: rien à arrêter."
+    : `Votre espace y repasse le ${formatLongDate(referralEssentielUntil)}.`;
+
+export const PlanChanger = ({ current, priceList, isSubscribed, referralEssentielUntil }: PlanChangerProps) => {
   const [period, setPeriod] = useState<BillingPeriod>(current.period);
   const change = usePlanChange(current);
   const nextPlan = readNextPlan(current.plan);
@@ -203,6 +211,11 @@ export const PlanChanger = ({ current, priceList, isSubscribed }: PlanChangerPro
     }
     const classes = cn(id === nextPlan ? PRIMARY_BUTTON_CLASSES : SECONDARY_BUTTON_CLASSES, "w-full");
     const label = id === current.plan ? describePeriodChange(period) : `Passer au plan ${PLANS[id].name}`;
+    if (!isPaidPlan(id) && !isSubscribed) {
+      return (
+        <p className="flex min-h-[56px] items-center text-small text-gray">{describeGivenPlanEnd(referralEssentielUntil)}</p>
+      );
+    }
     if (!isPaidPlan(id)) {
       return (
         <form action={openBillingPortalAction.bind(null, "stop")} className="flex min-h-[56px] items-center">

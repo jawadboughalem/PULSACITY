@@ -56,6 +56,19 @@ describe("the wall", () => {
     expect(cards[3].querySelectorAll(".stars .empty")).toHaveLength(1);
   });
 
+  it("adds the mention of a testimonial under its author: PULSACITY's beta testers", () => {
+    const mention = "Bêta-testeur · plan Essentiel offert pendant la bêta";
+    const [first, ...others] = SAMPLE_PAYLOAD.testimonials;
+    const payload = { ...SAMPLE_PAYLOAD, testimonials: [{ ...first, mention }, ...others] };
+
+    const wall = render(payload).root.querySelectorAll(".grid > li > article.card");
+    expect(texts(wall[0].querySelectorAll(".who .meta"))).toEqual(["Enseignante", mention]);
+    expect(texts(wall[1].querySelectorAll(".who .meta"))).not.toContain(mention);
+
+    const carousel = render({ ...payload, type: "carousel" }).root.querySelector("article.card");
+    expect(texts(carousel?.querySelectorAll(".who .meta") ?? [])).toContain(mention);
+  });
+
   it("puts the photo the customer sent in the avatar, loaded lazily", () => {
     const { root } = render(SAMPLE_PAYLOAD);
 

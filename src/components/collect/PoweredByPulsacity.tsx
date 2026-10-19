@@ -1,6 +1,7 @@
 import { BrandMention } from "@/components/brand/BrandMention";
 import { FOCUS_RING } from "@/components/ui/button-styles";
 import { cn } from "@/lib/cn";
+import { buildBadgeReferralUrl } from "@/lib/referrals/referral-links";
 
 type PoweredByPulsacityProps = {
   homeUrl: string;
@@ -12,7 +13,7 @@ type PoweredByPulsacityProps = {
 export const PoweredByPulsacity = ({ homeUrl, referralCode, className }: PoweredByPulsacityProps) => (
   <p className={cn("flex justify-center", className)}>
     <a
-      href={`${homeUrl}/?ref=${encodeURIComponent(referralCode)}`}
+      href={buildBadgeReferralUrl(homeUrl, referralCode, "collecte")}
       className={cn("inline-flex min-h-[44px] items-center gap-[6px] text-mention text-gray hover:underline", FOCUS_RING)}
     >
       Propulsé par

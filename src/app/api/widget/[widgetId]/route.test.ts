@@ -210,10 +210,10 @@ describe("GET /api/widget/[widgetId]", () => {
   it("keeps « Propulsé par PULSACITY » with the referral link, except on a Pro space that removed it", async () => {
     const widgetId = await insertWidget({ settings: { hidePoweredBy: true } });
 
-    expect((await (await fetchWidget(widgetId)).json()).poweredBy).toBe("https://pulsacity.com/?ref=julie42");
+    expect((await (await fetchWidget(widgetId)).json()).poweredBy).toBe("https://pulsacity.com/?utm_source=badge&utm_medium=widget&ref=julie42");
 
     await database.update(spaces).set({ plan: "essentiel" }).where(eq(spaces.id, spaceId));
-    expect((await (await fetchWidget(widgetId)).json()).poweredBy).toBe("https://pulsacity.com/?ref=julie42");
+    expect((await (await fetchWidget(widgetId)).json()).poweredBy).toBe("https://pulsacity.com/?utm_source=badge&utm_medium=widget&ref=julie42");
 
     await database.update(spaces).set({ plan: "pro" }).where(eq(spaces.id, spaceId));
     expect((await (await fetchWidget(widgetId)).json()).poweredBy).toBeNull();
@@ -247,11 +247,15 @@ describe("GET /api/widget/[widgetId]", () => {
     }
   });
 
-  it("records the first display on a pasted page, once, and never for PULSACITY itself", async () => {
+  it("records the first and the last display on a pasted page, the last one hourly, never for PULSACITY itself", async () => {
     const widgetId = await insertWidget();
-    const readFirstLoadedAt = async () =>
-      (await database.select({ firstLoadedAt: widgets.firstLoadedAt }).from(widgets).where(eq(widgets.id, widgetId)))[0]
-        .firstLoadedAt;
+    const readLoads = async () =>
+      (
+        await database
+          .select({ firstLoadedAt: widgets.firstLoadedAt, lastLoadedAt: widgets.lastLoadedAt })
+          .from(widgets)
+          .where(eq(widgets.id, widgetId))
+      )[0];
 
     await fetchWidget(widgetId);
     await fetchWidget(widgetId, { origin: APP_URL });
@@ -261,10 +265,25 @@ describe("GET /api/widget/[widgetId]", () => {
     await fetchWidget(widgetId, { origin: CREATOR_PAGE });
     expect(testContext.scheduled).toHaveLength(1);
     await testContext.scheduled[0]();
-    expect(await readFirstLoadedAt()).toBeInstanceOf(Date);
+    const first = await readLoads();
+    expect(first.firstLoadedAt).toBeInstanceOf(Date);
+    expect(first.lastLoadedAt).toEqual(first.firstLoadedAt);
 
+    // Shown again within the hour: neither date moves.
     await fetchWidget(widgetId, { origin: CREATOR_PAGE });
-    expect(testContext.scheduled).toHaveLength(1);
+    await testContext.scheduled[1]();
+    expect(await readLoads()).toEqual(first);
+
+    // Two hours later, the last display moves, the first stays.
+    await database
+      .update(widgets)
+      .set({ lastLoadedAt: new Date(Date.now() - 2 * 60 * 60 * 1000) })
+      .where(eq(widgets.id, widgetId));
+    await fetchWidget(widgetId, { origin: CREATOR_PAGE });
+    await testContext.scheduled[2]();
+    const later = await readLoads();
+    expect(later.firstLoadedAt).toEqual(first.firstLoadedAt);
+    expect(later.lastLoadedAt?.getTime()).toBeGreaterThan(Date.now() - 60_000);
   });
 
   it("back on the free plan, keeps one widget on its page and pauses the others, like unknown ones", async () => {
@@ -323,5 +342,31 @@ describe("OPTIONS /api/widget/[widgetId]", () => {
 
     expect(response.status).toBe(204);
     expect(response.headers.get("access-control-allow-origin")).toBe("*");
+  });
+
+  it("says « Bêta-testeur » under the beta testers of PULSACITY's own space, and nowhere else", async () => {
+    const [beta] = await database
+      .insert(products)
+      .values({ spaceId, name: "Bêta PULSACITY", slug: "beta-pulsacity" })
+      .returning({ id: products.id });
+    await insertTestTestimonial(database, { spaceId, productId: beta.id, authorName: "Inès K.", status: "approved" });
+    await insertTestTestimonial(database, { spaceId, productId: programmeId, authorName: "Amel M.", status: "approved" });
+    const widgetId = await insertWidget();
+
+    const mentions = async () =>
+      ((await (await fetchWidget(widgetId)).json()).testimonials as Array<{ name: string; mention?: string }>).map(
+        (testimonial) => [testimonial.name, testimonial.mention ?? null],
+      );
+
+    expect(await mentions()).toEqual(expect.arrayContaining([["Inès K.", null], ["Amel M.", null]]));
+
+    vi.stubEnv("PULSACITY_SPACE_ID", spaceId);
+    expect(await mentions()).toEqual(
+      expect.arrayContaining([
+        ["Inès K.", "Bêta-testeur · plan Essentiel offert pendant la bêta"],
+        ["Amel M.", null],
+      ]),
+    );
+    vi.unstubAllEnvs();
   });
 });

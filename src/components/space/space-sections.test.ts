@@ -26,6 +26,16 @@ describe("account links", () => {
     expect(ACCOUNT_SECTIONS.find((section) => section.label === "Mon compte")?.href).toBe("/app/compte");
   });
 
+  it("puts Parrainage between Abonnement et factures and Aide et contact (3.3)", () => {
+    expect(ACCOUNT_SECTIONS.map((section) => section.label)).toEqual([
+      "Mon compte",
+      "Abonnement et factures",
+      "Parrainage",
+      "Aide et contact",
+    ]);
+    expect(ACCOUNT_SECTIONS.find((section) => section.label === "Parrainage")?.href).toBe("/app/parrainage");
+  });
+
   it("leads Aide et contact to the public help page, open with or without a space (8.4)", () => {
     expect(ACCOUNT_SECTIONS.find((section) => section.label === "Aide et contact")?.href).toBe("/aide");
   });

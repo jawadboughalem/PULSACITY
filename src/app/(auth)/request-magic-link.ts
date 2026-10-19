@@ -4,6 +4,7 @@ import * as Sentry from "@sentry/nextjs";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { getDb } from "@/db";
+import { readHeardFrom, readSignupSource, withSignupSource } from "@/lib/acquisition/signup-source";
 import { getAuth } from "@/lib/auth/get-auth";
 import { MAGIC_LINK_REQUESTS_PER_IP } from "@/lib/auth/magic-link-rate-limits";
 import { SIGN_IN_PATH } from "@/lib/auth/require-signed-in-user";
@@ -12,6 +13,7 @@ import { EmailNotSentError } from "@/lib/email/email-not-sent-error";
 import { consumeRateLimit } from "@/lib/rate-limit/consume-rate-limit";
 import { hashRateLimitSubject } from "@/lib/rate-limit/hash-rate-limit-subject";
 import { readClientIp } from "@/lib/rate-limit/read-client-ip";
+import { ONBOARDING_SPACE_STEP_PATH, SPACE_HOME_PATH } from "@/lib/spaces/space-paths";
 
 const emailSchema = z.string().trim().toLowerCase().pipe(z.email());
 
@@ -38,8 +40,13 @@ export const requestMagicLink = async (
     await getAuth().api.signInMagicLink({
       body: {
         email: parsedEmail.data,
-        callbackURL: "/app",
-        newUserCallbackURL: "/app/onboarding",
+        callbackURL: SPACE_HOME_PATH,
+        // The source of the sign-up rides in the link's address, until the space is created (lot 4.12).
+        newUserCallbackURL: withSignupSource(
+          ONBOARDING_SPACE_STEP_PATH,
+          readSignupSource(formData),
+          readHeardFrom(formData),
+        ),
         errorCallbackURL: SIGN_IN_PATH,
       },
       headers: requestHeaders,

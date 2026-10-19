@@ -1,5 +1,6 @@
 import { type SpacePlan, canHideBadge } from "@/config/plans";
 import { getInitials } from "@/lib/spaces/get-initials";
+import { buildBadgeReferralUrl } from "@/lib/referrals/referral-links";
 import {
   WIDGET_PAYLOAD_VERSION,
   type BadgeAvatar,
@@ -23,6 +24,8 @@ export type WidgetTestimonialSource = {
   text: string;
   /** Day of reception in Paris, YYYY-MM-DD. */
   receivedOn: string;
+  /** A line under the author (PULSACITY's beta testers), when there is one. */
+  mention?: string | null;
 };
 
 export type WidgetPayloadInput = {
@@ -48,7 +51,7 @@ export const countTestimonialsForAnswer = (type: WidgetType, maxItems: number, o
 
 /** pulsacity.com with the space's referral code, as « Propulsé par PULSACITY » links to it. */
 export const buildReferralUrl = (appUrl: string, referralCode: string): string =>
-  `${appUrl}/?ref=${encodeURIComponent(referralCode)}`;
+  buildBadgeReferralUrl(appUrl, referralCode, "widget");
 
 export const buildPoweredByUrl = (
   appUrl: string,
@@ -67,6 +70,7 @@ const toPublicTestimonial = (
   rating: settings.showRating ? testimonial.rating : null,
   text: testimonial.text,
   date: settings.showDate ? testimonial.receivedOn : null,
+  ...(testimonial.mention ? { mention: testimonial.mention } : {}),
 });
 
 const toBadgeAvatar = (testimonial: WidgetTestimonialSource, settings: ResolvedWidgetSettings): BadgeAvatar => ({

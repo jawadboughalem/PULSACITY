@@ -1,3 +1,4 @@
+import { AudienceMeasurement } from "@/components/analytics/AudienceMeasurement";
 import { MarketingFooter } from "@/components/marketing/MarketingFooter";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 
@@ -17,6 +18,7 @@ const MarketingLayout = ({ children }: LayoutProps<"/">) => (
       {children}
     </main>
     <MarketingFooter />
+    <AudienceMeasurement />
   </div>
 );
 

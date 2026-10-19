@@ -60,6 +60,12 @@ export const PLANS = {
 /** The founder price goes to the beta testers and to this many first paying subscribers (arbitrages.md, n° 1). */
 export const FOUNDER_PRICE_SEATS = 100;
 
+/**
+ * Parrainage (decisions/commercialisation.md, P1 n° 6): each referee's first payment earns the referrer this many
+ * months of Essentiel, by a credit or on the free plan, never money. No cap: « Un mois par filleul payant, sans limite ».
+ */
+export const REFERRAL_REWARD_MONTHS = 1;
+
 /** « founder » while the founder price is open, « public » once it is closed. */
 export type PriceList = "founder" | "public";
 

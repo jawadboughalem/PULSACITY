@@ -54,6 +54,38 @@ describe("requestMagicLink", () => {
     );
   });
 
+  it("carries the source of the sign-up and the answer to the question in the link, for the space to record", async () => {
+    const formData = new FormData();
+    formData.set("email", "julie@exemple.fr");
+    formData.set("utm_source", "facebook");
+    formData.set("utm_campaign", "groupe systeme");
+    formData.set("ref", "k7m2xq9p");
+    formData.set("connu", "communaute");
+
+    await requestMagicLink(null, formData);
+
+    expect(testContext.signInMagicLink).toHaveBeenCalledWith(
+      expect.objectContaining({
+        body: expect.objectContaining({
+          callbackURL: "/app",
+          newUserCallbackURL: "/app/onboarding?utm_source=facebook&utm_campaign=groupe+systeme&ref=k7m2xq9p&connu=communaute",
+        }),
+      }),
+    );
+  });
+
+  it("leaves out an answer that is not one of the list", async () => {
+    const formData = new FormData();
+    formData.set("email", "julie@exemple.fr");
+    formData.set("connu", "<script>");
+
+    await requestMagicLink(null, formData);
+
+    expect(testContext.signInMagicLink).toHaveBeenCalledWith(
+      expect.objectContaining({ body: expect.objectContaining({ newUserCallbackURL: "/app/onboarding" }) }),
+    );
+  });
+
   it("refuses an incomplete address without asking for a link", async () => {
     expect(await submit("julie@")).toEqual({ ok: false, error: "invalid-email" });
     expect(testContext.signInMagicLink).not.toHaveBeenCalled();

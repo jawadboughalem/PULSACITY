@@ -56,19 +56,25 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 ```
 src/app/(marketing)/          # /, /integrations, /integrations/[connector], /tarifs, /guides, /guides/[slug], /aide (aide et « Écrivez-nous »), légal, /espace-supprime
 src/app/(auth)/               # /inscription, /connexion
-src/app/app/                  # /app, /app/temoignages, /app/offres, /app/widgets, /app/connecteurs, /app/connecteurs/[connector], /app/demandes, /app/reglages (l'espace), /app/compte (la personne, export /app/compte/export), /app/facturation
+src/app/app/                  # /app, /app/temoignages (image de partage : /app/temoignages/[id]/image), /app/offres, /app/widgets, /app/connecteurs, /app/connecteurs/[connector], /app/demandes, /app/reglages (l'espace), /app/compte (la personne, export /app/compte/export), /app/facturation, /app/parrainage
+src/app/go/[slug]/            # liens courts /go/… : l'accueil, avec la source de la visite dans l'adresse
+src/app/p/[slug]/             # lien de parrainage pulsacity.com/p/<adresse de l'espace>
 src/app/t/[spaceSlug]/        # page publique de collecte (+ /t/[spaceSlug]/[productSlug])
 src/app/api/connectors/[connector]/[token]/  # réception des webhooks de tous les connecteurs
 src/app/api/widget/[widgetId]/# JSON public des témoignages d'un widget (cache CDN)
 src/app/api/cron/requests/    # envoi des demandes planifiées
 src/app/api/stripe/webhook/   # abonnements PULSACITY
-src/app/api/unsubscribe/      # désinscription en un clic (lien signé, et bouton du client de messagerie)
+src/app/api/unsubscribe/      # désinscription en un clic (lien signé, et bouton du client de messagerie) ; /accueil : les e-mails d'accueil
 src/app/desinscription/       # page de confirmation de la désinscription
 widget/                       # source du widget embarquable, build → public/w.js
-src/config/plans.ts           # plans et limites
+src/config/plans.ts           # plans et limites, mois offert par filleul payant
+src/config/pulsacity-space.ts # l'espace PULSACITY (PULSACITY_SPACE_ID), son offre bêta, le seuil de son mur
 src/db/schema.ts
 src/lib/connectors/           # types.ts (contrat), registry.ts, moteur (réception, traitement), systeme/, universal/ (connecteur universel), upcoming-connectors.ts
 src/lib/purchases/            # record-purchase.ts : de NormalizedPurchase au client, à l'achat et à la demande
+src/lib/acquisition/          # source d'inscription : mots de l'adresse (UTM, ref), question « Comment avez-vous connu », liens courts
+src/lib/referrals/            # parrainage : liens, récompense au premier paiement du filleul, fin du mois offert
+src/lib/welcome-emails/       # e-mails d'accueil J0, J1, J3, J7 : échéances, arrêt à l'étape faite, désinscription
 src/lib/billing/              # Stripe Billing de PULSACITY : prix par clé de recherche, Checkout, portail, changements de plan, événements, prix fondateur, rappel des bêta-testeurs
 src/lib/requests/             # planification et envoi des demandes
 src/lib/support/              # « Écrivez-nous » : contact@pulsacity.com, champs, limites, envoi (rien gardé en base)
@@ -85,7 +91,7 @@ src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées
 ## Modèle de données
 
 - Tables Better Auth : `user` (name = prénom du créateur, facultatif, « Bonjour Julie » ; Mon compte), `session`, `account`, `verification`
-- `spaces` : id, userId, name, slug (unique, modifiable dans Réglages : l'ancienne adresse cesse de marcher), logoUrl, accentColor (bouton de la page de collecte, étoiles et widgets), replyToEmail, senderPostalAddress (pied des e-mails aux clients, une ligne par ligne saisie), newTestimonialEmailEnabled (e-mail « Nouveau témoignage », vrai par défaut), incentiveDeclaredAt (« J'offre une contrepartie », depuis quand ; null = non), plan (free|essentiel|pro), stripeCustomerId, stripeSubscriptionId, referralCode, collectionLinkSharedAt, firstDayCelebratedAt, firstApprovalCelebratedAt (moments de marque déjà joués), freeSince (repassé au plan Gratuit le …), createdAt. Supprimer l'espace (Mon compte) supprime le compte `user` et, en cascade, tout l'espace ; l'abonnement s'arrête d'abord (`src/lib/billing/stop-space-subscription.ts`, branché au lot 4.5)
+- `spaces` : id, userId, name, slug (unique, modifiable dans Réglages : l'ancienne adresse cesse de marcher, le lien de parrainage /p/<slug> aussi), logoUrl, accentColor (bouton de la page de collecte, étoiles et widgets), replyToEmail, senderPostalAddress (pied des e-mails aux clients, une ligne par ligne saisie), newTestimonialEmailEnabled (e-mail « Nouveau témoignage », vrai par défaut), incentiveDeclaredAt (« J'offre une contrepartie », depuis quand ; null = non), plan (free|essentiel|pro), stripeCustomerId, stripeSubscriptionId, referralCode, collectionLinkSharedAt, firstDayCelebratedAt, firstApprovalCelebratedAt (moments de marque déjà joués), freeSince (repassé au plan Gratuit le …), welcomeEmailsUnsubscribedAt (« Ne plus recevoir les e-mails d'accueil »), referralEssentielUntil (au plan Gratuit, Essentiel offert par le parrainage jusqu'au …), createdAt. Supprimer l'espace (Mon compte) supprime le compte `user` et, en cascade, tout l'espace ; l'abonnement s'arrête d'abord (`src/lib/billing/stop-space-subscription.ts`, branché au lot 4.5)
 - `connections` : id, spaceId, connector (systeme|stripe|calendly|…), webhookToken (unique, secret, régénérable), status (pending|active|error), lastEventAt, config (jsonb : signingSecret), createdAt (unique spaceId + connector)
 - `products` (les « offres » : formation, accompagnement, séance…) : id, spaceId, name, slug, requestDelayDays (défaut 14), requestsEnabled (bool), createdAt
 - `product_refs` : id, productId, connectionId, externalRef — relie une offre à son identifiant dans chaque connecteur
@@ -94,13 +100,16 @@ src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées
 - `purchases` : id, spaceId, customerId, productId, connectionId (nullable), source (connector|manual|csv), eventType, externalRef, purchasedAt, createdAt (unique connectionId + externalRef : une vente reçue deux fois est enregistrée une fois ; `manual` : « Demander un avis »)
 - `review_requests` : id, purchaseId, token (unique), scheduledAt, sentAt, reminderScheduledAt, reminderSentAt, completedAt, cancelledAt, failedAt, status (scheduled|sent|reminded|completed|cancelled|failed), failedAttempts
 - `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body (original, jamais modifié), displayBody (texte affiché, null = original), displayEditedAt, status (pending|approved|hidden), source (form|manual|csv), consentAt, consentText, featured (bool), createdAt
-- `widgets` : id, spaceId, name (nullable, pour le créateur seul), type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur d'accent, nombre max, afficher photo/note/date, masquer « Propulsé par » (Pro), style des cartes), firstLoadedAt (premier affichage sur une page), freePlanChosenAt (« Afficher celui-ci à la place » au plan Gratuit), createdAt
+- `widgets` : id, spaceId, name (nullable, pour le créateur seul), type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur d'accent, nombre max, afficher photo/note/date, masquer « Propulsé par » (Pro), style des cartes), firstLoadedAt (premier affichage sur une page), lastLoadedAt (dernier affichage, à l'heure près), freePlanChosenAt (« Afficher celui-ci à la place » au plan Gratuit), createdAt
+- `space_acquisitions` : spaceId (clé), heardFrom (réponse à « Comment avez-vous connu PULSACITY ? »), utmSource, utmMedium, utmCampaign, utmContent, utmTerm, referralCode (tel que reçu), createdAt — d'où vient un espace, écrit une fois à sa création ; rien sur la personne
+- `referrals` : id, referrerSpaceId, refereeSpaceId (unique, null après suppression du filleul), createdAt, rewardedAt (verrou : un mois par filleul, au premier paiement avec de l'argent), reward (credit|free-month|offered), rewardInvoiceId
+- `welcome_emails` : id, spaceId, step (j0|j1|j3|j7), claimedAt, sentAt, skippedAt (unique spaceId + step : écrit avant l'envoi, jamais deux fois)
 - `webhook_events` : id, connectionId, rawPayload (jsonb), rawBody (octets reçus, pour la signature), headers (jsonb), eventType, receivedAt, processedAt, outcome, purchaseId, error — journal complet, rejouable
 - `connector_waitlist` : id, spaceId, connector, toolName, createdAt — « Me prévenir » et « Dites-nous quel outil »
 - `connector_waitlist_emails` : id, connector, email, createdAt (unique connector + email) — « Me prévenir » des pages publiques /integrations/[connector], pour un visiteur sans espace ; supprimée après l'annonce
 - `tool_suggestions` : id, toolName, createdAt — « Dites-nous quel outil » de /integrations, pour un visiteur sans espace : le nom de l'outil seulement, sans adresse
 - `stripe_events` : id, type, payload (l'événement entier, gardé à l'arrivée), receivedAt, processedAt (verrou d'idempotence, null tant qu'il n'est pas traité), error — rejoué par la tâche planifiée s'il reste non traité
-- `subscriptions` : id (sub_…), spaceId, status, plan, period, priceList (founder|public), amountCents, currentPeriodEnd, cancelAt, endedAt, scheduledPlan, scheduledPeriod, scheduledPriceList, scheduledAmountCents, scheduledAt, betaTester, betaUntil, betaReminderSentAt, cardBrand, cardLast4, lastPaymentFailedAt, lastPaymentFailedAmountCents — copie de ce que Stripe dit de chaque abonnement, réécrite à chaque événement ; `spaces.plan` suit l'abonnement courant (`spaces.stripeSubscriptionId`)
+- `subscriptions` : id (sub_…), spaceId, status, plan, period, priceList (founder|public), amountCents, currentPeriodEnd, cancelAt, endedAt, scheduledPlan, scheduledPeriod, scheduledPriceList, scheduledAmountCents, scheduledAt, betaTester, betaUntil, betaReminderSentAt, couponId (coupon du code tapé au paiement, gardé : `partenaire-…` pour un partenaire), cardBrand, cardLast4, lastPaymentFailedAt, lastPaymentFailedAmountCents — copie de ce que Stripe dit de chaque abonnement, réécrite à chaque événement ; `spaces.plan` suit l'abonnement courant (`spaces.stripeSubscriptionId`)
 - `founder_seats` : id, spaceId (unique, null après suppression de l'espace), takenAt — une ligne par abonné payant au prix fondateur, bêta-testeurs à part ; la centième ferme le prix fondateur
 - `billing_payments` : id (in_…), spaceId (null après suppression), subscriptionId, amountCents, currency, paidAt — chaque facture payée avec de l'argent, pour le seuil de la micro-entreprise (`docs-internes/requetes/seuil-micro-entreprise.md`)
 
@@ -119,6 +128,8 @@ Prix fondateur : les bêta-testeurs et les 100 premiers abonnés payants (`FOUND
 Sur tous les plans : 20 demandes saisies à la main par jour (« Demander un avis », `manualRequestsPerDay`), contre les envois en masse. Elles comptent aussi dans les demandes du mois.
 
 Dépasser une limite ne supprime jamais de données : on bloque l'ajout et on propose de passer au plan supérieur. La limite de témoignages compte les témoignages validés : au-delà, les nouveaux arrivent et restent en attente.
+
+Parrainage (`REFERRAL_REWARD_MONTHS`) : le premier paiement avec de l'argent d'un filleul offre au parrain un mois d'Essentiel, une fois, jamais d'argent : abonné, un crédit Stripe d'un mois d'Essentiel à son prix, déduit des paiements suivants ; au plan Gratuit, Essentiel pendant un mois.
 
 ## Design system (application et site)
 
@@ -175,6 +186,9 @@ CRON_SECRET
 NEXT_PUBLIC_APP_URL            # https://pulsacity.com
 SENTRY_DSN
 LEGAL_VALIDATED                # false tant que les textes ne sont pas relus
+PULSACITY_SPACE_ID             # l'espace PULSACITY : son mur sur l'accueil, son badge sur Tarifs (sans elle, rien)
+NEXT_PUBLIC_UMAMI_WEBSITE_ID   # mesure d'audience Umami Cloud des pages publiques (sans elle, aucun script)
+NEXT_PUBLIC_UMAMI_SCRIPT_URL   # facultative : autre adresse du script d'Umami (cloud.umami.is par défaut)
 ```
 
 ## Conventions

@@ -82,7 +82,7 @@ export const applySubscription = async (
     const row = toRow(snapshot, space.id, now);
     const [saved] = await transaction
       .insert(subscriptions)
-      .values({ ...row, betaTester: snapshot.betaTester, betaUntil: snapshot.betaUntil })
+      .values({ ...row, betaTester: snapshot.betaTester, betaUntil: snapshot.betaUntil, couponId: snapshot.couponId })
       .onConflictDoUpdate({
         target: subscriptions.id,
         set: {
@@ -90,6 +90,8 @@ export const applySubscription = async (
           // Once a beta tester, always: the offered months end, the founder price stays.
           betaTester: sql`${subscriptions.betaTester} or ${snapshot.betaTester}`,
           betaUntil: sql`coalesce(${snapshot.betaUntil?.toISOString() ?? null}::timestamptz, ${subscriptions.betaUntil})`,
+          // The coupon that brought the subscription stays once its discount is over (partners' codes, lot 4.12).
+          couponId: sql`coalesce(${snapshot.couponId}::text, ${subscriptions.couponId})`,
         },
       })
       .returning({ betaTester: subscriptions.betaTester });

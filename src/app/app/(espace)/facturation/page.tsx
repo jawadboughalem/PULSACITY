@@ -4,6 +4,7 @@ import { BillingNoticeBanner } from "@/components/billing/BillingNoticeBanner";
 import { CurrentPlanCard } from "@/components/billing/CurrentPlanCard";
 import { PaymentAndInvoices } from "@/components/billing/PaymentAndInvoices";
 import { PlanChanger } from "@/components/billing/PlanChanger";
+import { ReferralCard } from "@/components/billing/ReferralCard";
 import { RefreshWhilePending } from "@/components/billing/RefreshWhilePending";
 import { buildSpaceAccount } from "@/components/space/build-space-account";
 import { MobileBackLink } from "@/components/space/MobileBackLink";
@@ -89,12 +90,14 @@ const BillingPage = async ({ searchParams }: PageProps<"/app/facturation">) => {
             current={current ?? { plan: overview.plan, period: "monthly" }}
             priceList={overview.priceList}
             isSubscribed={current !== null}
+            referralEssentielUntil={overview.referralEssentielUntil}
           />
         )}
         <PaymentAndInvoices
           isSubscribed={current !== null && !isPending}
           hasPastInvoices={overview.hasCustomer && overview.freeSince !== null}
         />
+        <ReferralCard />
       </SpacePage>
     </>
   );

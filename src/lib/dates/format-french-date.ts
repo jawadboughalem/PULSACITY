@@ -13,6 +13,8 @@ const LONG_DATE = new Intl.DateTimeFormat("fr-FR", { timeZone: PARIS, day: "nume
 
 const LONG_DAY_MONTH = new Intl.DateTimeFormat("fr-FR", { timeZone: PARIS, day: "numeric", month: "long" });
 
+const MONTH_YEAR = new Intl.DateTimeFormat("fr-FR", { timeZone: PARIS, month: "long", year: "numeric" });
+
 const HOUR_MINUTE = new Intl.DateTimeFormat("fr-FR", { timeZone: PARIS, hour: "2-digit", minute: "2-digit" });
 
 /** French writes the first day of a month « 1er ». */
@@ -36,3 +38,6 @@ export const formatDateTime = (date: Date): string => `${DAY_MONTH_YEAR.format(d
 /** « 12 oct. 2026 à 15 h 40 » (3.3, the export of Mon compte). */
 export const formatDateAtHour = (date: Date): string =>
   `${formatDayMonthYear(date)} à ${HOUR_MINUTE.format(date).replace(":", "\u00a0h\u00a0")}`;
+
+/** « août 2026 »: the month of a purchase (« achat en août 2026 », maquettes 3.6). */
+export const formatMonthYear = (date: Date): string => MONTH_YEAR.format(date);
