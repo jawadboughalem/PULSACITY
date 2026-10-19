@@ -269,9 +269,10 @@ await sql.begin(async (tx) => {
         'SALE_NEW', ${receivedAt}, ${receivedAt}, ${event.outcome}, ${purchaseId})`;
   }
 
-  // Two referees: Atelier Sophie subscribed, her first payment gave Julie a month; Coaching Karim only signed up.
+  // Two referees: Atelier Sophie subscribed, her first payment gave Julie a month, over now (at the free plan, a
+  // month of Essentiel; subscribed, a credit); Coaching Karim only signed up.
   for (const [name, spaceName, isSubscribed, signedUp, rewarded] of [
-    ["atelier-sophie", "Atelier Sophie", true, 16, 9],
+    ["atelier-sophie", "Atelier Sophie", true, 50, 40],
     ["coaching-karim", "Coaching Karim", false, 10, null],
   ]) {
     const refereeId = randomUUID();
@@ -285,7 +286,7 @@ await sql.begin(async (tx) => {
     await tx`
       insert into referrals (referrer_space_id, referee_space_id, created_at, rewarded_at, reward)
       values (${space.id}, ${referee.id}, ${daysAgo(signedUp)}, ${rewarded === null ? null : daysAgo(rewarded)},
-        ${rewarded === null ? null : "credit"})`;
+        ${rewarded === null ? null : plan === "free" ? "free-month" : "credit"})`;
   }
 
   console.log(`Espace « Julie Nutrition » prêt pour ${email} (plan ${plan}), adresse /t/${slug}.`);

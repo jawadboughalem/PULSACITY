@@ -90,6 +90,7 @@ const BillingPage = async ({ searchParams }: PageProps<"/app/facturation">) => {
             current={current ?? { plan: overview.plan, period: "monthly" }}
             priceList={overview.priceList}
             isSubscribed={current !== null}
+            referralEssentielUntil={overview.referralEssentielUntil}
           />
         )}
         <PaymentAndInvoices
