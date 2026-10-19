@@ -15,6 +15,7 @@ Dans l'ordre :
 - Prompt 9 : recette, le mur et le badge de PULSACITY (espace P, puis un redéploiement de l'aperçu), Umami sur l'aperçu, la politique de confidentialité.
 - Prompt 10 : Supabase (lecture seule), ce que la base a enregistré.
 - Prompt 11 : à 360 px.
+- Prompt 11 bis : contre-recette des corrections du 19 octobre, et Parrainage à 360 px.
 - Après la fusion : prompts 12 (l'espace PULSACITY en production), 13 (Resend Pro, avant le lancement), 14 (un code de partenaire, le jour où il arrive), 15 (vérification en production, à la toute fin avec celles des autres lots).
 
 Trois adresses, à garder pour vous (jamais dans un compte rendu) :
@@ -217,7 +218,7 @@ Tu fais la recette de « l'espace PULSACITY » sur l'aperçu https://pulsacity-g
 A. Préparer l'espace P (comme le fera le fondateur en production)
 1. « Offres » : ajoute une offre « Bêta PULSACITY » et enregistre.
 2. « Témoignages » : ouvre la fiche de « Camille R. », choisis « Bêta PULSACITY » dans « Offre associée » : « Offre enregistrée. » s'affiche dessous. Fais de même pour « Thomas L. ».
-3. « Widgets » : crée un widget de type « Badge » (garde les réglages proposés). Ouvre ensuite le mur existant et le badge : dans chacun, coche « Masquer « Propulsé par PULSACITY » » et enregistre.
+3. « Widgets » : crée un widget de type « Badge » (garde les réglages proposés). Ouvre ensuite le mur existant et le badge : dans chacun, active l'interrupteur « Masquer « Propulsé par PULSACITY » » (il s'enregistre seul).
 3 bis. Vercel (je suis connecté), onglet « Deployments » du projet « pulsacity » : redéploie le dernier déploiement de la branche claude/lot-4-12-accueil-acquisition-318dj8 (« Redeploy », sans cocher « Use existing Build Cache »), pour qu'il prenne PULSACITY_SPACE_ID et NEXT_PUBLIC_UMAMI_WEBSITE_ID et construise l'accueil et Tarifs avec le mur et le badge. Attends qu'il soit « Ready ». Ne touche à rien d'autre dans Vercel.
 
 B. Sur le site public (dans une fenêtre privée, sans être connecté)
@@ -275,6 +276,27 @@ Compte rendu à me donner : les points 1 à 6 avec « OK » ou ta description, e
 
 ---
 
+## 11 bis. Contre-recette : les deux corrections, et Parrainage à 360 px
+
+Après la recette du 19 octobre : la réponse à « Comment avez-vous connu PULSACITY ? » restait perdue après une erreur (prompt 5, point 6) ; pendant le mois offert par le parrainage, « Passer au plan Gratuit » ne faisait rien (prompt 7) ; le prompt 11 n'avait pas vu les écrans connectés.
+
+Avant ce prompt : attendez que l'aperçu soit reconstruit avec la correction (je vous le dis), puis connectez-vous vous-même sur l'aperçu avec l'adresse A, fenêtre en grand.
+
+```
+Tu fais la contre-recette du lot 4.12 de PULSACITY sur l'aperçu https://pulsacity-git-claude-lot-4-12-a-2c0d9c-jawadboughalems-projects.vercel.app . Je suis connecté à l'espace A (« Julie Nutrition »). Pour chaque point, note « OK » ou décris ce que tu vois. Tu n'envoies aucun formulaire, sauf au point 1.
+
+1. Dans une fenêtre privée (sans être connecté), ouvre /inscription. Choisis « YouTube » dans « Comment avez-vous connu PULSACITY ? », écris « test@exemple » dans l'adresse et clique « Recevoir mon lien » : l'erreur « Cette adresse e-mail est incomplète… » s'affiche, l'adresse garde « test@exemple » et la liste affiche toujours « YouTube ». Ferme la fenêtre privée.
+2. Dans l'espace A, en grand : « Abonnement et factures ». Dans « Changer de plan », la colonne « Gratuit » n'a plus de bouton : à sa place, en gris, « Votre espace y repasse le 19 novembre 2026. » La colonne « Essentiel » dit « Votre plan actuel », la colonne « Pro » a « Passer au plan Pro ».
+3. Mets la page à 360 px de large (outils de développement, mode appareil, ou un cadre de 360 px), toujours connecté à A. « Plus » (dernier onglet en bas) › « Votre compte » liste « Mon compte », « Abonnement et factures », « Parrainage », « Aide et contact ». Ouvre « Parrainage ».
+4. Parrainage à 360 px : « ‹ Plus » en haut, le titre et la phrase ; la carte « Votre lien » avec le champ, le bouton jaune « Partager mon lien », puis « Copier le lien » bordé ; deux tuiles côte à côte et la jaune dessous ; « Vos filleuls » en liste (nom et badge sur une ligne, « Inscrit le … », « Votre mois : … ») ; « Comment ça marche » en dernier. Rien ne défile sur le côté.
+5. « Partager mon lien » ouvre le partage du téléphone, ou copie le lien sur ordinateur.
+6. À 360 px, fiche de Camille R. : « Partager » sur toute la largeur ; la fenêtre s'ouvre en bas de l'écran, la bascule « Portrait » / « Paysage » tient sur la largeur, puis l'aperçu, « Télécharger l'image » et « Annuler ». Rien ne défile sur le côté.
+
+Compte rendu à me donner : les points 1 à 6 avec « OK » ou ta description, et une capture de chaque point qui n'est pas OK.
+```
+
+---
+
 ## Après la fusion
 
 ### 12. L'espace PULSACITY en production (avant la bêta)
@@ -294,7 +316,7 @@ Ce qu'il ne faut surtout pas toucher : les autres espaces, les autres variables 
    Une ligne : « PULSACITY », plan free. Puis, et seulement si c'est bien cette ligne, offre-lui le plan Pro :
    update spaces set plan = 'pro' where slug = 'pulsacity' and stripe_subscription_id is null;
    Le résultat doit dire « 1 row affected ». Copie l'id de la ligne.
-5. pulsacity.com › « Widgets » : dans le mur, puis dans le badge, coche « Masquer « Propulsé par PULSACITY » » et enregistre. « Abonnement et factures » dit « Plan Pro » et « Ce plan vous est offert par PULSACITY : aucun paiement. »
+5. pulsacity.com › « Widgets » : dans le mur, puis dans le badge, active l'interrupteur « Masquer « Propulsé par PULSACITY » » (il s'enregistre seul). « Abonnement et factures » dit « Plan Pro » et « Ce plan vous est offert par PULSACITY : aucun paiement. »
 6. Vercel, https://vercel.com/jawadboughalems-projects/pulsacity/settings/environment-variables : ajoute PULSACITY_SPACE_ID, valeur : l'id de l'étape 4, environnement : Production seulement. Puis redéploie le dernier déploiement de production (« Redeploy »).
 7. Sur https://pulsacity.com : tant que l'espace n'a pas 5 témoignages validés, l'accueil n'a pas de section « Les avis des premiers créateurs » et Tarifs n'a pas de badge. C'est normal : ils apparaissent dans l'heure qui suit la validation du cinquième.
 
@@ -349,9 +371,10 @@ Tu vérifies le lot 4.12 sur https://pulsacity.com , sans créer de compte. Pour
 
 1. https://pulsacity.com/go/linkedin mène à l'accueil avec ?utm_source=linkedin&utm_medium=social&utm_campaign=linkedin ; « Créer mon espace gratuit » mène à /inscription avec les mêmes mots.
 2. /inscription montre « Comment avez-vous connu PULSACITY ? (facultatif) ».
-3. Le code source de l'accueil contient le script d'Umami avec data-domains="pulsacity.com".
+3. Dans les outils de développement (onglet « Éléments »), la page chargée contient un script https://cloud.umami.is/script.js avec data-domains="pulsacity.com" (le code source brut ne montre pas la balise : Next.js la crée au chargement).
 4. Dis-moi : « Dans Umami Cloud, le site pulsacity.com compte-t-il la visite de maintenant ? Et dans « Événements », voyez-vous creer-mon-espace après un clic sur ce bouton ? » Note ma réponse.
 5. Dis-moi : « Votre espace de test créé cette semaine a-t-il reçu J0, puis J1 le lendemain vers 10 h, J3 et J7, chacun seulement si son étape n'était pas faite ? » Note ma réponse.
+6. Seulement si l'espace PULSACITY a 5 témoignages validés (sinon, note « pas encore ») : l'accueil montre « Les avis des premiers créateurs » avec des cartes, la ligne « Bêta-testeur · plan Essentiel offert pendant la bêta » sous les avis de l'offre « Bêta PULSACITY », sans « Propulsé par PULSACITY » ; Tarifs montre le badge sous « Sans engagement · … ». Sur l'aperçu, ces deux points ne se voient pas : la protection de Vercel bloque les données du widget (recette du 19 octobre).
 
-Compte rendu à me donner : les points 1 à 5.
+Compte rendu à me donner : les points 1 à 6.
 ```
