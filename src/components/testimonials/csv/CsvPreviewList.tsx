@@ -154,7 +154,7 @@ export const CsvPreviewList = ({ rows }: CsvPreviewListProps) => {
               <span className="font-bold">{row.authorName}</span>
               {row.authorTitle ? <span className="text-gray">{` · ${row.authorTitle}`}</span> : null}
             </span>
-            <span className="flex items-start gap-3">
+            <span className="flex flex-col items-start gap-1">
               {row.rating === null ? null : <RatingStars rating={row.rating} size={16} />}
               <span className="text-small text-gray">{`${row.productName ?? "Sans offre"} · ${dateOf(row)}`}</span>
             </span>

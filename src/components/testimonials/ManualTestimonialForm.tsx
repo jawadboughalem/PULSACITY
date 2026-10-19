@@ -176,7 +176,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
   const consentError = messageFor("hasConsent");
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
+    <form onSubmit={handleSubmit} noValidate className="flex min-w-[0] flex-col gap-8 rounded-panel bg-white p-5 desktop:p-8">
       {submitError ? (
         <StatusBanner tone="error" title="Le témoignage n'a pas été ajouté.">
           {SUBMIT_ERRORS[submitError]}
@@ -185,7 +185,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
       {summaryItems.length > 0 ? (
         <ErrorSummary key={summaryKey} title={describeSummary(summaryItems.length)} items={summaryItems} />
       ) : null}
-      <fieldset disabled={isSubmitting} className="flex min-w-[0] flex-col gap-8">
+      <fieldset disabled={isSubmitting} className="flex min-w-[0] flex-col gap-6">
         <TextField
           id={FIELD_IDS.authorName}
           label="Nom affiché"
@@ -239,7 +239,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
             </p>
           )}
         </div>
-        <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-[minmax(0,1fr)_240px] desktop:gap-6">
+        <div className="flex flex-col gap-6 desktop:grid desktop:grid-cols-[minmax(0,1fr)_240px]">
           <div className="flex flex-col gap-2">
             <label htmlFor="manual-offer" className={FIELD_LABEL_CLASSES}>
               Offre <span className={OPTIONAL_MARK_CLASSES}>(facultatif)</span>
@@ -275,8 +275,14 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
             error={messageFor("receivedAt")}
           />
         </div>
-        <div className={cn("flex flex-col gap-2", consentError && "rounded-card border-2 border-error bg-error-surface p-4")}>
-          <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-body has-disabled:cursor-not-allowed">
+        {/* Charte v2, Case à cocher: the consent line on Nuage, radius-card, padding 16; in error, Erreur fond and border. */}
+        <div
+          className={cn(
+            "flex flex-col gap-2 rounded-card p-4",
+            consentError ? "border-2 border-error bg-error-surface" : "bg-cloud",
+          )}
+        >
+          <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-body font-bold has-disabled:cursor-not-allowed">
             <Checkbox
               id={FIELD_IDS.hasConsent}
               checked={form.hasConsent}
@@ -293,7 +299,7 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
           ) : null}
         </div>
       </fieldset>
-      <div className="flex flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-6">
+      <div className="flex flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-4">
         <button
           type="submit"
           disabled={isSubmitting}
@@ -311,12 +317,12 @@ export const ManualTestimonialForm = ({ products, dateExample, testimonialsHref,
           </Link>
         )}
       </div>
-      <p className="text-small text-gray min-[1280px]:hidden">
-        Vous en avez beaucoup ?{" "}
-        <Link href={importHref} className={INLINE_LINK_CLASSES}>
+      <div className="flex flex-col items-start gap-1 min-[1280px]:hidden">
+        <p className="text-body text-gray">Vous en avez beaucoup ?</p>
+        <Link href={importHref} className={cn(INLINE_LINK_CLASSES, "flex min-h-[44px] items-center font-bold")}>
           Importer un fichier CSV
         </Link>
-      </p>
+      </div>
     </form>
   );
 };

@@ -67,7 +67,7 @@ export const TestimonialCard = ({ testimonial, variant, detailHref, isApprovalAl
             isFeatured={review.featured}
             authorName={testimonial.authorName}
             onToggle={review.toggleFeatured}
-            className="-mt-2 -mr-2"
+            className="self-center"
           />
         )}
       </div>

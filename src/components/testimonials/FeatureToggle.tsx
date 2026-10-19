@@ -10,7 +10,10 @@ type FeatureToggleProps = {
   className?: string;
 };
 
-/** Charte v2, « En avant »: an icon button with the bookmark (aria-pressed), on Soleil once the testimonial is put first. */
+/**
+ * Charte v2, « En avant »: an icon button with the bookmark (aria-pressed), circled in Encre (maquettes 3.4), on Soleil
+ * once the testimonial is put first.
+ */
 export const FeatureToggle = ({ isFeatured, authorName, onToggle, className }: FeatureToggleProps) => (
   <button
     type="button"
@@ -19,8 +22,8 @@ export const FeatureToggle = ({ isFeatured, authorName, onToggle, className }: F
     onClick={onToggle}
     className={cn(
       ICON_BUTTON_CLASSES,
-      "relative",
-      isFeatured && "bg-sun hover:bg-sun-hover active:bg-sun-pressed",
+      "relative border-2",
+      isFeatured ? "border-sun bg-sun hover:border-sun-hover hover:bg-sun-hover active:bg-sun-pressed" : "border-ink",
       className,
     )}
   >

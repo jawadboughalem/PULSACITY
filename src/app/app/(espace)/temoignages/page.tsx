@@ -33,14 +33,16 @@ export const metadata: Metadata = {
   title: "Témoignages · PULSACITY",
 };
 
-/** Charte v2, Tableau: the widths of the v1 columns, widened where the v2 controls need room (stars 18, badge). */
+/**
+ * Maquettes 3.4, Témoignages: the offer goes under the client's name, so that « Témoignage » keeps room for two lines.
+ * The widths are those of the maquette at 1440.
+ */
 const TABLE_COLUMNS = [
-  { heading: "Client", width: "w-[208px]" },
+  { heading: "Client", width: "w-[202px]" },
   { heading: "Témoignage", width: "" },
-  { heading: "Note", width: "w-[106px]" },
-  { heading: "Offre", width: "w-[128px]" },
-  { heading: "Statut", width: "w-[128px]" },
-  { heading: "En avant", width: "w-[80px]" },
+  { heading: "Note", width: "w-[112px]" },
+  { heading: "Statut", width: "w-[136px]" },
+  { heading: "En avant", width: "w-[76px]" },
 ];
 
 const describeCounts = (counts: { approved: number; pending: number; hidden: number }) =>
@@ -82,8 +84,8 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
       />
       <SpacePage>
         <FirstApprovalCelebration>
-          <div className="flex flex-col gap-6 desktop:gap-8">
-            <header className="flex items-start justify-between gap-6">
+          <div className="flex flex-col gap-4 desktop:gap-6">
+            <header className="flex items-start justify-between gap-6 desktop:items-end">
               <div className="flex flex-col gap-2">
                 <h1 className="hidden font-display text-h1 desktop:block">Témoignages</h1>
                 <p className="text-small text-gray desktop:text-body">{describeCounts(counts)}</p>
@@ -103,7 +105,7 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
                   products={products}
                 />
                 {list.total === 0 ? (
-                  <div className="flex flex-col items-start gap-2">
+                  <div className="flex flex-col items-start gap-2 rounded-panel bg-white p-5 desktop:px-6">
                     <p className="text-body">Aucun témoignage ne correspond à ces filtres.</p>
                     {hasTestimonialFilter(filters) ? (
                       <Link href={TESTIMONIALS_SECTION_HREF} className={DISCREET_BUTTON_CLASSES}>
@@ -113,8 +115,9 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
                   </div>
                 ) : (
                   <>
-                    <div className="hidden overflow-x-auto rounded-card bg-white p-2 desktop:block">
-                      <table className="w-full min-w-[1000px] table-fixed border-separate border-spacing-[0] text-left">
+                    <div className="-my-3 hidden overflow-x-auto desktop:block">
+                      {/* Each row is a white band on Nuage, 12 apart: no rule between them (charte v2). */}
+                      <table className="w-full min-w-[960px] table-fixed border-separate border-spacing-x-[0] border-spacing-y-3 text-left">
                         <thead>
                           <tr>
                             {TABLE_COLUMNS.map((column) => (
@@ -122,14 +125,14 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
                                 key={column.heading}
                                 scope="col"
                                 className={cn(
-                                  "h-[48px] bg-sky pr-4 text-small font-bold whitespace-nowrap first:rounded-l-field first:pl-4",
+                                  "h-[48px] bg-sky pr-4 text-small leading-[18px] font-bold first:rounded-l-field first:pl-4",
                                   column.width,
                                 )}
                               >
                                 {column.heading}
                               </th>
                             ))}
-                            <th scope="col" className="h-[48px] w-[252px] rounded-r-field bg-sky">
+                            <th scope="col" className="h-[48px] w-[240px] rounded-r-field bg-sky">
                               <span className="sr-only">Actions</span>
                             </th>
                           </tr>

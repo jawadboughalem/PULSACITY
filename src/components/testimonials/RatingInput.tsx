@@ -18,11 +18,12 @@ export const RatingInput = ({ id, rating, error, onChange }: RatingInputProps) =
   <fieldset className="flex min-w-[0] flex-col gap-2" aria-describedby={error ? `${id}-error` : undefined}>
     <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>Note</legend>
     <div className="flex items-center gap-3">
-      <div className={cn("-ml-3 flex rounded-card", error && "border-2 border-error")}>
+      {/* Maquettes 3.4: stars of 28 in targets of 52. */}
+      <div className={cn("flex rounded-card", error && "border-2 border-error")}>
         {RATINGS.map((value) => (
           <label
             key={value}
-            className="flex size-[44px] cursor-pointer items-center justify-center rounded-full has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink has-disabled:cursor-not-allowed"
+            className="flex size-[52px] cursor-pointer items-center justify-center rounded-full has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink has-disabled:cursor-not-allowed"
           >
             <input
               id={value === RATINGS[0] ? id : undefined}
@@ -34,7 +35,7 @@ export const RatingInput = ({ id, rating, error, onChange }: RatingInputProps) =
               aria-label={labelRating(value)}
               className="sr-only"
             />
-            <StarIcon size={20} isFilled={value <= rating} />
+            <StarIcon size={28} isFilled={value <= rating} />
           </label>
         ))}
       </div>

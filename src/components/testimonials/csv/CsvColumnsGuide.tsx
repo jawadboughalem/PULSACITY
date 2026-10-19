@@ -17,12 +17,13 @@ type CsvColumnsGuideProps = {
 };
 
 export const CsvColumnsGuide = ({ templateHref }: CsvColumnsGuideProps) => (
-  <section aria-labelledby="csv-columns" className="flex flex-col gap-6">
-    <h2 id="csv-columns" className="text-body font-bold max-desktop:sr-only">
-      Colonnes attendues
-    </h2>
-    <div className="hidden rounded-card bg-white p-2 desktop:block">
-      <table className="w-full border-separate border-spacing-[0] text-left text-body">
+  <section aria-labelledby="csv-columns" className="flex flex-col gap-4 desktop:gap-6">
+    {/* Maquettes 3.4: on a computer, the title and the table on one white card; on a phone, a card per column. */}
+    <div className="flex flex-col gap-4 desktop:rounded-panel desktop:bg-white desktop:p-6">
+      <h2 id="csv-columns" className="font-display text-h3">
+        Colonnes attendues
+      </h2>
+      <table className="hidden w-full border-separate border-spacing-[0] text-left text-body desktop:table">
         <thead>
           <tr className="text-small">
             <th scope="col" className="h-[48px] w-[30%] rounded-l-field bg-sky px-4 font-bold">Colonne</th>
@@ -40,18 +41,18 @@ export const CsvColumnsGuide = ({ templateHref }: CsvColumnsGuideProps) => (
           ))}
         </tbody>
       </table>
+      <ul className="flex flex-col gap-3 desktop:hidden">
+        {CSV_COLUMNS.map((column) => (
+          <li key={column} className="flex flex-col rounded-card bg-white px-3 py-2 text-small">
+            <span>
+              <span className="font-bold">{column}</span>
+              <span className="text-gray">{` · ${statusOf(column)}`}</span>
+            </span>
+            <span>{COLUMNS[column].content}</span>
+          </li>
+        ))}
+      </ul>
     </div>
-    <ul className="flex flex-col gap-3 desktop:hidden">
-      {CSV_COLUMNS.map((column) => (
-        <li key={column} className="flex flex-col gap-1 rounded-card bg-white p-4 text-body">
-          <span>
-            <span className="font-bold">{column}</span>
-            <span className="text-gray">{` · ${statusOf(column)}`}</span>
-          </span>
-          <span>{COLUMNS[column].content}</span>
-        </li>
-      ))}
-    </ul>
     <p className="text-small text-gray">
       La première ligne du fichier doit contenir les noms des colonnes.{" "}
       <a href={templateHref} download="modele-temoignages.csv" className={INLINE_LINK_CLASSES}>

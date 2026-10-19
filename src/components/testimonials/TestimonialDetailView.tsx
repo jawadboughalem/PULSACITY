@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/button-styles";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Breadcrumb } from "@/components/space/BackBar";
+import { MobileBackLink } from "@/components/space/MobileBackLink";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { FieldError } from "@/components/ui/FieldError";
 import { FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
@@ -156,6 +157,7 @@ export const TestimonialDetailView = ({
   return (
     <div className="flex flex-col gap-6 desktop:gap-8">
       <Breadcrumb parentHref={listHref} parentLabel="Témoignages" current={testimonial.authorName} />
+      <MobileBackLink href={listHref} label="Témoignages" />
 
       <header className="flex flex-col gap-6 desktop:flex-row desktop:items-start desktop:justify-between">
         <div className="flex items-start gap-4 desktop:gap-6">

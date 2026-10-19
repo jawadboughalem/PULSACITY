@@ -18,8 +18,8 @@ import { useTestimonialDeletion } from "./useTestimonialDeletion";
 import { HideTestimonialDialog } from "./HideTestimonialDialog";
 import { useTestimonialReview } from "./useTestimonialReview";
 
-/** Charte v2, Tableau: rows on white, padding 18 16, no rule between them; Nuage under the pointer, radius-field ends. */
-const CELL_CLASSES = "pz-couleur py-[18px] pr-4 group-hover/row:bg-cloud";
+/** Charte v2, Tableau: rows on white, padding 18 16, no rule between them; Ciel under the pointer, on Nuage. */
+const CELL_CLASSES = "pz-couleur bg-white py-[18px] pr-4 group-hover/row:bg-sky";
 
 type TestimonialTableRowProps = {
   testimonial: SpaceTestimonial;
@@ -35,17 +35,18 @@ export const TestimonialTableRow = ({ testimonial, detailHref, isApprovalAllowed
 
   return (
     <tr className={cn("group/row align-middle", deletion.isDeleting && "opacity-60")}>
-      <td className={cn(CELL_CLASSES, "rounded-l-field pl-4")}>
-        <div className="flex items-center gap-4">
-          <SpaceAvatar name={testimonial.authorName} logoUrl={testimonial.authorPhotoUrl} size={44} background="sky" />
+      <td className={cn(CELL_CLASSES, "rounded-l-field pl-3")}>
+        <div className="flex items-center gap-3">
+          <SpaceAvatar name={testimonial.authorName} logoUrl={testimonial.authorPhotoUrl} size={36} background="sky" />
           <div className="flex min-w-[0] flex-col">
             <Link
               href={detailHref}
-              className={cn("truncate text-body font-bold decoration-2 underline-offset-4 hover:underline", FOCUS_RING)}
+              className={cn("truncate text-small font-bold decoration-2 underline-offset-4 hover:underline", FOCUS_RING)}
             >
               {testimonial.authorName}
             </Link>
-            <span className="text-small whitespace-nowrap text-gray">{`Reçu le ${formatDayMonth(testimonial.createdAt)}`}</span>
+            <span className="text-badge text-gray">{testimonial.productName ?? "Sans offre"}</span>
+            <span className="text-badge whitespace-nowrap text-gray">{`Reçu le ${formatDayMonth(testimonial.createdAt)}`}</span>
           </div>
         </div>
       </td>
@@ -60,9 +61,6 @@ export const TestimonialTableRow = ({ testimonial, detailHref, isApprovalAllowed
       </td>
       <td className={CELL_CLASSES}>
         <RatingStars rating={testimonial.rating} size={18} />
-      </td>
-      <td className={cn(CELL_CLASSES, "text-small text-gray")}>
-        <span className="line-clamp-2">{testimonial.productName ?? "Sans offre"}</span>
       </td>
       <td className={CELL_CLASSES}>
         <StatusBadge status={review.status} isJustApproved={review.isJustApproved} />
