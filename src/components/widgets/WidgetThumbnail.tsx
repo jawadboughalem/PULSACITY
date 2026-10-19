@@ -2,48 +2,52 @@ import type { ReactElement } from "react";
 import { cn } from "@/lib/cn";
 import type { WidgetType } from "../../../widget/src/payload";
 
-const PAPER = "#F3F3F0";
-const HAIRLINE = "#D8D9DD";
+/** Maquettes 3.4: the vignettes in the colours of the charte v2, Ciel, White, Givre, and Soleil for the rating. */
+const SKY = "#DCEBFF";
 const WHITE = "#FFFFFF";
-const GRAY = "#7E8390";
-const CARMINE = "#A3243B";
+const FROST = "#B9C2D6";
+const SUN = "#FFBE3B";
 
-/** Maquette 18: the wall's columns of cards, in miniature. */
+/** The wall's columns of cards, in miniature. */
 const WallDrawing = () => (
-  <g fill={WHITE} stroke={HAIRLINE}>
-    <rect x="12" y="9.5" width="28" height="34" />
-    <rect x="12" y="49.5" width="28" height="20" />
-    <rect x="46" y="9.5" width="28" height="22.5" />
-    <rect x="46" y="37.5" width="28" height="32.5" />
-    <rect x="80" y="9.5" width="28" height="40.5" />
-    <rect x="80" y="55.5" width="28" height="14.5" />
+  <g fill={WHITE}>
+    <rect x="10" y="10" width="31" height="32" rx="3" />
+    <rect x="10" y="46" width="31" height="24" rx="3" />
+    <rect x="45" y="10" width="30" height="21" rx="3" />
+    <rect x="45" y="35" width="30" height="35" rx="3" />
+    <rect x="79" y="10" width="31" height="38" rx="3" />
+    <rect x="79" y="52" width="31" height="18" rx="3" />
   </g>
 );
 
 const CarouselDrawing = () => (
   <g>
-    <circle cx="12" cy="40" r="4" fill="none" stroke={GRAY} />
-    <circle cx="108" cy="40" r="4" fill="none" stroke={GRAY} />
-    <g fill={WHITE} stroke={HAIRLINE}>
-      <rect x="24" y="16" width="34" height="48" />
-      <rect x="62" y="16" width="34" height="48" />
+    <g fill={FROST}>
+      <circle cx="15" cy="40" r="5" />
+      <circle cx="105" cy="40" r="5" />
     </g>
-    <g fill={HAIRLINE}>
-      <rect x="30" y="24" width="22" height="2.5" />
-      <rect x="30" y="30.5" width="18" height="2.5" />
-      <rect x="68" y="24" width="22" height="2.5" />
-      <rect x="68" y="30.5" width="18" height="2.5" />
+    <g fill={WHITE}>
+      <rect x="24" y="19" width="34" height="42" rx="4" />
+      <rect x="62" y="19" width="34" height="42" rx="4" />
+    </g>
+    <g fill={FROST}>
+      <rect x="30" y="25" width="18" height="4" rx="2" />
+      <rect x="30" y="33" width="13" height="4" rx="2" />
+      <rect x="68" y="25" width="18" height="4" rx="2" />
+      <rect x="68" y="33" width="13" height="4" rx="2" />
     </g>
   </g>
 );
 
 const BadgeDrawing = () => (
   <g>
-    <rect x="20" y="33" width="80" height="14" rx="7" fill={WHITE} stroke={HAIRLINE} />
-    <circle cx="29" cy="40" r="4" fill={HAIRLINE} />
-    <circle cx="35" cy="40" r="4" fill={HAIRLINE} stroke={WHITE} />
-    <rect x="46" y="39" width="16" height="2.5" fill={CARMINE} />
-    <rect x="68" y="39" width="22" height="2.5" fill={HAIRLINE} />
+    <rect x="19" y="26" width="83" height="29" rx="14.5" fill={WHITE} />
+    <g fill={FROST}>
+      <circle cx="32" cy="40.5" r="6" />
+      <circle cx="47" cy="40.5" r="6" />
+      <rect x="81" y="38" width="14" height="5" rx="2.5" />
+    </g>
+    <rect x="59" y="38" width="19" height="5" rx="2.5" fill={SUN} />
   </g>
 );
 
@@ -53,14 +57,14 @@ const DRAWINGS: Record<WidgetType, () => ReactElement> = {
   badge: BadgeDrawing,
 };
 
-type WidgetThumbnailProps = { type: WidgetType; className?: string; isOnPaper?: boolean };
+type WidgetThumbnailProps = { type: WidgetType; className?: string };
 
-/** The shape of a widget at a glance, beside its name in the list: on Paper, or on White when laid on Paper. */
-export const WidgetThumbnail = ({ type, className, isOnPaper = false }: WidgetThumbnailProps) => {
+/** The shape of a widget at a glance, beside its name in the list, on its Ciel aplat. */
+export const WidgetThumbnail = ({ type, className }: WidgetThumbnailProps) => {
   const Drawing = DRAWINGS[type];
   return (
     <svg viewBox="0 0 120 80" aria-hidden="true" focusable="false" className={cn("shrink-0", className)}>
-      <rect width="120" height="80" fill={isOnPaper ? WHITE : PAPER} />
+      <rect width="120" height="80" rx="12" fill={SKY} />
       <Drawing />
     </svg>
   );

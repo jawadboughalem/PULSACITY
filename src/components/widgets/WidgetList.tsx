@@ -12,7 +12,6 @@ import {
   DISCREET_BUTTON_CLASSES,
   INLINE_LINK_CLASSES,
   PRIMARY_BUTTON_CLASSES,
-  SECONDARY_BUTTON_CLASSES,
   SECONDARY_COMPACT_BUTTON_CLASSES,
 } from "@/components/ui/button-styles";
 import { FieldError } from "@/components/ui/FieldError";
@@ -67,7 +66,7 @@ const TYPE_CHOICES: Array<{ type: WidgetType; title: string; text: string }> = [
 
 const WidgetStatus = ({ widget }: { widget: ListedWidget }) =>
   widget.shownSince ? (
-    <p className="flex items-start gap-2 text-small text-success">
+    <p className="flex items-start gap-2 text-small font-bold text-success">
       <Icon name="valid" size={20} className="shrink-0" />
       {widget.shownSince}
     </p>
@@ -87,7 +86,7 @@ const WidgetStatus = ({ widget }: { widget: ListedWidget }) =>
   );
 
 const EmptyState = () => (
-  <section aria-labelledby="no-widget" className="flex flex-col gap-4 rounded-panel bg-sky p-6 desktop:p-10">
+  <section aria-labelledby="no-widget" className="flex flex-col gap-4 rounded-panel bg-sky p-5 desktop:p-8">
     <h2 id="no-widget" className="font-display text-h2">
       Aucun widget pour l&apos;instant
     </h2>
@@ -96,8 +95,8 @@ const EmptyState = () => (
     </p>
     <ul className="flex flex-col gap-3">
       {TYPE_CHOICES.map((choice) => (
-        <li key={choice.type} className="flex items-center gap-4">
-          <WidgetThumbnail type={choice.type} className="w-[72px]" isOnPaper />
+        <li key={choice.type} className="flex items-center gap-4 rounded-card bg-white p-4">
+          <WidgetThumbnail type={choice.type} className="w-[72px]" />
           <span className="flex flex-col">
             <span className="text-body font-bold">{choice.title}</span>
             <span className="text-small text-gray">{choice.text}</span>
@@ -130,15 +129,15 @@ export const WidgetList = ({ widgets, createLimit, isPausing }: WidgetListProps)
   const [result, createWidget, isCreating] = useActionState<CreateWidgetResult | null>(createWidgetFromList, null);
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-6 desktop:flex-row desktop:items-start desktop:justify-between">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4 desktop:flex-row desktop:items-end desktop:justify-between desktop:gap-6">
         <div className="flex flex-col gap-2">
           <h1 className="font-display text-h1">Widgets</h1>
-          <p className="max-w-[600px] text-body text-gray">
+          <p className="max-w-[760px] text-body">
             Affichez vos témoignages sur vos pages de vente. Chaque widget a son code, à coller une seule fois.
           </p>
         </div>
-        <div className="flex flex-col gap-2 desktop:items-end desktop:pt-8">
+        <div className="flex shrink-0 flex-col gap-2">
           <form action={createWidget}>
             <button
               type="submit"
@@ -149,7 +148,7 @@ export const WidgetList = ({ widgets, createLimit, isPausing }: WidgetListProps)
             </button>
           </form>
           {createLimit ? (
-            <p className="text-small text-gray desktop:text-right">
+            <p className="text-small text-gray desktop:max-w-[220px]">
               {`Le plan ${createLimit.planName} comprend ${createLimit.widgetLimit} widget${createLimit.widgetLimit > 1 ? "s" : ""}. `}
               <Link href={BILLING_HREF} className={INLINE_LINK_CLASSES}>
                 Voir les plans
@@ -176,9 +175,9 @@ export const WidgetList = ({ widgets, createLimit, isPausing }: WidgetListProps)
           {widgets.map((widget) => (
             <li
               key={widget.id}
-              className="flex flex-col gap-4 rounded-card bg-white p-4 desktop:flex-row desktop:items-center desktop:gap-8 desktop:p-6"
+              className="flex flex-col gap-4 rounded-card bg-white p-4 desktop:flex-row desktop:items-center desktop:gap-6 desktop:p-6"
             >
-              <div className="flex min-w-[0] flex-1 items-start gap-4 desktop:gap-8">
+              <div className="flex min-w-[0] flex-1 items-start gap-4 desktop:items-center desktop:gap-6">
                 <WidgetThumbnail type={widget.type} className="w-[72px] desktop:w-[120px]" />
                 <div className="flex min-w-[0] flex-col gap-1">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -193,7 +192,7 @@ export const WidgetList = ({ widgets, createLimit, isPausing }: WidgetListProps)
               <Link
                 href={widgetEditorHref(widget.id)}
                 aria-label={`Modifier ${widget.title}`}
-                className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}
+                className={cn(SECONDARY_COMPACT_BUTTON_CLASSES, "w-full desktop:w-auto")}
               >
                 Modifier
               </Link>

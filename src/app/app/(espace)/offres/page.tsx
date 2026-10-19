@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { OffersBoard } from "@/components/offers/OffersBoard";
-import { BackBar } from "@/components/space/BackBar";
-import { MORE_SECTION_HREF, connectorHref } from "@/components/space/space-sections";
+import { buildSpaceAccount } from "@/components/space/build-space-account";
+import { MobileBackLink } from "@/components/space/MobileBackLink";
+import { connectorHref } from "@/components/space/space-sections";
+import { SpaceMobileHeader } from "@/components/space/SpaceMobileHeader";
 import { SpacePage } from "@/components/space/SpacePage";
 import { getDb } from "@/db";
 import { getConnector } from "@/lib/connectors/registry";
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 const OffersPage = async () => {
-  const { space } = await getCurrentSpace();
+  const { signedInUser, space } = await getCurrentSpace();
   const database = getDb();
   const [offers, connectorIds] = await Promise.all([
     listSpaceOffers(database, space.id),
@@ -30,8 +32,9 @@ const OffersPage = async () => {
 
   return (
     <>
-      <BackBar href={MORE_SECTION_HREF} label="Plus" />
-      <SpacePage className="desktop:max-w-[1128px]">
+      <SpaceMobileHeader account={buildSpaceAccount(signedInUser, space)} />
+      <SpacePage className="gap-4">
+        <MobileBackLink />
         <OffersBoard
           connectors={connectors}
           today={toParisIsoDay(new Date())}

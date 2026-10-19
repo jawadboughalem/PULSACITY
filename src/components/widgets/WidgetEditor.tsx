@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { useCallback, useId, useMemo, useState } from "react";
+import { Breadcrumb } from "@/components/space/BackBar";
+import { MobileBackLink } from "@/components/space/MobileBackLink";
 import { BILLING_HREF, TESTIMONIALS_SECTION_HREF, WIDGETS_SECTION_HREF } from "@/components/space/space-sections";
 import { useCopyLink } from "@/components/space/useCopyLink";
 import { DISCREET_BUTTON_CLASSES, INLINE_LINK_CLASSES, PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { ActionDoneMessage } from "@/components/ui/ActionDoneMessage";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { FieldError } from "@/components/ui/FieldError";
 import {
@@ -110,7 +113,7 @@ const SaveStatus = ({ saveState, onRetry }: { saveState: SaveState; onRetry: () 
     <span className="text-gray">{SAVE_LABELS[saveState]}</span>
   );
 
-/** Maquette 6, desktop: « Code copié » with its check on the button itself (charte v2), and where to paste it next. */
+/** Maquettes 3.4, desktop: « Code copié » with its check on the button itself, and where to paste it next. */
 const CopyCodeBlock = ({ isCopied, onCopy }: { isCopied: boolean; onCopy: () => void }) => (
   <div className="flex flex-col gap-3">
     <button
@@ -118,9 +121,10 @@ const CopyCodeBlock = ({ isCopied, onCopy }: { isCopied: boolean; onCopy: () => 
       onClick={onCopy}
       className={cn(PRIMARY_BUTTON_CLASSES, "w-full")}
     >
-      <Icon name={isCopied ? "valid" : "copy"} size={20} />
+      <Icon name={isCopied ? "check" : "copy"} size={20} />
       {isCopied ? "Code copié" : "Copier le code"}
     </button>
+    <ActionDoneMessage message={isCopied ? "Le code est copié." : null} />
     <p aria-live="polite" className={FIELD_HINT_CLASSES}>
       {isCopied
         ? "Collez-le maintenant dans votre page. Sur Systeme.io, suivez les 4 étapes ci-dessous."
@@ -263,7 +267,7 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
       <ThemeSelector value={edit.theme} onChange={(theme) => change({ theme })} />
       <AccentWarningNote warning={accentWarning} onUseInk={() => change({ accentColor: INK })} />
       <CardStyleSelector value={edit.cardStyle} onChange={(cardStyle) => change({ cardStyle })} />
-      <div className="flex items-start justify-between gap-4 pt-6">
+      <div className="flex items-start justify-between gap-4 pt-2">
         <div className="flex min-w-[0] flex-col gap-1">
           <span id="widget-hide-powered-label" className={cn("text-body", !look.canHideBadge && "text-gray")}>
             Masquer « Propulsé par PULSACITY »
@@ -292,28 +296,22 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
   const tabId = (value: EditorTab) => `${tabsId}-${value}`;
 
   return (
-    <div className="flex flex-col">
-      <header className="hidden items-center justify-between gap-6 px-10 py-4 desktop:flex">
-        <div className="flex min-w-[0] flex-col">
-          <nav aria-label="Fil d'Ariane" className="text-small text-gray">
-            <Link href={WIDGETS_SECTION_HREF} className={INLINE_LINK_CLASSES}>
-              Widgets
-            </Link>{" "}
-            / <span aria-current="page">{label}</span>
-          </nav>
-          <h1 className="font-display text-h2">Modifier le widget</h1>
+    <div className="flex flex-col gap-6 desktop:gap-8">
+      <div className="flex flex-col gap-4 desktop:gap-6">
+        <Breadcrumb parentHref={WIDGETS_SECTION_HREF} parentLabel="Widgets" current={label} />
+        <MobileBackLink href={WIDGETS_SECTION_HREF} label="Widgets" />
+        <div className="flex flex-col gap-2 desktop:flex-row desktop:items-end desktop:justify-between desktop:gap-6">
+          <h1 className="font-display text-h1">Modifier le widget</h1>
+          <p aria-live="polite" className="hidden min-h-[26px] items-center gap-2 text-body desktop:flex">
+            {saveState === "failed" ? null : <Icon name="valid" size={20} className="text-gray" />}
+            <SaveStatus saveState={saveState} onRetry={retry} />
+          </p>
+          <p aria-live="polite" className="text-small text-gray desktop:hidden">
+            {`${label} · `}
+            <SaveStatus saveState={saveState} onRetry={retry} />
+          </p>
         </div>
-        <p aria-live="polite" className="min-h-[20px] text-small">
-          <SaveStatus saveState={saveState} onRetry={retry} />
-        </p>
-      </header>
-      <div className="flex flex-col gap-2 px-6 pt-6 desktop:hidden">
-        <h1 className="font-display text-h1">Modifier le widget</h1>
-        <p aria-live="polite" className="text-small text-gray">
-          {`${label} · `}
-          <SaveStatus saveState={saveState} onRetry={retry} />
-        </p>
-        <div role="tablist" aria-label="Modifier le widget" className={cn(SEGMENTED_CLASSES, "mt-3")}>
+        <div role="tablist" aria-label="Modifier le widget" className={cn(SEGMENTED_CLASSES, "desktop:hidden")}>
           {TABS.map((option) => {
             const isChosen = option.value === tab;
             return (
@@ -337,18 +335,19 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
         </div>
       </div>
 
-      <div className="flex flex-col desktop:min-h-[1194px] desktop:flex-row">
+      {/* Maquettes 3.4: the settings on a white card of 400, the preview on its own card beside them. */}
+      <div className="flex flex-col gap-6 desktop:grid desktop:grid-cols-[400px_minmax(0,1fr)] desktop:items-start">
         <div
           id={`${tabId("settings")}-panel`}
           role="tabpanel"
           aria-labelledby={tabId("settings")}
           className={cn(
-            "flex-col gap-8 px-6 py-6 desktop:flex desktop:w-[380px] desktop:shrink-0 desktop:py-8 desktop:pr-8 desktop:pl-10",
+            "flex-col gap-6 rounded-panel bg-white p-4 desktop:flex desktop:p-7",
             tab === "settings" ? "flex" : "hidden",
           )}
         >
           {settings}
-          <div className="mt-auto hidden pt-10 desktop:block">
+          <div className="hidden pt-2 desktop:block">
             <CopyCodeBlock isCopied={isCopied} onCopy={handleCopy} />
           </div>
         </div>
@@ -357,7 +356,7 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
           role="tabpanel"
           aria-labelledby={tabId("preview")}
           className={cn(
-            "min-w-[0] flex-col gap-4 bg-sky px-6 py-6 desktop:flex desktop:flex-1 desktop:px-8 desktop:py-8",
+            "min-w-[0] flex-col gap-4 rounded-panel bg-white p-3 desktop:flex desktop:p-6",
             tab === "preview" ? "flex" : "hidden",
           )}
         >
@@ -389,10 +388,10 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
         </section>
       </div>
 
-      <div className="px-6 pt-2 pb-[108px] desktop:hidden">
+      <div className="desktop:hidden">
         <WidgetInstallPanel widgetId={widgetId} snippet={snippet} email={email} guideHref={guideHref} />
       </div>
-      <div className="hidden px-10 pb-10 desktop:block">
+      <div className="hidden desktop:block">
         <SystemePasteGuide isCodeCopied={isCopied} />
       </div>
     </div>

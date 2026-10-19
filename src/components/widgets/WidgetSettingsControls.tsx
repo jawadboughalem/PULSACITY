@@ -36,7 +36,7 @@ export const WidgetTypePicker = ({ value, onChange }: TypePickerProps) => (
             className={cn(
               "pz-couleur flex h-[72px] cursor-pointer flex-col items-center justify-center gap-1 rounded-field border-2 text-body text-ink",
               FOCUS_RING,
-              isChosen ? "border-ink bg-sky font-bold" : "border-gray bg-white hover:border-ink hover:bg-sky",
+              isChosen ? "border-ink bg-sun font-bold hover:bg-sun-hover" : "border-gray bg-white hover:border-ink hover:bg-sky",
             )}
           >
             <Icon name={option.icon} size={24} />
@@ -79,7 +79,8 @@ export const AccentSwatches = ({ swatches, value, onChange }: AccentSwatchesProp
     <fieldset className="flex min-w-[0] flex-col gap-3">
       <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>Couleur d&apos;accent</legend>
       <div className="flex items-center gap-3">
-        <div className="flex shrink-0">
+        {/* Maquettes 3.4: swatches of 44, the chosen one circled in Encre 3 px away. */}
+        <div className="flex shrink-0 gap-1">
           {swatches.map((swatch) => {
             const isChosen = swatch === chosen;
             return (
@@ -89,11 +90,11 @@ export const AccentSwatches = ({ swatches, value, onChange }: AccentSwatchesProp
                 aria-pressed={isChosen}
                 aria-label={swatch.name}
                 onClick={() => onChange(swatch.value)}
-                className={cn("flex size-[44px] cursor-pointer items-center justify-center rounded-full", FOCUS_RING)}
+                className={cn("flex size-[54px] cursor-pointer items-center justify-center rounded-full", FOCUS_RING)}
               >
                 <span
                   className={cn(
-                    "flex size-[36px] items-center justify-center rounded-full border-2 p-[2px]",
+                    "flex size-[54px] items-center justify-center rounded-full border-2 p-[3px]",
                     isChosen ? "border-ink" : "border-transparent",
                   )}
                 >
