@@ -49,7 +49,7 @@ describe("describeExistingRequest", () => {
   it("tells what became of the first request", () => {
     expect(describeExistingRequest(EXISTING, NOW)).toEqual({
       detail:
-        "Elle lui a été envoyée le 18 sept., puis relancée le 22 sept. Une seule demande par client et par offre : ainsi, personne ne reçoit plus de deux e-mails.",
+        "Elle lui a été envoyée le 18 sept., puis relancée le 22 sept. Une seule demande par client et par offre : ainsi, personne ne reçoit plus de deux e-mails de demande.",
       todo: "si cette personne vous a dit vouloir donner son avis, envoyez-lui vous-même votre lien de collecte.",
     });
     expect(

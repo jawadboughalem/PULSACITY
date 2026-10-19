@@ -32,8 +32,11 @@ describe("sitemap", () => {
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://pulsacity.com");
     vi.stubEnv("LEGAL_VALIDATED", "false");
     expect(listPaths()).not.toContain("/cgu");
+    expect(listPaths()).not.toContain("/a-propos-des-avis");
     vi.stubEnv("LEGAL_VALIDATED", "true");
-    expect(listPaths()).toEqual(expect.arrayContaining(["/mentions-legales", "/cgu", "/cgv", "/confidentialite"]));
+    expect(listPaths()).toEqual(
+      expect.arrayContaining(["/mentions-legales", "/cgu", "/cgv", "/confidentialite", "/a-propos-des-avis"]),
+    );
   });
 
   it("falls back on pulsacity.com when no address is configured, as in CI", () => {

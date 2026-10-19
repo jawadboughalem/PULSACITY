@@ -70,6 +70,14 @@ describe("the wall", () => {
     expect(dates.split(", ").every((piece) => !piece.includes(" "))).toBe(true);
   });
 
+  it("writes the first of a month « 1er »", () => {
+    const [first, ...others] = SAMPLE_PAYLOAD.testimonials;
+    const payload = { ...SAMPLE_PAYLOAD, testimonials: [{ ...first, date: "2026-07-01" }, ...others] };
+
+    const card = render(payload).root.querySelector(".grid > li > article.card");
+    expect(plain(card?.querySelector(".who .dates")?.textContent)).toBe("Avis du 1er juil. 2026");
+  });
+
   it("announces its selection, the counterpart and « À propos de ces avis », apart from « Propulsé par »", () => {
     const payload: WidgetPayload = {
       ...SAMPLE_PAYLOAD,

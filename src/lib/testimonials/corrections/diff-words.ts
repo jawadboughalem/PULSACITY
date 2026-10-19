@@ -14,23 +14,26 @@ export const diffWords = (from: string, to: string): DiffSegment[] => {
   const before = tokenize(from);
   const after = tokenize(to);
   const lengths = Array.from({ length: before.length + 1 }, () => new Array<number>(after.length + 1).fill(0));
-  for (let i = before.length - 1; i >= 0; i -= 1) {
-    for (let j = after.length - 1; j >= 0; j -= 1) {
+  for (let i = 1; i <= before.length; i += 1) {
+    for (let j = 1; j <= after.length; j += 1) {
       lengths[i][j] =
-        before[i] === after[j] ? lengths[i + 1][j + 1] + 1 : Math.max(lengths[i + 1][j], lengths[i][j + 1]);
+        before[i - 1] === after[j - 1] ? lengths[i - 1][j - 1] + 1 : Math.max(lengths[i - 1][j], lengths[i][j - 1]);
     }
   }
 
+  // Walked back from the end: a word repeated in the change is matched with its last occurrence, so that the words
+  // added read as one passage (« fringales de » to « envies de sucre de »: « envies de sucre », not « envies » and
+  // « sucre de »).
   const kept = new Array<boolean>(after.length).fill(false);
-  for (let i = 0, j = 0; i < before.length && j < after.length; ) {
-    if (before[i] === after[j]) {
-      kept[j] = true;
-      i += 1;
-      j += 1;
-    } else if (lengths[i + 1][j] >= lengths[i][j + 1]) {
-      i += 1;
+  for (let i = before.length, j = after.length; i > 0 && j > 0; ) {
+    if (before[i - 1] === after[j - 1]) {
+      kept[j - 1] = true;
+      i -= 1;
+      j -= 1;
+    } else if (lengths[i - 1][j] >= lengths[i][j - 1]) {
+      i -= 1;
     } else {
-      j += 1;
+      j -= 1;
     }
   }
 

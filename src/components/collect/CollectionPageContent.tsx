@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { getDb } from "@/db";
+import { PULSACITY_BETA_OFFER_SLUG, readPulsacitySpaceId } from "@/config/pulsacity-space";
 import { getAppUrl } from "@/lib/app-url";
 import { buildConsentText } from "@/lib/testimonials/build-consent-text";
 import { loadCollectionPage } from "@/lib/testimonials/load-collection-page";
+import type { CollectionIncentive } from "./IncentiveNote";
 import { CollectionView } from "./CollectionView";
 import { InactiveLinkScreen } from "./InactiveLinkScreen";
 
@@ -18,6 +20,15 @@ const buildTitle = (spaceName: string, productName: string | null) =>
   productName
     ? `Votre avis sur «${NO_BREAK_SPACE}${productName}${NO_BREAK_SPACE}»${NO_BREAK_SPACE}?`
     : `Votre avis compte pour ${spaceName}`;
+
+/** PULSACITY's own page for its beta testers says their counterpart; any other declared one, the space's. */
+const readIncentive = (
+  space: { id: string; incentiveDeclaredAt: Date | null },
+  productSlug: string | null,
+): CollectionIncentive | null => {
+  if (space.id === readPulsacitySpaceId() && productSlug === PULSACITY_BETA_OFFER_SLUG) return "beta";
+  return space.incentiveDeclaredAt ? "declared" : null;
+};
 
 type CollectionPageContentProps = {
   spaceSlug: string;
@@ -57,6 +68,7 @@ export const CollectionPageContent = async ({ spaceSlug, productSlug, requestTok
             homeUrl={homeUrl}
             title={buildTitle(space.name, page.product?.name ?? null)}
             consentText={buildConsentText(space.name)}
+            incentive={readIncentive(space, page.product?.slug ?? null)}
           />
         )}
       </main>

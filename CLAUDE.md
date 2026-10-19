@@ -54,12 +54,12 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 ## Structure
 
 ```
-src/app/(marketing)/          # /, /integrations, /integrations/[connector], /tarifs, /guides, /guides/[slug], /aide (aide et « Écrivez-nous »), légal, /espace-supprime
+src/app/(marketing)/          # /, /integrations, /integrations/[connector], /tarifs, /guides, /guides/[slug], /aide (aide et « Écrivez-nous »), légal, /a-propos-des-avis, /espace-supprime
 src/app/(auth)/               # /inscription, /connexion
 src/app/app/                  # /app, /app/temoignages (image de partage : /app/temoignages/[id]/image), /app/offres, /app/widgets, /app/connecteurs, /app/connecteurs/[connector], /app/demandes, /app/reglages (l'espace), /app/compte (la personne, export /app/compte/export), /app/facturation, /app/parrainage
 src/app/go/[slug]/            # liens courts /go/… : l'accueil, avec la source de la visite dans l'adresse
 src/app/p/[slug]/             # lien de parrainage pulsacity.com/p/<adresse de l'espace>
-src/app/t/[spaceSlug]/        # page publique de collecte (+ /t/[spaceSlug]/[productSlug])
+src/app/t/[spaceSlug]/        # page publique de collecte (+ /t/[spaceSlug]/[productSlug]) ; /t/[spaceSlug]/correction : réponse de l'auteur à une correction
 src/app/api/connectors/[connector]/[token]/  # réception des webhooks de tous les connecteurs
 src/app/api/widget/[widgetId]/# JSON public des témoignages d'un widget (cache CDN)
 src/app/api/cron/requests/    # envoi des demandes planifiées
@@ -99,8 +99,9 @@ src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées
 - `customers` : id, spaceId, email, firstName, lastName, unsubscribedAt, createdAt (unique spaceId + email)
 - `purchases` : id, spaceId, customerId, productId, connectionId (nullable), source (connector|manual|csv), eventType, externalRef, purchasedAt, createdAt (unique connectionId + externalRef : une vente reçue deux fois est enregistrée une fois ; `manual` : « Demander un avis »)
 - `review_requests` : id, purchaseId, token (unique), scheduledAt, sentAt, reminderScheduledAt, reminderSentAt, completedAt, cancelledAt, failedAt, status (scheduled|sent|reminded|completed|cancelled|failed), failedAttempts
-- `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body (original, jamais modifié), displayBody (texte affiché, null = original), displayEditedAt, status (pending|approved|hidden), source (form|manual|csv), consentAt, consentText, featured (bool), createdAt
-- `widgets` : id, spaceId, name (nullable, pour le créateur seul), type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur d'accent, nombre max, afficher photo/note/date, masquer « Propulsé par » (Pro), style des cartes), firstLoadedAt (premier affichage sur une page), lastLoadedAt (dernier affichage, à l'heure près), freePlanChosenAt (« Afficher celui-ci à la place » au plan Gratuit), createdAt
+- `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body (original, jamais modifié), displayBody (texte affiché, null = original), displayEditedAt, status (pending|approved|hidden), source (form|manual|csv), provenance (sale|request|added|import|public-link : vente reçue, demande manuelle, ajout, import, lien public), reviewRequestId, purchasedAt, purchaseConnector (la vente ou la demande à laquelle l'avis répond), hiddenAt, hiddenReason, hiddenReasonDetail (« Autre motif »), hiddenReasonSentAt (motif envoyé à l'auteur, une fois), consentAt, consentText, featured (bool), createdAt. Un avis masqué pour un motif ne compte plus dans la note du badge (`src/lib/testimonials/rated-testimonials.ts`)
+- `testimonial_corrections` : id, testimonialId, fromBody, body, token (unique, lien de réponse), createdAt, sentAt, answeredAt, outcome (null = en attente | accepted | refused | cancelled) — « Corriger le texte affiché » : le texte ne change qu'avec l'accord de l'auteur ; une correction en attente à la fois, deux au plus par avis
+- `widgets` : id, spaceId, name (nullable, pour le créateur seul), type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur d'accent, nombre max, afficher photo/note (la date de l'avis s'affiche toujours), masquer « Propulsé par » (Pro), style des cartes), firstLoadedAt (premier affichage sur une page), lastLoadedAt (dernier affichage, à l'heure près), freePlanChosenAt (« Afficher celui-ci à la place » au plan Gratuit), createdAt
 - `space_acquisitions` : spaceId (clé), heardFrom (réponse à « Comment avez-vous connu PULSACITY ? »), utmSource, utmMedium, utmCampaign, utmContent, utmTerm, referralCode (tel que reçu), createdAt — d'où vient un espace, écrit une fois à sa création ; rien sur la personne
 - `referrals` : id, referrerSpaceId, refereeSpaceId (unique, null après suppression du filleul), createdAt, rewardedAt (verrou : un mois par filleul, au premier paiement avec de l'argent), reward (credit|free-month|offered), rewardInvoiceId
 - `welcome_emails` : id, spaceId, step (j0|j1|j3|j7), claimedAt, sentAt, skippedAt (unique spaceId + step : écrit avant l'envoi, jamais deux fois)
@@ -198,6 +199,7 @@ NEXT_PUBLIC_UMAMI_SCRIPT_URL   # facultative : autre adresse du script d'Umami (
 - Toute action de l'espace vérifie la session ET l'appartenance de l'espace.
 - Webhooks : on enregistre d'abord le payload brut dans `webhook_events`, on répond 200 vite, on traite ensuite. Un payload inconnu n'est jamais perdu.
 - Envois d'e-mails idempotents : un `review_request` n'est envoyé qu'une fois (verrou sur `sentAt`).
+- Hors demande et relance, un client ne reçoit que deux e-mails, liés à son avis : le motif d'un masquage (une fois par avis, verrou sur `hiddenReasonSentAt`) et la demande d'accord d'une correction (deux au plus par avis). Rien à un client désinscrit ni à un auteur sans adresse (ajout, import, lien public).
 - Une demande par client et par offre. Un même client (même e-mail) reçu par deux connecteurs dans les 48 heures ne reçoit qu'une demande : la vente dont l'offre est associée la garde (`src/lib/requests/schedule-review-request.ts`).
 - Tests Vitest obligatoires : normalisation de chaque connecteur (à partir des payloads réels), planification des demandes, calcul des limites de plan, rendu du widget (jsdom).
 

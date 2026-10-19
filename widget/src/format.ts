@@ -9,8 +9,11 @@ const MONTH_FORMAT = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "nu
 /** « 4,8/5 » */
 export const formatAverage = (average: number): string => `${AVERAGE_FORMAT.format(average)}/5`;
 
-/** « 12 sept. 2026 », for a day written 2026-09-12. */
-export const formatDay = (isoDay: string): string => DAY_FORMAT.format(new Date(`${isoDay}T12:00:00Z`));
+/** « 12 sept. 2026 », for a day written 2026-09-12; the first of a month, « 1er juil. 2026 ». */
+export const formatDay = (isoDay: string): string =>
+  DAY_FORMAT.formatToParts(new Date(`${isoDay}T12:00:00Z`))
+    .map((part) => (part.type === "day" && part.value === "1" ? "1er" : part.value))
+    .join("");
 
 /** « août 2026 », for a month written 2026-08. */
 export const formatMonth = (isoMonth: string): string => MONTH_FORMAT.format(new Date(`${isoMonth}-15T12:00:00Z`));

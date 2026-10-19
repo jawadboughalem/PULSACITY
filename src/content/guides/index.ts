@@ -44,7 +44,7 @@ export const GUIDES: Guide[] = [
     summary: "Trois façons d'afficher vos avis sur une page de vente, et où les placer.",
     description:
       "Les trois façons d'afficher des avis clients sur une page de vente Systeme.io, de la plus simple à la plus durable, avec les pièges à éviter.",
-    updatedAt: "2026-10-04",
+    updatedAt: "2026-10-19",
     readingMinutes: 6,
     load: () => import("./ajouter-des-temoignages-sur-une-page-systeme-io.mdx"),
   },
@@ -99,7 +99,7 @@ export const GUIDES: Guide[] = [
     summary: "Consentement, photo, durée de conservation : les règles pour publier les avis.",
     description:
       "Consentement, droit à l'image, demandes d'avis par e-⁠mail, durée de conservation : les règles à connaître pour publier les avis de vos clients en toute sérénité.",
-    updatedAt: "2026-10-04",
+    updatedAt: "2026-10-19",
     readingMinutes: 7,
     load: () => import("./temoignages-clients-rgpd-formateur.mdx"),
   },

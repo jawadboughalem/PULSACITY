@@ -9,6 +9,7 @@ import { RadioButton } from "@/components/ui/RadioButton";
 import { Spinner } from "@/components/ui/Spinner";
 import { DIALOG_ACTIONS_CLASSES, DIALOG_CLASSES, DIALOG_TITLE_CLASSES, isClickOnVeil } from "@/components/ui/dialog-styles";
 import { cn } from "@/lib/cn";
+import { endSentence } from "@/lib/french/typography";
 import {
   HIDDEN_REASONS,
   HIDDEN_REASON_LABELS,
@@ -31,7 +32,7 @@ type HideTestimonialDialogProps = {
 const describeReach = (authorName: string, reach: AuthorReach) =>
   ({
     reachable: `${authorName} le reçoit par e-⁠mail, avec votre nom.`,
-    "no-address": `Il reste avec l'avis : sans adresse e-⁠mail, il ne peut pas être envoyé à ${authorName}.`,
+    "no-address": `Il reste avec l'avis : sans adresse e-⁠mail, il ne peut pas être envoyé à ${endSentence(authorName)}`,
     unsubscribed: `Il reste avec l'avis : ${authorName} ne reçoit plus vos e-⁠mails.`,
   })[reach];
 
@@ -79,7 +80,7 @@ export const HideTestimonialDialog = ({
   };
 
   const missingMessage =
-    authorReach === "reachable" ? `Choisissez un motif : il est envoyé à ${authorName}.` : "Choisissez un motif.";
+    authorReach === "reachable" ? `Choisissez un motif : il est envoyé à ${endSentence(authorName)}` : "Choisissez un motif.";
 
   return (
     <dialog

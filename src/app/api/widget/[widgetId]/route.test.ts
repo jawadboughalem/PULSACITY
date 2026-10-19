@@ -117,6 +117,61 @@ describe("GET /api/widget/[widgetId]", () => {
     expect(payload.next).toBe(2);
   });
 
+  it("rates on every review received, shown or not, except those hidden for a declared reason", async () => {
+    await insertTestTestimonial(database, { spaceId, rating: 5, status: "approved" });
+    await insertTestTestimonial(database, { spaceId, rating: 2, status: "pending" });
+    await insertTestTestimonial(database, { spaceId, rating: 2, status: "hidden" });
+    await insertTestTestimonial(database, {
+      spaceId,
+      rating: 1,
+      status: "hidden",
+      hiddenAt: daysAgo(1),
+      hiddenReason: "abusive",
+    });
+    const widgetId = await insertWidget();
+
+    const payload = await (await fetchWidget(widgetId)).json();
+
+    expect(payload.total).toBe(1);
+    expect(payload.count).toBe(3);
+    expect(payload.average).toBeCloseTo(3);
+  });
+
+  it("names the space, links to « À propos de ces avis », and says a counterpart once declared", async () => {
+    await database.update(spaces).set({ name: "Julie Nutrition" }).where(eq(spaces.id, spaceId));
+    await insertTestTestimonial(database, { spaceId, status: "approved" });
+    const widgetId = await insertWidget();
+
+    expect(await (await fetchWidget(widgetId)).json()).toMatchObject({
+      space: "Julie Nutrition",
+      about: `${APP_URL}/a-propos-des-avis`,
+      incentive: false,
+    });
+
+    await database.update(spaces).set({ incentiveDeclaredAt: daysAgo(1) }).where(eq(spaces.id, spaceId));
+    expect(await (await fetchWidget(widgetId)).json()).toMatchObject({ incentive: true });
+  });
+
+  it("gives the month of the purchase in Paris when the review followed one, never for a review added", async () => {
+    await insertTestTestimonial(database, {
+      spaceId,
+      authorName: "Manon G.",
+      status: "approved",
+      provenance: "sale",
+      purchasedAt: new Date("2026-08-31T22:30:00Z"),
+      createdAt: daysAgo(1),
+    });
+    await insertTestTestimonial(database, { spaceId, authorName: "Thomas L.", status: "approved", provenance: "added" });
+    const widgetId = await insertWidget();
+
+    const payload = await (await fetchWidget(widgetId)).json();
+
+    const byName = (name: string) =>
+      payload.testimonials.find((testimonial: { name: string }) => testimonial.name === name);
+    expect(byName("Manon G.")).toMatchObject({ purchase: "2026-09" });
+    expect(byName("Thomas L.")).not.toHaveProperty("purchase");
+  });
+
   it("keeps the testimonials of the widget's offer only", async () => {
     await insertTestTestimonial(database, { spaceId, authorName: "Camille R.", status: "approved", productId: programmeId });
     await insertTestTestimonial(database, { spaceId, authorName: "Nadia B.", status: "approved", productId: suiviId });

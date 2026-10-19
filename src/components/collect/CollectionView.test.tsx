@@ -22,6 +22,7 @@ const JULIE_NUTRITION: ComponentProps<typeof CollectionView> = {
   homeUrl: "https://pulsacity.com",
   title: "Votre avis sur « Programme 30 jours » ?",
   consentText: "J'accepte que ce témoignage soit publié sur les supports de Julie Nutrition.",
+  incentive: null,
 };
 
 const BODY = "En 30 jours j'ai arrêté de grignoter le soir. Julie explique sans culpabiliser, c'est la première fois.";
@@ -188,5 +189,25 @@ describe("CollectionView", () => {
 
     expect(find("h1").textContent).toBe("Ce lien n'est plus actif");
     expect(find<HTMLAnchorElement>('a[href^="mailto:"]').href).toBe("mailto:julie@exemple.fr");
+  });
+});
+
+describe("the counterpart", () => {
+  it("is said before the form, so that the customer knows it before writing", async () => {
+    await renderCollection({ incentive: "declared" });
+    const note = find("p.rounded-card");
+    expect(note.textContent).toBe(
+      "Julie Nutrition offre une contrepartie pour chaque avis, quel qu'il soit. Elle est indiquée avec les avis publiés.",
+    );
+    expect(note.compareDocumentPosition(find("form")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it("tells PULSACITY's beta testers the mention their review will carry, and nothing when none is declared", async () => {
+    await renderCollection({ incentive: "beta" });
+    expect(find("p.rounded-card").textContent?.replace(/\u00a0/g, " ")).toContain(
+      "portera la mention « Bêta-testeur · plan Essentiel offert pendant la bêta »",
+    );
+    await renderCollection({ incentive: null });
+    expect(container.querySelector("p.rounded-card")).toBeNull();
   });
 });

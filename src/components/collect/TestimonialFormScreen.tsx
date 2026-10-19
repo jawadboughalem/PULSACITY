@@ -11,6 +11,7 @@ import { CollectSubmitButton } from "./CollectSubmitButton";
 import { CollectTextareaField } from "./CollectTextareaField";
 import { ConsentField } from "./ConsentField";
 import { HoneypotField } from "./HoneypotField";
+import { type CollectionIncentive, IncentiveNote } from "./IncentiveNote";
 import { PhotoPicker } from "./PhotoPicker";
 import { PoweredByPulsacity } from "./PoweredByPulsacity";
 import { RatingField } from "./RatingField";
@@ -40,6 +41,7 @@ type TestimonialFormScreenProps = {
   consentText: string;
   homeUrl: string;
   referralCode: string;
+  incentive?: CollectionIncentive | null;
 };
 
 export const TestimonialFormScreen = ({
@@ -51,6 +53,7 @@ export const TestimonialFormScreen = ({
   consentText,
   homeUrl,
   referralCode,
+  incentive = null,
 }: TestimonialFormScreenProps) => {
   const { values, setters, refs, fieldErrors } = form;
 
@@ -61,6 +64,7 @@ export const TestimonialFormScreen = ({
         <h1 className="font-display text-h2">{title}</h1>
         <p className="text-body text-gray">{`${spaceName} lira chaque mot. Comptez moins d'une minute.`}</p>
       </div>
+      {incentive ? <IncentiveNote incentive={incentive} spaceName={spaceName} /> : null}
       <form onSubmit={form.handleSubmit} onInput={form.handleInput} noValidate className="flex flex-col gap-6">
         {form.submitProblem ? <SubmitProblemBanner problem={form.submitProblem} /> : null}
         <RatingField
