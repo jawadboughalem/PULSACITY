@@ -1,6 +1,6 @@
 import { h, svg } from "./dom";
-import { describeRating, formatDay, quoteInFrench } from "./format";
-import type { PublicTestimonial } from "./payload";
+import { ABOUT_REVIEWS, INCENTIVE_NOTE, describeDates, describeRating, describeSelection, quoteInFrench } from "./format";
+import type { PublicTestimonial, WidgetPayload } from "./payload";
 
 const STAR = "M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z";
 const STAR_LEFT_HALF = "M12 2.5L9.1 8.6 2.5 9.4l4.9 4.6-1.3 6.6L12 17.3z";
@@ -65,52 +65,60 @@ export const avatar = (initials: string, photo: string | null): HTMLElement => {
   return circle;
 };
 
-const dateElement = (isoDay: string, className: string | null = null): HTMLElement =>
-  h("time", { class: className, datetime: isoDay }, formatDay(isoDay));
+/** The author: the name, the title, « Avis du …, achat en … », and on PULSACITY's wall the beta testers' mention. */
+const who = (testimonial: PublicTestimonial): HTMLElement =>
+  h(
+    "p",
+    { class: "who" },
+    h("span", { class: "name" }, testimonial.name),
+    testimonial.title ? h("span", { class: "meta" }, testimonial.title) : null,
+    testimonial.date
+      ? h("time", { class: "dates", datetime: testimonial.date }, describeDates(testimonial.date, testimonial.purchase))
+      : null,
+    testimonial.mention ? h("span", { class: "dates" }, testimonial.mention) : null,
+  );
 
-/** Maquette 2, wall: the author, the stars, the quote, then the date. */
+/** Maquette 2, wall: the author, the stars, then the quote. */
 export const wallCard = (testimonial: PublicTestimonial): HTMLElement =>
   h(
     "article",
     { class: "card" },
-    h(
-      "div",
-      { class: "author" },
-      avatar(testimonial.initials, testimonial.photo),
-      h(
-        "p",
-        { class: "who" },
-        h("span", { class: "name" }, testimonial.name),
-        testimonial.title ? h("span", { class: "meta" }, testimonial.title) : null,
-        testimonial.mention ? h("span", { class: "meta" }, testimonial.mention) : null,
-      ),
-    ),
+    h("div", { class: "author" }, avatar(testimonial.initials, testimonial.photo), who(testimonial)),
     testimonial.rating === null ? null : stars(testimonial.rating, describeRating(testimonial.rating)),
     h("blockquote", { class: "quote" }, quoteInFrench(testimonial.text)),
-    testimonial.date ? h("p", { class: "date" }, dateElement(testimonial.date)) : null,
   );
 
-/** Maquette 2, carousel: the stars, the quote, then the author with their title and the date. */
-export const carouselCard = (testimonial: PublicTestimonial): HTMLElement => {
-  const meta = [testimonial.title, testimonial.date ? formatDay(testimonial.date) : null].filter(Boolean).join(" · ");
-  return h(
+/** Maquette 2, carousel: the stars, the quote, then the author. */
+export const carouselCard = (testimonial: PublicTestimonial): HTMLElement =>
+  h(
     "article",
     { class: "card" },
     testimonial.rating === null ? null : stars(testimonial.rating, describeRating(testimonial.rating), "large"),
     h("blockquote", { class: "quote" }, quoteInFrench(testimonial.text)),
-    h(
-      "div",
-      { class: "author" },
-      avatar(testimonial.initials, testimonial.photo),
-      h(
-        "p",
-        { class: "who" },
-        h("span", { class: "name" }, testimonial.name),
-        meta ? h("span", { class: "meta" }, meta) : null,
-        testimonial.mention ? h("span", { class: "meta" }, testimonial.mention) : null,
-      ),
-    ),
+    h("div", { class: "author" }, avatar(testimonial.initials, testimonial.photo), who(testimonial)),
   );
+
+/** « À propos de ces avis », a page of pulsacity.com, distinct from « Propulsé par » (positionnement.md, point 3). */
+export const aboutLink = (href: string): HTMLElement =>
+  h("a", { class: "about", href, target: "_blank", rel: "noopener" }, ABOUT_REVIEWS);
+
+export const incentiveNote = (): HTMLElement => h("p", { class: "incentive" }, INCENTIVE_NOTE);
+
+/**
+ * Charte v2, Widget, ajouts (3.6): under a wall or a carousel, the selection announced, the counterpart when there is
+ * one, then « À propos de ces avis », on every plan; then « Propulsé par », beside them when wide, below when narrow.
+ */
+export const notes = (payload: WidgetPayload): HTMLElement | null => {
+  const lines = h(
+    "div",
+    { class: "mentions" },
+    payload.space ? h("p", null, describeSelection(payload.space)) : null,
+    payload.incentive ? incentiveNote() : null,
+    payload.about ? aboutLink(payload.about) : null,
+  );
+  const powered = payload.poweredBy ? poweredBy(payload.poweredBy) : null;
+  if (lines.childElementCount === 0 && !powered) return null;
+  return h("div", { class: "notes" }, lines.childElementCount > 0 ? lines : null, powered);
 };
 
 const SYMBOL_STAR =

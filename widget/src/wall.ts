@@ -1,7 +1,7 @@
 import type { LayoutContext } from "./context";
 import { h } from "./dom";
 import { describeMore, describeSummary, summarize } from "./format";
-import { poweredBy, stars, wallCard } from "./parts";
+import { notes, stars, wallCard } from "./parts";
 import type { PublicTestimonial, WidgetPayload } from "./payload";
 
 const MORE_FAILED = "Les autres avis n'ont pas pu s'afficher. Réessayez.";
@@ -48,8 +48,8 @@ export const renderWall = (payload: WidgetPayload, context: LayoutContext): HTML
       h(
         "p",
         { class: "summary" },
-        stars(payload.average, describeSummary(payload.average, payload.total), "large"),
-        h("span", { "aria-hidden": "true" }, summarize(payload.average, payload.total)),
+        stars(payload.average, describeSummary(payload.average, payload.count ?? payload.total), "large"),
+        h("span", { "aria-hidden": "true" }, summarize(payload.average, payload.count ?? payload.total)),
       ),
     );
   }
@@ -99,7 +99,8 @@ export const renderWall = (payload: WidgetPayload, context: LayoutContext): HTML
     });
     footer.append(more);
   }
-  if (payload.poweredBy) footer.append(poweredBy(payload.poweredBy));
   if (footer.childElementCount > 0) wall.append(footer);
+  const mentions = notes(payload);
+  if (mentions) wall.append(mentions);
   return wall;
 };

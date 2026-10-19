@@ -56,10 +56,10 @@ const DARK_CARD = "#22262D";
 
 const MAX_ITEMS_ERROR = `Indiquez un nombre entre ${MIN_WIDGET_MAX_ITEMS} et ${MAX_WIDGET_MAX_ITEMS}.`;
 
+/** No « Date » any more (lot 4.13): the law asks for the date of each review, the widget always shows it. */
 const DISPLAY_OPTIONS = [
   { key: "showPhoto", label: "Photo" },
   { key: "showRating", label: "Note en étoiles" },
-  { key: "showDate", label: "Date" },
 ] as const;
 
 const readMaxItems = (text: string): number | null => {

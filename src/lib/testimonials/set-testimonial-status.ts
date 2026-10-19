@@ -6,7 +6,8 @@ import { claimFirstApproval } from "./claim-first-approval";
 import { countApprovedTestimonials } from "./count-approved-testimonials";
 import { findOwnedTestimonial } from "./find-owned-testimonial";
 
-export type ReviewedTestimonialStatus = "approved" | "hidden";
+/** « Masquer » goes through hideTestimonial, with its reason. */
+export type ReviewedTestimonialStatus = "approved";
 
 export type TestimonialChangeResult = { status: "updated" } | { status: "testimonial-not-found" };
 
@@ -37,9 +38,10 @@ export const setTestimonialStatus = (
       }
     }
 
+    // Shown again, a testimonial counts again in the rating: its reason for being hidden goes (the e-mail sent stays).
     await transaction
       .update(testimonials)
-      .set({ status })
+      .set({ status, hiddenAt: null, hiddenReason: null, hiddenReasonDetail: null })
       .where(and(eq(testimonials.id, testimonial.id), eq(testimonials.spaceId, testimonial.spaceId)));
     return {
       status: "updated",

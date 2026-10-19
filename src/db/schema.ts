@@ -3,6 +3,7 @@ import {
   boolean,
   check,
   index,
+  uniqueIndex,
   integer,
   jsonb,
   pgEnum,
@@ -21,6 +22,9 @@ import type { HeardFrom } from "../lib/acquisition/heard-from";
 import type { ReferralReward } from "../lib/referrals/referral-reward";
 import type { WelcomeEmailStep } from "../lib/welcome-emails/welcome-email-steps";
 import { DEFAULT_REQUEST_DELAY_DAYS } from "../lib/requests/request-timing";
+import type { HiddenReason } from "../lib/testimonials/hidden-reasons";
+import type { CorrectionOutcome } from "../lib/testimonials/corrections/correction-outcome";
+import type { TestimonialProvenance } from "../lib/testimonials/testimonial-provenance";
 
 function timestamptz(name: string) {
   return timestamp(name, { withTimezone: true });
@@ -460,6 +464,21 @@ export const testimonials = pgTable(
     consentText: text("consent_text"),
     featured: boolean("featured").notNull().default(false),
     createdAt: timestamptz("created_at").notNull().defaultNow(),
+    /** Vente reçue, demande manuelle, ajout, import ou lien public (lot 4.13). Null: written before, read from source. */
+    provenance: text("provenance").$type<TestimonialProvenance>(),
+    /** The request it answers, while it exists. The provenance and the purchase stay when it is gone. */
+    reviewRequestId: uuid("review_request_id").references(() => reviewRequests.id, { onDelete: "set null" }),
+    /** The purchase the request followed (sale or « Demander un avis »): « achat en août 2026 » in the widgets. */
+    purchasedAt: timestamptz("purchased_at"),
+    /** The connector of the sale (« Vente reçue · Systeme.io »). */
+    purchaseConnector: text("purchase_connector"),
+    /** When « Masquer » was last confirmed, with its reason. Cleared when the testimonial is validated again. */
+    hiddenAt: timestamptz("hidden_at"),
+    hiddenReason: text("hidden_reason").$type<HiddenReason>(),
+    /** The words of « Autre motif ». */
+    hiddenReasonDetail: text("hidden_reason_detail"),
+    /** The reason left by e-mail to the author: once per testimonial, whatever happens next. */
+    hiddenReasonSentAt: timestamptz("hidden_reason_sent_at"),
   },
   (table) => [
     index("testimonials_space_id_status_idx").on(table.spaceId, table.status),
@@ -470,6 +489,37 @@ export const testimonials = pgTable(
       "testimonials_form_consent_check",
       sql`${table.source} <> 'form' or (${table.consentAt} is not null and ${table.consentText} is not null)`,
     ),
+  ],
+).enableRLS();
+
+/**
+ * « Corriger le texte affiché » (lot 4.13, point 4): a correction is proposed to the author by e-mail, and shows only
+ * once accepted. The original body never changes. One correction waits at a time.
+ */
+export const testimonialCorrections = pgTable(
+  "testimonial_corrections",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    testimonialId: uuid("testimonial_id")
+      .notNull()
+      .references(() => testimonials.id, { onDelete: "cascade" }),
+    /** The text shown when it was proposed: « Votre texte » of the e-mail. */
+    fromBody: text("from_body").notNull(),
+    /** « Le texte corrigé ». */
+    body: text("body").notNull(),
+    /** In the link of the e-mail: only its receiver can answer. */
+    token: text("token").notNull().unique(),
+    createdAt: timestamptz("created_at").notNull().defaultNow(),
+    sentAt: timestamptz("sent_at"),
+    answeredAt: timestamptz("answered_at"),
+    /** Null while it waits: « accepted », « refused » by the author, or « cancelled » by the creator. */
+    outcome: text("outcome").$type<CorrectionOutcome>(),
+  },
+  (table) => [
+    index("testimonial_corrections_testimonial_id_idx").on(table.testimonialId),
+    uniqueIndex("testimonial_corrections_one_waiting_unique")
+      .on(table.testimonialId)
+      .where(sql`${table.outcome} is null`),
   ],
 ).enableRLS();
 

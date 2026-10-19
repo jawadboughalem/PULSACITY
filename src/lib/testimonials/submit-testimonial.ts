@@ -1,13 +1,14 @@
 import { and, eq } from "drizzle-orm";
 import { canAddTestimonial, getPlan } from "@/config/plans";
 import type { Database } from "@/db/database";
-import { products, purchases, reviewRequests, spaces, testimonials, user } from "@/db/schema";
+import { connections, products, purchases, reviewRequests, spaces, testimonials, user } from "@/db/schema";
 import { getUploadPublicUrl } from "@/lib/uploads/presign-image-upload";
 import { isTestimonialPhotoKeyOf } from "@/lib/uploads/upload-keys";
 import { isReviewRequestActive } from "./active-review-request-statuses";
 import { buildConsentText } from "./build-consent-text";
 import { countApprovedTestimonials } from "./count-approved-testimonials";
 import { findCollectionProduct } from "./load-collection-page";
+import type { TestimonialProvenance } from "./testimonial-provenance";
 
 export type TestimonialSubmission = {
   spaceSlug: string;
@@ -70,6 +71,12 @@ export const submitTestimonial = async (
   return database.transaction(async (transaction): Promise<SubmitTestimonialResult> => {
     let customerId: string | null = null;
     let product = urlProduct;
+    let origin: {
+      provenance: TestimonialProvenance;
+      reviewRequestId: string | null;
+      purchasedAt: Date | null;
+      purchaseConnector: string | null;
+    } = { provenance: "public-link", reviewRequestId: null, purchasedAt: null, purchaseConnector: null };
 
     if (submission.requestToken) {
       const [request] = await transaction
@@ -80,10 +87,14 @@ export const submitTestimonial = async (
           productId: products.id,
           productName: products.name,
           productSlug: products.slug,
+          purchaseSource: purchases.source,
+          purchasedAt: purchases.purchasedAt,
+          connector: connections.connector,
         })
         .from(reviewRequests)
         .innerJoin(purchases, eq(purchases.id, reviewRequests.purchaseId))
         .innerJoin(products, eq(products.id, purchases.productId))
+        .leftJoin(connections, eq(connections.id, purchases.connectionId))
         .where(and(eq(reviewRequests.token, submission.requestToken), eq(purchases.spaceId, space.id)))
         .limit(1)
         .for("update", { of: reviewRequests });
@@ -95,6 +106,12 @@ export const submitTestimonial = async (
         .where(eq(reviewRequests.id, request.id));
       customerId = request.customerId;
       product = { id: request.productId, name: request.productName, slug: request.productSlug };
+      origin = {
+        provenance: request.purchaseSource === "connector" ? "sale" : "request",
+        reviewRequestId: request.id,
+        purchasedAt: request.purchasedAt,
+        purchaseConnector: request.connector,
+      };
     }
 
     const approvedCount = await countApprovedTestimonials(transaction, space.id);
@@ -113,6 +130,7 @@ export const submitTestimonial = async (
       source: "form",
       consentAt: new Date(),
       consentText: buildConsentText(space.name),
+      ...origin,
     });
 
     const plan = getPlan(space.plan);

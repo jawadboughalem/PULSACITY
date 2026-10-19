@@ -12,6 +12,8 @@ export const MARKETING_PATHS = {
   privacy: "/confidentialite",
   cookies: "/confidentialite#cookies",
   help: "/aide",
+  /** How the testimonials are collected and shown (lot 4.13): linked from every widget, on every plan. */
+  aboutReviews: "/a-propos-des-avis",
   /** « Écrivez-nous » of /aide, where the footer's « Contact » and every « Écrivez-nous » lead. */
   contact: "/aide#contact",
 } as const;

@@ -7,6 +7,7 @@ import { findOwnedSpace } from "@/lib/spaces/find-owned-space";
 import { slugify } from "@/lib/spaces/slugify";
 import { getDisplayedBody } from "@/lib/testimonials/displayed-body";
 import { loadTestimonialDetail } from "@/lib/testimonials/load-testimonial-detail";
+import { hasKnownPurchase } from "@/lib/testimonials/testimonial-provenance";
 import {
   TESTIMONIAL_IMAGE_FORMATS,
   isTestimonialImageFormat,
@@ -51,7 +52,7 @@ export const GET = async (
       rating: testimonial.rating,
       text: getDisplayedBody(testimonial),
       reviewedAt: testimonial.createdAt,
-      purchasedAt: testimonial.request?.purchasedAt ?? null,
+      purchasedAt: hasKnownPurchase(testimonial.provenance) ? testimonial.purchasedAt : null,
     });
     const { width, height } = TESTIMONIAL_IMAGE_FORMATS[format];
     const fileName = `temoignage-${slugify(testimonial.authorName) || "client"}-${width}x${height}.png`;

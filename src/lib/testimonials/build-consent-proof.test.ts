@@ -19,12 +19,20 @@ const NADIA: TestimonialDetail = {
   createdAt: new Date("2026-09-26T19:47:00Z"),
   productId: null,
   productName: null,
+  provenance: "sale",
+  purchasedAt: new Date("2026-06-24T10:00:00Z"),
+  purchaseConnector: "systeme",
   request: {
-    connector: "systeme",
-    purchasedAt: new Date("2026-06-24T10:00:00Z"),
     requestSentAt: new Date("2026-09-24T08:00:00Z"),
     answeredAt: new Date("2026-09-26T19:47:00Z"),
   },
+  hiddenAt: null,
+  hiddenReason: null,
+  hiddenReasonDetail: null,
+  hiddenReasonSentAt: null,
+  authorReach: "reachable",
+  correction: null,
+  correctionsProposed: 0,
 };
 
 describe("buildConsentProof", () => {
@@ -34,6 +42,7 @@ describe("buildConsentProof", () => {
     expect(proof).toContain("Espace : Julie Nutrition");
     expect(proof).toContain("Auteur : Nadia B., Infirmière de nuit");
     expect(proof).toContain("Source : page de collecte, remplie par l'auteur, après une vente Systeme.io");
+    expect(proof).toContain("Provenance : vente reçue de Systeme.io\nAchat du : 24 juin 2026\n");
     expect(proof).toContain(
       "Consentement donné le : 26 sept. 2026 à 21:47 (heure de Paris), 2026-09-26T19:47:00.000Z",
     );
@@ -45,9 +54,17 @@ describe("buildConsentProof", () => {
   });
 
   it("says when the creator vouched for a testimonial they added", () => {
-    const proof = buildConsentProof("Julie Nutrition", { ...NADIA, source: "manual", request: null });
+    const proof = buildConsentProof("Julie Nutrition", {
+      ...NADIA,
+      source: "manual",
+      provenance: "added",
+      purchasedAt: null,
+      purchaseConnector: null,
+      request: null,
+    });
 
     expect(proof).toContain("Donné par : le créateur de l'espace, qui atteste avoir l'accord de l'auteur");
     expect(proof).toContain("Source : ajout manuel par le créateur de l'espace\n");
+    expect(proof).toContain("Provenance : ajout par le créateur de l'espace\nAchat du : date inconnue\n");
   });
 });

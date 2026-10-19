@@ -159,7 +159,7 @@ describe("GET /api/widget/[widgetId]", () => {
     ]);
   });
 
-  it("leaves out the photos, ratings and dates the widget hides", async () => {
+  it("leaves out the photos and ratings the widget hides, never the date of the review", async () => {
     await insertTestTestimonial(database, {
       spaceId,
       authorPhotoUrl: "https://photos.exemple.fr/camille.jpg",
@@ -169,7 +169,7 @@ describe("GET /api/widget/[widgetId]", () => {
 
     const payload = await (await fetchWidget(widgetId)).json();
 
-    expect(payload.testimonials[0]).toMatchObject({ photo: null, rating: null, date: null });
+    expect(payload.testimonials[0]).toMatchObject({ photo: null, rating: null, date: expect.any(String) });
     expect(payload.average).toBeNull();
   });
 

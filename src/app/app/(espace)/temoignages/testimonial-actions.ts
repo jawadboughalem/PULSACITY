@@ -7,7 +7,12 @@ import { z } from "zod";
 import { getDb } from "@/db";
 import { requireSignedInUser } from "@/lib/auth/require-signed-in-user";
 import { SPACE_HOME_PATH } from "@/lib/spaces/space-paths";
+import { cancelCorrection, proposeCorrection } from "@/lib/testimonials/corrections/manage-corrections";
+import { type MaskPassageResult, maskPassage } from "@/lib/testimonials/corrections/mask-passage";
 import { deleteTestimonial } from "@/lib/testimonials/delete-testimonial";
+import { HIDDEN_REASONS, MAX_HIDDEN_REASON_DETAIL_LENGTH } from "@/lib/testimonials/hidden-reasons";
+import { hideTestimonial } from "@/lib/testimonials/hide-testimonial";
+import { sendHiddenReason } from "@/lib/testimonials/send-hidden-reason";
 import { editTestimonialPresentation, setTestimonialProduct } from "@/lib/testimonials/edit-testimonial-presentation";
 import { restoreTestimonialOriginal } from "@/lib/testimonials/restore-testimonial-original";
 import { setTestimonialFeatured } from "@/lib/testimonials/set-testimonial-featured";
@@ -23,7 +28,7 @@ export type TestimonialActionResult =
   | { ok: true; data: null }
   | { ok: false; error: "testimonial-not-found" | "product-not-found" };
 
-export type TestimonialPresentationField = "displayBody" | "authorName" | "authorTitle";
+export type TestimonialPresentationField = "authorName" | "authorTitle";
 
 export type SaveTestimonialPresentationResult =
   | { ok: true; data: null }
@@ -33,7 +38,6 @@ export type SaveTestimonialPresentationResult =
 const testimonialIdSchema = z.uuid();
 
 const presentationSchema = z.object({
-  displayBody: z.string().trim().min(1).max(MAX_TESTIMONIAL_LENGTH),
   authorName: z.string().trim().min(1).max(MAX_AUTHOR_NAME_LENGTH),
   authorTitle: z
     .string()
@@ -78,18 +82,43 @@ export const approveTestimonial = async (testimonialId: string): Promise<Approve
   return { ok: true, data: { isFirstApproval: result.isFirstApproval } };
 };
 
-export const hideTestimonial = async (testimonialId: string): Promise<TestimonialActionResult> =>
-  changeTestimonial(testimonialId, async (userId, id) => {
-    const result = await setTestimonialStatus(getDb(), userId, id, "hidden");
-    return result.status === "updated" ? { status: "updated" } : { status: "testimonial-not-found" };
-  });
+const hidingSchema = z
+  .object({
+    reason: z.enum(HIDDEN_REASONS),
+    detail: z.string().trim().max(MAX_HIDDEN_REASON_DETAIL_LENGTH).nullable(),
+  })
+  .refine((hiding) => hiding.reason !== "other" || Boolean(hiding.detail), { path: ["detail"] });
+
+export type HideTestimonialResult =
+  /** reasonSent: the reason left by e-mail to the author just now. */
+  | { ok: true; data: { reasonSent: boolean } }
+  | { ok: false; error: "testimonial-not-found" | "invalid-reason" };
+
+/** « Masquer » with its reason (point 6): the testimonial leaves the widgets, the reason leaves to its author. */
+export const hideTestimonialWithReason = async (
+  testimonialId: string,
+  hiding: { reason: string; detail: string | null },
+): Promise<HideTestimonialResult> => {
+  const signedInUser = await requireSignedInUser();
+  const parsedId = testimonialIdSchema.safeParse(testimonialId);
+  if (!parsedId.success) return { ok: false, error: "testimonial-not-found" };
+  const parsedHiding = hidingSchema.safeParse(hiding);
+  if (!parsedHiding.success) return { ok: false, error: "invalid-reason" };
+
+  const database = getDb();
+  const result = await hideTestimonial(database, signedInUser.id, parsedId.data, parsedHiding.data);
+  if (result.status !== "updated") return { ok: false, error: result.status };
+  const sent = await sendHiddenReason(database, parsedId.data);
+  revalidatePath(SPACE_HOME_PATH, "layout");
+  return { ok: true, data: { reasonSent: sent === "sent" } };
+};
 
 export const featureTestimonial = async (testimonialId: string, featured: boolean): Promise<TestimonialActionResult> =>
   changeTestimonial(testimonialId, (userId, id) => setTestimonialFeatured(getDb(), userId, id, featured === true));
 
 export const saveTestimonialPresentation = async (
   testimonialId: string,
-  presentation: { displayBody: string; authorName: string; authorTitle: string },
+  presentation: { authorName: string; authorTitle: string },
 ): Promise<SaveTestimonialPresentationResult> => {
   const signedInUser = await requireSignedInUser();
   const parsedId = testimonialIdSchema.safeParse(testimonialId);
@@ -97,8 +126,7 @@ export const saveTestimonialPresentation = async (
   const parsed = presentationSchema.safeParse(presentation);
   if (!parsed.success) {
     const fields = [...new Set(parsed.error.issues.map((issue) => issue.path[0]))].filter(
-      (field): field is TestimonialPresentationField =>
-        field === "displayBody" || field === "authorName" || field === "authorTitle",
+      (field): field is TestimonialPresentationField => field === "authorName" || field === "authorTitle",
     );
     return { ok: false, error: "invalid-input", fields };
   }
@@ -122,6 +150,74 @@ export const linkTestimonialProduct = async (
   return changeTestimonial(testimonialId, (userId, id) =>
     setTestimonialProduct(getDb(), userId, id, parsedProductId.data),
   );
+};
+
+export type ProposeCorrectionActionResult =
+  | { ok: true; data: null }
+  | {
+      ok: false;
+      error:
+        | "testimonial-not-found"
+        | "invalid-input"
+        | "unreachable"
+        | "already-waiting"
+        | "too-many"
+        | "unchanged"
+        | "not-sent";
+    };
+
+const correctionSchema = z.string().trim().min(1).max(MAX_TESTIMONIAL_LENGTH);
+
+/** « Envoyer à … pour accord » (point 4): nothing changes on the pages before the author accepts. */
+export const proposeTestimonialCorrection = async (
+  testimonialId: string,
+  body: string,
+): Promise<ProposeCorrectionActionResult> => {
+  const signedInUser = await requireSignedInUser();
+  const parsedId = testimonialIdSchema.safeParse(testimonialId);
+  if (!parsedId.success) return { ok: false, error: "testimonial-not-found" };
+  const parsedBody = correctionSchema.safeParse(body);
+  if (!parsedBody.success) return { ok: false, error: "invalid-input" };
+
+  const result = await proposeCorrection(getDb(), signedInUser.id, parsedId.data, parsedBody.data);
+  if (result.status !== "sent") return { ok: false, error: result.status };
+  revalidatePath(SPACE_HOME_PATH, "layout");
+  return { ok: true, data: null };
+};
+
+/** « Annuler la correction »: the author's link no longer proposes it. */
+export const cancelTestimonialCorrection = async (testimonialId: string): Promise<TestimonialActionResult> =>
+  changeTestimonial(testimonialId, async (userId, id) => {
+    const result = await cancelCorrection(getDb(), userId, id);
+    return result.status === "testimonial-not-found" ? result : { status: "updated" };
+  });
+
+export type MaskPassageActionResult =
+  | { ok: true; data: null }
+  | { ok: false; error: Exclude<MaskPassageResult["status"], "masked"> | "invalid-input" };
+
+const maskSchema = z.object({
+  text: z.string().max(MAX_TESTIMONIAL_LENGTH),
+  start: z.number().int().min(0),
+  end: z.number().int().min(0),
+  kind: z.enum(["name", "contact"]),
+});
+
+/** « Masquer ce passage »: a name or a coordinate, no agreement needed, the original kept. */
+export const maskTestimonialPassage = async (
+  testimonialId: string,
+  selection: { text: string; start: number; end: number; kind: string },
+): Promise<MaskPassageActionResult> => {
+  const signedInUser = await requireSignedInUser();
+  const parsedId = testimonialIdSchema.safeParse(testimonialId);
+  if (!parsedId.success) return { ok: false, error: "testimonial-not-found" };
+  const parsedSelection = maskSchema.safeParse(selection);
+  if (!parsedSelection.success) return { ok: false, error: "invalid-input" };
+
+  const result = await maskPassage(getDb(), signedInUser.id, parsedId.data, parsedSelection.data);
+  if (result.status !== "masked") return { ok: false, error: result.status };
+  revalidatePath(SPACE_HOME_PATH, "layout");
+  return { ok: true, data: null };
 };
 
 export const restoreTestimonialDisplay = async (testimonialId: string): Promise<TestimonialActionResult> =>

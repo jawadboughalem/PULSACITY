@@ -28,6 +28,9 @@ const render = (payload: WidgetPayload, setup: Setup = {}, options: Partial<Rend
 
 const texts = (elements: Iterable<Element>) => [...elements].map((element) => element.textContent);
 
+/** The widget holds its pieces together with no-break spaces: compared here with plain ones. */
+const plain = (text: string | null | undefined) => text?.replace(/\u00a0/g, " ");
+
 const variable = (root: HTMLElement, name: string) => root.style.getPropertyValue(name);
 
 afterEach(() => {
@@ -37,7 +40,7 @@ afterEach(() => {
 });
 
 describe("the wall", () => {
-  it("shows each card as in maquette 2: author, stars, quote in French quotes, then the date", () => {
+  it("shows each card as in maquette 2: the author with the date of the review, the stars, the quote in French quotes", () => {
     const { root } = render(SAMPLE_PAYLOAD);
 
     const cards = root.querySelectorAll(".grid > li > article.card");
@@ -48,12 +51,52 @@ describe("the wall", () => {
     expect(first.querySelector(".avatar")?.textContent).toBe("CR");
     expect(first.querySelector(".stars")?.getAttribute("aria-label")).toBe("5 sur 5");
     expect(first.querySelectorAll(".stars .full")).toHaveLength(5);
-    expect(first.querySelector("blockquote")?.textContent).toBe(
+    expect(plain(first.querySelector("blockquote")?.textContent)).toBe(
       "« En 30 jours j'ai arrêté de grignoter le soir. Julie explique sans culpabiliser, c'est la première fois qu'un programme tient dans ma vraie vie. »",
     );
-    expect(first.querySelector("time")?.getAttribute("datetime")).toBe("2026-09-12");
-    expect(first.querySelector("time")?.textContent).toBe("12 sept. 2026");
+    expect(first.querySelector(".who time")?.getAttribute("datetime")).toBe("2026-09-12");
+    expect(plain(first.querySelector(".who time")?.textContent)).toBe("Avis du 12 sept. 2026");
     expect(cards[3].querySelectorAll(".stars .empty")).toHaveLength(1);
+  });
+
+  it("adds the month of the purchase to the date of the review, when PULSACITY knows it", () => {
+    const [first, ...others] = SAMPLE_PAYLOAD.testimonials;
+    const payload = { ...SAMPLE_PAYLOAD, testimonials: [{ ...first, purchase: "2026-08" }, ...others] };
+
+    const card = render(payload).root.querySelector(".grid > li > article.card");
+    const dates = card?.querySelector(".who .dates")?.textContent ?? "";
+    expect(plain(dates)).toBe("Avis du 12 sept. 2026, achat en août 2026");
+    // Two unbreakable pieces: a narrow card cuts the line at the comma, never inside a date.
+    expect(dates.split(", ").every((piece) => !piece.includes(" "))).toBe(true);
+  });
+
+  it("announces its selection, the counterpart and « À propos de ces avis », apart from « Propulsé par »", () => {
+    const payload: WidgetPayload = {
+      ...SAMPLE_PAYLOAD,
+      space: "Julie Nutrition",
+      incentive: true,
+      about: "https://pulsacity.com/a-propos-des-avis",
+    };
+
+    const notes = render(payload).root.querySelector(".wall > .notes");
+    expect(texts(notes?.querySelectorAll(".mentions > *") ?? []).map(plain)).toEqual([
+      "Sélection de Julie Nutrition : avis mis en avant, puis les plus récents.",
+      "Certains clients ont reçu une contrepartie pour leur avis.",
+      "À propos de ces avis",
+    ]);
+    expect(notes?.querySelector("a.about")?.getAttribute("href")).toBe("https://pulsacity.com/a-propos-des-avis");
+    expect(notes?.querySelector(".powered")).not.toBeNull();
+
+    const withoutBadge = render({ ...payload, incentive: false, poweredBy: null }).root.querySelector(".wall > .notes");
+    expect(withoutBadge?.querySelector("a.about")).not.toBeNull();
+    expect(withoutBadge?.querySelector(".powered")).toBeNull();
+    expect(texts(withoutBadge?.querySelectorAll(".mentions > *") ?? [])).toHaveLength(2);
+  });
+
+  it("rates every review received when the answer says so, and shows only those validated", () => {
+    const { root } = render({ ...SAMPLE_PAYLOAD, count: 23, average: 4.7 });
+
+    expect(root.querySelector(".summary .stars")?.getAttribute("aria-label")).toBe("Note moyenne 4,7 sur 5, 23 avis");
   });
 
   it("adds the mention of a testimonial under its author: PULSACITY's beta testers", () => {
@@ -62,11 +105,16 @@ describe("the wall", () => {
     const payload = { ...SAMPLE_PAYLOAD, testimonials: [{ ...first, mention }, ...others] };
 
     const wall = render(payload).root.querySelectorAll(".grid > li > article.card");
-    expect(texts(wall[0].querySelectorAll(".who .meta"))).toEqual(["Enseignante", mention]);
-    expect(texts(wall[1].querySelectorAll(".who .meta"))).not.toContain(mention);
+    expect(texts(wall[0].querySelectorAll(".who > *")).map(plain)).toEqual([
+      "Camille R.",
+      "Enseignante",
+      "Avis du 12 sept. 2026",
+      mention,
+    ]);
+    expect(texts(wall[1].querySelectorAll(".who > *"))).not.toContain(mention);
 
     const carousel = render({ ...payload, type: "carousel" }).root.querySelector("article.card");
-    expect(texts(carousel?.querySelectorAll(".who .meta") ?? [])).toContain(mention);
+    expect(texts(carousel?.querySelectorAll(".who > *") ?? [])).toContain(mention);
   });
 
   it("puts the photo the customer sent in the avatar, loaded lazily", () => {
@@ -173,7 +221,7 @@ describe("the wall", () => {
 
     expect(root.querySelector("img")).toBeNull();
     expect(root.querySelector("b")).toBeNull();
-    expect(root.querySelector("blockquote")?.textContent).toBe('« <img src=x onerror="alert(1)"> »');
+    expect(plain(root.querySelector("blockquote")?.textContent)).toBe('« <img src=x onerror="alert(1)"> »');
   });
 });
 
@@ -188,7 +236,8 @@ describe("the carousel", () => {
     expect(slides[0].getAttribute("aria-label")).toBe("1 sur 4");
     const card = slides[0].querySelector(".card");
     expect([...(card?.children ?? [])].map((child) => child.className)).toEqual(["stars large", "quote", "author"]);
-    expect(card?.querySelector(".meta")?.textContent).toBe("Enseignante · 12 sept. 2026");
+    expect(card?.querySelector(".meta")?.textContent).toBe("Enseignante");
+    expect(plain(card?.querySelector(".dates")?.textContent)).toBe("Avis du 12 sept. 2026");
   });
 
   it("moves one card at a time with accessible arrows and points", () => {
@@ -280,6 +329,22 @@ describe("the badge", () => {
     for (const shown of root.querySelectorAll(".badge > :not(.sr-only)")) {
       expect(shown.getAttribute("aria-hidden")).toBe("true");
     }
+  });
+
+  it("puts « À propos de ces avis » beside the pill, the counterpart below, and rates every review received", () => {
+    const { root } = render({
+      ...SAMPLE_BADGE_PAYLOAD,
+      count: 52,
+      incentive: true,
+      about: "https://pulsacity.com/a-propos-des-avis",
+    });
+
+    expect(root.querySelector(".badge .sr-only")?.textContent).toBe("Note moyenne 4,8 sur 5, 52 avis");
+    expect(root.querySelector(".badge-links a.about")?.getAttribute("href")).toBe("https://pulsacity.com/a-propos-des-avis");
+    expect(root.querySelector(".badge-links .powered")).not.toBeNull();
+    expect(root.querySelector(".badge-wrap > .incentive")?.textContent).toBe(
+      "Certains clients ont reçu une contrepartie pour leur avis.",
+    );
   });
 
   it("links to the wall of the page once there is one", () => {

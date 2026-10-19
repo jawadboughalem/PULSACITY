@@ -67,17 +67,17 @@ beforeEach(async () => {
 });
 
 describe("countDashboardFigures", () => {
-  it("counts validated and pending testimonials, and averages the validated ones", async () => {
+  it("counts validated and pending testimonials, and averages all of them but those hidden for a reason", async () => {
     await insertTestTestimonial(database, { spaceId, status: "approved", rating: 5 });
     await insertTestTestimonial(database, { spaceId, status: "approved", rating: 4 });
     await insertTestTestimonial(database, { spaceId, status: "approved", rating: 5 });
-    await insertTestTestimonial(database, { spaceId, status: "pending", rating: 1 });
-    await insertTestTestimonial(database, { spaceId, status: "hidden", rating: 1 });
+    await insertTestTestimonial(database, { spaceId, status: "pending", rating: 2 });
+    await insertTestTestimonial(database, { spaceId, status: "hidden", rating: 1, hiddenReason: "abusive" });
 
     expect(await countDashboardFigures(database, spaceId, NOW)).toEqual({
       approved: 3,
       pending: 1,
-      averageRating: 14 / 3,
+      averageRating: 16 / 4,
       requestsSentThisMonth: 0,
       requestsAnsweredThisMonth: 0,
       remindersScheduled: 0,

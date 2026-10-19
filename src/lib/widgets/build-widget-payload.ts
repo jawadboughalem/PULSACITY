@@ -24,6 +24,8 @@ export type WidgetTestimonialSource = {
   text: string;
   /** Day of reception in Paris, YYYY-MM-DD. */
   receivedOn: string;
+  /** Month of the purchase in Paris, YYYY-MM, when the testimonial followed a known purchase. */
+  purchasedIn: string | null;
   /** A line under the author (PULSACITY's beta testers), when there is one. */
   mention?: string | null;
 };
@@ -33,8 +35,16 @@ export type WidgetPayloadInput = {
   settings: ResolvedWidgetSettings;
   spaceAccentColor: string | null;
   poweredBy: string | null;
+  /** Validated testimonials the widget can show. */
   total: number;
+  /** Testimonials in the rating: all received but those hidden for a declared reason. */
+  ratedCount: number;
   averageRating: number | null;
+  spaceName: string;
+  /** A counterpart is declared for the reviews (Réglages), or they are PULSACITY's beta testers. */
+  incentive: boolean;
+  /** The address of « À propos de ces avis ». */
+  aboutUrl: string;
   /** Featured first, then the most recent, already cut to this answer. */
   testimonials: WidgetTestimonialSource[];
   offset: number;
@@ -69,7 +79,9 @@ const toPublicTestimonial = (
   photo: settings.showPhoto ? testimonial.authorPhotoUrl : null,
   rating: settings.showRating ? testimonial.rating : null,
   text: testimonial.text,
-  date: settings.showDate ? testimonial.receivedOn : null,
+  // The law asks for the date of each review, whatever the old « Date » setting of the widget says (lot 4.13).
+  date: testimonial.receivedOn,
+  ...(testimonial.purchasedIn ? { purchase: testimonial.purchasedIn } : {}),
   ...(testimonial.mention ? { mention: testimonial.mention } : {}),
 });
 
@@ -89,10 +101,14 @@ export const buildWidgetPayload = (input: WidgetPayloadInput): WidgetPayload => 
     accentColor: settings.accentColor ?? input.spaceAccentColor,
     cardStyle: settings.cardStyle,
     total,
-    average: settings.showRating && total > 0 ? input.averageRating : null,
+    count: input.ratedCount,
+    average: settings.showRating && input.ratedCount > 0 ? input.averageRating : null,
     testimonials: isBadge ? [] : input.testimonials.map((testimonial) => toPublicTestimonial(testimonial, settings)),
     avatars: isBadge ? input.testimonials.map((testimonial) => toBadgeAvatar(testimonial, settings)) : [],
     next: type === "wall" && shownUntil < Math.min(total, input.shownLimit ?? total) ? shownUntil : null,
     poweredBy: input.poweredBy,
+    space: input.spaceName,
+    incentive: input.incentive,
+    about: input.aboutUrl,
   };
 };

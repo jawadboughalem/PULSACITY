@@ -13,6 +13,7 @@ const testimonial = (authorName: string, productId: string | null): PreviewTesti
   rating: 5,
   text: `Le témoignage de ${authorName}.`,
   receivedOn: "2026-09-12",
+  purchasedIn: null,
   productId,
 });
 
@@ -24,8 +25,11 @@ const DATA: WidgetPreviewData = {
     testimonial("Hugo P.", null),
   ],
   summaries: {
-    all: { total: 60, averageRating: 4.7 },
-    byOffer: { [PROGRAMME]: { total: 2, averageRating: 5 }, [SUIVI]: { total: 1, averageRating: 5 } },
+    all: { total: 60, ratedCount: 64, averageRating: 4.7 },
+    byOffer: {
+      [PROGRAMME]: { total: 2, ratedCount: 2, averageRating: 5 },
+      [SUIVI]: { total: 1, ratedCount: 1, averageRating: 5 },
+    },
   },
 };
 
@@ -47,6 +51,9 @@ const LOOK: PreviewLook = {
   spaceAccentColor: "#4F6F52",
   poweredByUrl: "https://pulsacity.com/?ref=julie42",
   canHideBadge: false,
+  spaceName: "Julie Nutrition",
+  incentive: false,
+  aboutUrl: "https://pulsacity.com/a-propos-des-avis",
 };
 
 describe("buildPreviewPayload", () => {
@@ -57,9 +64,13 @@ describe("buildPreviewPayload", () => {
       type: "wall",
       accentColor: "#4F6F52",
       total: 60,
+      count: 64,
       average: 4.7,
       next: 2,
       poweredBy: "https://pulsacity.com/?ref=julie42",
+      space: "Julie Nutrition",
+      incentive: false,
+      about: "https://pulsacity.com/a-propos-des-avis",
     });
     expect(payload.testimonials.map((shown) => shown.name)).toEqual(["Camille R.", "Inès V."]);
   });
@@ -92,10 +103,10 @@ describe("buildPreviewPayload", () => {
     expect(buildPreviewPayload(DATA, { ...EDIT, hidePoweredBy: true }, { ...LOOK, canHideBadge: true }).poweredBy).toBeNull();
   });
 
-  it("leaves out the photos, the stars and the dates the creator turns off", () => {
+  it("leaves out the photos and the stars the creator turns off, never the date the law asks for", () => {
     const payload = buildPreviewPayload(DATA, { ...EDIT, showPhoto: false, showRating: false, showDate: false }, LOOK);
 
     expect(payload.average).toBeNull();
-    expect(payload.testimonials[0]).toMatchObject({ photo: null, rating: null, date: null });
+    expect(payload.testimonials[0]).toMatchObject({ photo: null, rating: null, date: "2026-09-12" });
   });
 });

@@ -3,7 +3,8 @@ import { cn } from "@/lib/cn";
 import { Icon } from "./Icon";
 
 type StatusBannerProps = {
-  tone: "success" | "waiting" | "info" | "error";
+  /** « neutral »: Gris clair, like the badge « Masqué » (fiche of a hidden testimonial, maquettes 3.4). */
+  tone: "success" | "waiting" | "info" | "error" | "neutral";
   title: string;
   icon?: ReactNode;
   /** The detail, and for an error its action (always one, as the charter requires). */
@@ -16,6 +17,7 @@ const TONE_CLASSES = {
   waiting: "bg-waiting-surface",
   info: "bg-sky",
   error: "border-2 border-error bg-error-surface",
+  neutral: "bg-gray-light",
 } as const;
 
 const TONE_ICONS = {
@@ -23,6 +25,7 @@ const TONE_ICONS = {
   waiting: { name: "clock", classes: "text-waiting" },
   info: { name: "info", classes: "text-ink" },
   error: { name: "alert", classes: "text-error" },
+  neutral: { name: "hidden", classes: "text-ink" },
 } as const;
 
 /** radius-card, padding 20 24 (16 20 on a phone), the icon 24 at 14 px, title 17/26 700, detail 15/22. */
