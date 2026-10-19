@@ -30,7 +30,7 @@ export const MagicLinkForm = ({ source = {}, asksHeardFrom = false }: MagicLinkF
     isSent,
     error,
     isPending,
-    submitAction,
+    handleSubmit,
     handleChangeEmail,
     handleChangeHeardFrom,
     handleUseAnotherAddress,
@@ -57,7 +57,7 @@ export const MagicLinkForm = ({ source = {}, asksHeardFrom = false }: MagicLinkF
   }
 
   return (
-    <form action={submitAction} noValidate className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
       {error === "too-many-requests" ? (
         <StatusBanner tone="error" title="Vous avez demandé plusieurs liens en peu de temps.">
           Patientez quelques minutes, puis réessayez. Pensez à regarder dans vos courriers indésirables.

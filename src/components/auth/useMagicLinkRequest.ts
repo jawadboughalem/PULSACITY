@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { type FormEvent, startTransition, useActionState, useEffect, useRef, useState } from "react";
 import { type RequestMagicLinkResult, requestMagicLink } from "@/app/(auth)/request-magic-link";
 
 /** `onSent`: once per link sent (the sign-up's event for the audience). */
@@ -37,13 +37,21 @@ export const useMagicLinkRequest = (onSent?: (heardFrom: string) => void) => {
     setDismissedResult(result);
   };
 
+  // Sent from onSubmit, not from the form's action: React resets a form after its action, and a controlled
+  // <select> stays on its first option (the answer would be lost after an error).
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    startTransition(() => submitAction(formData));
+  };
+
   return {
     email,
     heardFrom,
     isSent,
     error,
     isPending,
-    submitAction,
+    handleSubmit,
     handleChangeEmail,
     handleChangeHeardFrom,
     handleUseAnotherAddress,
