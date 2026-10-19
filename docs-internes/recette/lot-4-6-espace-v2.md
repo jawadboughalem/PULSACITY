@@ -212,7 +212,7 @@ Claude in Chrome n'ouvre pas les outils de développement : ce contrôle passe p
 2. Clic droit, « Inspecter », onglet « Lighthouse ». Mode « Navigation », appareil « Mobile », catégories « Performances » et « Accessibilité ». Cliquez « Analyser le chargement de la page ».
 3. Recommencez deux fois, puis en appareil « Ordinateur ».
 
-On attend 100 en accessibilité. En performance, l'aperçu est plus lent que la production (protection Vercel, base de recette en plan Free) : notez les chiffres sans vous en inquiéter sous 90 sur téléphone. Dans le conteneur : 99 sur ordinateur, médiane 87 sur téléphone, contre 84 pour `main`. Ce qui reste vient de l'écran « Ouverture de votre espace… » : le contenu s'affiche au moins 300 ms après lui. Le retirer de l'accueil donnerait environ 97 sur téléphone, mais retire ce moment de marque : à trancher.
+On attend 100 en accessibilité. En performance, l'aperçu est plus lent que la production (protection Vercel, base de recette en plan Free) : notez les chiffres sans vous en inquiéter sous 90 sur téléphone. Dans le conteneur : 99 sur ordinateur, médiane 87 sur téléphone, contre 84 pour `main`. Ce qui reste vient de l'écran « Ouverture de votre espace… » : le contenu s'affiche au moins 300 ms après lui. Les passages où le contenu arrive avec la page, sans cet écran, donnent 93 à 97 : le retirer de l'accueil viserait ces scores, mais retire ce moment de marque. À trancher.
 
 Compte rendu à me renvoyer : les scores, appareil par appareil.
 
