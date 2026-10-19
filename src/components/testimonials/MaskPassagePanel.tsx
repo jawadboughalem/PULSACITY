@@ -188,7 +188,11 @@ export const MaskPassagePanel = ({ testimonialId, text, onMasked, onCancel }: Ma
           ))}
         </div>
       </div>
-      {error ? <FieldError id="mask-passage-error" message={ERRORS[error]} /> : null}
+      {error ? (
+        <div role="alert">
+          <FieldError id="mask-passage-error" message={ERRORS[error]} />
+        </div>
+      ) : null}
       <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-6">
         <button
           type="button"

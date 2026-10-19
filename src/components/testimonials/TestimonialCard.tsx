@@ -169,6 +169,7 @@ const ReviewActions = ({ className, review, testimonial, detailHref, isDashboard
         isOpen={review.isHideConfirmationOpen}
         authorName={testimonial.authorName}
         authorReach={testimonial.authorReach}
+        isReasonAlreadySent={testimonial.isReasonAlreadySent}
         isPending={review.isHiding}
         onConfirm={review.hide}
         onCancel={review.cancelHide}

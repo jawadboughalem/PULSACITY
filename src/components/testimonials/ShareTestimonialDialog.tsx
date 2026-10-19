@@ -12,6 +12,7 @@ import {
   SEGMENTED_OPTION_IDLE_CLASSES,
 } from "@/components/ui/segmented-styles";
 import { cn } from "@/lib/cn";
+import { prefixPersonWithDe } from "@/lib/french/prefix-with-de";
 
 type ImageFormat = "portrait" | "paysage";
 
@@ -80,7 +81,7 @@ export const ShareTestimonialButton = ({ testimonialId, authorName, hasPurchase 
           <div className="flex flex-col gap-3">
             <div className="flex items-start justify-between gap-4">
               <h2 id={titleId} className={DIALOG_TITLE_CLASSES}>
-                {`Partager le témoignage de ${name}`}
+                {`Partager le témoignage ${prefixPersonWithDe(name)}`}
               </h2>
               <DialogCloseButton onClick={() => setIsOpen(false)} />
             </div>

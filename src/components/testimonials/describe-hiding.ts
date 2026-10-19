@@ -1,5 +1,5 @@
 import { formatDayMonthYear } from "@/lib/dates/format-french-date";
-import { NO_BREAK_SPACE } from "@/lib/french/typography";
+import { NO_BREAK_SPACE, keepInitialAttached } from "@/lib/french/typography";
 import { describeHiddenReason } from "@/lib/testimonials/hidden-reasons";
 import type { TestimonialDetail } from "@/lib/testimonials/load-testimonial-detail";
 
@@ -17,7 +17,7 @@ const quoted = (text: string) => `«${NO_BREAK_SPACE}${text}${NO_BREAK_SPACE}»`
 export const describeHiding = (testimonial: Hiding): { title: string; detail: string } => {
   const title = testimonial.hiddenAt ? `Masqué le ${formatDayMonthYear(testimonial.hiddenAt)}.` : "Masqué.";
   const reason = describeHiddenReason(testimonial);
-  const name = testimonial.authorName;
+  const name = keepInitialAttached(testimonial.authorName);
   if (reason === null) {
     return {
       title,

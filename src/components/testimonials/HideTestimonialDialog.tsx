@@ -9,7 +9,8 @@ import { RadioButton } from "@/components/ui/RadioButton";
 import { Spinner } from "@/components/ui/Spinner";
 import { DIALOG_ACTIONS_CLASSES, DIALOG_CLASSES, DIALOG_TITLE_CLASSES, isClickOnVeil } from "@/components/ui/dialog-styles";
 import { cn } from "@/lib/cn";
-import { endSentence } from "@/lib/french/typography";
+import { prefixPersonWithDe } from "@/lib/french/prefix-with-de";
+import { NO_BREAK_SPACE, endSentence, keepInitialAttached } from "@/lib/french/typography";
 import {
   HIDDEN_REASONS,
   HIDDEN_REASON_LABELS,
@@ -23,18 +24,24 @@ type HideTestimonialDialogProps = {
   isOpen: boolean;
   authorName: string;
   authorReach: AuthorReach;
+  /** A reason already left by e-mail for this review: the next one stays with it (one e-mail per review). */
+  isReasonAlreadySent: boolean;
   isPending: boolean;
   onConfirm: (hiding: HidingReason) => void;
   onCancel: () => void;
 };
 
 /** Under « Motif »: who receives it, or why nobody does. */
-const describeReach = (authorName: string, reach: AuthorReach) =>
-  ({
+const describeReach = (authorName: string, reach: AuthorReach, isReasonAlreadySent: boolean) => {
+  if (reach === "reachable" && isReasonAlreadySent) {
+    return `Il reste avec l'avis : ${authorName} a déjà reçu un motif pour cet avis, un seul e-⁠mail par avis.`;
+  }
+  return {
     reachable: `${authorName} le reçoit par e-⁠mail, avec votre nom.`,
     "no-address": `Il reste avec l'avis : sans adresse e-⁠mail, il ne peut pas être envoyé à ${endSentence(authorName)}`,
     unsubscribed: `Il reste avec l'avis : ${authorName} ne reçoit plus vos e-⁠mails.`,
-  })[reach];
+  }[reach];
+};
 
 /**
  * Maquettes 3.4, fiche 04 et 05: « Masquer » asks for a reason (positionnement.md, point 6), sent to the author. Charte
@@ -42,8 +49,9 @@ const describeReach = (authorName: string, reach: AuthorReach) =>
  */
 export const HideTestimonialDialog = ({
   isOpen,
-  authorName,
+  authorName: author,
   authorReach,
+  isReasonAlreadySent,
   isPending,
   onConfirm,
   onCancel,
@@ -56,6 +64,10 @@ export const HideTestimonialDialog = ({
   const [reason, setReason] = useState<HiddenReason | null>(null);
   const [detail, setDetail] = useState("");
   const [isMissing, setIsMissing] = useState(false);
+  const firstReasonRef = useRef<HTMLInputElement>(null);
+  const detailRef = useRef<HTMLTextAreaElement>(null);
+  const authorName = keepInitialAttached(author);
+  const isSent = authorReach === "reachable" && !isReasonAlreadySent;
   const isDetailMissing = isMissing && reason === "other" && detail.trim() === "";
 
   useEffect(() => {
@@ -74,13 +86,16 @@ export const HideTestimonialDialog = ({
     if (isPending) return;
     if (reason === null || (reason === "other" && detail.trim() === "")) {
       setIsMissing(true);
+      // The error is said where the answer is missing: a screen reader reads it with the field.
+      (reason === null ? firstReasonRef : detailRef).current?.focus();
       return;
     }
     onConfirm({ reason, detail: reason === "other" ? detail.trim() : null });
   };
 
-  const missingMessage =
-    authorReach === "reachable" ? `Choisissez un motif : il est envoyé à ${endSentence(authorName)}` : "Choisissez un motif.";
+  const missingMessage = isSent
+    ? `Choisissez un motif : il est envoyé à ${endSentence(authorName)}`
+    : "Choisissez un motif.";
 
   return (
     <dialog
@@ -101,7 +116,7 @@ export const HideTestimonialDialog = ({
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between gap-4">
             <h2 id={titleId} className={DIALOG_TITLE_CLASSES}>
-              {`Masquer l'avis de ${authorName} ?`}
+              {`Masquer l'avis ${prefixPersonWithDe(authorName)}${NO_BREAK_SPACE}?`}
             </h2>
             <DialogCloseButton onClick={onCancel} isDisabled={isPending} />
           </div>
@@ -116,15 +131,16 @@ export const HideTestimonialDialog = ({
           aria-describedby={isMissing && reason === null ? errorId : undefined}
         >
           <legend className={FIELD_LABEL_CLASSES}>Motif</legend>
-          <p className={cn(FIELD_HINT_CLASSES, "mt-1 mb-2")}>{describeReach(authorName, authorReach)}</p>
+          <p className={cn(FIELD_HINT_CLASSES, "mt-1 mb-2")}>{describeReach(authorName, authorReach, isReasonAlreadySent)}</p>
           {isMissing && reason === null ? (
-            <div className="mb-2">
+            <div role="alert" className="mb-2">
               <FieldError id={errorId} message={missingMessage} />
             </div>
           ) : null}
-          {HIDDEN_REASONS.map((choice) => (
+          {HIDDEN_REASONS.map((choice, index) => (
             <label key={choice} className="flex min-h-[44px] cursor-pointer items-center gap-3 py-[6px] text-body">
               <RadioButton
+                ref={index === 0 ? firstReasonRef : undefined}
                 name="hidden-reason"
                 value={choice}
                 checked={reason === choice}
@@ -143,6 +159,7 @@ export const HideTestimonialDialog = ({
                 Précisez le motif
               </label>
               <textarea
+                ref={detailRef}
                 id={detailId}
                 value={detail}
                 maxLength={MAX_HIDDEN_REASON_DETAIL_LENGTH}
@@ -152,10 +169,19 @@ export const HideTestimonialDialog = ({
                 className={cn(TEXTAREA_CLASSES, "min-h-[96px]")}
               />
               {isDetailMissing ? (
-                <FieldError id={`${detailId}-error`} message={`Écrivez le motif en quelques mots : ${authorName} le lira tel quel.`} />
+                <div role="alert">
+                  <FieldError
+                    id={`${detailId}-error`}
+                    message={
+                      isSent
+                        ? `Écrivez le motif en quelques mots${NO_BREAK_SPACE}: ${authorName} le lira tel quel.`
+                        : "Écrivez le motif en quelques mots."
+                    }
+                  />
+                </div>
               ) : (
                 <p id={`${detailId}-hint`} className={FIELD_HINT_CLASSES}>
-                  {`Quelques mots, envoyés tels quels. ${MAX_HIDDEN_REASON_DETAIL_LENGTH} caractères au plus.`}
+                  {`${isSent ? "Quelques mots, envoyés tels quels." : "Quelques mots, gardés avec l'avis."} ${MAX_HIDDEN_REASON_DETAIL_LENGTH} caractères au plus.`}
                 </p>
               )}
             </div>

@@ -1,8 +1,8 @@
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithRef } from "react";
 import { cn } from "@/lib/cn";
 import { FOCUS_RING } from "./button-styles";
 
-type RadioButtonProps = Omit<ComponentPropsWithoutRef<"input">, "type" | "className"> & {
+type RadioButtonProps = Omit<ComponentPropsWithRef<"input">, "type" | "className"> & {
   hasError?: boolean;
 };
 

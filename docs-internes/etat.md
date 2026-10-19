@@ -166,6 +166,15 @@ D'après `positionnement.md` (« Avis de vrais clients », points 1 à 7) et l'a
 - L'espace de démonstration a chaque état : Manon G. (vente reçue de Systeme.io, correction acceptée), Camille R. (correction en attente), Thomas L. (ajout), Jade K. (import), Kévin R. (masqué, motif envoyé), Arthur B. (masqué, sans adresse), Emma S. (un prénom masqué).
 - Vérifié dans le conteneur : lint, typage, 833 tests (le seul échec, `decode-csv-file`, est connu), construction de production ; `w.js` 10,2 Ko gzip ; chaque état de la fiche, la fenêtre « Masquer », la page de réponse, « À propos de ces avis », l'aperçu du widget, la page de collecte avec la contrepartie, à 1440 et 360 px, à côté des maquettes.
 - Recette : `docs-internes/recette/lot-4-13-avis-en-ligne.md` (prompts 1 à 10 sur l'aperçu, 11 en production à la toute fin).
+- Recette du 19 octobre (prompts 1 à 10) : tout le parcours fonctionne, de la demande à l'avis, la correction refusée puis acceptée, le passage masqué, le motif envoyé une fois, la note du badge (12 puis 13 puis 12 avis), la contrepartie, la page publique, à 360 px. Corrigé après :
+  - l'élision devant le nom d'un auteur (« d'Inès V. », « d'Hugo P. », phrases et titres des fenêtres) ;
+  - « 1er » dans la date du consentement ;
+  - le message « Passage masqué » qui disparaissait aussitôt (la fiche se reconstruisait au nouveau texte affiché) ;
+  - la fenêtre « Masquer » qui promettait un e-mail quand un motif était déjà parti pour l'avis ; ses erreurs annoncées (zone d'alerte) et le curseur posé sur ce qui manque ;
+  - « Clara T. » et « ci-dessous » qui se coupaient en fin de ligne ;
+  - la contradiction de « À propos de ces avis » sur les demandes envoyées à la main (l'achat et sa date sont ceux indiqués par le créateur).
+  - Expliqués sans changement : sur un aperçu, une demande saisie à la main attend l'envoi planifié, qui ne tourne qu'en production (« Envoyer maintenant ») ; le bouton rouge de l'e-mail de demande, encore en v1, passe en v2 au lot 4.8 ; « Texte original » ouvert d'office quand le texte affiché diffère (maquettes 10 et 13). Vu à 360 × 800 : la fenêtre « Masquer » dépasse de 6 px et défile en elle-même ; laissé tel quel.
+  - Contre-recette : prompt 10 bis.
 
 ## Décisions du 19 octobre (lot 4.13), à valider par le fondateur
 

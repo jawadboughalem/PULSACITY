@@ -1,5 +1,5 @@
 import { Img, Section, Text } from "react-email";
-import { prefixWithDe } from "@/lib/french/prefix-with-de";
+import { prefixPersonWithDe, prefixWithDe } from "@/lib/french/prefix-with-de";
 import { AccountEmailLayout } from "./AccountEmailLayout";
 import { EmailButton } from "./EmailButton";
 import { EMAIL_COLORS, paragraphStyle, quoteStyle, smallStyle } from "./email-styles";
@@ -7,7 +7,7 @@ import { EMAIL_COLORS, paragraphStyle, quoteStyle, smallStyle } from "./email-st
 const MAX_RATING = 5;
 
 export const buildNewTestimonialSubject = (authorFirstName: string, rating: number) =>
-  `Nouveau témoignage ${prefixWithDe(authorFirstName)} (${rating}/${MAX_RATING})`;
+  `Nouveau témoignage ${prefixPersonWithDe(authorFirstName)} (${rating}/${MAX_RATING})`;
 
 type NewTestimonialEmailProps = {
   spaceName: string;

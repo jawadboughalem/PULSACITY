@@ -14,6 +14,7 @@ Dans l'ordre :
 - Prompt 8 : recette de bout en bout : « Masquer » avec un motif, l'e-mail du motif, la note du badge.
 - Prompt 9 : Supabase (lecture seule), ce que la base a enregistré.
 - Prompt 10 : à 360 px.
+- Prompt 10 bis : contre-recette des corrections du 19 octobre.
 - Après la fusion : prompt 11 (vérification en production, à la toute fin avec celles des autres lots).
 
 Deux adresses, à garder pour vous (jamais dans un compte rendu) :
@@ -149,14 +150,14 @@ Aperçu : https://pulsacity-git-claude-affectiona-24a504-jawadboughalems-project
 
 Pour chaque point, note « OK » ou décris ce que tu vois.
 
-1. Ouvre /app/demandes, clique sur « Demander un avis ». Demande-moi l'adresse B et mets-la ; prénom « Clara », nom « Test » ; offre « Atelier cuisine » ; coche la case, envoie. Attendu : la demande est envoyée.
+1. Ouvre /app/demandes, clique sur « Demander un avis ». Demande-moi l'adresse B et mets-la ; prénom « Clara », nom « Test » ; offre « Atelier cuisine » ; coche la case, envoie. Attendu : « Demande prête pour Clara T. ». Sur un aperçu, l'envoi planifié ne passe pas (il ne tourne qu'en production) : sur la ligne de Clara T., clique sur « Envoyer maintenant ».
 2. Dans la boîte de B : l'e-mail « Clara, votre avis sur Atelier cuisine ? », au nom de Julie Nutrition. Clique sur « Donner mon avis (1 minute) ».
 3. Sur la page de collecte : 5 étoiles, le texte « Les recettes sont simples et rapide. Je les refais chaque semaine. », le nom « Clara T. », coche le consentement, « Envoyer mon avis ». Attendu : la page de remerciement.
 4. Dans l'espace (onglet A), Témoignages : « Clara T. » en attente. Ouvre sa fiche. Provenance : « Demande manuelle », « Achat du … (aujourd'hui) · demande envoyée le …, réponse après … ». Sous le texte affiché : « Une correction part à Clara T. pour accord : elle ne s'affiche qu'avec son accord. Sans accord, vous pouvez masquer un nom ou une coordonnée. », le bouton « Corriger le texte affiché » et le lien « Masquer un nom ou une coordonnée ».
 5. Clique sur « Corriger le texte affiché ». Dans le champ, remplace « simples et rapide » par « simples et rapides », puis « Envoyer à Clara T. pour accord ». Attendu : le bandeau « Correction envoyée à Clara T. le … », « Affiché aujourd'hui » (ancien texte), « Correction proposée » (nouveau texte).
 6. Dans la boîte de B : l'e-mail « Clara, puis-je corriger votre avis ? », au nom de Julie Nutrition. « Votre texte », « Le texte corrigé » avec « rapides » en gras souligné, « Rien ne change sans votre accord. Votre texte d'origine reste gardé. », deux boutons « Accepter la correction » et « Garder mon texte », « Sans réponse de votre part, votre texte d'origine reste affiché. », et le lien « Ne plus recevoir ces e-mails » en bas (ne clique pas dessus).
 7. Clique sur « Garder mon texte ». Une page s'ouvre : « Puis-je corriger votre avis ? », les deux versions, et les deux boutons. Rien n'est encore décidé. Clique sur « Garder mon texte » sur cette page. Attendu : « Votre texte reste tel quel », « C'est noté. Julie Nutrition garde votre avis avec votre texte d'origine. », et « Écrire à Julie Nutrition ».
-8. Recharge cette page : « Vous avez déjà répondu », « Votre réponse à cette correction est bien enregistrée. »
+8. Rouvre le lien de l'e-mail (sans « &reponse=… » à la fin de l'adresse) : « Vous avez déjà répondu », « Votre réponse à cette correction est bien enregistrée. »
 9. Dans l'espace, recharge la fiche de Clara T. : un bandeau « Clara T. a refusé votre correction le … » avec « Le texte d'origine reste affiché. Vous pouvez masquer un nom ou une coordonnée, ou masquer l'avis. » ; le texte affiché est resté « simples et rapide ».
 
 Compte rendu à me donner : les 9 points, OK ou ce que tu vois, avec les phrases exactes des bandeaux et des pages. Pas les adresses e-mail.
@@ -216,8 +217,9 @@ Ce qu'il ne faut surtout pas toucher : le projet de production « PULSACITY » ;
    select provenance, count(*) from testimonials group by provenance order by provenance;
    Attendu : des lignes pour sale, request, added, import, public-link ; aucune ligne avec provenance vide (null).
 2. Lance :
-   select t.author_name, t.status, t.provenance, t.hidden_reason, t.hidden_reason_sent_at is not null as motif_envoye, t.display_body is not null as texte_corrige
-   from testimonials t where t.author_name in ('Clara T.', 'Kévin R.', 'Arthur B.', 'Manon G.', 'Emma S.') order by t.author_name;
+   select t.author_name, t.status, t.provenance, t.hidden_reason, t.hidden_reason_detail, t.hidden_reason_sent_at is not null as motif_envoye, t.display_body is not null as texte_corrige
+   from testimonials t join spaces s on s.id = t.space_id
+   where s.slug = 'julie-nutrition' and t.author_name in ('Clara T.', 'Kévin R.', 'Arthur B.', 'Manon G.', 'Emma S.') order by t.author_name;
    Recopie le résultat (il ne contient que des données fictives).
 3. Lance :
    select c.outcome, c.sent_at is not null as envoyee, c.answered_at is not null as repondue
@@ -247,6 +249,53 @@ Pour chaque page, vérifie : rien ne dépasse à droite (pas de défilement hori
 6. Pour finir, la fiche de Camille R. : clique sur « Annuler la correction ». Le bandeau disparaît, « Corriger le texte affiché » revient. Aucun e-mail ne part.
 
 Compte rendu à me donner : les 6 points, OK ou ce que tu vois.
+```
+
+---
+
+## Recette du 19 octobre : comptes rendus et suites
+
+Prompts 1 à 10 passés le 19 octobre. Tout le parcours fonctionne. Corrigé ensuite (contre-recette : prompt 10 bis) :
+- « Sans adresse e-mail de Inès V. », « de Arthur B. », « de Hugo P. » : élidés (« d'Inès V. », « d'Hugo P. »), comme les titres des fenêtres (« Masquer l'avis d'Inès V. ? ») ;
+- la date du consentement écrivait « 1 juil. » : « 1er juil. » ;
+- « Passage masqué. L'original reste gardé. » disparaissait aussitôt (la fiche se reconstruisait au nouveau texte affiché) : il reste affiché ;
+- la fenêtre « Masquer » promettait un e-mail quand un motif était déjà parti pour l'avis : elle dit « Il reste avec l'avis : … a déjà reçu un motif pour cet avis, un seul e-mail par avis. » ;
+- les erreurs de la fenêtre sont annoncées (zone d'alerte) et le curseur va au premier motif, ou au champ « Précisez le motif » ;
+- « Clara » et « T. » ne se séparent plus en fin de ligne, « ci-dessous » ne se coupe plus ;
+- « À propos de ces avis » : « D'où viennent les avis » ne contredit plus « Les dates » (« Pour une demande envoyée à la main, l'achat et sa date sont ceux indiqués par le créateur. »).
+
+Expliqués, sans changement :
+- l'envoi d'une demande saisie à la main attend l'envoi planifié, qui ne tourne qu'en production : sur un aperçu, « Envoyer maintenant » (prompt 6 corrigé) ;
+- recharger la page de réponse juste après avoir répondu redonne la confirmation ; le lien de l'e-mail, lui, dit « Vous avez déjà répondu » (prompt 6 corrigé) ;
+- « Texte original de … » s'ouvre de lui-même quand le texte affiché diffère de l'original (maquettes 10 et 13) ;
+- « Masquer l'avis » reste cliquable sans motif : le clic montre l'erreur (maquette 05) ;
+- « J'ai l'accord de chacune de ces personnes pour publier son témoignage » : « chacune… son » est correct, et ce texte est enregistré tel quel avec chaque avis importé ;
+- « Propulsé par » suivi du logo : le logo s'écrit ainsi (identité v2) ;
+- le bouton rouge de l'e-mail de demande : cet e-mail est encore en v1, il passe en v2 avec le lot 4.8 ;
+- sur téléphone, la Provenance montre sa version courte (maquette mobile) ;
+- les doublons de la requête 2 du prompt 9 venaient d'autres espaces de démonstration : la requête filtre maintenant l'espace.
+
+---
+
+## 10 bis. Contre-recette des corrections du 19 octobre
+
+Avant ce prompt : le dernier déploiement de l'aperçu est « Ready » (commentaire de Vercel sur la PR #43) ; connecté avec A, fenêtre en grand.
+
+```
+Tu fais la contre-recette de corrections de PULSACITY sur l'aperçu où je suis connecté : https://pulsacity-git-claude-affectiona-24a504-jawadboughalems-projects.vercel.app/app/temoignages
+
+Tu ne masques que l'avis de Clara T., tu ne corriges aucun avis. Pour chaque point, note « OK » ou décris ce que tu vois.
+
+1. Fiche d'Inès V. : sous le texte affiché, « Sans adresse e-mail d'Inès V., une correction ne peut pas lui être proposée : vous pouvez masquer un nom ou une coordonnée. » Clique sur « Masquer » en haut : le titre de la fenêtre est « Masquer l'avis d'Inès V. ? ». Clique sur « Annuler ».
+2. Fiche de Hugo P. : « Sans adresse e-mail d'Hugo P. … » et « Texte original d'Hugo ».
+3. Fiche de Jade K. : sous « Consentement », « … le 1er juil. 2026 à … » (et non « 1 juil. »).
+4. Fiche de Hugo P. : « Masquer un nom ou une coordonnée », double-clic sur « budget », « Masquer ce passage ». Le message « Passage masqué. L'original reste gardé. » est toujours là 5 secondes plus tard. Puis ouvre « Texte original d'Hugo » et clique sur « Afficher le texte original ».
+5. Fiche de Clara T. (Masquée) : clique sur « Valider ». Puis « Masquer » : sous « Motif », « Il reste avec l'avis : Clara T. a déjà reçu un motif pour cet avis, un seul e-mail par avis. » (et plus « Clara T. le reçoit par e-mail »). Clique sur « Masquer l'avis » sans choisir : « Choisissez un motif. » (sans « il est envoyé à »), et le curseur est sur le premier motif (« Il ne parle pas de mon offre »). Dans l'arbre d'accessibilité, le message est dans une zone d'alerte (role « alert »).
+6. Toujours dans la fenêtre : choisis « Autre motif ». Sous le champ : « Quelques mots, gardés avec l'avis. 200 caractères au plus. » Clique sur « Masquer l'avis » : « Écrivez le motif en quelques mots. », le curseur est dans le champ. Écris « Contre-recette », puis « Masquer l'avis » : bandeau « Masqué le … » et « Motif : « Contre-recette ». Clara T. a déjà reçu un motif pour cet avis : un seul e-mail par avis. » Aucun nouvel e-mail dans la boîte de B.
+7. Page publique /a-propos-des-avis, section « D'où viennent les avis » : « Pour ces avis, aucune vente n'est reçue de l'outil du créateur : PULSACITY ne peut pas vérifier l'achat. Pour une demande envoyée à la main, l'achat et sa date sont ceux indiqués par le créateur. La provenance de chaque avis est gardée. »
+8. Dans un cadre de 360 × 800 (comme au prompt 10), la fiche de Clara T. : dans le bandeau de masquage, « Clara T. » n'est jamais coupé entre deux lignes.
+
+Compte rendu à me donner : les 8 points, OK ou ce que tu vois.
 ```
 
 ---

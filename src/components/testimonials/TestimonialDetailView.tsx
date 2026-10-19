@@ -193,7 +193,7 @@ export const TestimonialDetailView = ({
             </p>
           </div>
 
-          <DisplayedTextSection key={`${testimonial.displayBody}-${testimonial.correction?.createdAt.getTime()}`} testimonial={testimonial} />
+          <DisplayedTextSection key={testimonial.correction?.createdAt.getTime() ?? 0} testimonial={testimonial} />
 
           <form onSubmit={handleSave} className="flex flex-col gap-8">
             <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-2 desktop:gap-6">
@@ -346,6 +346,7 @@ export const TestimonialDetailView = ({
         isOpen={review.isHideConfirmationOpen}
         authorName={testimonial.authorName}
         authorReach={testimonial.authorReach}
+        isReasonAlreadySent={testimonial.hiddenReasonSentAt !== null}
         isPending={review.isHiding}
         onConfirm={review.hide}
         onCancel={review.cancelHide}

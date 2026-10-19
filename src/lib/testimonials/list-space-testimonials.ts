@@ -23,6 +23,8 @@ export type SpaceTestimonial = {
   productName: string | null;
   /** « Masquer » says whether its reason reaches the author by e-mail. */
   authorReach: AuthorReach;
+  /** A reason was already sent for this review: a new one stays with it. */
+  isReasonAlreadySent: boolean;
 };
 
 export type SpaceTestimonialPage = {
@@ -72,6 +74,7 @@ const selectSpaceTestimonials = (database: Database) =>
       productId: testimonials.productId,
       productName: products.name,
       authorReach: sql<AuthorReach>`case when ${customers.email} is null then 'no-address' when ${customers.unsubscribedAt} is not null then 'unsubscribed' else 'reachable' end`,
+      isReasonAlreadySent: sql<boolean>`${testimonials.hiddenReasonSentAt} is not null`,
     })
     .from(testimonials)
     .leftJoin(products, eq(products.id, testimonials.productId))

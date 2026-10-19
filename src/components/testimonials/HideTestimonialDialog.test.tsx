@@ -15,6 +15,7 @@ const renderDialog = async (props: Partial<ComponentProps<typeof HideTestimonial
         isOpen
         authorName="Nadia B."
         authorReach="reachable"
+        isReasonAlreadySent={false}
         isPending={false}
         onConfirm={onConfirm}
         onCancel={() => {}}
@@ -106,5 +107,34 @@ describe("HideTestimonialDialog", () => {
     await renderDialog({ authorReach: "no-address" });
 
     expect(readText()).toContain("sans adresse e-⁠mail, il ne peut pas être envoyé à Nadia B.");
+  });
+
+  it("promises no second e-mail when a reason was already sent for this review", async () => {
+    await renderDialog({ isReasonAlreadySent: true });
+
+    expect(readText()).toContain("Il reste avec l'avis : Nadia B. a déjà reçu un motif pour cet avis, un seul e-⁠mail par avis.");
+    expect(readText()).not.toContain("le reçoit par e-⁠mail");
+    await click(buttonNamed("Masquer l'avis"));
+    expect(readText()).toContain("Choisissez un motif.");
+    expect(readText()).not.toContain("il est envoyé à");
+  });
+
+  it("brings the focus to the missing answer, and announces the error", async () => {
+    await renderDialog();
+
+    await click(buttonNamed("Masquer l'avis"));
+    expect(document.activeElement).toBe(container.querySelector('input[value="off-topic"]'));
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain("Choisissez un motif");
+
+    await choose("other");
+    await click(buttonNamed("Masquer l'avis"));
+    expect(document.activeElement).toBe(container.querySelector("textarea"));
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain("Écrivez le motif en quelques mots");
+  });
+
+  it("elides « de » before a vowel and keeps the initial with the name", async () => {
+    await renderDialog({ authorName: "Inès V." });
+
+    expect(container.querySelector("h2")?.textContent).toBe("Masquer l'avis d'Inès\u00a0V.\u00a0?");
   });
 });
