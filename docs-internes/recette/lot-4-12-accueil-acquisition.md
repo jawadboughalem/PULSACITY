@@ -306,18 +306,18 @@ Avant ce prompt : sur https://pulsacity.com/inscription, créez vous-même votre
 ```
 Tu m'aides à préparer l'espace PULSACITY en production, où PULSACITY recueille les avis de ses bêta-testeurs. Je suis connecté à pulsacity.com (espace « PULSACITY »), à Supabase et à Vercel.
 
-Ce qu'il ne faut surtout pas toucher : les autres espaces, les autres variables de Vercel, les domaines ; dans Supabase, rien d'autre que la ligne de l'espace PULSACITY (étape 4).
+Ce qu'il ne faut surtout pas toucher : les autres espaces, les autres variables de Vercel, les domaines ; dans Supabase, rien d'autre que la ligne de l'espace PULSACITY (étape 3).
 
 1. pulsacity.com › « Offres » : ajoute l'offre « Bêta PULSACITY » (son adresse doit être beta-pulsacity), délai 0 jour, demandes automatiques coupées (les bêta-testeurs reçoivent « Demander un avis » à la main, arbitrage n° 10).
 2. « Réglages » : coche « J'offre une contrepartie à mes clients » (les bêta-testeurs ont Essentiel offert), enregistre.
-3. « Widgets » : garde le mur créé avec l'espace ; ajoute un widget « Badge ».
-4. Supabase, projet de production « PULSACITY », éditeur SQL. D'abord, lis :
+3. Supabase, projet de production « PULSACITY », éditeur SQL. D'abord, lis :
    select id, name, slug, plan from spaces where slug = 'pulsacity';
    Une ligne : « PULSACITY », plan free. Puis, et seulement si c'est bien cette ligne, offre-lui le plan Pro :
    update spaces set plan = 'pro' where slug = 'pulsacity' and stripe_subscription_id is null;
    Le résultat doit dire « 1 row affected ». Copie l'id de la ligne.
-5. pulsacity.com › « Widgets » : dans le mur, puis dans le badge, active l'interrupteur « Masquer « Propulsé par PULSACITY » » (il s'enregistre seul). « Abonnement et factures » dit « Plan Pro » et « Ce plan vous est offert par PULSACITY : aucun paiement. »
-6. Vercel, https://vercel.com/jawadboughalems-projects/pulsacity/settings/environment-variables : ajoute PULSACITY_SPACE_ID, valeur : l'id de l'étape 4, environnement : Production seulement. Puis redéploie le dernier déploiement de production (« Redeploy »).
+4. pulsacity.com › « Widgets » (recharge la page) : garde le mur créé avec l'espace ; ajoute un widget « Badge » (au plan Gratuit, un second widget serait refusé : c'est pourquoi le plan Pro passe avant).
+5. « Widgets » : dans le mur, puis dans le badge, active l'interrupteur « Masquer « Propulsé par PULSACITY » » (il s'enregistre seul). « Abonnement et factures » dit « Plan Pro » et « Ce plan vous est offert par PULSACITY : aucun paiement. »
+6. Vercel, https://vercel.com/jawadboughalems-projects/pulsacity/settings/environment-variables : ajoute PULSACITY_SPACE_ID, valeur : l'id de l'étape 3, environnement : Production seulement. Puis redéploie le dernier déploiement de production (« Redeploy »).
 7. Sur https://pulsacity.com : tant que l'espace n'a pas 5 témoignages validés, l'accueil n'a pas de section « Les avis des premiers créateurs » et Tarifs n'a pas de badge. C'est normal : ils apparaissent dans l'heure qui suit la validation du cinquième.
 
 Compte rendu à me donner : chaque étape faite, le plan affiché, la variable ajoutée. Ni adresse ni id.
