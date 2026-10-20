@@ -22,17 +22,17 @@ const renderIllustration = (
     case "connection-address":
       return <ConnectionAddressFrame connectorName={integration.name} hasSigningKey={integration.hasSigningKey ?? true} />;
     case "systeme-webhook-screens":
-      return <ConnectionGuide connectorId="systeme" connectorName="Systeme.io" />;
+      return <ConnectionGuide connectorId="systeme" connectorName="Systeme.io" frame="cloud" />;
     case "connection-success":
       return <ConnectionSuccessFrame connectorName={integration.name} />;
     case "universal-fields":
       return <UniversalFieldList />;
     case "paste-widget-screens":
-      return <PasteGuideSteps layout="pairs" />;
+      return <PasteGuideSteps layout="pairs" frame="cloud" />;
     case "systeme-enrollment-rule":
       return (
         <div className="desktop:max-w-[640px]">
-          <ConnectionRule connectorId="systeme" addressStep={addressStep} />
+          <ConnectionRule connectorId="systeme" addressStep={addressStep} surface="cloud" />
         </div>
       );
   }
@@ -49,21 +49,21 @@ type StepRowProps = {
 };
 
 /**
- * A step of m21: its number, its title and its sentence in a column; under them, its drawing, the full width on a phone
- * and in the column of the text on a computer.
+ * A step of maquettes 3.5 (charte v2, Étapes numérotées): its number on a Soleil disc of 36, its title and its sentence
+ * in a column; under them, its drawing, the full width on a phone and in the column of the text on a computer.
  */
 const StepRow = ({ marker, spokenPrefix, isOptional = false, step, addressStep, integration }: StepRowProps) => (
-  <div className="grid grid-cols-[32px_minmax(0,1fr)] gap-x-4 gap-y-6 desktop:grid-cols-[40px_minmax(0,1fr)] desktop:gap-x-6">
+  <div className="grid grid-cols-[36px_minmax(0,1fr)] gap-x-4 gap-y-4 desktop:gap-y-5">
     <span
       aria-hidden="true"
       className={cn(
-        "flex size-[32px] items-center justify-center rounded-full desktop:size-[40px]",
-        isOptional ? "border-2 border-ink bg-white" : "bg-ink text-body font-bold text-white",
+        "flex size-[36px] items-center justify-center rounded-full",
+        isOptional ? "border-2 border-ink bg-white" : "bg-sun font-display text-[18px] leading-[1]",
       )}
     >
       {marker}
     </span>
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 pt-[4px]">
       <h3 className="font-display text-h3">
         {spokenPrefix ? <span className="sr-only">{spokenPrefix}</span> : null}
         {step.title}
@@ -85,12 +85,15 @@ const StepRow = ({ marker, spokenPrefix, isOptional = false, step, addressStep, 
   </div>
 );
 
-/** « Installer la connexion », step by step (m21), spaced without rules (charte v2), then the optional step marked « + ». */
+/**
+ * « Installer la connexion », step by step, on a white card (maquettes 3.5), spaced without rules, then the optional
+ * step marked « + ».
+ */
 export const InstallGuide = ({ integration }: { integration: AvailableIntegration }) => {
   const addressStep = findAddressStep(integration.installSteps);
   return (
-    <div className="flex flex-col gap-12">
-      <ol className="flex flex-col gap-12">
+    <div className="flex flex-col gap-10 rounded-panel bg-white p-5 desktop:p-10">
+      <ol className="flex flex-col gap-10">
         {integration.installSteps.map((step, index) => (
           <li key={step.title}>
             <StepRow

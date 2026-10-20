@@ -274,3 +274,10 @@ html:has([data-site-header]) {
     scroll-padding-top: 88px;
   }
 }
+
+/* The home's fixed bar of the phone (maquettes 3.5): an anchor or a focused element never lands under its 98 px. */
+@media (width < 1024px) {
+  html:has([data-barre-fixe="true"]) {
+    scroll-padding-bottom: 98px;
+  }
+}

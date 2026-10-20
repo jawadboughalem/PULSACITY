@@ -43,10 +43,11 @@ type PlanPresentation = {
   isRecommended: boolean;
 };
 
+/** The lists of Tarifs (maquettes 3.5): Pro is Essentiel plus the removal of the mention, nothing else (tarifs.md). */
 const describeHighlights = (plan: Plan): string[] => {
-  if (plan.badgeRemovable) return [`Tout ${PLANS.essentiel.name}`, "Mention PULSACITY retirable", "Témoignages vidéo, bientôt"];
+  if (plan.badgeRemovable) return [`Tout ${PLANS.essentiel.name}`, "Mention PULSACITY retirable"];
   const testimonials = describeLimit(plan.limits.testimonials, "Témoignages illimités", (count) =>
-    `${count} ${plural(count, "témoignage", "témoignages")}`,
+    `${count} ${plural(count, "témoignage validé", "témoignages validés")}`,
   );
   const widgets = describeLimit(plan.limits.widgets, "Tous les widgets", (count) => `${count} ${plural(count, "widget", "widgets")}`);
   const requests = describeLimit(
@@ -54,7 +55,7 @@ const describeHighlights = (plan: Plan): string[] => {
     "Demandes automatiques illimitées",
     (count) => `${count} ${plural(count, "demande automatique", "demandes automatiques")} par mois`,
   );
-  // m8: the free plan lists its limits, then the mention it shows; a paid plan puts the requests second.
+  // The free plan lists its limits, then the mention it shows; a paid plan puts the requests second.
   return plan.priceCents.monthly === 0
     ? [testimonials, widgets, requests, POWERED_BY_MENTION]
     : [testimonials, requests, widgets];
@@ -95,6 +96,38 @@ export const PLAN_PRESENTATIONS: PlanPresentation[] = PLAN_IDS.map((id) => ({
   isRecommended: id === RECOMMENDED_PLAN,
 }));
 
+/**
+ * The sentence of each plan in the prices of the home page (positionnement.md, section 9): its limits for the free
+ * plan, from plans.ts.
+ */
+export const describeHomePlan = (id: PlanId): string => {
+  const plan = PLANS[id];
+  if (plan.badgeRemovable) return `Tout ${PLANS.essentiel.name}, sans le badge ${quoteInFrench("Propulsé par PULSACITY")}.`;
+  const { testimonials, monthlyRequests, widgets } = plan.limits;
+  if (testimonials === UNLIMITED && monthlyRequests === UNLIMITED && widgets === UNLIMITED) {
+    return "Témoignages, demandes et widgets illimités.";
+  }
+  return [
+    describeLimit(testimonials, "Témoignages illimités", (count) => `${count} ${plural(count, "témoignage validé", "témoignages validés")}`),
+    describeLimit(monthlyRequests, "demandes illimitées", (count) => `${count} ${plural(count, "demande automatique", "demandes automatiques")} par mois`),
+    describeLimit(widgets, "widgets illimités", (count) => `${count} ${plural(count, "widget", "widgets")}`),
+  ].join(", ").concat(".");
+};
+
+/** Under 10 €, a price is « moins de 10 € »: the promise of the home while the founder price is shown (arbitrage n° 1). */
+const SMALL_PRICE_CENTS = 1000;
+
+/**
+ * The title of the home's prices: « Gratuit pour commencer, moins de 10 € ensuite » while the founder price is shown,
+ * then the price of Essentiel once the public prices are (maquettes 3.5, proposed: to validate).
+ */
+export const describeHomePricesTitle = (priceList: PriceList): string => {
+  const essentiel = readPlanPrice("essentiel", "monthly", priceList);
+  return essentiel < SMALL_PRICE_CENTS
+    ? `Gratuit pour commencer, moins de 10${NO_BREAK_SPACE}€ ensuite`
+    : `Gratuit pour commencer, ${formatPrice(essentiel, "EUR")} par mois ensuite`;
+};
+
 export type PriceParts = {
   /** « 9 », in the large figures. */
   whole: string;
@@ -133,12 +166,8 @@ export const describeLaunchPrice = (id: PlanId, period: BillingPeriod, priceList
   return `Prix de lancement, gardé à vie, pour les ${FOUNDER_PRICE_SEATS} premiers abonnés. Ensuite, ${publicPrice} ${PERIOD_WORDS[period]}.`;
 };
 
-/** One value of the comparison: included, not included, to come, or a word. */
-export type ComparisonValue =
-  | { kind: "included" }
-  | { kind: "excluded"; label: string }
-  | { kind: "soon"; label: string }
-  | { kind: "text"; label: string };
+/** One value of the comparison: included, or a word. */
+export type ComparisonValue = { kind: "included" } | { kind: "text"; label: string };
 
 export type ComparisonRow = { label: string; values: Record<PlanId, ComparisonValue> };
 
@@ -159,23 +188,31 @@ const limitValue = (limit: Limit, unlimited: string, limited: (count: number) =>
   label: describeLimit(limit, unlimited, limited),
 });
 
-/** « Comparer en détail » of maquette 8, row by row, as m8 on a phone shows it. */
+/**
+ * « Comparer en détail » of Tarifs (maquettes 3.5): what is true today, or decided, row by row. « Témoignages validés »
+ * says what the free plan counts: beyond them, nothing is lost.
+ */
 export const PLAN_COMPARISON: ComparisonGroup[] = [
   {
     title: "Témoignages",
     rows: [
       {
-        label: "Témoignages conservés et affichés",
+        label: "Témoignages validés",
         values: everyPlan((plan) => limitValue(plan.limits.testimonials, "Illimités", String)),
       },
       {
         label: "Demandes automatiques après une vente",
         values: everyPlan((plan) => limitValue(plan.limits.monthlyRequests, "Illimitées", (count) => `${count} par mois`)),
       },
+      {
+        label: "Demandes saisies à la main",
+        values: everyPlan((plan) => limitValue(plan.limits.manualRequestsPerDay, "Illimitées", (count) => `${count} par jour`)),
+      },
       { label: "Une relance si pas de réponse", values: allIncluded },
       { label: "Lien de collecte à partager", values: allIncluded },
-      { label: "Valider, corriger, masquer", values: allIncluded },
-      { label: "Preuve de consentement horodatée", values: allIncluded },
+      { label: "Valider et masquer", values: allIncluded },
+      { label: "Corriger le texte, avec l'accord du client", values: allIncluded },
+      { label: "Accord du client daté et gardé", values: allIncluded },
     ],
   },
   {
@@ -190,6 +227,7 @@ export const PLAN_COMPARISON: ComparisonGroup[] = [
       },
       { label: "Tri par offre", values: allIncluded },
       { label: "Couleur et thème de votre page", values: allIncluded },
+      { label: `Lien ${quoteInFrench("À propos de ces avis")}`, values: allIncluded },
       {
         label: POWERED_BY_MENTION,
         values: everyPlan((plan) => ({ kind: "text", label: plan.badgeRemovable ? "Retirable" : "Affichée" })),
@@ -199,19 +237,9 @@ export const PLAN_COMPARISON: ComparisonGroup[] = [
   {
     title: "Connecteurs",
     rows: [
-      { label: "Systeme.io et le connecteur universel", values: allIncluded },
-      { label: "Les autres connecteurs, dès leur sortie", values: allIncluded },
-    ],
-  },
-  {
-    title: "Bientôt",
-    rows: [
-      {
-        label: "Témoignages vidéo",
-        values: everyPlan((plan) =>
-          plan.badgeRemovable ? { kind: "soon", label: "Bientôt" } : { kind: "excluded", label: "Non inclus" },
-        ),
-      },
+      { label: "Systeme.io", values: allIncluded },
+      { label: "Connecteur universel, avec Zapier, Make ou n8n", values: allIncluded },
+      { label: "Les prochains connecteurs, dès leur sortie", values: allIncluded },
     ],
   },
 ];

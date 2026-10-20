@@ -24,7 +24,11 @@ const renderPart = (part: PasteGuidePart, index: number) =>
     </strong>
   );
 
-type PasteGuideStepsProps = { layout: "grid" | "pairs" | "column" };
+type PasteGuideStepsProps = {
+  layout: "grid" | "pairs" | "column";
+  /** Ciel in the space; Nuage on the public pages, where the steps sit on a white card (maquettes 3.5). */
+  frame?: "sky" | "cloud";
+};
 
 const LIST_CLASSES: Record<PasteGuideStepsProps["layout"], string> = {
   grid: "grid grid-cols-[repeat(auto-fill,minmax(232px,1fr))] gap-5",
@@ -36,15 +40,23 @@ const LIST_CLASSES: Record<PasteGuideStepsProps["layout"], string> = {
  * The four steps, each with its drawing: side by side in the editor, two by two on the public page of Systeme.io (m21),
  * one below the other on its own page.
  */
-export const PasteGuideSteps = ({ layout }: PasteGuideStepsProps) => (
+export const PasteGuideSteps = ({ layout, frame = "sky" }: PasteGuideStepsProps) => (
   <ol className={LIST_CLASSES[layout]}>
     {PASTE_GUIDE_STEPS.map((parts, index) => (
       <li key={index} className={layout === "pairs" ? "flex flex-col gap-3" : "flex flex-col gap-4"}>
-        <div className={cn("overflow-hidden rounded-card bg-sky", layout === "column" && "desktop:max-w-[560px]")}>
+        <div
+          className={cn(
+            "overflow-hidden rounded-card",
+            frame === "cloud" ? "bg-cloud" : "bg-sky",
+            layout === "column" && "desktop:max-w-[560px]",
+            // Maquettes 3.5: on the public pages, the drawings keep their size of 240 beside the longer sentences.
+            layout === "pairs" && frame === "cloud" && "desktop:max-w-[240px]",
+          )}
+        >
           {DRAWINGS[index]}
         </div>
         {layout === "pairs" ? (
-          // The public page of Systeme.io keeps its own layout until the site's maquettes v2 (lot 4.7).
+          // The public pages (maquettes 3.5): the number in bold before the sentence, as under the drawings of step 3.
           <p className="text-small">
             <span className="font-bold">{`${index + 1}.`}</span> {parts.map(renderPart)}
           </p>

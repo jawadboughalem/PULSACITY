@@ -136,6 +136,8 @@ describe("the published catalog", () => {
       "Connecteur universel",
       "Stripe",
       "Calendly",
+      "Learnybox",
+      "Kajabi",
     ]);
     for (const integration of FEATURED_INTEGRATIONS) expect(INTEGRATIONS).toContain(integration);
   });

@@ -22,20 +22,22 @@ type SpaceFrameProps = {
 };
 
 /**
- * A part of the creator's space, in a window of the site (m21): « Votre espace · Connecteurs › Systeme.io ». The
- * window is on Nuage like the space, its bar on Ciel.
+ * A part of the creator's space, in a window of the site (maquettes 3.5): « Votre espace · Connecteurs › Systeme.io ».
+ * A white window, its bar on Ciel, in a Nuage frame, like the other drawings of the steps.
  */
 const SpaceFrame = ({ label, connectorName, children }: SpaceFrameProps) => (
-  <div role="img" aria-label={label} className="overflow-hidden rounded-card bg-cloud desktop:max-w-[562px]">
-    <div className="flex h-[36px] items-center gap-2 bg-sky px-3 text-legal text-gray">
-      <span className="flex gap-1">
-        {[1, 2, 3].map((dot) => (
-          <span key={dot} className="size-[8px] rounded-full bg-white" />
-        ))}
-      </span>
-      <span className="ml-3 truncate">{`Votre espace · Connecteurs › ${connectorName}`}</span>
+  <div role="img" aria-label={label} className="rounded-card bg-cloud p-3 desktop:max-w-[708px]">
+    <div className="overflow-hidden rounded-field bg-white">
+      <div className="flex h-[36px] items-center gap-2 bg-sky px-3 text-legal text-gray">
+        <span className="flex gap-1">
+          {[1, 2, 3].map((dot) => (
+            <span key={dot} className="size-[8px] rounded-full bg-white" />
+          ))}
+        </span>
+        <span className="ml-3 truncate">{`Votre espace · Connecteurs › ${connectorName}`}</span>
+      </div>
+      <div className="p-4 desktop:p-6">{children}</div>
     </div>
-    <div className="p-4 desktop:p-6">{children}</div>
   </div>
 );
 

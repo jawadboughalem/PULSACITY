@@ -10,6 +10,6 @@ export const contentType = SOCIAL_IMAGE_TYPE;
 export const generateStaticParams = () => GUIDES.map((guide) => ({ slug: guide.slug }));
 
 const SocialImage = async ({ params }: { params: Promise<{ slug: string }> }) =>
-  renderSocialImage(findGuide((await params).slug)?.title ?? "Guides");
+  renderSocialImage(findGuide((await params).slug)?.title ?? "Guides", { kind: "guide" });
 
 export default SocialImage;

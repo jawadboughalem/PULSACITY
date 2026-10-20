@@ -1,77 +1,47 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { EXAMPLE_AVERAGE, EXAMPLE_COUNT, EXAMPLE_REVIEWS } from "@/content/home-examples";
+import { cn } from "@/lib/cn";
 import { readLinkColor } from "../../../../widget/src/page";
-import type { PublicTestimonial, WidgetPayload } from "../../../../widget/src/payload";
+import type { PublicTestimonial, WidgetPayload, WidgetType } from "../../../../widget/src/payload";
 import { renderWidget } from "../../../../widget/src/render";
+import { ChoiceButtons } from "../ChoiceButtons";
+import { ExampleMention } from "../ExampleMention";
+import { JULIE_ACCENT, JULIE_PAGE_BACKGROUNDS, JULIE_PAGE_FONT_CLASSES } from "./julie-page";
 
 const LOGOTYPE_URL = "/fonts/pulsacity-logotype.woff2";
 
-/** The green of Julie Nutrition, the example page of maquettes 2, 6 and 7. */
-const JULIE_ACCENT = "#4F6F52";
+/** On a dark card, Julie's green stands out too little: the stars take Soleil (maquettes 3.5, widget sombre). */
+const DARK_ACCENT = "#FFBE3B";
 
-/** Maquette 7: the order of the carousel, then Sophie D., fourth on a phone. */
-const TESTIMONIALS: PublicTestimonial[] = [
-  {
-    name: "Camille R.",
-    initials: "CR",
-    title: "Enseignante",
-    photo: null,
-    rating: 5,
-    text: "En 30 jours j'ai arrêté de grignoter le soir. Julie explique sans culpabiliser, c'est la première fois qu'un programme tient dans ma vraie vie.",
-    date: "2026-09-12",
-  },
-  {
-    name: "Thomas L.",
-    initials: "TL",
-    title: "Développeur",
-    photo: null,
-    rating: 5,
-    text: "Les recettes sont rapides et le groupe motive vraiment. J'ai perdu 4 kg sans me priver.",
-    date: "2026-09-03",
-  },
-  {
-    name: "Nadia B.",
-    initials: "NB",
-    title: "Infirmière de nuit",
-    photo: null,
-    rating: 4,
-    text: "Enfin des conseils adaptés aux horaires décalés. J'aurais aimé plus de recettes végétariennes.",
-    date: "2026-09-26",
-  },
-  {
-    name: "Sophie D.",
-    initials: "SD",
-    title: "Maman de 3 enfants",
-    photo: null,
-    rating: 5,
-    text: "Toute la famille mange mieux. Les menus de la semaine m'ont sauvé la vie.",
-    date: "2026-09-27",
-  },
-];
+type Look = "light" | "dark";
 
-const BASE_PAYLOAD: Omit<WidgetPayload, "type" | "testimonials" | "avatars"> = {
+const TESTIMONIALS: PublicTestimonial[] = EXAMPLE_REVIEWS.map((review) => ({
+  name: review.name,
+  initials: review.name.charAt(0),
+  title: review.offer,
+  photo: null,
+  rating: review.rating,
+  text: review.text,
+  date: review.date,
+}));
+
+const buildPayload = (type: WidgetType, look: Look): WidgetPayload => ({
   v: 1,
-  theme: "light",
-  accentColor: JULIE_ACCENT,
-  cardStyle: "sharp",
-  total: 47,
-  average: 4.8,
+  type,
+  theme: look,
+  accentColor: look === "dark" ? DARK_ACCENT : JULIE_ACCENT,
+  cardStyle: "soft",
+  total: EXAMPLE_COUNT,
+  count: EXAMPLE_COUNT,
+  average: EXAMPLE_AVERAGE,
+  testimonials: type === "badge" ? [] : TESTIMONIALS,
+  avatars: TESTIMONIALS.map(({ initials }) => ({ initials, photo: null })),
   next: null,
   // On our own page, « Propulsé par » leads home.
   poweredBy: "/",
-};
-
-const CAROUSEL: WidgetPayload = { ...BASE_PAYLOAD, type: "carousel", testimonials: TESTIMONIALS, avatars: [] };
-
-const BADGE: WidgetPayload = {
-  ...BASE_PAYLOAD,
-  type: "badge",
-  testimonials: [],
-  avatars: TESTIMONIALS.slice(0, 2)
-    .concat(TESTIMONIALS[3])
-    .map(({ initials }) => ({ initials, photo: null })),
-};
+});
 
 /** The renderer of w.js in its own shadow root, as on a creator's page. */
 const LiveWidget = ({ payload }: { payload: WidgetPayload }) => {
@@ -89,34 +59,92 @@ const LiveWidget = ({ payload }: { payload: WidgetPayload }) => {
   return <div ref={hostRef} />;
 };
 
+const TYPE_OPTIONS = [
+  { value: "wall", label: "Mur" },
+  { value: "carousel", label: "Carrousel" },
+  { value: "badge", label: "Badge" },
+] as const;
+
+const LOOK_OPTIONS = [
+  { value: "light", label: "Clair" },
+  { value: "dark", label: "Sombre" },
+] as const;
+
 /**
- * Maquette 7, « Chez vous, avec vos couleurs »: the sales page of Julie Nutrition, with her font and her green, and the
- * real widget on it: the badge near the top, then the carousel. On a phone, the frame takes 8 px of the page margins
- * and keeps narrow ones inside, so that the widget has the width of a real page of 360 px: the whole badge (about 311 px
- * in Georgia bold), and the points under the carousel (288 px).
+ * Room kept for each widget while it draws itself, so that nothing below moves (charte v2, Widget, Chargement): its
+ * height at 360 and 1440 px, measured, plus a margin for a wider Georgia (Windows).
  */
-export const WidgetShowcase = () => (
-  <figure className="-mx-2 overflow-hidden rounded-card bg-white font-[Georgia,'Times_New_Roman',serif] text-ink desktop:mx-[0]">
-    <figcaption className="sr-only font-sans text-legal text-gray desktop:not-sr-only desktop:flex desktop:h-[40px] desktop:items-center desktop:gap-4 desktop:bg-cloud desktop:px-4">
-      <span aria-hidden="true" className="hidden gap-2 desktop:flex">
-        <span className="size-[8px] rounded-full bg-sky-pressed" />
-        <span className="size-[8px] rounded-full bg-sky-pressed" />
-        <span className="size-[8px] rounded-full bg-sky-pressed" />
-      </span>
-      Page de vente de Julie Nutrition · exemple
-    </figcaption>
-    <div className="min-h-[104px] py-4 desktop:min-h-[56px] desktop:px-14 desktop:py-2">
-      <LiveWidget payload={BADGE} />
-    </div>
-    {/* A band of her page on Nuage: on the Ciel of the section, the frame stays whole without a rule (charte v2). */}
-    <div className="bg-cloud px-2 py-10 desktop:px-14 desktop:py-14">
-      <p className="mb-6 px-4 text-[28px] leading-[34px] font-bold desktop:mb-8 desktop:px-[0] desktop:text-[36px] desktop:leading-[44px]">
-        Ils ont suivi le programme
-      </p>
-      <div className="min-h-[440px] desktop:min-h-[360px]">
-        <LiveWidget payload={CAROUSEL} />
+const RESERVED_HEIGHTS: Record<WidgetType, string> = {
+  wall: "min-h-[640px] desktop:min-h-[320px]",
+  carousel: "min-h-[400px] desktop:min-h-[420px]",
+  badge: "min-h-[72px] desktop:min-h-[48px]",
+};
+
+/**
+ * Maquettes 3.5, Accueil, section 5: the sales page of Julie Nutrition, with her font and her green, and the real
+ * widget on it, which the visitor switches between wall, carousel and badge, light and dark. The page itself goes dark
+ * with the widget. The reviews are those of positionnement.md, marked as examples.
+ */
+export const WidgetShowcase = () => {
+  const [type, setType] = useState<WidgetType>("wall");
+  const [look, setLook] = useState<Look>("light");
+  const [payload, setPayload] = useState(() => buildPayload("wall", "light"));
+
+  const show = (nextType: WidgetType, nextLook: Look) => {
+    setType(nextType);
+    setLook(nextLook);
+    setPayload(buildPayload(nextType, nextLook));
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3 desktop:flex-row desktop:gap-4">
+        <ChoiceButtons
+          label="Type de widget"
+          options={TYPE_OPTIONS}
+          value={type}
+          onChoose={(value) => show(value, look)}
+          announcement={(value) => `${TYPE_OPTIONS.find((option) => option.value === value)?.label} affiché.`}
+        />
+        <ChoiceButtons
+          label="Thème du widget"
+          options={LOOK_OPTIONS}
+          value={look}
+          onChoose={(value) => show(type, value)}
+          announcement={(value) => `Thème ${value === "dark" ? "sombre" : "clair"} affiché.`}
+        />
       </div>
+      <figure className="flex flex-col gap-3">
+        <div className="overflow-hidden rounded-panel border-2 border-gray-light">
+          <p aria-hidden="true" className="hidden h-[40px] items-center gap-4 bg-white px-4 text-legal text-gray desktop:flex">
+            <span className="flex gap-2">
+              <span className="size-[8px] rounded-full bg-gray-light" />
+              <span className="size-[8px] rounded-full bg-gray-light" />
+              <span className="size-[8px] rounded-full bg-gray-light" />
+            </span>
+            Page de vente de Julie Nutrition · exemple
+          </p>
+          <div
+            style={{ backgroundColor: JULIE_PAGE_BACKGROUNDS[look] }}
+            className={cn(
+              JULIE_PAGE_FONT_CLASSES,
+              "px-4 py-6 desktop:px-12 desktop:py-10",
+              look === "dark" ? "text-white" : "text-ink",
+            )}
+          >
+            <p className="mb-5 text-[24px] leading-[30px] font-bold desktop:mb-6 desktop:text-[36px] desktop:leading-[44px]">
+              Ils ont suivi le programme
+            </p>
+            <div className={RESERVED_HEIGHTS[type]}>
+              <LiveWidget payload={payload} />
+            </div>
+          </div>
+        </div>
+        <figcaption>
+          <span className="sr-only">Page de vente de Julie Nutrition, avec un widget PULSACITY. </span>
+          <ExampleMention />
+        </figcaption>
+      </figure>
     </div>
-    <div className="h-[32px]" />
-  </figure>
-);
+  );
+};

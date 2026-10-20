@@ -1,15 +1,17 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Breadcrumb } from "@/components/marketing/Breadcrumb";
 import { GuideList } from "@/components/marketing/guides/GuideList";
+import { JsonLd } from "@/components/marketing/JsonLd";
 import { formatGuideMeta } from "@/components/marketing/guides/format-guide-meta";
 import { MARKETING_PATHS, guidePath } from "@/components/marketing/marketing-paths";
-import { MarketingSection, SectionTitle } from "@/components/marketing/MarketingSection";
-import { BREADCRUMB_LINK_CLASSES } from "@/components/marketing/marketing-styles";
+import { MarketingSection } from "@/components/marketing/MarketingSection";
+import { SITE_GROUP_TITLE_CLASSES, SITE_PAGE_TITLE_CLASSES } from "@/components/marketing/marketing-styles";
 import { ReadingLayout } from "@/components/marketing/reading/ReadingLayout";
-import { Icon } from "@/components/ui/Icon";
 import { GUIDES, findGuide } from "@/content/guides";
 import { readGuideHeadings } from "@/lib/content/read-text-headings";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
+import { buildGuideData } from "@/lib/seo/structured-data";
+import { readSiteUrl } from "@/lib/site-url";
 
 export const dynamicParams = false;
 
@@ -21,25 +23,7 @@ export const generateMetadata = async ({ params }: PageProps<"/guides/[slug]">) 
   return buildPageMetadata({ title: guide.title, description: guide.description, path: guidePath(guide.slug) });
 };
 
-const Breadcrumb = ({ title }: { title: string }) => (
-  <nav aria-label="Fil d'Ariane" className="text-small">
-    <ol className="flex items-center gap-3">
-      <li>
-        <Link href={MARKETING_PATHS.guides} className={BREADCRUMB_LINK_CLASSES}>
-          Guides
-        </Link>
-      </li>
-      <li aria-hidden="true" className="flex text-gray">
-        <Icon name="chevronRight" size={16} />
-      </li>
-      <li aria-current="page" className="min-w-[0] text-gray">
-        {title}
-      </li>
-    </ol>
-  </nav>
-);
-
-/** Maquette 22, a guide: its MDX text beside its contents, then the other guides. */
+/** Maquettes 3.5, a guide: its MDX text on the white plate of the long texts, beside its contents, then the others. */
 const GuidePage = async ({ params }: PageProps<"/guides/[slug]">) => {
   const guide = findGuide((await params).slug);
   if (!guide) notFound();
@@ -48,16 +32,17 @@ const GuidePage = async ({ params }: PageProps<"/guides/[slug]">) => {
 
   return (
     <>
+      <JsonLd data={buildGuideData(readSiteUrl(), { ...guide, path: guidePath(guide.slug) })} />
       <ReadingLayout
         labelledBy="guide-title"
-        breadcrumb={<Breadcrumb title={guide.title} />}
+        breadcrumb={<Breadcrumb parent={{ href: MARKETING_PATHS.guides, label: "Guides" }} current={guide.title} />}
         header={
           <>
-            <h1 id="guide-title" className="font-display text-h1">
+            <h1 id="guide-title" className={SITE_PAGE_TITLE_CLASSES}>
               {guide.title}
             </h1>
             <p className="text-small text-gray">{formatGuideMeta(guide)}</p>
-            <p className="mt-2 text-lead">{guide.description}</p>
+            <p className="mt-1 max-w-[680px] text-lead">{guide.description}</p>
           </>
         }
         contentsTitle="Dans ce guide"
@@ -67,9 +52,11 @@ const GuidePage = async ({ params }: PageProps<"/guides/[slug]">) => {
       </ReadingLayout>
 
       <MarketingSection labelledBy="other-guides">
-        <div className="grid gap-8 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-8">
-          <SectionTitle id="other-guides">Autres guides</SectionTitle>
-          <GuideList guides={otherGuides} />
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 desktop:grid-cols-[400px_minmax(0,1fr)] desktop:gap-12">
+          <h2 id="other-guides" className={SITE_GROUP_TITLE_CLASSES}>
+            Autres guides
+          </h2>
+          <GuideList guides={otherGuides} surface="cloud" />
         </div>
       </MarketingSection>
     </>

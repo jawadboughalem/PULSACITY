@@ -34,23 +34,29 @@ const AnchoredHeading = ({ id, children }: AnchoredHeadingProps) => (
   </h2>
 );
 
-/** What the company still has to provide, highlighted in Attente while a draft (m23): <ToComplete>SIREN</ToComplete>. */
+/**
+ * What the company still has to provide, while a draft (charte v2, ajouts 3.5, Brouillon et champs à compléter):
+ * highlighted in Attente fond, Attente 700, radius 4, line by line. Written <ToComplete>SIREN</ToComplete>.
+ */
 const ToComplete = ({ children }: { children: ReactNode }) => (
-  <mark className="box-decoration-clone bg-waiting-surface px-1 font-bold text-waiting">
+  <mark className="rounded-[4px] box-decoration-clone bg-waiting-surface px-1 font-bold text-waiting">
     [À COMPLÉTER : {children}]
   </mark>
 );
 
+/** Charte v2, ajouts 3.5, Lecture: the text in 17/27, 68 characters a line at most. */
+const TEXT_CLASSES = "text-[17px] leading-[27px]";
+
 /**
- * The long texts of the site (guides, legal texts): the charter's sizes, 68 characters a line at most. Their column
- * spaces the blocks (ProseColumn); a title takes more room above it.
+ * The long texts of the site (guides, legal texts), on the white plate of ReadingLayout. Their column spaces the blocks
+ * (ProseColumn); a title takes more room above it.
  */
 const components = {
   h2: ProseTitle,
   h3: ({ children }) => <h3 className="mt-3 font-display text-h3">{children}</h3>,
-  p: ({ children }) => <p className="max-w-text text-body">{children}</p>,
-  ul: ({ children }) => <ul className="flex max-w-text list-disc flex-col gap-2 pl-6 text-body">{children}</ul>,
-  ol: ({ children }) => <ol className="flex max-w-text list-decimal flex-col gap-2 pl-6 text-body">{children}</ol>,
+  p: ({ children }) => <p className={`max-w-text ${TEXT_CLASSES}`}>{children}</p>,
+  ul: ({ children }) => <ul className={`flex max-w-text list-disc flex-col gap-2 pl-6 ${TEXT_CLASSES}`}>{children}</ul>,
+  ol: ({ children }) => <ol className={`flex max-w-text list-decimal flex-col gap-2 pl-6 ${TEXT_CLASSES}`}>{children}</ol>,
   strong: ({ children }) => <strong className="font-bold">{children}</strong>,
   a: ProseLink,
   AnchoredHeading,

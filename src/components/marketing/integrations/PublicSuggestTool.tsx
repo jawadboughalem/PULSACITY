@@ -5,17 +5,16 @@ import { suggestPublicTool } from "@/app/(marketing)/integrations/public-tool-ac
 import { HoneypotField } from "@/components/collect/HoneypotField";
 import { INLINE_LINK_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
+import { StatusBanner } from "@/components/ui/StatusBanner";
 import { TextField } from "@/components/ui/TextField";
 import { cn } from "@/lib/cn";
 
-const ERRORS = {
-  "invalid-name": "Indiquez le nom de l'outil, en 2 caractères au moins.",
-  "too-many-requests": "Plusieurs envois sont partis en peu de temps. Patientez quelques minutes, puis réessayez.",
-} as const;
+/** The anchor of the card: the home's « Votre outil n'y est pas ? Dites-nous lequel. » leads here. */
+export const SUGGEST_TOOL_ID = "dites-nous";
 
 /**
- * m21, under « Votre outil n'est pas encore là ? »: the visitor names the tool where they sell, like « Dites-nous quel
- * outil » in the space. Only the name is kept.
+ * Maquettes 3.5, Intégrations, « Dites-nous quel outil » and its five states (closed, open, name refused, too many
+ * sendings, thanks), on a white card. The visitor names the tool where they sell; only the name is kept.
  */
 export const PublicSuggestTool = () => {
   const [result, submitAction, isPending] = useActionState(suggestPublicTool, null);
@@ -25,28 +24,33 @@ export const PublicSuggestTool = () => {
   const [honeypot, setHoneypot] = useState("");
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="max-w-text text-body text-gray">
+    <section id={SUGGEST_TOOL_ID} aria-label="Dites-nous quel outil" className="flex flex-col gap-4 rounded-card bg-white p-5 desktop:p-8">
+      <p className="max-w-text text-body">
         Vous vendez ailleurs ?{" "}
         <button
           type="button"
           onClick={() => setIsOpen(true)}
           aria-expanded={isOpen}
           aria-controls="suggested-tool-form"
-          className={cn(INLINE_LINK_CLASSES, "cursor-pointer")}
+          className={cn(INLINE_LINK_CLASSES, "cursor-pointer font-bold")}
         >
           Dites-nous quel outil
         </button>
         {" : c'est ainsi que nous choisissons les prochains."}
       </p>
       {result?.ok ? (
-        <p role="status" className="flex items-center gap-2 text-small font-semibold text-success">
+        <p role="status" className="flex items-center gap-2 text-body font-bold text-success">
           <Icon name="valid" size={20} />
           Merci, c&apos;est noté.
         </p>
       ) : null}
       {isOpen && !result?.ok ? (
-        <form id="suggested-tool-form" action={submitAction} noValidate className="flex max-w-[400px] flex-col gap-3">
+        <form id="suggested-tool-form" action={submitAction} noValidate className="flex max-w-[520px] flex-col gap-4">
+          {result?.ok === false && result.error === "too-many-requests" ? (
+            <StatusBanner tone="error" title="Plusieurs envois sont partis en peu de temps.">
+              Patientez quelques minutes, puis réessayez.
+            </StatusBanner>
+          ) : null}
           <HoneypotField value={honeypot} onChange={setHoneypot} />
           <TextField
             id="suggested-tool"
@@ -57,7 +61,11 @@ export const PublicSuggestTool = () => {
             autoFocus
             autoComplete="off"
             onChange={(event) => setToolName(event.target.value)}
-            error={result?.ok === false ? ERRORS[result.error] : undefined}
+            error={
+              result?.ok === false && result.error === "invalid-name"
+                ? "Indiquez le nom de l'outil, en 2 caractères au moins."
+                : undefined
+            }
           />
           <button
             type="submit"
@@ -68,6 +76,6 @@ export const PublicSuggestTool = () => {
           </button>
         </form>
       ) : null}
-    </div>
+    </section>
   );
 };

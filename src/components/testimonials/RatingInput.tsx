@@ -9,14 +9,16 @@ type RatingInputProps = {
   rating: number;
   error?: string;
   onChange: (rating: number) => void;
+  /** « Note » in the space; « Votre note » in the home's test review. */
+  legend?: string;
 };
 
 const labelRating = (rating: number) => `${rating} ${rating === 1 ? "étoile" : "étoiles"} sur ${RATINGS.length}`;
 
 /** Five stars as radio buttons. `id` goes to the first star, so an error summary can lead to it. */
-export const RatingInput = ({ id, rating, error, onChange }: RatingInputProps) => (
+export const RatingInput = ({ id, rating, error, onChange, legend = "Note" }: RatingInputProps) => (
   <fieldset className="flex min-w-[0] flex-col gap-2" aria-describedby={error ? `${id}-error` : undefined}>
-    <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>Note</legend>
+    <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>{legend}</legend>
     <div className="flex items-center gap-3">
       {/* Maquettes 3.4: stars of 28 in targets of 52. */}
       <div className={cn("flex rounded-card", error && "border-2 border-error")}>

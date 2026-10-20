@@ -48,7 +48,7 @@ export const UNIVERSAL: AvailableIntegration = {
     },
   ],
   installTitle: "Installer le connecteur universel, pas à pas",
-  finalCall: "Reliez votre outil : la prochaine vente fait le reste.",
+  finalCall: "Reliez votre outil une fois : chaque vente suivante fait le reste.",
   installIntro: "Cinq étapes, plus simples depuis un ordinateur. Gardez votre outil ouvert dans un autre onglet.",
   installSteps: [
     {

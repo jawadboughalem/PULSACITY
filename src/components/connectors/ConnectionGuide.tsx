@@ -40,7 +40,9 @@ const GUIDES: Record<string, GuideStep[]> = {
         { strong: "Nouvelle vente" },
         " et ",
         { strong: "Vente annulée" },
-        ", activez le webhook, puis ",
+        ", activez ",
+        { strong: "Actif(ve)" },
+        ", puis ",
         { strong: "Enregistrer" },
         ".",
       ],
@@ -60,9 +62,11 @@ const renderPart = (part: GuidePart, index: number) =>
 type ConnectionGuideProps = {
   connectorId: string;
   connectorName: string;
+  /** Ciel in the space; Nuage on the public page, where the steps sit on a white card (maquettes 3.5). */
+  frame?: "sky" | "cloud";
 };
 
-export const ConnectionGuide = ({ connectorId, connectorName }: ConnectionGuideProps) => {
+export const ConnectionGuide = ({ connectorId, connectorName, frame = "sky" }: ConnectionGuideProps) => {
   const steps = GUIDES[connectorId];
   if (!steps) {
     return (
@@ -70,10 +74,16 @@ export const ConnectionGuide = ({ connectorId, connectorName }: ConnectionGuideP
     );
   }
   return (
-    <ol className="grid grid-cols-[repeat(auto-fill,minmax(232px,1fr))] gap-6">
+    <ol
+      className={cn(
+        "grid gap-6",
+        // The public page puts the three screens in a row on a computer, at the size drawn on maquettes 3.5.
+        frame === "cloud" ? "desktop:grid-cols-3 desktop:gap-5" : "grid-cols-[repeat(auto-fill,minmax(232px,1fr))]",
+      )}
+    >
       {steps.map((step, index) => (
         <li key={index} className="flex flex-col gap-3">
-          <div className="overflow-hidden rounded-card bg-sky">{step.drawing}</div>
+          <div className={cn("overflow-hidden rounded-card", frame === "cloud" ? "bg-cloud" : "bg-sky")}>{step.drawing}</div>
           <p className="text-small">
             <span className="font-bold">{`${index + 1}.`}</span> {step.parts.map(renderPart)}
           </p>

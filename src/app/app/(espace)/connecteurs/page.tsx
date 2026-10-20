@@ -7,6 +7,7 @@ import {
   FAMILY_SEARCH_PARAM,
   readFamilyFilter,
 } from "@/components/connectors/ConnectorFamilyFilter";
+import { MeanwhileLine } from "@/components/connectors/MeanwhileLine";
 import { SuggestTool } from "@/components/connectors/SuggestTool";
 import { WaitlistButton } from "@/components/connectors/WaitlistButton";
 import { buildSpaceAccount } from "@/components/space/build-space-account";
@@ -21,8 +22,6 @@ import {
   INTEGRATIONS,
   INTEGRATION_FAMILIES,
   type Integration,
-  type UpcomingIntegration,
-  readMeanwhileLinks,
 } from "@/content/integrations";
 import { getDb } from "@/db";
 import { findConnection } from "@/lib/connectors/connections";
@@ -42,34 +41,6 @@ const AVAILABLE_BADGE = { tone: "success", label: "Disponible", icon: "check" } 
 const MEANWHILE_LINK_CLASSES = cn(INLINE_LINK_CLASSES, "font-bold");
 
 const describeProducts = (count: number) => (count > 1 ? `${count} produits à associer` : `${count} produit à associer`);
-
-/** Charte v2, Carte d'outil: « En attendant : avec Zapier ou Make », or the guide that already does it. */
-const MeanwhileLine = ({ integration }: { integration: UpcomingIntegration }) => {
-  const links = readMeanwhileLinks(integration);
-  return (
-    <p className="text-badge text-gray">
-      {"guideHref" in links ? (
-        <>
-          {"Déjà possible avec le connecteur universel : "}
-          <Link href={links.guideHref} className={MEANWHILE_LINK_CLASSES}>
-            voir le guide
-          </Link>
-        </>
-      ) : (
-        <>
-          {"En attendant : avec "}
-          <Link href={links.zapierHref} className={MEANWHILE_LINK_CLASSES}>
-            Zapier
-          </Link>
-          {" ou "}
-          <Link href={links.makeHref} className={MEANWHILE_LINK_CLASSES}>
-            Make
-          </Link>
-        </>
-      )}
-    </p>
-  );
-};
 
 type CatalogRowProps = {
   name: string;

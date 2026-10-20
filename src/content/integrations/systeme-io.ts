@@ -16,12 +16,13 @@ export const SYSTEME_IO: AvailableIntegration = {
       "Chaque vente Systeme.io devient une demande d'avis à votre nom, puis un témoignage sur votre page de vente. Guide d'installation complet, sans code.",
   },
   heading: "Témoignages automatiques pour Systeme.io",
+  finalCall: "Connectez Systeme.io une fois : chaque vente suivante fait le reste.",
   intro:
     "Après chaque vente sur Systeme.io, votre client reçoit une demande d'avis à votre nom. Vous validez, et son témoignage s'affiche sur votre page de vente.",
   benefits: [
     {
       title: "Rien à installer",
-      text: "Une adresse et une clé à coller dans vos paramètres Systeme.io. Plus simple depuis un ordinateur.",
+      text: "Une adresse et une clé à coller dans vos paramètres Systeme.io, depuis votre ordinateur.",
     },
     {
       title: "Au bon moment, pour chaque offre",
@@ -104,7 +105,7 @@ export const SYSTEME_IO: AvailableIntegration = {
     {
       question: "De qui vient l'e-⁠mail que reçoit mon client ?",
       answer:
-        "De vous : il porte le nom de votre espace, et les réponses arrivent dans votre boîte. Il part d'une adresse technique de PULSACITY, pour bien arriver en boîte de réception. Chaque e-⁠mail permet de se désinscrire en un clic.",
+        "De vous : il porte le nom de votre espace, et les réponses arrivent dans votre boîte. Il part d'une adresse de PULSACITY, pour bien arriver en boîte de réception. Chaque e-⁠mail permet de se désinscrire en un clic.",
     },
     {
       question: "Puis-je changer d'adresse et de clé ?",

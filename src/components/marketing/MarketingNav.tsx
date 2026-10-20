@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
+import { FREE_MENTION } from "./CallToAction";
 import { MARKETING_PATHS } from "./marketing-paths";
 
 /** The sections of the site, then the space (charte v2, Navigation). */
@@ -28,13 +29,19 @@ const NAV_LINKS = [
  */
 const SECTION_LINK_CLASSES = `pz-couleur inline-flex min-h-[44px] items-center text-body font-semibold text-ink hover:text-ink-800 hover:shadow-[inset_0_-2px_0_var(--color-ink-800)] aria-[current=page]:shadow-[inset_0_-3px_0_var(--color-ink)] ${FOCUS_RING}`;
 
-/** A row of the phone's menu: 56 high, a Gris chevron; the current page on Ciel, in 700. */
-const MENU_ROW_CLASSES = `pz-couleur flex min-h-[56px] items-center justify-between gap-4 rounded-field px-4 text-body font-semibold text-ink hover:bg-sky aria-[current=page]:bg-sky aria-[current=page]:font-bold ${FOCUS_RING}`;
+/**
+ * A row of the phone's menu (maquettes 3.5, Menu du téléphone): Bricolage 22 on 56, 4 apart, its Ciel reaching 8 px
+ * beyond the panel's text; the current page on Ciel.
+ */
+const MENU_ROW_CLASSES = `pz-couleur -mx-2 flex min-h-[56px] items-center justify-between gap-4 rounded-field px-4 font-display text-h3 text-ink hover:bg-sky aria-[current=page]:bg-sky ${FOCUS_RING}`;
 
 /** The section of the page is underlined and announced: « Intégrations » on /integrations/systeme-io too. */
 const isCurrent = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-/** Four links and « Créer mon espace gratuit » on a computer; on a phone, a menu under the header, over the veil. */
+/**
+ * Four links and « Créer mon espace gratuit » on a computer; on a phone, a menu under the header, over the veil, its call
+ * followed by « Gratuit, sans carte bancaire. » as everywhere on the site.
+ */
 export const MarketingNav = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -103,7 +110,7 @@ export const MarketingNav = () => {
         data-defilement-bloque={isOpen}
         className="absolute top-full -right-page-gutter -left-page-gutter z-20 rounded-b-panel bg-white px-5 pt-2 pb-6 desktop:hidden"
       >
-        <ul className="flex flex-col">
+        <ul className="flex flex-col gap-1">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <Link
@@ -113,7 +120,7 @@ export const MarketingNav = () => {
                 className={MENU_ROW_CLASSES}
               >
                 {link.label}
-                <Icon name="chevronRight" size={20} className="text-gray" />
+                <Icon name="chevronRight" size={20} />
               </Link>
             </li>
           ))}
@@ -121,6 +128,7 @@ export const MarketingNav = () => {
         <SignUpLink place="menu" onClick={close} className={cn(PRIMARY_BUTTON_CLASSES, "mt-4 w-full")}>
           Créer mon espace gratuit
         </SignUpLink>
+        <p className="mt-2 text-center text-small text-gray">{FREE_MENTION}</p>
       </nav>
     </>
   );

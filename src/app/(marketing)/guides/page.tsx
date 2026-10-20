@@ -1,8 +1,13 @@
 import Link from "next/link";
-import { FinalCall } from "@/components/marketing/FinalCall";
+import { FinalCall, PAGE_FINAL_CALL_TITLE } from "@/components/marketing/FinalCall";
 import { GuideList } from "@/components/marketing/guides/GuideList";
 import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
-import { MarketingSection, SectionTitle } from "@/components/marketing/MarketingSection";
+import { MarketingSection } from "@/components/marketing/MarketingSection";
+import {
+  SITE_GROUP_TITLE_CLASSES,
+  SITE_LARGE_PAGE_TITLE_CLASSES,
+  SITE_PANEL_TITLE_CLASSES,
+} from "@/components/marketing/marketing-styles";
 import { SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { GUIDES, GUIDE_GROUPS } from "@/content/guides";
 import { cn } from "@/lib/cn";
@@ -14,14 +19,18 @@ export const generateMetadata = () =>
     description:
       "Des guides concrets pour les formateurs, coachs et consultants : récolter des témoignages, relier Zapier, Make ou n8n, les afficher, respecter le RGPD.",
     path: MARKETING_PATHS.guides,
+    socialTitle: "Guides",
   });
 
-/** Maquette 22, « Guides »: the guides by group, each beside its title, where to ask, then the call of m7. */
+/**
+ * Maquettes 3.5, Guides, on Nuage: the guides by group, each beside its title, where to ask on a Ciel panel, then the
+ * final call on white.
+ */
 const GuidesPage = () => (
   <>
-    <MarketingSection labelledBy="guides-title">
+    <MarketingSection labelledBy="guides-title" tone="cloud" className="desktop:pt-12">
       <div className="flex max-w-[680px] flex-col gap-4">
-        <h1 id="guides-title" className="font-display text-h1">
+        <h1 id="guides-title" className={SITE_LARGE_PAGE_TITLE_CLASSES}>
           Guides
         </h1>
         <p className="text-lead">
@@ -29,39 +38,39 @@ const GuidesPage = () => (
           changement.
         </p>
       </div>
-      <div className="mt-10 flex flex-col gap-12 desktop:mt-12">
+      <div className="mt-10 flex flex-col gap-10 desktop:mt-14 desktop:gap-14">
         {GUIDE_GROUPS.map((group) => (
           <section
             key={group.id}
             aria-labelledby={`guides-${group.id}`}
-            className="grid gap-6 desktop:grid-cols-[448px_minmax(0,1fr)] desktop:gap-8"
+            className="grid grid-cols-[minmax(0,1fr)] gap-5 desktop:grid-cols-[400px_minmax(0,1fr)] desktop:gap-12"
           >
-            <div className="flex flex-col gap-3">
-              <h2 id={`guides-${group.id}`} className="font-display text-h2">
+            <div className="flex flex-col gap-2">
+              <h2 id={`guides-${group.id}`} className={SITE_GROUP_TITLE_CLASSES}>
                 {group.title}
               </h2>
-              <p className="text-body text-gray desktop:text-small">{group.text}</p>
+              <p className="text-small text-gray">{group.text}</p>
             </div>
-            <GuideList guides={GUIDES.filter((guide) => guide.group === group.id)} />
+            <GuideList guides={GUIDES.filter((guide) => guide.group === group.id)} surface="white" />
           </section>
         ))}
       </div>
-    </MarketingSection>
-    <MarketingSection labelledBy="guides-question" tone="paper">
-      <div className="flex flex-col items-start gap-4">
-        <SectionTitle id="guides-question">Une question sans réponse ici ?</SectionTitle>
-        <p className="max-w-text text-body text-gray">
+      <section
+        aria-labelledby="guides-question"
+        className="mt-10 flex flex-col items-start gap-4 rounded-panel bg-sky p-6 desktop:mt-14 desktop:px-12 desktop:py-10"
+      >
+        <h2 id="guides-question" className={SITE_PANEL_TITLE_CLASSES}>
+          Une question sans réponse ici ?
+        </h2>
+        <p className="max-w-text text-body">
           Écrivez-nous. Si c&apos;est une installation, nous la faisons avec vous, en partage d&apos;écran.
         </p>
-        <Link href={MARKETING_PATHS.contact} className={cn(SECONDARY_BUTTON_CLASSES, "mt-2 w-full desktop:w-auto")}>
+        <Link href={MARKETING_PATHS.contact} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
           Nous écrire
         </Link>
-      </div>
+      </section>
     </MarketingSection>
-    <FinalCall
-      title="Vos clients ont déjà quelque chose à dire."
-      text="Reliez l'outil où vous vendez : la prochaine vente fait le reste."
-    />
+    <FinalCall title={PAGE_FINAL_CALL_TITLE} text="Reliez l'outil où vous encaissez : chaque vente suivante fait le reste." />
   </>
 );
 
