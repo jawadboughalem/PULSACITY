@@ -36,7 +36,7 @@ export const WidgetTypePicker = ({ value, onChange }: TypePickerProps) => (
             className={cn(
               "pz-couleur flex h-[72px] cursor-pointer flex-col items-center justify-center gap-1 rounded-field border-2 text-body text-ink",
               FOCUS_RING,
-              isChosen ? "border-ink bg-sun font-bold hover:bg-sun-hover" : "border-gray bg-white hover:border-ink hover:bg-sky",
+              isChosen ? "border-ink bg-sun font-bold hover:bg-sun-hover" : "border-disabled-border bg-white hover:border-ink hover:bg-sky",
             )}
           >
             <Icon name={option.icon} size={24} />

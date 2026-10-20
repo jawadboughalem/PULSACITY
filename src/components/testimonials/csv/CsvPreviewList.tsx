@@ -137,7 +137,7 @@ export const CsvPreviewList = ({ rows }: CsvPreviewListProps) => {
         <button
           type="button"
           onClick={() => setIsExpanded(true)}
-          className={cn(DISCREET_BUTTON_CLASSES, "hidden self-start desktop:inline-flex")}
+          className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px] hidden self-start desktop:inline-flex")}
         >
           Voir toutes les lignes
         </button>
@@ -167,7 +167,7 @@ export const CsvPreviewList = ({ rows }: CsvPreviewListProps) => {
           <p className="text-small text-gray">
             {hiddenOnMobile === 1 ? "Et 1 autre ligne prête." : `Et ${hiddenOnMobile} autres lignes prêtes.`}
           </p>
-          <button type="button" onClick={() => setIsExpanded(true)} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
+          <button type="button" onClick={() => setIsExpanded(true)} className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px] self-start")}>
             Voir toutes les lignes
           </button>
         </div>

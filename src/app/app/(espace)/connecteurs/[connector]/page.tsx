@@ -107,7 +107,7 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
           <Breadcrumb parentHref={CONNECTORS_SECTION_HREF} parentLabel="Connecteurs" current={connector.name} />
           <MobileBackLink href={CONNECTORS_SECTION_HREF} label="Connecteurs" />
           <div className="flex flex-col items-start gap-4 desktop:flex-row desktop:items-center">
-            <Monogram name={connector.name} className="size-[56px] text-[21px]" />
+            <Monogram name={connector.name} className="size-[48px] text-[18px] desktop:size-[56px] desktop:text-[21px]" />
             <h1 className="font-display text-h1">{wording.title}</h1>
           </div>
           <p className="max-w-[840px] text-lead">{wording.intro}</p>
@@ -212,8 +212,8 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
             <h2 id="latest-events" className="font-display text-h2">
               Derniers événements reçus
             </h2>
-            {overview.eventCount > OVERVIEW_EVENT_COUNT ? (
-              <Link href={connectorHistoryHref(connector.slug)} className={cn(DISCREET_BUTTON_CLASSES, "hidden shrink-0 desktop:inline-flex")}>
+            {overview.eventCount > 0 ? (
+              <Link href={connectorHistoryHref(connector.slug)} className={cn(DISCREET_BUTTON_CLASSES, "-mr-[10px] hidden shrink-0 desktop:inline-flex")}>
                 Voir tout l&apos;historique
               </Link>
             ) : null}
@@ -230,8 +230,8 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
               {`Rien reçu pour l'instant. Chaque vente de ${wording.toolName} s'affichera ici.`}
             </p>
           )}
-          {overview.eventCount > OVERVIEW_EVENT_COUNT ? (
-            <Link href={connectorHistoryHref(connector.slug)} className={cn(DISCREET_BUTTON_CLASSES, "self-start desktop:hidden")}>
+          {overview.eventCount > 0 ? (
+            <Link href={connectorHistoryHref(connector.slug)} className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px] self-start desktop:hidden")}>
               Voir tout l&apos;historique
             </Link>
           ) : null}

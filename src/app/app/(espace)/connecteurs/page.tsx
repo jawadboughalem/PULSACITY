@@ -9,7 +9,6 @@ import {
 } from "@/components/connectors/ConnectorFamilyFilter";
 import { SuggestTool } from "@/components/connectors/SuggestTool";
 import { WaitlistButton } from "@/components/connectors/WaitlistButton";
-import { WaitlistNotice } from "@/components/connectors/WaitlistNotice";
 import { buildSpaceAccount } from "@/components/space/build-space-account";
 import { MobileBackLink } from "@/components/space/MobileBackLink";
 import { CONNECTORS_SECTION_HREF, connectorHref } from "@/components/space/space-sections";
@@ -181,29 +180,27 @@ const ConnectorsPage = async ({ searchParams }: PageProps<"/app/connecteurs">) =
           </div>
           <ConnectorFamilyFilter href={CONNECTORS_SECTION_HREF} current={familyFilter} />
           <div className="flex flex-col gap-8">
-            <WaitlistNotice>
-              {families.map((family) => (
-                <section key={family.id} aria-labelledby={`family-${family.id}`} className="flex flex-col gap-4">
-                  <div className="flex flex-col gap-1">
-                    <h2 id={`family-${family.id}`} className="font-display text-h2">
-                      {family.title}
-                    </h2>
-                    <p className="text-small text-gray">{family.text}</p>
-                  </div>
-                  <ul className="flex flex-col gap-3">
-                    {INTEGRATIONS.filter((integration) => integration.family === family.id).map((integration) => (
-                      <IntegrationRow
-                        key={integration.slug}
-                        integration={integration}
-                        overviews={overviews}
-                        waitlisted={waitlisted}
-                        now={now}
-                      />
-                    ))}
-                  </ul>
-                </section>
-              ))}
-            </WaitlistNotice>
+            {families.map((family) => (
+              <section key={family.id} aria-labelledby={`family-${family.id}`} className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                  <h2 id={`family-${family.id}`} className="font-display text-h2">
+                    {family.title}
+                  </h2>
+                  <p className="text-small text-gray">{family.text}</p>
+                </div>
+                <ul className="flex flex-col gap-3">
+                  {INTEGRATIONS.filter((integration) => integration.family === family.id).map((integration) => (
+                    <IntegrationRow
+                      key={integration.slug}
+                      integration={integration}
+                      overviews={overviews}
+                      waitlisted={waitlisted}
+                      now={now}
+                    />
+                  ))}
+                </ul>
+              </section>
+            ))}
           </div>
           {familyFilter ? (
             <p className="text-small text-gray">

@@ -63,7 +63,7 @@ export const OffersBoard = ({ offers, connectors, today }: OffersBoardProps) => 
         </section>
       ) : null}
       {isEmpty ? null : (
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-6">
           {offers.map(({ offer, collectionUrl, collectionAddress }) => (
             <OfferRow
               key={offer.id}

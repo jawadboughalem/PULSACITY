@@ -295,7 +295,8 @@ export const RequestReviewDialog = ({
             </h2>
           </div>
           <div className="flex flex-col gap-6 px-5 pt-6 pb-7 desktop:px-8 desktop:py-2">
-            <div className="hidden items-start justify-between gap-4 desktop:flex">
+            {/* On a computer too, the title and the cross stay in view while the form scrolls (an error moves it). */}
+            <div className="sticky top-[0] z-10 hidden items-start justify-between gap-4 bg-white pb-2 desktop:flex">
               <p aria-hidden="true" className={DIALOG_TITLE_CLASSES}>
                 Demander un avis
               </p>

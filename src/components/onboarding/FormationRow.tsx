@@ -3,10 +3,10 @@
 import { useState, useTransition } from "react";
 import { type RemoveFormationResult, removeFormation } from "@/app/app/onboarding/formations/formation-actions";
 import { useCopyLink } from "@/components/space/useCopyLink";
-import { ActionDoneMessage } from "@/components/ui/ActionDoneMessage";
 import { DISCREET_BUTTON_CLASSES, ICON_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
+import { prefixWithDe } from "@/lib/french/prefix-with-de";
 
 const REMOVAL_ERROR_MESSAGES = {
   "has-sales": "Cette formation a déjà des ventes : elle reste en place pour les garder.",
@@ -33,7 +33,7 @@ export const FormationRow = ({ id, name, collectionUrl, collectionAddress }: For
   };
 
   return (
-    <li className="flex flex-col gap-2 rounded-card bg-cloud py-4 pr-3 pl-4 desktop:pl-5">
+    <li className="flex flex-col gap-2 rounded-card bg-cloud py-4 pr-3 pl-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-[0] flex-col gap-1 pt-[10px]">
           <span className="text-body font-bold">{name}</span>
@@ -43,7 +43,7 @@ export const FormationRow = ({ id, name, collectionUrl, collectionAddress }: For
           <button
             type="button"
             onClick={handleCopy}
-            aria-label={`Copier le lien de ${name}`}
+            aria-label={`Copier le lien ${prefixWithDe(name)}`}
             className={ICON_BUTTON_CLASSES}
           >
             <Icon name={isCopied ? "check" : "copy"} size={20} />
@@ -53,7 +53,10 @@ export const FormationRow = ({ id, name, collectionUrl, collectionAddress }: For
           </button>
         </div>
       </div>
-      <ActionDoneMessage message={isCopied ? "Le lien est copié." : null} />
+      {/* The check on the button says it on the spot; a line of text here would push the next formations down. */}
+      <span aria-live="polite" className="sr-only">
+        {isCopied ? "Le lien est copié." : ""}
+      </span>
       {result?.ok === false ? <FieldError id={`${id}-error`} message={REMOVAL_ERROR_MESSAGES[result.error]} /> : null}
     </li>
   );

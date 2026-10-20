@@ -291,7 +291,7 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
             isDragging ? "border-ink bg-sky" : "border-gray bg-white",
           )}
         >
-          <span className="flex size-[56px] items-center justify-center rounded-full bg-sky">
+          <span className="flex size-[64px] items-center justify-center rounded-full bg-sky">
             <Icon name="upload" size={24} />
           </span>
           <p className="text-body font-bold max-desktop:hidden">Déposez votre fichier ici</p>

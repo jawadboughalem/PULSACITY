@@ -43,27 +43,31 @@ export const SpaceForm = ({ defaultReplyToEmail, collectionAddressPrefix, source
         hint="Vos clients le voient sur votre page de collecte et dans vos e-mails."
         error={form.fieldErrors.name}
       />
-      <div className="flex flex-col gap-2">
-        <TextField
-          id="space-slug"
-          name="slug"
-          label="Adresse de votre page de collecte"
-          autoCapitalize="none"
-          autoCorrect="off"
-          spellCheck={false}
-          maxLength={MAX_SLUG_LENGTH}
-          required
-          value={form.slug}
-          onChange={(event) => form.handleChangeSlug(event.target.value)}
-          hint={`${collectionAddressPrefix}${form.slug}`}
-          error={form.suggestedSlug ? "Cette adresse est déjà prise par un autre espace." : form.fieldErrors.slug}
-        />
-        {form.suggestedSlug ? (
-          <button type="button" onClick={form.handleUseSuggestedSlug} className={cn(SECONDARY_COMPACT_BUTTON_CLASSES, "self-start")}>
-            {`Prendre ${form.suggestedSlug}`}
-          </button>
-        ) : null}
-      </div>
+      <TextField
+        id="space-slug"
+        name="slug"
+        label="Adresse de votre page de collecte"
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
+        maxLength={MAX_SLUG_LENGTH}
+        required
+        value={form.slug}
+        onChange={(event) => form.handleChangeSlug(event.target.value)}
+        hint={`${collectionAddressPrefix}${form.slug}`}
+        error={form.suggestedSlug ? "Cette adresse est déjà prise par un autre espace." : form.fieldErrors.slug}
+        errorAction={
+          form.suggestedSlug ? (
+            <button
+              type="button"
+              onClick={form.handleUseSuggestedSlug}
+              className={cn(SECONDARY_COMPACT_BUTTON_CLASSES, "self-start")}
+            >
+              {`Prendre ${form.suggestedSlug}`}
+            </button>
+          ) : null
+        }
+      />
       <LogoField upload={form.logoUpload} spaceName={form.name} serverError={form.fieldErrors.logoKey} />
       <AccentColorField value={form.accentColor} onChange={form.setAccentColor} />
       <TextField

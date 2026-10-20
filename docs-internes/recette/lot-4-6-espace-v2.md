@@ -5,8 +5,9 @@ Dans l'ordre :
 - Prompt 2 : inscription, connexion et démarrage, sur ordinateur, avec une adresse sans espace ; puis les états vides de l'espace.
 - Prompts 3 à 5 : l'espace rempli, sur ordinateur.
 - Prompt 6 : tout l'espace à 360 px.
-- Action 7, à faire vous-même : Lighthouse sur l'accueil de l'espace (deux minutes, dans Chrome).
-- Prompt 8 : vérification sur pulsacity.com, après la fusion, à la toute fin avec celles des autres lots.
+- Prompts 7 et 8 : contre-recette des corrections apportées après la recette du 20 octobre, sur ordinateur puis à 360 px.
+- Action 9, à faire vous-même : Lighthouse sur l'accueil de l'espace (deux minutes, dans Chrome).
+- Prompt 10 : vérification sur pulsacity.com, après la fusion, à la toute fin avec celles des autres lots.
 
 Ce lot ne touche à aucun service : aucune action sur Vercel, Supabase, Cloudflare, Resend ou Stripe, aucune variable, aucune migration. Il change l'apparence de l'espace, pas ce qu'il fait : la recette regarde chaque écran à côté de sa maquette (`docs-internes/design-v2/maquettes/v2-espace-*`, index dans `INDEX.md`), et vérifie que chaque bouton fait toujours ce qu'il faisait.
 Si la dernière recette date de plus d'une semaine, réveillez d'abord la base de recette (prompt 0 bis de `lot-4-1-decisions.md`).
@@ -204,11 +205,102 @@ Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu
 
 ---
 
-## 7. À faire vous-même : Lighthouse sur l'accueil de l'espace
+## Résultats de la recette du 20 octobre (prompts 1 à 6)
+
+Tout fonctionne ; les remarques portent sur l'apparence. Fenêtre à 2 048 px (les maquettes sont à 1 440), téléphone dans un cadre de 360 px.
+
+Corrigé (commit « Lot 4.6: the recette's corrections »), à revoir aux prompts 7 et 8 :
+- **Démarrage** : le bouton « Prendre julie-nutrition-… » se place juste sous le message, avant l'adresse ; une adresse e-mail longue ne se coupe plus en plein mot dans « Un lien vous attend… » ; « Copier le lien d'Atelier test » (et non « de ») ; copier le lien d'une formation ne fait plus sauter les lignes du dessous (la coche du bouton suffit, le message reste lu aux lecteurs d'écran) ; retrait des bandes à 16 px.
+- **Liens seuls** (« Masquer », « Ouvrir », « Tout voir », « Effacer les filtres », « Importer un fichier CSV », « Voir toutes les lignes », « Voir le plan Essentiel », « Voir tout l'historique ») : leur texte s'aligne sur le texte voisin, sans les 10 px de leur zone de clic.
+- **Accueil** : encadré de l'étape suivante à 16 px de marge ; au téléphone, 24 px avant « Derniers reçus » et « Demandes ce mois » (au lieu de 48), et ce titre à la taille de la maquette.
+- **Témoignages** : au survol d'une ligne, l'avatar passe en blanc et ne se confond plus avec le fond.
+- **Ajouter** : 28 px entre le formulaire et « Bon à savoir », large de 360 px.
+- **Import** : les trois barres d'étapes ont la même largeur ; le disque de la zone de dépôt fait 64 px.
+- **Offres** : 24 px entre les cartes ; l'adresse de collecte se coupe à un tiret, plus en plein mot.
+- **Widgets** : la ligne sous le titre d'un widget sans nom ne répète plus le titre ; dans l'éditeur, le « » » de « Masquer « Propulsé par PULSACITY » » reste avec son texte, et les cases de type non choisies ont le bord gris clair de la maquette.
+- **Connecteurs** : « Me prévenir » répond sur la ligne de l'outil (« Nous vous préviendrons par e-mail »), plus en haut de la page, qu'on ne voyait pas et qui faisait descendre le contenu ; 12 px entre les lignes de pastilles au téléphone.
+- **Systeme.io** : « La clé secrète est copiée. » s'affiche sous la clé ; les deux cadres de l'étape facultative sont sur Nuage ; « Voir tout l'historique » s'affiche dès le premier événement reçu (avant : au-delà de cinq) ; le carré « SI » fait 48 px au téléphone.
+- **Demandes** : les deux boutons de l'état vide sont centrés l'un sur l'autre ; dans « Demander un avis », le titre et la croix restent visibles quand le formulaire défile.
+
+Pas un défaut de ce lot :
+- **Widgets vide** (prompt 2, point 19) : chaque espace reçoit un mur à sa création ; l'état « Aucun widget pour l'instant » ne se voit qu'après avoir supprimé ce mur. Le prompt se trompait.
+- **Inscription avec une adresse qui a déjà un espace** (prompt 2, point 5) : le lien ouvre cet espace, c'est voulu.
+- **Champ vide** (prompt 2, point 2) : « Cette adresse e-mail est incomplète » est le texte d'avant ce lot, qui ne change pas les textes. Proposition pour un lot suivant : « Indiquez votre adresse e-mail. » quand le champ est vide.
+- **Podia « avec Zapier », Zapier « Bientôt »** : textes du catalogue décidés au lot 4.1. « Bientôt » parle de l'app PULSACITY dans Zapier ; en attendant, le guide passe déjà par le connecteur universel.
+- **Fiche** : le texte original replié et « donnée à l'envoi » viennent du lot 4.13.
+- **Offres** : prix pour une offre vendue, nombre de témoignages pour les autres : logique d'avant ce lot.
+- **Éditeur** : pas de case « Date » (lot 4.13) ; l'aperçu réduit une page de 1 280 px à la largeur du cadre, presque en taille réelle dans une fenêtre de 2 048 px ; guide en 4 étapes et ses textes : ceux du code ; « Voir le guide » sur téléphone seulement : déjà le cas.
+- **Aperçu du mur au téléphone** en deux colonnes étroites, dates coupées : c'est le widget lui-même (deux colonnes dès 340 px de large), comme sur un vrai téléphone. Il passe en v2 au lot 4.8 : à reprendre là.
+- **Demandes** : la demande en échec en tête de liste (ordre d'avant ce lot) ; fenêtres centrées ; au téléphone, « Demander un avis » occupe l'écran comme sur la maquette (la feuille ancrée en bas de la charte reste à trancher).
+- Les écarts de quelques pixels qui restent dans un pas de l'échelle d'espacement (4, 8, 12…) ne sont pas repris.
+
+À trancher, en plus de la liste du haut : connecteur universel, tableau des champs replié sous « Les champs à envoyer » et bouton « Copier » bordé, comme sur la maquette.
+
+Pas testé : connexion et inscription à 360 px (prompt 6, point 8), faute de fenêtre sans session. Le prompt 8 le fait après une déconnexion.
+
+---
+
+## 7. Contre-recette sur ordinateur
+
+Avant ce prompt : sur https://github.com/jawadboughalem/PULSACITY/pull/45, le commentaire de Vercel dit « Ready », mis à jour après le commit « Lot 4.6: the recette's corrections ». Connectez-vous vous-même sur l'aperçu avec l'adresse A. Gardez sous la main une nouvelle adresse sans espace (par exemple l'alias de B suivi de « recette1020 ») et le fichier temoignages-50-lignes.csv.
+
+```
+Tu revérifies les corrections de l'espace PULSACITY sur l'aperçu https://pulsacity-git-claude-admiring-a-90c6c6-jawadboughalems-projects.vercel.app, fenêtre en grand. Je suis connecté avec l'espace « Julie Nutrition ». Pour chaque point, note « OK » ou décris ce que tu vois. Ne valide, ne masque, ne supprime et n'importe rien ; n'envoie aucune demande. Ne relève pas les erreurs réseau vues par ton outil de surveillance du navigateur.
+
+A. Les liens seuls
+1. Accueil (/app) : dans une carte de témoignage déjà validé, « Masquer » seul en bas à gauche commence exactement sous le début du texte du témoignage (pas 10 px plus à droite) ; « Ouvrir » finit au bord droit du texte. « Tout voir » finit au bord droit de la colonne.
+2. Témoignages : écris « zzz » dans la recherche et valide ; « Effacer les filtres » commence sous le début de la phrase « Aucun témoignage ne correspond à ces filtres. ». Efface les filtres.
+3. Ajouter un témoignage : dans « Bon à savoir », « Importer un fichier CSV » commence sous le début de « Vous en avez beaucoup ? ». L'écart entre la carte du formulaire et « Bon à savoir » est d'environ 28 px.
+4. Importer : les trois barres d'étapes ont la même largeur ; le disque bleu de la zone de dépôt fait 64 px. Choisis le fichier temoignages-50-lignes.csv (demande-moi de le sélectionner) : à l'étape « Vérifier », les trois barres ont toujours la même largeur, et « Voir toutes les lignes » et « Voir le plan Essentiel » commencent sous le début du texte au-dessus. Quitte la page sans importer.
+
+B. Témoignages et offres
+5. Témoignages : survole une ligne : son fond devient bleu clair et le rond de l'avatar devient blanc, ses initiales restent lisibles.
+6. Offres : 24 px environ entre deux cartes d'offre.
+7. Widgets : la ligne du mur montre son titre, puis directement son état (« Pas encore collé sur une page » ou « Sur une page depuis … »), sans répéter le titre. Ouvre l'éditeur : les cases de type non choisies ont un bord gris clair ; « Masquer « Propulsé par PULSACITY » » tient sans « » » seul sur sa ligne.
+
+C. Connecteurs
+8. Connecteurs : fais défiler jusqu'à un outil « Bientôt » assez bas (par exemple dans « Événements »), clique « Me prévenir » : la ligne affiche « Nous vous préviendrons par e-mail » en vert avec une coche, rien n'apparaît en haut de la page, et la page ne bouge pas.
+9. Systeme.io (« Gérer ») : clique « Copier » de la clé secrète : « La clé secrète est copiée. » s'affiche sous la clé, à droite, et non sous l'adresse. L'étape « Facultatif » : ses deux cadres sont bleu très pâle (comme le fond de la page), plus bleu clair.
+10. « Derniers événements reçus » : « Voir tout l'historique » est à droite du titre. Clique-le : l'historique des ventes reçues s'ouvre, avec chaque événement et son traitement. Reviens.
+
+D. Demandes
+11. Demandes, « Demander un avis » : clique « Envoyer la demande » sans rien remplir. Les erreurs s'affichent ; le titre « Demander un avis » et la croix restent visibles en haut de la fenêtre. Fais défiler la fenêtre jusqu'en bas : le bouton « Envoyer la demande » s'affiche en entier. Ferme avec Échap.
+
+E. Le démarrage (déconnecte-toi d'abord par le menu du compte, en bas à gauche)
+12. Sur /inscription, demande-moi la nouvelle adresse sans espace, et envoie le lien : dans « Nous l'avons envoyé à … », l'adresse ne se coupe pas en plein mot (si elle ne tient pas, elle passe entière à la ligne, ou se coupe seulement à la fin de la ligne). Demande-moi de cliquer le lien reçu.
+13. Étape 1 : écris « Julie Nutrition », clique « Créer mon espace » : sous le champ de l'adresse, d'abord le message rouge, juste dessous le bouton « Prendre julie-nutrition-… », puis seulement la ligne de l'adresse. Clique « Prendre … », puis « Créer mon espace ».
+14. Étape 2 : ajoute « Atelier test » et « Programme test ». Les bandes ont 16 px de marge à gauche. Clique l'icône de copie d'« Atelier test » : l'icône devient une coche, et la bande du dessous ne bouge pas. Si ton outil lit le nom des boutons, celui-ci s'appelle « Copier le lien d'Atelier test ». Clique « Ouvrir mon espace ».
+15. Demandes de ce nouvel espace : « Aucune demande pour l'instant », les deux boutons « Connecter mon outil » et « Copier mon lien » sont centrés l'un sur l'autre (le jaune un peu plus haut que le bordé, de 2 px en haut et en bas).
+
+Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu. Ne recopie aucune adresse e-mail.
+```
+
+---
+
+## 8. Contre-recette à 360 px
+
+Avant ce prompt : connectez-vous de nouveau avec l'adresse A.
+
+```
+Tu revérifies les corrections de l'espace PULSACITY à la largeur d'un téléphone, sur l'aperçu https://pulsacity-git-claude-admiring-a-90c6c6-jawadboughalems-projects.vercel.app, dans un cadre de 360 px de large. Je suis connecté avec l'espace « Julie Nutrition ». Pour chaque point, note « OK » ou décris ce que tu vois. N'envoie, ne valide, ne masque et ne supprime rien.
+
+1. Accueil : sous les étapes restantes, environ 24 px avant le titre « Derniers reçus », qui a la taille de « Étapes restantes » ou plus ; même écart avant « Demandes ce mois ». « Tout voir » finit au bord droit des cartes.
+2. Offres (par « Plus ») : l'adresse de collecte de chaque offre se coupe à un tiret ou une barre, jamais en plein mot (« julie-nutritio / n »).
+3. Connecteurs : environ 12 px entre deux lignes de pastilles de familles.
+4. Systeme.io : le carré « SI » fait 48 px.
+5. Déconnecte-toi (« Plus », puis « Se déconnecter »), puis ouvre /connexion dans le cadre de 360 px : la page est blanche (pas de carte sur fond bleu), le titre « Retrouvez votre espace », le champ, le bouton jaune « Recevoir mon lien » sur toute la largeur, puis « Pas encore d'espace ? Créer mon espace gratuit ». Rien ne déborde.
+6. /inscription dans le même cadre : la même chose, avec « Créez votre espace », la question « Comment avez-vous connu PULSACITY ? » et « Vous avez déjà un espace ? Me connecter ».
+
+Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu.
+```
+
+---
+
+## 9. À faire vous-même : Lighthouse sur l'accueil de l'espace
 
 Claude in Chrome n'ouvre pas les outils de développement : ce contrôle passe par vous, deux minutes.
 
-1. Dans Chrome, connecté avec l'adresse A, ouvrez https://pulsacity-git-claude-admiring-a-90c6c6-jawadboughalems-projects.vercel.app/app dans une fenêtre sans extension (navigation privée, connectez-vous de nouveau avec le lien reçu).
+1. Dans Chrome, connecté avec l'adresse A, ouvrez https://pulsacity-git-claude-admiring-a-90c6c6-jawadboughalems-projects.vercel.app/app dans une fenêtre de navigation privée, sans extension : identifiez-vous à Vercel si la page le demande, puis connectez-vous à l'espace avec le lien reçu.
 2. Clic droit, « Inspecter », onglet « Lighthouse ». Mode « Navigation », appareil « Mobile », catégories « Performances » et « Accessibilité ». Cliquez « Analyser le chargement de la page ».
 3. Recommencez deux fois, puis en appareil « Ordinateur ».
 
@@ -218,7 +310,7 @@ Compte rendu à me renvoyer : les scores, appareil par appareil.
 
 ---
 
-## 8. Vérification sur pulsacity.com, après la fusion
+## 10. Vérification sur pulsacity.com, après la fusion
 
 À lancer à la toute fin, avec les vérifications en production des autres lots. Avant ce prompt : « CI » vert sur `main` après la fusion, et connectez-vous vous-même sur https://pulsacity.com avec votre compte de test de production.
 

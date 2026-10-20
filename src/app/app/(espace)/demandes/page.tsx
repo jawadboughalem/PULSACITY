@@ -185,7 +185,7 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
               Dès qu&apos;une vente nous arrive de votre outil, la demande d&apos;avis se prépare ici, avec sa date de départ. Vous
               pouvez aussi envoyer votre lien de collecte vous-même.
             </p>
-            <div className="flex flex-col gap-3 desktop:flex-row">
+            <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center">
               {isConnected ? null : (
                 <Link href={CONNECTORS_SECTION_HREF} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
                   <Icon name="connection" size={20} />

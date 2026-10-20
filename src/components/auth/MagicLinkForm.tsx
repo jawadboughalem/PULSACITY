@@ -54,7 +54,7 @@ export const MagicLinkForm = ({ heading, footer, source = {}, asksHeardFrom = fa
         </span>
         <h1 className="font-display text-h1">Un lien vous attend dans votre boîte de réception.</h1>
         <p className="text-body">
-          Nous l&apos;avons envoyé à <strong className="font-bold break-all">{email}</strong>. Il est valable{" "}
+          Nous l&apos;avons envoyé à <strong className="font-bold wrap-anywhere">{email}</strong>. Il est valable{" "}
           {MAGIC_LINK_LIFETIME_MINUTES} minutes.
         </p>
         <p className="text-small text-gray">Rien reçu ? Regardez dans vos courriers indésirables.</p>

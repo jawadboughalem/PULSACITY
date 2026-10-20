@@ -37,7 +37,14 @@ export const TestimonialTableRow = ({ testimonial, detailHref, isApprovalAllowed
     <tr className={cn("group/row align-middle", deletion.isDeleting && "opacity-60")}>
       <td className={cn(CELL_CLASSES, "rounded-l-field pl-3")}>
         <div className="flex items-center gap-3">
-          <SpaceAvatar name={testimonial.authorName} logoUrl={testimonial.authorPhotoUrl} size={36} background="sky" />
+          {/* The row turns Ciel on hover: the avatar turns white, as on any Ciel surface. */}
+          <SpaceAvatar
+            name={testimonial.authorName}
+            logoUrl={testimonial.authorPhotoUrl}
+            size={36}
+            background="sky"
+            className="pz-couleur group-hover/row:bg-white"
+          />
           <div className="flex min-w-[0] flex-col">
             <Link
               href={detailHref}

@@ -27,7 +27,7 @@ type ConnectorFamilyFilterProps = {
 /** Maquettes 3.4, Connecteurs: a filter chip per family, « Toutes » first; they wrap on a phone. */
 export const ConnectorFamilyFilter = ({ href, current }: ConnectorFamilyFilterProps) => (
   <nav aria-label="Familles d'outils">
-    <ul className="flex flex-wrap gap-x-2 gap-y-1">
+    <ul className="flex flex-wrap gap-x-2 gap-y-2">
       {CHIPS.map((chip) => {
         const isCurrent = chip.id === current;
         return (

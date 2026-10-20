@@ -41,7 +41,7 @@ const AddTestimonialPage = async () => {
           </div>
         </div>
         {/* Maquettes 3.4: the form on its white card; « Bon à savoir » on Ciel at its right, from 1280. */}
-        <div className="flex flex-col gap-10 min-[1280px]:grid min-[1280px]:grid-cols-[minmax(0,1fr)_minmax(280px,348px)] min-[1280px]:items-start min-[1280px]:gap-9">
+        <div className="flex flex-col gap-10 min-[1280px]:grid min-[1280px]:grid-cols-[minmax(0,1fr)_minmax(280px,360px)] min-[1280px]:items-start min-[1280px]:gap-7">
           <ManualTestimonialForm
             products={products}
             dateExample={formatFrenchDay(readParisDate(new Date()))}
@@ -62,7 +62,7 @@ const AddTestimonialPage = async () => {
             </p>
             <div className="flex flex-col gap-2 pt-4">
               <p className="text-small font-bold">Vous en avez beaucoup ?</p>
-              <Link href={IMPORT_TESTIMONIALS_HREF} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
+              <Link href={IMPORT_TESTIMONIALS_HREF} className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px] self-start")}>
                 Importer un fichier CSV
               </Link>
             </div>

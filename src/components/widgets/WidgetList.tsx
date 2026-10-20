@@ -185,7 +185,10 @@ export const WidgetList = ({ widgets, createLimit, isPausing }: WidgetListProps)
                     {widget.display?.state === "shown" ? <ToneBadge tone="success" label="Affiché" icon="valid" /> : null}
                     {widget.display?.state === "paused" ? <ToneBadge tone="neutral" label="En pause" icon="pause" /> : null}
                   </div>
-                  <p className="text-small text-gray">{widget.description}</p>
+                  {/* A widget without a name is titled by its description: it is not repeated under. */}
+                  {widget.title === widget.description ? null : (
+                    <p className="text-small text-gray">{widget.description}</p>
+                  )}
                   {widget.display ? <DisplayNote widget={widget} display={widget.display} /> : <WidgetStatus widget={widget} />}
                 </div>
               </div>

@@ -131,7 +131,7 @@ export const SetupStepsPanel = (props: SetupStepsPanelProps) => {
           .map((step, index) => {
             const stepNumber = done + index + 1;
             return (
-              <li key={step.key} className="flex gap-3 rounded-card bg-cloud p-4 desktop:px-4 desktop:py-5">
+              <li key={step.key} className="flex gap-3 rounded-card bg-cloud p-4">
                 {/* Charte v2, Étapes numérotées: the remaining steps are a true sequence, on a Soleil disc of 36. */}
                 <span
                   aria-hidden="true"

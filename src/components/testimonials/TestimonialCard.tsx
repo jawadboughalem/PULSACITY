@@ -144,7 +144,7 @@ const ReviewActions = ({ className, review, testimonial, detailHref, isDashboard
             <button
               type="button"
               onClick={review.askToHide}
-              className={cn(DISCREET_BUTTON_CLASSES, "justify-center", !canApprove && "justify-start")}
+              className={cn(DISCREET_BUTTON_CLASSES, "justify-center", !canApprove && "-ml-[10px] justify-start")}
             >
               Masquer
             </button>
@@ -152,7 +152,7 @@ const ReviewActions = ({ className, review, testimonial, detailHref, isDashboard
           {isDashboard ? (
             <Link
               href={detailHref}
-              className={cn(DISCREET_BUTTON_CLASSES, "ml-auto hidden desktop:inline-flex")}
+              className={cn(DISCREET_BUTTON_CLASSES, "-mr-[10px] ml-auto hidden desktop:inline-flex")}
             >
               Ouvrir
             </Link>

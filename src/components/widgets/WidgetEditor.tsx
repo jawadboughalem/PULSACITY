@@ -26,6 +26,7 @@ import {
 import { SelectControl } from "@/components/ui/SelectControl";
 import { Switch } from "@/components/ui/Switch";
 import { cn } from "@/lib/cn";
+import { quoteInFrench } from "@/lib/french/typography";
 import { MIN_ACCENT_CONTRAST_RATIO, calculateContrastRatio } from "@/lib/colors/contrast-ratio";
 import { type PreviewLook, buildPreviewPayload } from "@/lib/widgets/build-preview-payload";
 import { buildWidgetSnippet } from "@/lib/widgets/build-widget-snippet";
@@ -270,7 +271,7 @@ export const WidgetEditor = ({ widget, offers, preview, look, spaceName, appUrl,
       <div className="flex items-start justify-between gap-4 pt-2">
         <div className="flex min-w-[0] flex-col gap-1">
           <span id="widget-hide-powered-label" className={cn("text-body", !look.canHideBadge && "text-gray")}>
-            Masquer « Propulsé par PULSACITY »
+            {`Masquer ${quoteInFrench("Propulsé par PULSACITY")}`}
           </span>
           {look.canHideBadge ? null : (
             <p id="widget-hide-powered-hint" className={FIELD_HINT_CLASSES}>

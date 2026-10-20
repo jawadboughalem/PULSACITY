@@ -77,6 +77,7 @@ export const ConnectionAddressFields = ({
               {address.isCopied ? "Copiée" : "Copier"}
             </button>
           </div>
+          <ActionDoneMessage message={address.isCopied ? "L'adresse de connexion est copiée." : null} />
         </div>
         {signingSecret ? (
           <div className="flex min-w-[0] flex-col gap-2 desktop:flex-[2]">
@@ -102,20 +103,17 @@ export const ConnectionAddressFields = ({
                 {secret.isCopied ? "Copiée" : "Copier"}
               </button>
             </div>
+            <ActionDoneMessage message={secret.isCopied ? "La clé secrète est copiée." : null} />
           </div>
         ) : null}
       </div>
       <ActionDoneMessage
         message={
-          address.isCopied
-            ? "L'adresse de connexion est copiée."
-            : secret.isCopied
-              ? "La clé secrète est copiée."
-              : isRenewed
-                ? hasSecret
-                  ? `Nouvelle adresse et nouvelle clé créées. Collez-les dans ${connectorName}.`
-                  : `Nouvelle adresse créée. Collez-la dans ${connectorName}.`
-                : null
+          isRenewed
+            ? hasSecret
+              ? `Nouvelle adresse et nouvelle clé créées. Collez-les dans ${connectorName}.`
+              : `Nouvelle adresse créée. Collez-la dans ${connectorName}.`
+            : null
         }
       />
       <div aria-live="polite" className="empty:hidden">

@@ -105,8 +105,10 @@ const SpaceHomePage = async () => {
           {showsPlanLimit ? null : askForReviewLink}
           <div
             className={cn(
-              "grid gap-10 desktop:-mt-1",
-              hasAside && "desktop:grid-cols-[1fr_360px] desktop:grid-rows-[auto_1fr] desktop:gap-x-7 desktop:gap-y-6",
+              "grid gap-6 desktop:-mt-1",
+              hasAside
+                ? "desktop:grid-cols-[1fr_360px] desktop:grid-rows-[auto_1fr] desktop:gap-x-7 desktop:gap-y-6"
+                : "desktop:gap-10",
             )}
           >
             {showsSteps ? (
@@ -124,11 +126,11 @@ const SpaceHomePage = async () => {
               className={cn("flex min-w-[0] flex-col", hasAside && "desktop:col-start-1 desktop:row-span-2 desktop:row-start-1")}
             >
               <div className="flex items-center justify-between gap-4">
-                <h2 id="latest-testimonials" className="font-display text-h3 desktop:text-h2">
+                <h2 id="latest-testimonials" className="font-display text-h2">
                   <span className="desktop:hidden">Derniers reçus</span>
                   <span className="hidden desktop:inline">Derniers témoignages reçus</span>
                 </h2>
-                <Link href={TESTIMONIALS_SECTION_HREF} className={cn(DISCREET_BUTTON_CLASSES, "shrink-0")}>
+                <Link href={TESTIMONIALS_SECTION_HREF} className={cn(DISCREET_BUTTON_CLASSES, "-mr-[10px] shrink-0")}>
                   Tout voir
                 </Link>
               </div>

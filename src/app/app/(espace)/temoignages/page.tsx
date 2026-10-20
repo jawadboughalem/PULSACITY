@@ -108,7 +108,7 @@ const TestimonialsPage = async ({ searchParams }: PageProps<"/app/temoignages">)
                   <div className="flex flex-col items-start gap-2 rounded-panel bg-white p-5 desktop:px-6">
                     <p className="text-body">Aucun témoignage ne correspond à ces filtres.</p>
                     {hasTestimonialFilter(filters) ? (
-                      <Link href={TESTIMONIALS_SECTION_HREF} className={DISCREET_BUTTON_CLASSES}>
+                      <Link href={TESTIMONIALS_SECTION_HREF} className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px]")}>
                         Effacer les filtres
                       </Link>
                     ) : null}

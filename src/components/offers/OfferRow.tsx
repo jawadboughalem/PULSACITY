@@ -292,7 +292,7 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
             </span>
             <p
               aria-labelledby={ids.link}
-              className={cn(READ_ONLY_FIELD_CLASSES, "flex h-auto min-h-[56px] items-center border-cloud py-3 break-all")}
+              className={cn(READ_ONLY_FIELD_CLASSES, "flex h-auto min-h-[56px] items-center border-cloud py-3 wrap-anywhere")}
             >
               {collectionAddress}
             </p>
