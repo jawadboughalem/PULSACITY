@@ -126,6 +126,7 @@ export const WIDGET_CSS = `
 }
 .wide .grid { --gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .one-column .grid { grid-template-columns: minmax(0, 1fr); }
+.compact .grid .author { flex-direction: column; gap: 8px; }
 .footer { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
 .wide .footer { align-items: flex-start; }
 .more {

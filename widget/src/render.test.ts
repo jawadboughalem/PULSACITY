@@ -199,6 +199,16 @@ describe("the wall", () => {
     expect(columns(0)).toBe(false);
   });
 
+  it("puts the avatar above the name in two narrow columns, from 340 px and under 440 px", () => {
+    const compact = (width: number) => render(SAMPLE_PAYLOAD, { width }).root.classList.contains("compact");
+
+    expect(compact(339)).toBe(false);
+    expect(compact(340)).toBe(true);
+    expect(compact(439)).toBe(true);
+    expect(compact(440)).toBe(false);
+    expect(compact(0)).toBe(false);
+  });
+
   it("follows a change of width: a phone turned sideways gets its two columns back", () => {
     let width = 320;
     const observers: Array<() => void> = [];
