@@ -16,7 +16,7 @@ const ProseLink = ({ href = "", children }: ComponentPropsWithoutRef<"a">) =>
     </a>
   );
 
-const TITLE_CLASSES = "mt-8 scroll-mt-6 font-display text-h2";
+const TITLE_CLASSES = "mt-6 scroll-mt-6 font-display text-h2 first:mt-[0]";
 
 /** A title of the text, anchored for the table of contents (m22, m23): « #qui-traite-vos-donnees ». */
 const ProseTitle = ({ children }: { children?: ReactNode }) => (

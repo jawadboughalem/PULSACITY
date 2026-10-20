@@ -22,7 +22,7 @@ export const ErrorScreen = ({ icon, title, text, action, link }: ErrorScreenProp
   <div className="flex min-h-dvh flex-col bg-cloud">
     <SiteHeader />
     <main className="flex-1 px-page-gutter pt-8 pb-14 desktop:pt-14">
-      <div className="mx-auto flex max-w-[720px] flex-col gap-5 rounded-panel bg-white px-5 py-7 desktop:p-14">
+      <div className="mx-auto flex max-w-[720px] flex-col gap-5 rounded-panel bg-white px-5 py-7 desktop:p-11">
         <span className="flex size-[72px] items-center justify-center rounded-full bg-sky">
           <Icon name={icon} size={32} />
         </span>

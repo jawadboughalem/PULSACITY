@@ -89,7 +89,7 @@ export const MarketingNav = () => {
         aria-controls={menuId}
         aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
         onClick={() => setIsOpen((wasOpen) => !wasOpen)}
-        className={cn(ICON_BUTTON_CLASSES, "-mr-3 desktop:hidden", isOpen && "bg-sky")}
+        className={cn(ICON_BUTTON_CLASSES, "-mr-3 desktop:hidden")}
       >
         <Icon name={isOpen ? "close" : "menu"} size={24} />
       </button>

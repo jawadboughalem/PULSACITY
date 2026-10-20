@@ -71,7 +71,7 @@ export const TableOfContents = ({ title, headings }: TableOfContentsProps) => {
               <Link
                 href={`#${heading.id}`}
                 aria-current={isCurrent ? "location" : undefined}
-                className={cn(LINK_CLASSES, "rounded-field px-3 py-2", isCurrent && "bg-sky font-bold")}
+                className={cn(LINK_CLASSES, "-mx-3 rounded-field px-3 py-2", isCurrent && "bg-sky font-bold")}
               >
                 {heading.title}
               </Link>

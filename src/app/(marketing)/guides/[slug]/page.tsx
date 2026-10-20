@@ -42,7 +42,7 @@ const GuidePage = async ({ params }: PageProps<"/guides/[slug]">) => {
               {guide.title}
             </h1>
             <p className="text-small text-gray">{formatGuideMeta(guide)}</p>
-            <p className="mt-1 max-w-[680px] text-lead">{guide.description}</p>
+            <p className="mt-1 max-w-[640px] text-lead">{guide.description}</p>
           </>
         }
         contentsTitle="Dans ce guide"

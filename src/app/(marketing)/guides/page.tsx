@@ -38,7 +38,7 @@ const GuidesPage = () => (
           changement.
         </p>
       </div>
-      <div className="mt-10 flex flex-col gap-10 desktop:mt-14 desktop:gap-14">
+      <div className="mt-10 flex flex-col gap-10 desktop:mt-11 desktop:gap-11">
         {GUIDE_GROUPS.map((group) => (
           <section
             key={group.id}
@@ -57,7 +57,7 @@ const GuidesPage = () => (
       </div>
       <section
         aria-labelledby="guides-question"
-        className="mt-10 flex flex-col items-start gap-4 rounded-panel bg-sky p-6 desktop:mt-14 desktop:px-12 desktop:py-10"
+        className="mt-10 flex flex-col items-start gap-4 rounded-panel bg-sky p-6 desktop:mt-11 desktop:gap-3 desktop:px-10 desktop:py-9"
       >
         <h2 id="guides-question" className={SITE_PANEL_TITLE_CLASSES}>
           Une question sans réponse ici ?
