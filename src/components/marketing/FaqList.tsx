@@ -28,12 +28,13 @@ export const FaqList = ({ name, entries, surface }: FaqListProps) => (
       >
         <summary
           className={cn(
-            "flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 py-3 text-body font-bold [&::-webkit-details-marker]:hidden",
+            // A question on two lines keeps its chevron by its first line (maquettes 3.5); on one, both stay centred.
+            "flex min-h-[56px] cursor-pointer list-none items-start justify-between gap-4 py-[15px] text-body font-bold [&::-webkit-details-marker]:hidden",
             FOCUS_RING,
           )}
         >
           {entry.question}
-          <Icon name="chevronDown" size={20} className="shrink-0 group-open:rotate-180" />
+          <Icon name="chevronDown" size={20} className="mt-[3px] shrink-0 group-open:rotate-180" />
         </summary>
         <p className="max-w-text pb-6 text-body">{entry.answer}</p>
       </details>

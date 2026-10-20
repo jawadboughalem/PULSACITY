@@ -39,8 +39,9 @@ const MENU_ROW_CLASSES = `pz-couleur -mx-2 flex min-h-[56px] items-center justif
 const isCurrent = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
 /**
- * Four links and « Créer mon espace gratuit » on a computer; on a phone, a menu under the header, over the veil, its call
- * followed by « Gratuit, sans carte bancaire. » as everywhere on the site.
+ * Four links and « Créer mon espace gratuit » on a computer; on a phone, a menu under the header, its bottom corners
+ * of 28, over an Encre veil of 48 % (charte v2, ajouts 3.5, Menu du téléphone), its call followed by « Gratuit, sans
+ * carte bancaire. » as everywhere on the site.
  */
 export const MarketingNav = () => {
   const pathname = usePathname();
@@ -100,7 +101,7 @@ export const MarketingNav = () => {
           tabIndex={-1}
           aria-hidden="true"
           onClick={close}
-          className="fixed inset-x-[0] top-[64px] bottom-[0] z-10 cursor-default bg-veil desktop:hidden"
+          className="fixed inset-x-[0] top-[64px] bottom-[0] z-10 cursor-default bg-[rgba(22,33,62,0.48)] desktop:hidden"
         />
       ) : null}
       <nav
@@ -108,7 +109,7 @@ export const MarketingNav = () => {
         aria-label="Site"
         hidden={!isOpen}
         data-defilement-bloque={isOpen}
-        className="absolute top-full -right-page-gutter -left-page-gutter z-20 rounded-b-panel bg-white px-5 pt-2 pb-6 desktop:hidden"
+        className="absolute top-full -right-page-gutter -left-page-gutter z-20 rounded-b-[28px] bg-white px-5 pt-2 pb-6 desktop:hidden"
       >
         <ul className="flex flex-col gap-1">
           {NAV_LINKS.map((link) => (

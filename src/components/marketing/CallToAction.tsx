@@ -37,8 +37,12 @@ export const CallToAction = ({
 }: CallToActionProps) => (
   <div
     className={cn(
-      "grid grid-cols-[minmax(0,1fr)] justify-items-stretch gap-3 desktop:justify-start desktop:justify-items-start desktop:gap-x-6",
-      link || isMentionBeside ? "desktop:grid-cols-[auto_auto]" : "desktop:grid-cols-[auto]",
+      "grid grid-cols-[minmax(0,1fr)] justify-items-stretch gap-3 desktop:justify-start desktop:justify-items-start",
+      // A link's text stands 26 from the button, its own 10 of padding included; a mention beside it, 24 (maquettes 3.5).
+      link ? "desktop:gap-x-4" : "desktop:gap-x-6",
+      // The second column takes the rest: a long mention spanning both would otherwise widen the button's, and push
+      // the link away from it.
+      link || isMentionBeside ? "desktop:grid-cols-[auto_minmax(0,1fr)]" : "desktop:grid-cols-[auto]",
       isCentered && "desktop:justify-center desktop:justify-items-center",
       className,
     )}
@@ -59,7 +63,10 @@ export const CallToAction = ({
     <p
       className={cn(
         "text-small text-gray",
-        link && linkOnPhone === "before-mention" ? "mt-2 desktop:mt-[0]" : "text-center desktop:text-left",
+        link && linkOnPhone === "before-mention" && "mt-2",
+        // On a phone, the short line is centred under the button; the longer one of the home's top reads from the left,
+        // and on a computer stands a little further from the button (maquettes 3.5).
+        mention === FREE_MENTION ? "text-center desktop:mt-[0] desktop:text-left" : "desktop:mt-4",
         isMentionBeside
           ? "desktop:col-start-2 desktop:row-start-1 desktop:self-center"
           : "desktop:col-span-full desktop:row-start-2",

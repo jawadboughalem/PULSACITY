@@ -48,7 +48,7 @@ export const PlanColumns = ({ priceList }: { priceList: PriceList }) => (
       <li
         key={plan.id}
         className={cn(
-          "flex flex-col gap-4 rounded-panel px-7 py-8 desktop:row-span-5 desktop:grid desktop:grid-rows-subgrid desktop:gap-6",
+          "flex flex-col gap-4 rounded-panel px-7 py-8 desktop:row-span-5 desktop:grid desktop:grid-rows-subgrid",
           plan.isRecommended ? "bg-sky" : "bg-white",
         )}
       >
@@ -75,7 +75,7 @@ export const PlanColumns = ({ priceList }: { priceList: PriceList }) => (
           })}
         </div>
         <p className="text-body">{plan.tagline}</p>
-        <div className="order-last w-full desktop:order-none desktop:mt-6 desktop:self-center">
+        <div className="order-last w-full desktop:order-none desktop:self-center">
           {(["monthly", "yearly"] as const).map((period) => (
             <div key={period} className={PERIOD_VISIBILITY[period]}>
               <SignUpLink

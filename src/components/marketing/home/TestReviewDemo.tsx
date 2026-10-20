@@ -96,7 +96,8 @@ export const TestReviewDemo = () => {
   }
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-4 rounded-block bg-cloud p-4 desktop:grid-cols-2 desktop:gap-6 desktop:p-6">
+    // Maquettes 3.5 draw the open demo on Nuage: on a phone, the band runs from edge to edge, the cards keep the width.
+    <div className="-mx-page-gutter grid grid-cols-[minmax(0,1fr)] items-start gap-4 bg-cloud px-page-gutter py-6 desktop:mx-[0] desktop:grid-cols-2 desktop:gap-6 desktop:rounded-block desktop:p-6">
       <section aria-labelledby={`${ids}-title`} className="flex flex-col gap-5 rounded-panel bg-white p-5 desktop:p-8">
         <h3 id={`${ids}-title`} ref={titleRef} tabIndex={-1} className="font-display text-h3 focus:outline-none">
           Votre avis de test
@@ -122,6 +123,7 @@ export const TestReviewDemo = () => {
             <RatingInput
               id={`${ids}-rating`}
               legend="Votre note"
+              isCompact
               rating={rating}
               error={errors.rating}
               onChange={(value) => {

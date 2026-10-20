@@ -50,10 +50,10 @@ type StepRowProps = {
 
 /**
  * A step of maquettes 3.5 (charte v2, Étapes numérotées): its number on a Soleil disc of 36, its title and its sentence
- * in a column; under them, its drawing, the full width on a phone and in the column of the text on a computer.
+ * in a column; under them, its drawing, in the column of the text.
  */
 const StepRow = ({ marker, spokenPrefix, isOptional = false, step, addressStep, integration }: StepRowProps) => (
-  <div className="grid grid-cols-[36px_minmax(0,1fr)] gap-x-4 gap-y-4 desktop:gap-y-5">
+  <div className="grid grid-cols-[36px_minmax(0,1fr)] gap-x-3 gap-y-4 desktop:gap-x-4 desktop:gap-y-5">
     <span
       aria-hidden="true"
       className={cn(
@@ -73,12 +73,12 @@ const StepRow = ({ marker, spokenPrefix, isOptional = false, step, addressStep, 
       </p>
     </div>
     {step.illustration ? (
-      <div className="col-span-2 desktop:col-span-1 desktop:col-start-2">
+      <div className="col-start-2">
         {renderIllustration(step.illustration, addressStep, integration)}
       </div>
     ) : null}
     {step.note ? (
-      <p className="col-span-2 max-w-[560px] text-small desktop:col-span-1 desktop:col-start-2">
+      <p className="col-start-2 max-w-[560px] text-small">
         <RichTextLine parts={step.note} />
       </p>
     ) : null}
@@ -92,7 +92,7 @@ const StepRow = ({ marker, spokenPrefix, isOptional = false, step, addressStep, 
 export const InstallGuide = ({ integration }: { integration: AvailableIntegration }) => {
   const addressStep = findAddressStep(integration.installSteps);
   return (
-    <div className="flex flex-col gap-10 rounded-panel bg-white p-5 desktop:p-10">
+    <div className="flex flex-col gap-10 rounded-panel bg-white p-4 desktop:p-10">
       <ol className="flex flex-col gap-10">
         {integration.installSteps.map((step, index) => (
           <li key={step.title}>

@@ -231,7 +231,9 @@ export const WIDGET_CSS = `
   color: var(--card-text);
   font-weight: 600;
   white-space: nowrap;
+  max-width: 100%;
 }
+.badge-text { min-width: 0; white-space: normal; }
 a.badge:hover .badge-text { text-decoration: underline; text-underline-offset: 3px; }
 .faces { display: inline-flex; }
 .faces .avatar { width: 32px; height: 32px; border: 2px solid var(--card-bg); font-size: 12px; }

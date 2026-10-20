@@ -14,6 +14,13 @@ const PHONE_VISIBILITY: Record<PlanId, string> = {
   pro: "hidden group-data-[choice=pro]/compare:table-cell desktop:table-cell",
 };
 
+/** The same for a value, which a phone lays out in its row's flex, centred on its label. */
+const PHONE_VALUE_VISIBILITY: Record<PlanId, string> = {
+  free: "hidden max-desktop:group-data-[choice=free]/compare:flex desktop:table-cell",
+  essentiel: "hidden max-desktop:group-data-[choice=essentiel]/compare:flex desktop:table-cell",
+  pro: "hidden max-desktop:group-data-[choice=pro]/compare:flex desktop:table-cell",
+};
+
 const Value = ({ value }: { value: ComparisonValue }) =>
   value.kind === "included" ? (
     <>
@@ -68,10 +75,11 @@ export const PlanComparison = () => (
             </th>
           </tr>
           {group.rows.map((row, rowIndex) => (
-            <tr key={row.label}>
+            // On a phone, each row sets its own widths: a label only wraps when its value is long (maquettes 3.5).
+            <tr key={row.label} className="max-desktop:mt-[6px] max-desktop:flex max-desktop:items-stretch">
               <th
                 scope="row"
-                className="rounded-l-field bg-white py-3 pr-3 pl-4 font-normal desktop:h-[52px] desktop:py-[0] desktop:pl-5 desktop:text-[17px] desktop:leading-[24px] desktop:font-semibold"
+                className="flex-1 rounded-l-field bg-white py-3 pr-3 pl-4 text-[16px] leading-[24px] font-normal max-desktop:flex max-desktop:items-center desktop:h-[52px] desktop:py-[0] desktop:pl-5 desktop:text-[17px] desktop:leading-[24px] desktop:font-semibold"
               >
                 {row.label}
               </th>
@@ -79,12 +87,12 @@ export const PlanComparison = () => (
                 <td
                   key={id}
                   className={cn(
-                    "rounded-r-field bg-white py-3 pr-4 text-right whitespace-nowrap desktop:h-[52px] desktop:px-5 desktop:py-[0] desktop:text-left",
+                    "shrink-0 items-center justify-end rounded-r-field bg-white py-3 pr-4 text-right whitespace-nowrap desktop:h-[52px] desktop:px-5 desktop:py-[0] desktop:text-left",
                     index < PLAN_IDS.length - 1 && "desktop:rounded-r-none",
                     id === RECOMMENDED_PLAN && "desktop:bg-sky",
                     // The 6 px between two rows stay Ciel in Essentiel's column.
                     id === RECOMMENDED_PLAN && rowIndex > 0 && "desktop:shadow-[0_-6px_0_var(--color-sky)]",
-                    PHONE_VISIBILITY[id],
+                    PHONE_VALUE_VISIBILITY[id],
                   )}
                 >
                   <span className="flex items-center justify-end desktop:justify-start">

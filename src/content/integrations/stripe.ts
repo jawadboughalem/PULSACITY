@@ -14,6 +14,7 @@ export const STRIPE: UpcomingIntegration = {
   },
   heading: "Témoignages automatiques pour Stripe",
   intro: "Bientôt, chaque paiement réussi sur Stripe déclenchera une demande d'avis à votre nom.",
+  sales: { arrive: "chaque paiement arrive tout seul", become: "chaque paiement réussi devient une demande d'avis" },
   willDo: [
     "Chaque paiement réussi déclenche une demande d'avis, au délai choisi pour l'offre.",
     "Un paiement remboursé annule la demande prévue.",

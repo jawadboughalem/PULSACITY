@@ -117,7 +117,7 @@ export const HomeCatalogLinks = () => (
     <Link href={MARKETING_PATHS.integrations} className={cn(SECONDARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
       Voir toutes les intégrations
     </Link>
-    <Link href={`${MARKETING_PATHS.integrations}#dites-nous`} className={cn(TEXT_LINK_CLASSES, "self-center text-small desktop:self-auto")}>
+    <Link href={`${MARKETING_PATHS.integrations}#dites-nous`} className={cn(TEXT_LINK_CLASSES, "-ml-[10px] self-start text-small desktop:ml-[0] desktop:self-auto")}>
       Votre outil n&apos;y est pas ? Dites-nous lequel.
     </Link>
   </div>

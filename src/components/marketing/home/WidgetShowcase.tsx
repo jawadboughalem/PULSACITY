@@ -71,13 +71,14 @@ const LOOK_OPTIONS = [
 ] as const;
 
 /**
- * Room kept for each widget while it draws itself, so that nothing below moves (charte v2, Widget, Chargement): its
- * height at 360 and 1440 px, measured, plus a margin for a wider Georgia (Windows).
+ * Room kept for the widget, so that switching its type moves nothing below (recette of lot 4.7): on a computer, one
+ * height for the three, the carousel's; on a phone, the height of each, a wall's height left under a badge being
+ * most of a screen. Measured at 360 and 1440 px, plus a margin.
  */
 const RESERVED_HEIGHTS: Record<WidgetType, string> = {
-  wall: "min-h-[640px] desktop:min-h-[320px]",
-  carousel: "min-h-[400px] desktop:min-h-[420px]",
-  badge: "min-h-[72px] desktop:min-h-[48px]",
+  wall: "min-h-[680px] desktop:min-h-[424px]",
+  carousel: "min-h-[384px] desktop:min-h-[424px]",
+  badge: "min-h-[96px] desktop:min-h-[424px]",
 };
 
 /**
@@ -126,13 +127,12 @@ export const WidgetShowcase = () => {
           </p>
           <div
             style={{ backgroundColor: JULIE_PAGE_BACKGROUNDS[look] }}
-            className={cn(
-              JULIE_PAGE_FONT_CLASSES,
-              "px-4 py-6 desktop:px-12 desktop:py-10",
-              look === "dark" ? "text-white" : "text-ink",
-            )}
+            className={cn("px-4 py-6 desktop:px-12 desktop:py-10", look === "dark" ? "text-white" : "text-ink")}
           >
-            <p className="mb-5 text-[24px] leading-[30px] font-bold desktop:mb-6 desktop:text-[36px] desktop:leading-[44px]">
+            {/* Not through cn: tailwind-merge would read the font family as a weight, and drop it for font-bold. */}
+            <p
+              className={`${JULIE_PAGE_FONT_CLASSES} mb-5 text-[24px] leading-[30px] font-bold desktop:mb-6 desktop:text-[36px] desktop:leading-[44px]`}
+            >
               Ils ont suivi le programme
             </p>
             <div className={RESERVED_HEIGHTS[type]}>

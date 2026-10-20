@@ -52,7 +52,7 @@ const PricingPage = async () => {
               <p className="text-lead">
                 Commencez gratuitement. Passez à Essentiel quand les avis arrivent. Sans engagement.
               </p>
-              <p className="text-body font-bold">Prix finaux : rien ne s&apos;ajoute au paiement.</p>
+              <p className="text-lead font-bold">Prix finaux : rien ne s&apos;ajoute au paiement.</p>
             </div>
             <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-4">
               <ChoiceToggle
@@ -67,8 +67,8 @@ const PricingPage = async () => {
           <div className="mt-8 desktop:mt-10">
             <PlanColumns priceList={priceList} />
           </div>
-          <div className="mt-8 flex flex-col items-center gap-6">
-            <p className="text-center text-small text-gray">
+          <div className="mt-8 flex flex-col items-start gap-6 desktop:items-center">
+            <p className="text-small text-gray desktop:text-center">
               Sans engagement · Changez de plan à tout moment · Paiement par carte
             </p>
             {showcase.badgeWidgetId !== null ? <PulsacityBadge widgetId={showcase.badgeWidgetId} /> : null}

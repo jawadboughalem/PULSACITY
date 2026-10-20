@@ -190,7 +190,7 @@ const UpcomingPage = ({ integration }: { integration: UpcomingIntegration }) => 
       <SplitSection
         id="will-do-title"
         title="Ce que fera la connexion"
-        text="Une fois installée, plus rien à faire : chaque vente arrive toute seule."
+        text={`Une fois installée, plus rien à faire : ${integration.sales?.arrive ?? "chaque vente arrive toute seule"}.`}
         tone="cloud"
       >
         <ul className="flex flex-col gap-2">

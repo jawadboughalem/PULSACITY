@@ -50,11 +50,17 @@ const ReviewCard = () => (
   </div>
 );
 
+/** A wall seen from afar: its cards drawn smaller than the text of the page, as on maquettes 3.5 (11/14). */
 const MiniCard = ({ quote, name, isNew = false }: { quote: string; name: string; isNew?: boolean }) => (
-  <div className={cn("flex flex-col gap-1 rounded-field bg-white p-3", isNew && "outline-2 -outline-offset-2 outline-sun")}>
+  <div
+    className={cn(
+      "flex flex-col gap-1 rounded-field bg-white p-2 text-[11px] leading-[14px]",
+      isNew && "outline-2 -outline-offset-2 outline-sun",
+    )}
+  >
     {isNew ? <RatingStars rating={5} size={16} /> : null}
-    <p className="text-legal">{quoteInFrench(quote)}</p>
-    <span className="text-legal font-bold">{name}</span>
+    <p>{quoteInFrench(quote)}</p>
+    <span className="font-bold">{name}</span>
   </div>
 );
 
@@ -121,7 +127,7 @@ export const SaleToWallDemo = () => (
           <h3 className="font-display text-h3">{step.title}</h3>
         </div>
         {/* On a computer, the frames of the four times share one row: as high as the wall, the highest. */}
-        <div aria-hidden="true" className="flex min-h-[216px] items-center rounded-panel bg-cloud p-4">
+        <div aria-hidden="true" className="flex items-center rounded-panel bg-cloud p-4 desktop:min-h-[216px]">
           {step.illustration}
         </div>
         <p className="text-[16px] leading-[24px]">{step.text}</p>

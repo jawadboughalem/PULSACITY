@@ -29,7 +29,7 @@ export const IntegrationCatalog = ({ after }: IntegrationCatalogProps) => {
   const families = INTEGRATION_FAMILIES.filter((family) => chosen === null || family.id === chosen);
   return (
     <div className="flex flex-col gap-10 desktop:gap-12">
-      <div className="flex flex-col gap-10 desktop:gap-12">
+      <div className="flex flex-col gap-10">
         <div role="group" aria-label="Familles d'outils" className="flex flex-wrap gap-x-2 gap-y-2">
           {CHIPS.map((chip) => {
             const isChosen = chip.id === chosen;
@@ -49,7 +49,7 @@ export const IntegrationCatalog = ({ after }: IntegrationCatalogProps) => {
           })}
         </div>
         {families.map((family) => (
-          <section key={family.id} aria-labelledby={`family-${family.id}`} className="flex flex-col gap-5">
+          <section key={family.id} aria-labelledby={`family-${family.id}`} className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">
               <h2 id={`family-${family.id}`} className={SITE_GROUP_TITLE_CLASSES}>
                 {family.title}

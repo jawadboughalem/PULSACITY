@@ -5,15 +5,19 @@ import { SignUpLink } from "@/components/acquisition/SignUpLink";
 import { PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { cn } from "@/lib/cn";
 
-/** The element the bar watches: the top's « Créer mon espace gratuit ». */
+/** Around the top's call: the bar watches its button, « Créer mon espace gratuit », not its link and line below. */
 export const HERO_CALL_ID = "appel-haut-de-page";
 
 /** The final call: once it is on the screen, its own button replaces the bar. */
 export const FINAL_CALL_ID = "appel-final";
 
+/** The fields that open a phone's keyboard: not a star of the test review, which is a radio button. */
+const KEYLESS_INPUT_TYPES = new Set(["radio", "checkbox", "button", "submit", "reset"]);
+
 const isTyping = () => {
   const element = document.activeElement;
-  return element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement;
+  if (element instanceof HTMLInputElement) return !KEYLESS_INPUT_TYPES.has(element.type);
+  return element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement;
 };
 
 /**
@@ -27,7 +31,7 @@ export const StickyCallBar = () => {
   const [isShown, setIsShown] = useState(false);
 
   useEffect(() => {
-    const heroCall = document.getElementById(HERO_CALL_ID);
+    const heroCall = document.getElementById(HERO_CALL_ID)?.querySelector("a") ?? null;
     const finalCall = document.getElementById(FINAL_CALL_ID);
     if (!heroCall || !finalCall) return;
     let frame = 0;

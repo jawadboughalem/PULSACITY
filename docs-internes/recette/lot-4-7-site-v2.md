@@ -230,3 +230,28 @@ Tu vérifies sur la production de PULSACITY le site public en v2. Je ne suis pas
 
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu.
 ```
+
+---
+
+## Comptes rendus du 20 octobre (prompts 1 à 6) et corrections
+
+Fenêtre à 2 048 px (contenu limité à 1 280, comme à 1 440), téléphone dans un cadre de 360 × 740. Tout fonctionne ; aucune page ne déborde. Corrigé avant la fusion :
+- **Exemple de widget** (prompt 1, point 11) : sur ordinateur, une seule hauteur réservée pour le mur, le carrousel et le badge : rien ne saute sous le cadre. Au téléphone, chaque type garde sa hauteur (une hauteur commune laisserait l'écran presque vide sous le badge). Le texte des cartes reprend la police du site ; seul le titre de la page de Julie reste en Georgia.
+- **Badge coupé au téléphone** (prompt 2, point 7) : le badge du widget se replie après le point (« 4,7/5 · » puis « 23 avis ») quand sa place est étroite. Le même défaut aurait touché une colonne étroite chez un créateur.
+- **« 4 sur 5 » hors du formulaire** (prompt 2, point 5) : l'avis de test n'écrit plus la note à côté des étoiles (chaque étoile la dit aux lecteurs d'écran), étoiles de 30 dans des cibles de 44, comme la maquette. Au téléphone, la bande Nuage va d'un bord à l'autre : la carte fait 320 px.
+- **Appel du haut** (prompt 1, point 2) : « Voir comment ça marche » à 26 px du bouton, la mention à 28 px dessous. Au téléphone, la mention courte est centrée (charte, Appel principal).
+- **Barre fixe** (prompt 2, point 4) : elle apparaît dès que le bouton jaune sort de l'écran, et une étoile touchée ne la cache plus.
+- **Démo « De la vente au témoignage »** (prompt 1, point 7 ; prompt 2) : petit mur de l'étape 4 à l'échelle de la maquette ; au téléphone, chaque cadre prend la hauteur de son dessin.
+- **Tarifs** (prompt 3) : 16 px entre les rangées des colonnes, plus de marge en trop avant le bouton (colonnes de 511 px, contre 519 sur la maquette) ; « Prix finaux… » en 20 px ; au téléphone, comparatif ligne par ligne (un libellé ne revient à la ligne que si sa valeur est longue) et « Sans engagement… » aligné à gauche.
+- **Intégrations** (prompt 4) : 48 px entre les familles, 12 entre une famille et ses cartes ; au téléphone, dessins du guide d'installation sous le texte de l'étape ; page Stripe : « chaque paiement arrive tout seul », « chaque paiement réussi devient une demande d'avis » (et « reçu » pour PayPal).
+- **Menu** : voile Encre à 48 % et coins de 28, comme la charte (ajouts 3.5).
+- **Accueil, autres** : chevrons des questions à hauteur de la première ligne ; « Votre outil n'y est pas ? » aligné à gauche au téléphone.
+- **Page introuvable** (prompt 6, point 1) : l'onglet dit « Page introuvable · PULSACITY ».
+
+Expliqué sans changement :
+- **« PULSACITY est nouveau » absent** (prompt 1, point 17 ; prompt 2, point 2) : sur l'aperçu, la variable `PULSACITY_SPACE_ID` désigne l'espace Pro de la recette, qui a plus de 5 avis : l'accueil montre donc son mur (lot 4.12) à la place de la section 10. Ce mur reste vide sur un aperçu : la protection de Vercel bloque les données du widget, demandées sans cookie (déjà noté au lot 4.12). En production, tant que l'espace PULSACITY n'a pas 5 témoignages validés, c'est bien « PULSACITY est nouveau. Vous ne verrez ici aucun avis inventé. » qui s'affiche (vérifié dans le conteneur, sans la variable).
+- **`/confidentialite`** (prompt 5, point 6) : ses deux parties de plus (« Écrivez-nous, sur la page d'aide », lot 4.4 ; « La mesure d'audience », lot 4.12) sont voulues : le code est plus récent que la maquette, qui datait d'avant Umami.
+- Le dessin des cartes du widget (police, auteur en haut, demi-étoile, flèches, « Propulsé par Pulsacity ») est celui du widget actuel : il passe au dessin v2 avec le lot 4.8.
+- Zone « Votre avis » de 160 de haut (charte), grand titre en 72/72 (charte), titres des guides un peu plus petits que la maquette (jeton h1).
+
+Action 7 (Lighthouse) : reportée par le fondateur, avec les vérifications en production.

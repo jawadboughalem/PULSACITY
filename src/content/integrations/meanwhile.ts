@@ -47,6 +47,7 @@ const readMeanwhileLink = (integration: UpcomingIntegration): NonNullable<Meanwh
 /** « En attendant : avec Zapier ou Make » (decisions/connecteurs.md): the line under a tool to come, and its first way. */
 export const describeMeanwhile = (integration: UpcomingIntegration): { line: string; item: MeanwhileItem } => {
   const link = readMeanwhileLink(integration);
+  const becomes = integration.sales?.become ?? "chaque vente devient une demande d'avis";
   switch (integration.meanwhileVia ?? "zapier-or-make") {
     case "universal":
       return {
@@ -62,7 +63,7 @@ export const describeMeanwhile = (integration: UpcomingIntegration): { line: str
         line: "En attendant : avec Zapier",
         item: {
           title: "Avec Zapier",
-          text: `${integration.name}, puis Zapier, puis votre connecteur universel : chaque vente devient une demande d'avis dès aujourd'hui.`,
+          text: `${integration.name}, puis Zapier, puis votre connecteur universel : ${becomes} dès aujourd'hui.`,
           link,
         },
       };
@@ -71,7 +72,7 @@ export const describeMeanwhile = (integration: UpcomingIntegration): { line: str
         line: "En attendant : avec Zapier ou Make",
         item: {
           title: "Avec Zapier ou Make",
-          text: `${integration.name}, puis Zapier ou Make, puis votre connecteur universel : chaque vente devient une demande d'avis dès aujourd'hui. Make propose un plan gratuit.`,
+          text: `${integration.name}, puis Zapier ou Make, puis votre connecteur universel : ${becomes} dès aujourd'hui. Make propose un plan gratuit.`,
           link,
         },
       };
