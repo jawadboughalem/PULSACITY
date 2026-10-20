@@ -1,7 +1,8 @@
 import { and, eq } from "drizzle-orm";
-import { canAddTestimonial, getPlan } from "@/config/plans";
+import { type PriceList, canAddTestimonial, getPlan } from "@/config/plans";
 import type { Database } from "@/db/database";
 import { connections, products, purchases, reviewRequests, spaces, testimonials, user } from "@/db/schema";
+import { readCurrentPriceList } from "@/lib/billing/founder-seats";
 import { getUploadPublicUrl } from "@/lib/uploads/presign-image-upload";
 import { isTestimonialPhotoKeyOf } from "@/lib/uploads/upload-keys";
 import { isReviewRequestActive } from "./active-review-request-statuses";
@@ -27,12 +28,17 @@ export type NewTestimonialNotification = {
   productName: string | null;
   authorName: string;
   authorTitle: string | null;
-  authorPhotoUrl: string | null;
   rating: number;
   body: string;
+  /** « Vente reçue de Systeme.io · achat du 28 août 2026 » (maquettes 3.6, positionnement.md, point 1). */
+  provenance: TestimonialProvenance;
+  purchasedAt: Date | null;
+  purchaseConnector: string | null;
   planName: string;
   planTestimonialLimit: number | null;
   isOverPlanLimit: boolean;
+  /** The price of Essentiel the e-mail quotes when the free plan is full: the one the site shows. */
+  priceList: PriceList;
 };
 
 export type SubmitTestimonialResult =
@@ -135,6 +141,7 @@ export const submitTestimonial = async (
 
     const plan = getPlan(space.plan);
     if (!space.notifiesCreator) return { status: "received", notification: null };
+    const isOverPlanLimit = !canAddTestimonial(space, approvedCount);
     return {
       status: "received",
       notification: {
@@ -143,12 +150,15 @@ export const submitTestimonial = async (
         productName: product?.name ?? null,
         authorName: submission.authorName,
         authorTitle: submission.authorTitle,
-        authorPhotoUrl,
         rating: submission.rating,
         body: submission.body,
+        provenance: origin.provenance,
+        purchasedAt: origin.purchasedAt,
+        purchaseConnector: origin.purchaseConnector,
         planName: plan.name,
         planTestimonialLimit: plan.limits.testimonials,
-        isOverPlanLimit: !canAddTestimonial(space, approvedCount),
+        isOverPlanLimit,
+        priceList: await readCurrentPriceList(transaction),
       },
     };
   });

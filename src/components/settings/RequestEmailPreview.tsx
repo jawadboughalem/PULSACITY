@@ -131,8 +131,8 @@ export const RequestEmailPreview = ({ readInput }: RequestEmailPreviewProps) => 
                 <EmailFrame html={state.preview.html} />
               </div>
               <p className="text-small text-gray">
-                Exemple, pour un client fictif. Le texte reste celui de PULSACITY ; votre nom, votre logo et votre adresse
-                postale s&apos;y appliquent.
+                Exemple, pour un client fictif. Le texte reste celui de PULSACITY ; votre nom, votre logo, votre
+                couleur d&apos;accent et votre adresse postale s&apos;y appliquent.
               </p>
             </div>
           ) : null}

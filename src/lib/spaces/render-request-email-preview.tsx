@@ -10,6 +10,7 @@ export const EXAMPLE_PRODUCT_NAME = "Programme 30 jours";
 type RequestEmailPreviewInput = {
   spaceName: string;
   logoUrl: string | null;
+  accentColor: string | null;
   senderPostalAddress: string | null;
   productName: string | null;
   collectionUrl: string;
@@ -23,12 +24,13 @@ export type RequestEmailPreview = {
 };
 
 /**
- * Réglages, « Voir l'e-mail de demande »: the request e-mail exactly as it leaves, with the creator's name, logo and
- * address as typed, for a fictitious customer. Its links lead nowhere.
+ * Réglages, « Voir l'e-mail de demande »: the request e-mail exactly as it leaves, with the creator's name, logo,
+ * accent and address as typed, for a fictitious customer. Its links lead nowhere.
  */
 export const renderRequestEmailPreview = async ({
   spaceName,
   logoUrl,
+  accentColor,
   senderPostalAddress,
   productName,
   collectionUrl,
@@ -38,15 +40,13 @@ export const renderRequestEmailPreview = async ({
   const html = await render(
     <ReviewRequestEmail
       kind="request"
-      spaceName={spaceName}
-      logoUrl={logoUrl}
+      space={{ name: spaceName, logoUrl, accentColor, senderPostalAddress }}
       firstName={EXAMPLE_CUSTOMER}
       productName={offer}
       eventType="sale"
       purchasedAt={now}
       reviewUrl={collectionUrl}
       unsubscribeUrl={collectionUrl}
-      senderPostalAddress={senderPostalAddress}
     />,
   );
   return {

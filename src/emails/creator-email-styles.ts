@@ -1,8 +1,9 @@
 import type { CSSProperties } from "react";
 
 /**
- * Charte v2, « E-mails » and « E-mails, ajouts » (3.6): the e-mails to the creator in PULSACITY's name. The welcome
- * e-mails are the first ones drawn in v2; the others follow with lot 4.8.
+ * Charte v2, « E-mails » and « E-mails, ajouts » (3.6): every e-mail in v2, to the creator in PULSACITY's name and to
+ * their customers in theirs (CustomerEmailLayout). System fonts, colours of the charter written out: an e-mail reads
+ * no stylesheet.
  */
 export const CREATOR_EMAIL_COLORS = {
   ink: "#16213E",
@@ -12,23 +13,26 @@ export const CREATOR_EMAIL_COLORS = {
   sun: "#FFBE3B",
   success: "#1A6B45",
   successSurface: "#DFF3E6",
+  waiting: "#8A5300",
+  waitingSurface: "#FFF4DB",
 } as const;
 
 /** System fonts only: nothing to load. */
 const SYSTEM_FONTS = "Helvetica, Arial, sans-serif";
 
-/** On a phone: padding 24, the button over the whole width, 56 high. */
+/** On a phone: padding 24, the button over the whole width, 56 high (18 + 19 + 18). */
 export const CREATOR_EMAIL_MOBILE_STYLES = `
 @media (max-width: 600px) {
   .creator-email-card > tbody > tr > td { padding: 24px !important; }
   .creator-email-legal > tbody > tr > td { padding: 0 24px !important; }
-  .creator-email-button { display: block !important; padding-top: 16px !important; padding-bottom: 16px !important; text-align: center !important; }
+  .creator-email-button { display: block !important; padding-top: 18px !important; padding-bottom: 18px !important; text-align: center !important; }
 }
 `;
 
+/** 12 on each side: on a phone, the card keeps a margin of Nuage (maquettes 3.6). */
 export const creatorPageStyle: CSSProperties = {
   margin: 0,
-  padding: "40px 0",
+  padding: "40px 12px",
   backgroundColor: CREATOR_EMAIL_COLORS.cloud,
   color: CREATOR_EMAIL_COLORS.ink,
   fontFamily: SYSTEM_FONTS,
@@ -116,10 +120,13 @@ export const stepDoneStyle: CSSProperties = {
   color: CREATOR_EMAIL_COLORS.success,
 };
 
-/** Soleil, Encre text, 52 high, radius-full (square under Outlook). */
+/**
+ * Soleil, Encre text, 52 high, radius-full (square under Outlook). react-email sets its label at a line height of 120 %
+ * (19 px): 16 above and below make the 52 of the charter.
+ */
 export const creatorButtonStyle: CSSProperties = {
   display: "inline-block",
-  padding: "14px 28px",
+  padding: "16px 28px",
   borderRadius: "9999px",
   backgroundColor: CREATOR_EMAIL_COLORS.sun,
   color: CREATOR_EMAIL_COLORS.ink,
@@ -160,4 +167,32 @@ export const creatorLegalLineStyle: CSSProperties = {
   fontSize: "13px",
   lineHeight: "18px",
   color: CREATOR_EMAIL_COLORS.gray,
+};
+
+/** A testimonial or a code, on Nuage, radius 16. */
+export const creatorQuoteBoxStyle: CSSProperties = {
+  width: "100%",
+  margin: "0 0 28px",
+  padding: "24px",
+  borderRadius: "16px",
+  backgroundColor: CREATOR_EMAIL_COLORS.cloud,
+};
+
+/** What waits on the creator (the free plan full), on Attente fond, radius 16. */
+export const creatorWaitingBoxStyle: CSSProperties = {
+  width: "100%",
+  margin: "0 0 28px",
+  padding: "20px",
+  borderRadius: "16px",
+  backgroundColor: CREATOR_EMAIL_COLORS.waitingSurface,
+};
+
+/** A title inside the card: 22/28 700 (charte v2, « E-mails »). */
+export const creatorTitleStyle: CSSProperties = {
+  margin: "8px 0 16px",
+  fontFamily: SYSTEM_FONTS,
+  fontSize: "22px",
+  lineHeight: "28px",
+  fontWeight: 700,
+  color: CREATOR_EMAIL_COLORS.ink,
 };

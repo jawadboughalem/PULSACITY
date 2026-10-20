@@ -25,25 +25,27 @@ describe("e-mails on a phone", () => {
     const request = await render(
       <ReviewRequestEmail
         kind="request"
-        spaceName="Julie Nutrition"
-        logoUrl={null}
+        space={{ name: "Julie Nutrition", logoUrl: null, accentColor: null, senderPostalAddress: null }}
         firstName="Camille"
         productName="Programme 30 jours"
         eventType="sale"
         purchasedAt={new Date("2026-10-01T10:00:00Z")}
         reviewUrl="https://pulsacity.com/t/julie-nutrition"
-        unsubscribeUrl="https://pulsacity.com/api/unsubscribe"
-        senderPostalAddress={null}
+        unsubscribeUrl="https://pulsacity.com/desinscription/abc"
       />,
     );
-    const account = await render(<MagicLinkEmail url="https://pulsacity.com/connexion" lifetimeMinutes={15} />);
+    const account = await render(
+      <MagicLinkEmail url="https://pulsacity.com/entrer/abc" email="julie@exemple.fr" lifetimeMinutes={15} />,
+    );
 
-    for (const html of [request, account]) {
-      expect(readPaddedCells(html)).toEqual([
-        { selector: ".email-card > tbody > tr > td", padding: "48px" },
-        { selector: ".email-legal > tbody > tr > td", padding: "0px 48px" },
-      ]);
-    }
+    expect(readPaddedCells(request)).toEqual([
+      { selector: ".customer-email-card > tbody > tr > td", padding: "40px" },
+      { selector: ".customer-email-legal > tbody > tr > td", padding: "0px 40px" },
+    ]);
+    expect(readPaddedCells(account)).toEqual([
+      { selector: ".creator-email-card > tbody > tr > td", padding: "40px" },
+      { selector: ".creator-email-legal > tbody > tr > td", padding: "0px 40px" },
+    ]);
   });
 
   it("narrows the padding of the welcome e-mails (v2) the same way", async () => {

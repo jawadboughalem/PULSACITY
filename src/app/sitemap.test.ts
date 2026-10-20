@@ -49,7 +49,7 @@ describe("robots", () => {
   it("keeps the space, the API and the collection pages out of search engines", () => {
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://pulsacity.com");
     expect(robots()).toEqual({
-      rules: { userAgent: "*", allow: "/", disallow: ["/app/", "/api/", "/t/", "/desinscription"] },
+      rules: { userAgent: "*", allow: "/", disallow: ["/app/", "/api/", "/t/", "/desinscription", "/entrer/"] },
       sitemap: "https://pulsacity.com/sitemap.xml",
     });
   });

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Body, Button, Column, Container, Head, Html, Img, Link, Preview, Row, Section, Text } from "react-email";
+import { Body, Column, Container, Head, Html, Link, Preview, Row, Section, Text } from "react-email";
 import { guidePath } from "@/components/marketing/marketing-paths";
 import {
   ASK_FOR_REVIEW_HREF,
@@ -10,22 +10,16 @@ import {
 import { formatDayMonthYear } from "@/lib/dates/format-french-date";
 import { SPACE_HOME_PATH } from "@/lib/spaces/space-paths";
 import type { WelcomeEmailStep } from "@/lib/welcome-emails/welcome-email-steps";
-import { EMAIL_SYMBOL_PATH } from "./AccountEmailLayout";
+import { CreatorEmailButton, CreatorEmailHeader, PULSACITY_SIGNATURE } from "./AccountEmailLayout";
 import {
   CREATOR_EMAIL_MOBILE_STYLES,
-  creatorButtonStyle,
   creatorCardStyle,
-  creatorFallbackStyle,
-  creatorHeaderStyle,
   creatorLegalLineStyle,
   creatorLegalStyle,
   creatorLinkStyle,
-  creatorNameStyle,
   creatorPageStyle,
   creatorParagraphStyle,
   creatorSmallStyle,
-  creatorSymbolCellStyle,
-  creatorSymbolStyle,
   doneStepTextStyle,
   stepDoneStyle,
   stepMarkCellStyle,
@@ -177,16 +171,7 @@ export const WelcomeEmail = ({ step, spaceCreatedAt, progress, appUrl, unsubscri
       <Preview>{content.preview}</Preview>
       <Body lang="fr" style={creatorPageStyle}>
         <Container className="creator-email-card" style={creatorCardStyle}>
-          <Section style={creatorHeaderStyle}>
-            <Row>
-              <Column style={creatorSymbolCellStyle}>
-                <Img src={`${appUrl}${EMAIL_SYMBOL_PATH}`} width="24" height="24" alt="" style={creatorSymbolStyle} />
-              </Column>
-              <Column>
-                <Text style={creatorNameStyle}>PULSACITY</Text>
-              </Column>
-            </Row>
-          </Section>
+          <CreatorEmailHeader appUrl={appUrl} />
           <Text style={creatorParagraphStyle}>Bonjour,</Text>
           <Text style={creatorParagraphStyle}>{content.intro(progress)}</Text>
           <StepsList progress={progress} />
@@ -195,15 +180,7 @@ export const WelcomeEmail = ({ step, spaceCreatedAt, progress, appUrl, unsubscri
               {paragraph}
             </Text>
           ))}
-          <Button className="creator-email-button" href={buttonUrl} style={creatorButtonStyle}>
-            {content.button.label}
-          </Button>
-          <Text style={creatorFallbackStyle}>
-            Le bouton ne s&apos;affiche pas ? Ouvrez ce lien :{" "}
-            <Link href={buttonUrl} style={creatorLinkStyle}>
-              {buttonUrl}
-            </Link>
-          </Text>
+          <CreatorEmailButton href={buttonUrl} label={content.button.label} />
           {content.extra?.(appUrl)}
         </Container>
         <Container className="creator-email-legal" style={creatorLegalStyle}>
@@ -215,7 +192,7 @@ export const WelcomeEmail = ({ step, spaceCreatedAt, progress, appUrl, unsubscri
               Ne plus recevoir les e-⁠mails d&apos;accueil
             </Link>
           </Text>
-          <Text style={creatorLegalLineStyle}>PULSACITY</Text>
+          <Text style={creatorLegalLineStyle}>{PULSACITY_SIGNATURE}</Text>
         </Container>
       </Body>
     </Html>

@@ -133,13 +133,15 @@ describe("previewRequestEmail", () => {
       spaceName: "Julie Nutrition Lyon",
       logoKey: "",
       removeLogo: false,
+      accentColor: "#4F6F52",
       senderPostalAddress: "Julie Martin\n69003 Lyon",
     });
 
     expect(result).toMatchObject({
       ok: true,
-      data: { sender: "Julie Nutrition Lyon via PULSACITY", subject: "Camille, votre avis sur Programme 30 jours ?" },
+      data: { sender: "Julie Nutrition Lyon via PULSACITY", subject: "Camille, votre avis sur Programme 30 jours\u00a0?" },
     });
     expect(result.ok && result.data.html).toContain("Julie Martin · 69003 Lyon");
+    expect(result.ok && result.data.html).toContain("background-color:#4F6F52");
   });
 });

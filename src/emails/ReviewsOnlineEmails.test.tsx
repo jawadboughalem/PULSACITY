@@ -9,7 +9,7 @@ const COMMON = {
   space: SPACE,
   productName: "Programme 30 jours",
   reviewedAt: new Date("2026-10-12T10:00:00Z"),
-  unsubscribeUrl: "https://pulsacity.com/api/unsubscribe?token=def",
+  unsubscribeUrl: "https://pulsacity.com/desinscription/def",
 };
 const NBSP = " ";
 
@@ -39,7 +39,7 @@ describe("HiddenReasonEmail", () => {
     expect(text).toContain(
       "vous avez laissé un avis sur Programme 30 jours auprès de Julie Nutrition le 12 oct. 2026.",
     );
-    expect(text).toContain("Ne plus recevoir ces e-mails https://pulsacity.com/api/unsubscribe?token=def");
+    expect(text.replaceAll("\u2060", "")).toContain("Ne plus recevoir ces e-mails https://pulsacity.com/desinscription/def");
     expect(text.toLowerCase()).not.toContain("vérifié");
   });
 });

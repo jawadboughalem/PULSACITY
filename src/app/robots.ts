@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { readSiteUrl } from "@/lib/site-url";
 
 /** The space, the collection pages of the creators' clients and the API stay out of search engines. */
-const PRIVATE_PATHS = ["/app/", "/api/", "/t/", "/desinscription"];
+const PRIVATE_PATHS = ["/app/", "/api/", "/t/", "/desinscription", "/entrer/"];
 
 const robots = (): MetadataRoute.Robots => {
   const siteUrl = readSiteUrl();
