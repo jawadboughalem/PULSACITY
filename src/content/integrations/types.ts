@@ -62,6 +62,11 @@ export type UpcomingIntegration = IntegrationBase & {
   meanwhileVia?: "zapier-or-make" | "universal" | "zapier";
   /** The guide that sends its sales to the universal connector today: « En attendant » links to it. */
   guideSlug?: string;
+  /**
+   * What the tool sends, when « chaque vente » does not say it (maquettes 3.5, Stripe): the end of « Une fois installée,
+   * plus rien à faire : … » and what becomes a request in « En attendant ».
+   */
+  sales?: { arrive: string; become: string };
 };
 
 export type Integration = AvailableIntegration | UpcomingIntegration;

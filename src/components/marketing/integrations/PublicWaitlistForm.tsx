@@ -25,8 +25,8 @@ type PublicWaitlistFormProps = {
 };
 
 /**
- * Maquette 21, « Être prévenu à la sortie de Stripe »: an address on a Ciel panel, kept only until the connector is out. The
- * confirmation replaces the form in the same box.
+ * Maquettes 3.5, « Être prévenu à la sortie de Stripe »: an address on a Nuage panel, kept only until the connector is
+ * out. The confirmation replaces the form in the same box.
  */
 export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistFormProps) => {
   const [result, submitAction, isPending] = useActionState(joinConnectorWaitlist, null);
@@ -40,7 +40,7 @@ export const PublicWaitlistForm = ({ connector, connectorName }: PublicWaitlistF
   return (
     <section
       aria-labelledby="waitlist-title"
-      className="flex flex-col gap-6 rounded-panel bg-sky p-6 desktop:max-w-[704px] desktop:p-8"
+      className="flex flex-col gap-5 rounded-panel bg-cloud p-5 desktop:max-w-[768px] desktop:p-8"
     >
       <h2 id="waitlist-title" className="font-display text-h3">
         {`Être prévenu à la sortie de ${connectorName}`}

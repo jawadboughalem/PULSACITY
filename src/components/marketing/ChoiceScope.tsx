@@ -1,13 +1,7 @@
 "use client";
 
 import { type ReactNode, createContext, useContext, useState } from "react";
-import {
-  SEGMENTED_CLASSES,
-  SEGMENTED_OPTION_CHOSEN_CLASSES,
-  SEGMENTED_OPTION_CLASSES,
-  SEGMENTED_OPTION_IDLE_CLASSES,
-} from "@/components/ui/segmented-styles";
-import { cn } from "@/lib/cn";
+import { ChoiceButtons } from "./ChoiceButtons";
 
 type ChoiceState = { value: string; choose: (value: string) => void };
 
@@ -43,39 +37,18 @@ type ChoiceToggleProps = {
   className?: string;
 };
 
-/** Charte v2, Bascule à deux choix (Mensuel / Annuel): the chosen option in Encre. aria-pressed. */
+/** The buttons of a ChoiceScope: Mensuel / Annuel on Tarifs, the plan to compare on a phone. */
 export const ChoiceToggle = ({ label, options, announcements, className }: ChoiceToggleProps) => {
   const state = useContext(ChoiceContext);
-  const [announcement, setAnnouncement] = useState("");
   if (!state) throw new Error("ChoiceToggle needs a ChoiceScope around it.");
-
   return (
-    <div className={className}>
-      <div role="group" aria-label={label} className={SEGMENTED_CLASSES}>
-        {options.map((option) => {
-          const isActive = option.value === state.value;
-          return (
-            <button
-              key={option.value}
-              type="button"
-              aria-pressed={isActive}
-              onClick={() => {
-                state.choose(option.value);
-                setAnnouncement(announcements[option.value] ?? "");
-              }}
-              className={cn(
-                SEGMENTED_OPTION_CLASSES,
-                isActive ? SEGMENTED_OPTION_CHOSEN_CLASSES : SEGMENTED_OPTION_IDLE_CLASSES,
-              )}
-            >
-              {option.label}
-            </button>
-          );
-        })}
-      </div>
-      <p role="status" className="sr-only">
-        {announcement}
-      </p>
-    </div>
+    <ChoiceButtons
+      label={label}
+      options={options}
+      value={state.value}
+      onChoose={state.choose}
+      announcement={(value) => announcements[value] ?? ""}
+      className={className}
+    />
   );
 };

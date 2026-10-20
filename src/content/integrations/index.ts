@@ -47,8 +47,8 @@ export const INTEGRATIONS: Integration[] = [
   N8N,
 ];
 
-/** The home page names a few (m7): the tools available today, then the first to come. */
-export const FEATURED_INTEGRATIONS: Integration[] = [SYSTEME_IO, UNIVERSAL, STRIPE, CALENDLY];
+/** The home's band of tools (positionnement.md, section 2): the tools available today, then the first to come. */
+export const FEATURED_INTEGRATIONS: Integration[] = [SYSTEME_IO, UNIVERSAL, STRIPE, CALENDLY, LEARNYBOX, KAJABI];
 
 export const findIntegration = (slug: string): Integration | null =>
   INTEGRATIONS.find((integration) => integration.slug === slug) ?? null;

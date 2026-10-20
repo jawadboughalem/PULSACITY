@@ -5,23 +5,22 @@ const UNIVERSAL_SLUG = "connecteur-universel";
 
 const UNIVERSAL_LINK = { href: integrationPath(UNIVERSAL_SLUG), label: "Voir le connecteur universel" };
 
-/** /integrations, « Votre outil n'est pas encore là ? » (m21): three columns, each under its icon. */
+/** /integrations, « Sans connecteur, ça marche déjà » (maquettes 3.5): three white cards, each under its icon. */
 export const WITHOUT_CONNECTOR: MeanwhileItem[] = [
-  {
-    icon: "connection",
-    title: "Avec Zapier, Make ou n8n",
-    text: "Le connecteur universel reçoit les ventes de n'importe quel outil : chacune déclenche une demande d'avis, comme avec Systeme.io.",
-    link: UNIVERSAL_LINK,
-  },
   {
     icon: "email",
     title: "Demander un avis",
     text: "Depuis votre espace, envoyez une demande à un client, une à la fois. Son nom et son adresse e-⁠mail suffisent.",
   },
   {
-    icon: "share",
+    icon: "connection",
     title: "Votre lien de collecte",
     text: "Un lien à votre nom, à partager où vous voulez : e-⁠mail, message, groupe de clients. L'avis se laisse depuis un téléphone.",
+  },
+  {
+    icon: "grid",
+    title: "Le widget",
+    text: "Il se colle sur toute page qui accepte un code HTML, et reprend votre police et votre couleur.",
   },
 ];
 
@@ -48,6 +47,7 @@ const readMeanwhileLink = (integration: UpcomingIntegration): NonNullable<Meanwh
 /** « En attendant : avec Zapier ou Make » (decisions/connecteurs.md): the line under a tool to come, and its first way. */
 export const describeMeanwhile = (integration: UpcomingIntegration): { line: string; item: MeanwhileItem } => {
   const link = readMeanwhileLink(integration);
+  const becomes = integration.sales?.become ?? "chaque vente devient une demande d'avis";
   switch (integration.meanwhileVia ?? "zapier-or-make") {
     case "universal":
       return {
@@ -63,7 +63,7 @@ export const describeMeanwhile = (integration: UpcomingIntegration): { line: str
         line: "En attendant : avec Zapier",
         item: {
           title: "Avec Zapier",
-          text: `Envoyez dès aujourd'hui vos ventes ${integration.name} au connecteur universel, avec Zapier : chacune déclenche une demande d'avis.`,
+          text: `${integration.name}, puis Zapier, puis votre connecteur universel : ${becomes} dès aujourd'hui.`,
           link,
         },
       };
@@ -72,7 +72,7 @@ export const describeMeanwhile = (integration: UpcomingIntegration): { line: str
         line: "En attendant : avec Zapier ou Make",
         item: {
           title: "Avec Zapier ou Make",
-          text: `Envoyez dès aujourd'hui vos ventes ${integration.name} au connecteur universel, avec Zapier ou Make : chacune déclenche une demande d'avis.`,
+          text: `${integration.name}, puis Zapier ou Make, puis votre connecteur universel : ${becomes} dès aujourd'hui. Make propose un plan gratuit.`,
           link,
         },
       };

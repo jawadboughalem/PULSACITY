@@ -21,3 +21,9 @@ export const BETA_TESTER_MENTION = "Bêta-testeur · plan Essentiel offert penda
  * five, the count past which a few reviews read as a pattern (Spiegel Research Center, 2017). To confirm by the founder.
  */
 export const PULSACITY_SHOWCASE_MIN_TESTIMONIALS = 5;
+
+/**
+ * How long the beta testers have Essentiel without paying (arbitrages.md, n° 3): the months of their Stripe code, said
+ * on the home page to whoever wants to test.
+ */
+export const BETA_OFFERED_MONTHS = 3;

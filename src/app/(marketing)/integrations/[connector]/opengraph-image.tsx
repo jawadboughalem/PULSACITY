@@ -9,7 +9,11 @@ export const contentType = SOCIAL_IMAGE_TYPE;
 
 export const generateStaticParams = () => INTEGRATIONS.map((integration) => ({ connector: integration.slug }));
 
-const SocialImage = async ({ params }: { params: Promise<{ connector: string }> }) =>
-  renderSocialImage(findIntegration((await params).connector)?.heading ?? "Intégrations");
+const SocialImage = async ({ params }: { params: Promise<{ connector: string }> }) => {
+  const integration = findIntegration((await params).connector);
+  return integration
+    ? renderSocialImage(integration.heading, { kind: "tool", name: integration.name })
+    : renderSocialImage("Intégrations");
+};
 
 export default SocialImage;

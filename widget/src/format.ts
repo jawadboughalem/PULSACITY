@@ -44,7 +44,10 @@ export const describeRating = (rating: number): string => `${rating} sur 5`;
 export const describeSummary = (average: number | null, total: number): string =>
   average === null ? `${total} avis` : `Note moyenne ${AVERAGE_FORMAT.format(average)} sur 5, ${total} avis`;
 
-export const summarize = (average: number | null, total: number): string =>
-  average === null ? `${total} avis` : `${formatAverage(average)} · ${total} avis`;
+/** « 4,8/5 · 47 avis », which can only break after the dot when the badge is narrow. */
+export const summarize = (average: number | null, total: number): string => {
+  const count = `${total}${NO_BREAK_SPACE}avis`;
+  return average === null ? count : `${formatAverage(average)}${NO_BREAK_SPACE}· ${count}`;
+};
 
 export const describeMore = (count: number): string => (count === 1 ? "Voir l'autre avis" : `Voir les ${count} autres avis`);

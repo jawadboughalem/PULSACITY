@@ -14,6 +14,7 @@ export const PAYPAL: UpcomingIntegration = {
   },
   heading: "Témoignages automatiques pour PayPal",
   intro: "Bientôt, chaque paiement reçu sur PayPal déclenchera une demande d'avis à votre nom.",
+  sales: { arrive: "chaque paiement arrive tout seul", become: "chaque paiement reçu devient une demande d'avis" },
   willDo: [
     "Chaque paiement reçu déclenche une demande d'avis, au délai choisi pour l'offre.",
     "Vos produits PayPal s'associent à vos offres PULSACITY, comme les produits Systeme.io.",

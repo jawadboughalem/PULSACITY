@@ -138,7 +138,7 @@ describe("the wall", () => {
     const { root } = render(SAMPLE_PAYLOAD);
 
     const summary = root.querySelector(".summary");
-    expect(summary?.textContent).toBe("4,8/5 · 47 avis");
+    expect(summary?.textContent).toBe("4,8/5\u00a0· 47\u00a0avis");
     expect(summary?.querySelector(".stars")?.getAttribute("aria-label")).toBe("Note moyenne 4,8 sur 5, 47 avis");
   });
 
@@ -332,7 +332,7 @@ describe("the badge", () => {
     expect(root.querySelector(".badge .sr-only")?.textContent).toBe("Note moyenne 4,8 sur 5, 47 avis");
     expect(texts(root.querySelectorAll(".faces .avatar")).slice(0, 2)).toEqual(["CR", "TL"]);
     expect(root.querySelector(".faces .avatar img")?.getAttribute("src")).toBe("https://photos.exemple.fr/sophie.jpg");
-    expect(root.querySelector(".badge-text")?.textContent).toBe("4,8/5 · 47 avis");
+    expect(root.querySelector(".badge-text")?.textContent).toBe("4,8/5\u00a0· 47\u00a0avis");
     expect(root.querySelectorAll(".badge .stars svg")).toHaveLength(5);
     for (const shown of root.querySelectorAll(".badge > :not(.sr-only)")) {
       expect(shown.getAttribute("aria-hidden")).toBe("true");

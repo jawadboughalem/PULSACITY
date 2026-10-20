@@ -1,8 +1,9 @@
 import { ChoiceScope, ChoiceToggle } from "@/components/marketing/ChoiceScope";
-import { FaqList } from "@/components/marketing/FaqList";
+import { FaqSectionContent } from "@/components/marketing/FaqList";
 import { JsonLd } from "@/components/marketing/JsonLd";
 import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
 import { MarketingSection, SectionTitle } from "@/components/marketing/MarketingSection";
+import { SITE_LARGE_PAGE_TITLE_CLASSES } from "@/components/marketing/marketing-styles";
 import { PlanColumns } from "@/components/marketing/pricing/PlanColumns";
 import { PlanComparison } from "@/components/marketing/pricing/PlanComparison";
 import { PulsacityBadge } from "@/components/marketing/PulsacityTestimonials";
@@ -34,7 +35,7 @@ const BILLING_OPTIONS = [
 
 const PLAN_OPTIONS = PLAN_IDS.map((id) => ({ value: id, label: PLANS[id].name }));
 
-/** Maquette 8, Tarifs. */
+/** Maquettes 3.5, Tarifs: the plans and their period, the comparison, then « Facturation ». */
 const PricingPage = async () => {
   const [priceList, showcase] = await Promise.all([readShownPriceList(), readPulsacityShowcase()]);
   return (
@@ -42,18 +43,18 @@ const PricingPage = async () => {
       <JsonLd data={buildFaqPageData(BILLING_FAQ)} />
 
       <ChoiceScope initial="monthly" className="group/billing">
-        <MarketingSection labelledBy="pricing-title" className="pb-10 desktop:pb-10">
-          <div className="flex flex-col gap-8 desktop:flex-row desktop:items-start desktop:justify-between">
+        <MarketingSection labelledBy="pricing-title" tone="cloud" className="pb-8 desktop:pt-12 desktop:pb-10">
+          <div className="flex flex-col gap-6 desktop:flex-row desktop:items-end desktop:justify-between desktop:gap-10">
             <div className="flex flex-col gap-4 desktop:max-w-[720px]">
-              <h1 id="pricing-title" className="font-display text-h1">
+              <h1 id="pricing-title" className={SITE_LARGE_PAGE_TITLE_CLASSES}>
                 Un prix simple, qui suit vos ventes.
               </h1>
-              <p className="text-body text-gray desktop:max-w-[680px]">
-                Commencez gratuitement. Passez à Essentiel quand les avis arrivent. Sans engagement. Prix finaux : rien
-                ne s&apos;ajoute au paiement.
+              <p className="text-lead">
+                Commencez gratuitement. Passez à Essentiel quand les avis arrivent. Sans engagement.
               </p>
+              <p className="text-lead font-bold">Prix finaux : rien ne s&apos;ajoute au paiement.</p>
             </div>
-            <div className="flex flex-col gap-3 desktop:mt-8 desktop:items-end">
+            <div className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-4">
               <ChoiceToggle
                 label="Période de paiement"
                 options={BILLING_OPTIONS}
@@ -66,17 +67,16 @@ const PricingPage = async () => {
           <div className="mt-8 desktop:mt-10">
             <PlanColumns priceList={priceList} />
           </div>
+          <div className="mt-8 flex flex-col items-start gap-6 desktop:items-center">
+            <p className="text-small text-gray desktop:text-center">
+              Sans engagement · Changez de plan à tout moment · Paiement par carte
+            </p>
+            {showcase.badgeWidgetId !== null ? <PulsacityBadge widgetId={showcase.badgeWidgetId} /> : null}
+          </div>
         </MarketingSection>
       </ChoiceScope>
 
-      <div className="px-page-gutter">
-        <div className="mx-auto flex max-w-content flex-col gap-6 desktop:pt-6">
-          <p className="text-small text-gray">Sans engagement · Changez de plan à tout moment · Paiement par carte</p>
-          {showcase.badgeWidgetId !== null ? <PulsacityBadge widgetId={showcase.badgeWidgetId} /> : null}
-        </div>
-      </div>
-
-      <MarketingSection labelledBy="compare-title">
+      <MarketingSection labelledBy="compare-title" tone="cloud" className="pt-6 desktop:pt-6">
         <SectionTitle id="compare-title">Comparer en détail</SectionTitle>
         <ChoiceScope initial={RECOMMENDED_PLAN} className="group/compare mt-6 desktop:mt-8">
           <ChoiceToggle
@@ -89,11 +89,8 @@ const PricingPage = async () => {
         </ChoiceScope>
       </MarketingSection>
 
-      <MarketingSection labelledBy="billing-title" className="pt-[0] desktop:pt-[0]">
-        <div className="grid gap-8 desktop:grid-cols-[448px_1fr]">
-          <SectionTitle id="billing-title">Facturation</SectionTitle>
-          <FaqList name="billing-faq" entries={BILLING_FAQ} surface="cloud" />
-        </div>
+      <MarketingSection labelledBy="billing-title">
+        <FaqSectionContent titleId="billing-title" title="Facturation" name="billing-faq" entries={BILLING_FAQ} surface="cloud" />
       </MarketingSection>
     </>
   );

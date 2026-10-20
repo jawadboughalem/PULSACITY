@@ -23,9 +23,9 @@ describe("POWERED_BY_MENTION", () => {
 });
 
 describe("PLAN_PRESENTATIONS", () => {
-  it("says what maquette 8 says, from the limits of plans.ts", () => {
+  it("says what the maquettes 3.5 say, from the limits of plans.ts", () => {
     expect(highlightsOf("free")).toEqual([
-      "15 témoignages",
+      "15 témoignages validés",
       "1 widget",
       "20 demandes automatiques par mois",
       POWERED_BY_MENTION,
@@ -35,7 +35,8 @@ describe("PLAN_PRESENTATIONS", () => {
       "Demandes automatiques illimitées",
       "Tous les widgets",
     ]);
-    expect(highlightsOf("pro")).toEqual(["Tout Essentiel", "Mention PULSACITY retirable", "Témoignages vidéo, bientôt"]);
+    // tarifs.md: in V0, Pro is Essentiel plus the removal of the mention, without « Témoignages vidéo ».
+    expect(highlightsOf("pro")).toEqual(["Tout Essentiel", "Mention PULSACITY retirable"]);
   });
 
   it("presents the three plans in their order, Essentiel recommended", () => {
@@ -107,13 +108,23 @@ describe("PLAN_COMPARISON", () => {
   const rowOf = (label: string) => PLAN_COMPARISON.flatMap((group) => group.rows).find((row) => row.label === label);
 
   it("reads the limits of plans.ts", () => {
-    expect(rowOf("Témoignages conservés et affichés")?.values).toEqual({
+    expect(rowOf("Témoignages validés")?.values).toEqual({
       free: { kind: "text", label: "15" },
       essentiel: { kind: "text", label: "Illimités" },
       pro: { kind: "text", label: "Illimités" },
     });
     expect(rowOf("Demandes automatiques après une vente")?.values.free).toEqual({ kind: "text", label: "20 par mois" });
     expect(rowOf("Mur, carrousel et badge")?.values.free).toEqual({ kind: "text", label: "1 au choix" });
+    expect(Object.values(rowOf("Demandes saisies à la main")?.values ?? {})).toEqual([
+      { kind: "text", label: "20 par jour" },
+      { kind: "text", label: "20 par jour" },
+      { kind: "text", label: "20 par jour" },
+    ]);
+  });
+
+  it("promises nothing that is not built: no video, no « Bientôt » (tarifs.md, arbitrages.md n° 7)", () => {
+    const labels = PLAN_COMPARISON.flatMap((group) => [group.title, ...group.rows.map((row) => row.label)]);
+    expect(labels.join(" ")).not.toMatch(/vidéo|Bientôt/i);
   });
 
   it("lets only the plan that can remove the mention say so", () => {

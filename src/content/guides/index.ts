@@ -44,7 +44,7 @@ export const GUIDES: Guide[] = [
     summary: "Trois façons d'afficher vos avis sur une page de vente, et où les placer.",
     description:
       "Les trois façons d'afficher des avis clients sur une page de vente Systeme.io, de la plus simple à la plus durable, avec les pièges à éviter.",
-    updatedAt: "2026-10-19",
+    updatedAt: "2026-10-20",
     readingMinutes: 6,
     load: () => import("./ajouter-des-temoignages-sur-une-page-systeme-io.mdx"),
   },

@@ -3,7 +3,8 @@ import { ICON_PATHS, type IconName } from "./icon-paths";
 
 type IconProps = {
   name: IconName;
-  size: 16 | 20 | 24 | 32;
+  /** 22: the « Inclus » check of the comparison (charte v2, ajouts 3.5, Comparatif). */
+  size: 16 | 20 | 22 | 24 | 32;
   className?: string;
 };
 

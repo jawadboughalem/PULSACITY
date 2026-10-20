@@ -5,8 +5,8 @@ import { type ComparisonValue, PLAN_COMPARISON, RECOMMENDED_PLAN } from "@/conte
 import { cn } from "@/lib/cn";
 
 /**
- * Inside the comparison scope (group/compare): on a phone, only the chosen plan's column shows, as on m8 mobile;
- * on a computer, all three.
+ * Inside the comparison scope (group/compare): on a phone, only the chosen plan's column shows, its value on the
+ * right, in bold; on a computer, all three.
  */
 const PHONE_VISIBILITY: Record<PlanId, string> = {
   free: "hidden group-data-[choice=free]/compare:table-cell desktop:table-cell",
@@ -14,51 +14,34 @@ const PHONE_VISIBILITY: Record<PlanId, string> = {
   pro: "hidden group-data-[choice=pro]/compare:table-cell desktop:table-cell",
 };
 
-/** m8: in bold on a phone, where one plan shows at a time; regular on a computer, where the three sit side by side. */
-/** m8 on a computer: the features take two fifths, Pro a little less than the others. */
-const COLUMN_WIDTHS: Record<PlanId, string> = {
-  free: "desktop:w-[20.5%]",
-  essentiel: "desktop:w-[20%]",
-  pro: "desktop:w-[18.5%]",
+/** The same for a value, which a phone lays out in its row's flex, centred on its label. */
+const PHONE_VALUE_VISIBILITY: Record<PlanId, string> = {
+  free: "hidden max-desktop:group-data-[choice=free]/compare:flex desktop:table-cell",
+  essentiel: "hidden max-desktop:group-data-[choice=essentiel]/compare:flex desktop:table-cell",
+  pro: "hidden max-desktop:group-data-[choice=pro]/compare:flex desktop:table-cell",
 };
 
-const Value = ({ value }: { value: ComparisonValue }) => {
-  switch (value.kind) {
-    case "included":
-      return (
-        <>
-          <Icon name="check" size={20} className="ml-auto text-success desktop:ml-[0]" />
-          <span className="sr-only">Inclus</span>
-        </>
-      );
-    case "excluded":
-      return (
-        <span className="text-gray">
-          <span className="desktop:hidden">{value.label}</span>
-          <span aria-hidden="true" className="hidden desktop:inline">
-            —
-          </span>
-          <span className="sr-only hidden desktop:inline">{value.label}</span>
-        </span>
-      );
-    case "soon":
-      return <span className="font-bold desktop:font-normal desktop:text-gray">{value.label}</span>;
-    case "text":
-      return <span className="font-bold desktop:font-normal">{value.label}</span>;
-  }
-};
+const Value = ({ value }: { value: ComparisonValue }) =>
+  value.kind === "included" ? (
+    <>
+      <Icon name="check" size={22} className="text-success" />
+      <span className="sr-only">Inclus</span>
+    </>
+  ) : (
+    <span className="font-bold desktop:font-normal">{value.label}</span>
+  );
 
 /**
- * « Comparer en détail » of maquette 8: one row per feature, grouped, without rules (charte v2). Essentiel's column on
- * Ciel, its parts rounded (radius-field) where the group titles cut it.
+ * « Comparer en détail » (charte v2, ajouts 3.5, Comparatif): each row a white band on Nuage, 6 px apart, rounded 14 at
+ * its ends; Essentiel's column on Ciel, whole from the first row of a group to its last. The labels take 41 %.
  */
 export const PlanComparison = () => (
-  <table className="w-full border-separate border-spacing-[0] text-left text-body">
+  <table className="w-full border-separate border-spacing-x-[0] border-spacing-y-[6px] text-left text-body">
     <caption className="sr-only">Ce que comprend chaque plan</caption>
     <colgroup>
       <col className="desktop:w-[41%]" />
       {PLAN_IDS.map((id) => (
-        <col key={id} className={COLUMN_WIDTHS[id]} />
+        <col key={id} className="desktop:w-[19.66%]" />
       ))}
     </colgroup>
     <thead className="sr-only desktop:not-sr-only">
@@ -69,8 +52,8 @@ export const PlanComparison = () => (
             key={id}
             scope="col"
             className={cn(
-              "px-4 py-4 font-display text-h3",
-              id === RECOMMENDED_PLAN && "rounded-field bg-sky",
+              "h-[64px] px-5 font-display text-h3",
+              id === RECOMMENDED_PLAN && "rounded-t-field bg-sky",
               PHONE_VISIBILITY[id],
             )}
           >
@@ -86,25 +69,30 @@ export const PlanComparison = () => (
             <th
               scope="colgroup"
               colSpan={PLAN_IDS.length + 1}
-              className="pt-10 pb-3 text-small font-bold text-gray desktop:pt-8 desktop:pb-2"
+              className="pt-6 pb-2 text-small font-bold text-gray desktop:pt-5"
             >
               {group.title}
             </th>
           </tr>
           {group.rows.map((row, rowIndex) => (
-            <tr key={row.label}>
-              <th scope="row" className="py-3 pr-3 font-normal desktop:py-4 desktop:pr-4">
+            // On a phone, each row sets its own widths: a label only wraps when its value is long (maquettes 3.5).
+            <tr key={row.label} className="max-desktop:mt-[6px] max-desktop:flex max-desktop:items-stretch">
+              <th
+                scope="row"
+                className="flex-1 rounded-l-field bg-white py-3 pr-3 pl-4 text-[16px] leading-[24px] font-normal max-desktop:flex max-desktop:items-center desktop:h-[52px] desktop:py-[0] desktop:pl-5 desktop:text-[17px] desktop:leading-[24px] desktop:font-semibold"
+              >
                 {row.label}
               </th>
-              {PLAN_IDS.map((id) => (
+              {PLAN_IDS.map((id, index) => (
                 <td
                   key={id}
                   className={cn(
-                    "py-3 text-right whitespace-nowrap desktop:px-4 desktop:py-4 desktop:text-left",
+                    "shrink-0 items-center justify-end rounded-r-field bg-white py-3 pr-4 text-right whitespace-nowrap desktop:h-[52px] desktop:px-5 desktop:py-[0] desktop:text-left",
+                    index < PLAN_IDS.length - 1 && "desktop:rounded-r-none",
                     id === RECOMMENDED_PLAN && "desktop:bg-sky",
-                    id === RECOMMENDED_PLAN && rowIndex === 0 && "desktop:rounded-t-field",
-                    id === RECOMMENDED_PLAN && rowIndex === group.rows.length - 1 && "desktop:rounded-b-field",
-                    PHONE_VISIBILITY[id],
+                    // The 6 px between two rows stay Ciel in Essentiel's column.
+                    id === RECOMMENDED_PLAN && rowIndex > 0 && "desktop:shadow-[0_-6px_0_var(--color-sky)]",
+                    PHONE_VALUE_VISIBILITY[id],
                   )}
                 >
                   <span className="flex items-center justify-end desktop:justify-start">

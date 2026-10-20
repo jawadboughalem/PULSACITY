@@ -1,21 +1,29 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
-import { TextColumnPage } from "@/components/ui/TextColumnPage";
+import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
+import { DISCREET_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { ErrorScreen } from "@/components/ui/ErrorScreen";
 import { cn } from "@/lib/cn";
 
+/** The tab says what happened: the root layout's « PULSACITY » alone would win over a <title> in the page. */
+export const metadata: Metadata = { title: "Page introuvable · PULSACITY" };
+
 const NotFoundPage = () => (
-  <TextColumnPage>
-    <title>Page introuvable · PULSACITY</title>
-    <div className="flex flex-col gap-2">
-      <h1 className="font-display text-h1">Cette page n&apos;existe pas</h1>
-      <p className="text-body text-gray">
-        L&apos;adresse est peut-être incomplète. Vérifiez le lien que vous avez reçu, puis ouvrez-le à nouveau.
-      </p>
-    </div>
-    <Link href="/" className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
-      Aller à l&apos;accueil
-    </Link>
-  </TextColumnPage>
+  <ErrorScreen
+    icon="search"
+    title="Cette page n'existe pas"
+    text="L'adresse est peut-être incomplète. Vérifiez le lien que vous avez reçu, puis ouvrez-le à nouveau."
+    action={
+      <Link href={MARKETING_PATHS.home} className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}>
+        Revenir à l&apos;accueil
+      </Link>
+    }
+    link={
+      <Link href={MARKETING_PATHS.contact} className={DISCREET_BUTTON_CLASSES}>
+        Écrire à l&apos;équipe
+      </Link>
+    }
+  />
 );
 
 export default NotFoundPage;
