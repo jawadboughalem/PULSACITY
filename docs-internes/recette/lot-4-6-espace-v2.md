@@ -341,6 +341,8 @@ Tu vérifies sur la production de PULSACITY l'apparence v2 de l'espace. Je suis 
 4. https://pulsacity.com/app/demandes : les tuiles, puis les demandes en bandes (ou « Aucune demande pour l'instant »).
 5. À 360 px, sur https://pulsacity.com/app/offres : l'en-tête blanc, « ‹ Plus » dessous, les offres sur leurs cartes, sans débordement.
 6. Dans une fenêtre de navigation privée, https://pulsacity.com/connexion : une carte blanche sur fond bleu très pâle, « Retrouvez votre espace ». N'envoie rien.
+7. La même page dans un cadre de 360 px : « Créer mon espace gratuit » passe à la ligne et commence exactement sous « Pas encore d'espace ? ».
+8. Si le compte de test n'a encore aucune demande, sur https://pulsacity.com/app/demandes : « Connecter mon outil » (jaune) et « Copier mon lien » (bordé) sont centrés l'un sur l'autre. Sinon, passe ce point.
 
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu.
 ```
