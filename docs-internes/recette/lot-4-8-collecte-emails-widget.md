@@ -152,7 +152,7 @@ Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu
 Avant ce prompt : connecté à l'aperçu avec A, fenêtre en grand ; la boîte de B ouverte.
 
 ```
-Tu continues la recette du lot 4.8 de PULSACITY sur l'aperçu https://pulsacity-git-claude-sweet-ritc-38d706-jawadboughalems-projects.vercel.app, connecté à l'espace « Julie Nutrition », fenêtre en grand. Tu ne touches qu'à l'avis de Camille arrivé au prompt précédent (« Avis de recette du lot 4.8, merci. ») : jamais à un autre avis, car un e-mail partirait à un client en @exemple.fr. Pour chaque point, note « OK » ou décris ce que tu vois. Maquettes : https://github.com/jawadboughalem/PULSACITY/tree/claude/sweet-ritchie-zo9fad/docs-internes/design-v2/maquettes. Ne recopie dans le compte rendu aucune adresse e-mail ni aucun lien.
+Tu continues la recette du lot 4.8 de PULSACITY sur l'aperçu https://pulsacity-git-claude-sweet-ritc-38d706-jawadboughalems-projects.vercel.app, connecté à l'espace « Julie Nutrition », fenêtre en grand. Tu ne touches qu'à l'avis de Camille arrivé au prompt 3 (« Avis de recette du lot 4.8, merci. ») : jamais à un autre avis, car un e-mail partirait à un client en @exemple.fr. Pour chaque point, note « OK » ou décris ce que tu vois. Maquettes : https://github.com/jawadboughalem/PULSACITY/tree/claude/sweet-ritchie-zo9fad/docs-internes/design-v2/maquettes. Ne recopie dans le compte rendu aucune adresse e-mail ni aucun lien.
 
 A. La correction acceptée
 1. Dans Témoignages, ouvre l'avis de Camille et clique « Valider ».
