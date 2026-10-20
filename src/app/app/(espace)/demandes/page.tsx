@@ -192,7 +192,7 @@ const RequestsPage = async ({ searchParams }: PageProps<"/app/demandes">) => {
                   Connecter mon outil
                 </Link>
               )}
-              <CopyCollectionLinkButton url={buildCollectionUrl(space.slug)} label="Copier mon lien" />
+              <CopyCollectionLinkButton url={buildCollectionUrl(space.slug)} label="Copier mon lien" className="w-full desktop:w-auto" />
             </div>
           </section>
         ) : (

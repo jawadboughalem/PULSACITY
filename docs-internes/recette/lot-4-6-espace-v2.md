@@ -296,6 +296,24 @@ Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu
 
 ---
 
+## Résultats de la contre-recette du 20 octobre (prompts 7 et 8)
+
+Vingt points sur vingt et un corrigés. Restaient deux défauts, corrigés depuis (commit « Lot 4.6: two last alignments ») :
+- **Demandes vides** (prompt 7, point 15) : les boutons restaient alignés en haut, car « Copier mon lien » se calait en haut de sa ligne. Il est maintenant centré sur « Connecter mon outil ».
+- **Connexion à 360 px** (prompt 8, point 5) : quand « Créer mon espace gratuit » passe à la ligne, il commençait 10 px à droite du texte. Il s'aligne maintenant, et « Me connecter » de l'inscription aussi.
+
+À revoir au prompt 10, sur pulsacity.com, après la fusion (points 7 et 8).
+
+## Lighthouse sur l'aperçu, 20 octobre (action 9)
+
+Rapport du fondateur, Lighthouse 13.4 dans Chrome, téléphone simulé :
+- **Accessibilité** : 100.
+- **Bonnes pratiques** : 100.
+- **SEO** : 58. Attendu : l'espace est privé, l'aperçu et `/app` ne doivent pas être indexés (« is-crawlable ») et n'ont pas de description pour les moteurs de recherche.
+- **Performance** : 75. Premier affichage 1,0 s, plus grand élément 3,4 s, blocage du fil principal 640 ms, aucun décalage de mise en page. Dans le conteneur, la médiane est de 87 (`main` : 84).
+
+L'écart avec le conteneur vient surtout de l'ordinateur qui mesure : 1,5 s de tâches longues « non attribuées », qui ne viennent pas du code de la page (extensions du navigateur, dont Claude in Chrome, ou les outils de développement eux-mêmes). Ce qui revient à la page, sur le même rapport et dans le conteneur, c'est l'écran « Ouverture de votre espace… » : le contenu s'affiche au moins 300 ms après lui, et le plus grand élément arrive donc tard. Ce lot ne l'atteint pas sur téléphone ; voir « À trancher ».
+
 ## 9. À faire vous-même : Lighthouse sur l'accueil de l'espace
 
 Claude in Chrome n'ouvre pas les outils de développement : ce contrôle passe par vous, deux minutes.

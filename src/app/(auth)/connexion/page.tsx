@@ -5,6 +5,7 @@ import { DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { StatusBanner } from "@/components/ui/StatusBanner";
 import { MAGIC_LINK_LIFETIME_MINUTES } from "@/lib/auth/magic-link-lifetime";
 import { redirectSignedInUser } from "@/lib/auth/redirect-signed-in-user";
+import { cn } from "@/lib/cn";
 
 export const metadata: Metadata = {
   title: "Connexion · PULSACITY",
@@ -36,7 +37,7 @@ const SignInPage = async ({ searchParams }: PageProps<"/connexion">) => {
         footer={
           <p className="flex flex-wrap items-center gap-x-2 text-small">
             Pas encore d&apos;espace ?
-            <SignUpLink place="connexion" className={DISCREET_BUTTON_CLASSES}>
+            <SignUpLink place="connexion" className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px]")}>
               Créer mon espace gratuit
             </SignUpLink>
           </p>
