@@ -1,5 +1,5 @@
 import { type StarFill, StarIcon } from "@/components/collect/StarIcon";
-import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
+import { RATINGS } from "@/lib/testimonials/ratings";
 
 type RatingStarsProps = {
   /** A whole rating, or an average: it is shown to the nearest half star. */

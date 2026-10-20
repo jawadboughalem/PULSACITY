@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { z } from "zod";
-import { BackBar } from "@/components/space/BackBar";
+import { buildSpaceAccount } from "@/components/space/build-space-account";
+import { SpaceMobileHeader } from "@/components/space/SpaceMobileHeader";
 import { SpacePage } from "@/components/space/SpacePage";
 import { TESTIMONIALS_SECTION_HREF } from "@/components/space/space-sections";
 import { FirstApprovalCelebration } from "@/components/testimonials/FirstApprovalCelebration";
@@ -23,7 +24,7 @@ const TestimonialPage = async ({ params, searchParams }: PageProps<"/app/temoign
   const isFirstApproval = (await searchParams)[FIRST_APPROVAL_SEARCH_PARAM] === "1";
   if (!z.uuid().safeParse(testimonialId).success) notFound();
 
-  const { space } = await getCurrentSpace();
+  const { signedInUser, space } = await getCurrentSpace();
   const database = getDb();
   const [testimonial, products, approvedCount] = await Promise.all([
     loadTestimonialDetail(database, space.id, testimonialId),
@@ -34,7 +35,7 @@ const TestimonialPage = async ({ params, searchParams }: PageProps<"/app/temoign
 
   return (
     <>
-      <BackBar href={TESTIMONIALS_SECTION_HREF} label="Témoignages" />
+      <SpaceMobileHeader account={buildSpaceAccount(signedInUser, space)} />
       <SpacePage>
         <FirstApprovalCelebration isInitiallyShown={isFirstApproval && testimonial.status === "approved"}>
           <TestimonialDetailView

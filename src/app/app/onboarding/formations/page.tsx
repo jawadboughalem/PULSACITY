@@ -34,12 +34,13 @@ const FormationsStepPage = async () => {
               key={formation.id}
               id={formation.id}
               name={formation.name}
+              collectionUrl={buildCollectionUrl(space.slug, formation.slug)}
               collectionAddress={displayUrl(buildCollectionUrl(space.slug, formation.slug))}
             />
           ))}
         </ul>
       ) : (
-        <p className="text-body text-gray">
+        <p className="rounded-card bg-cloud p-5 text-body text-gray desktop:px-6">
           Aucune formation pour l&apos;instant. Ajoutez la première, ou passez cette étape.
         </p>
       )}

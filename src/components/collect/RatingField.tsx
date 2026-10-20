@@ -2,7 +2,7 @@ import type { Ref } from "react";
 import { FieldError } from "@/components/ui/FieldError";
 import { FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 import { cn } from "@/lib/cn";
-import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
+import { RATINGS } from "@/lib/testimonials/ratings";
 import { StarIcon } from "./StarIcon";
 
 const MISSING_RATING_MESSAGE = "Choisissez une note, de 1 à 5 étoiles.";

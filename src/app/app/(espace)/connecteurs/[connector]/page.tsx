@@ -7,16 +7,20 @@ import { ConnectionAddressFields } from "@/components/connectors/ConnectionAddre
 import { ConnectionEventList } from "@/components/connectors/ConnectionEventList";
 import { ConnectionGuide, ConnectionOptionalStep } from "@/components/connectors/ConnectionGuide";
 import { ConnectionStatusBanner } from "@/components/connectors/ConnectionStatusBanner";
-import { ConnectorLogo } from "@/components/connectors/ConnectorLogo";
 import { readConnectorWording } from "@/components/connectors/connector-wording";
 import { ExternalProductsTable } from "@/components/connectors/ExternalProductsTable";
-import { UniversalFieldList } from "@/components/connectors/UniversalFieldList";
+import { UniversalFieldTable } from "@/components/connectors/UniversalFieldTable";
 import { describeExternalProduct } from "@/components/connectors/describe-external-product";
 import { RichTextLine } from "@/components/marketing/RichTextLine";
-import { BackBar, Breadcrumb } from "@/components/space/BackBar";
+import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
+import { Breadcrumb } from "@/components/space/BackBar";
+import { buildSpaceAccount } from "@/components/space/build-space-account";
+import { MobileBackLink } from "@/components/space/MobileBackLink";
 import { CONNECTORS_SECTION_HREF, connectorHistoryHref } from "@/components/space/space-sections";
+import { SpaceMobileHeader } from "@/components/space/SpaceMobileHeader";
 import { SpacePage } from "@/components/space/SpacePage";
-import { DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DISCREET_BUTTON_CLASSES, INLINE_LINK_CLASSES } from "@/components/ui/button-styles";
+import { Monogram } from "@/components/ui/Monogram";
 import { UNIVERSAL_GUIDE_LINKS } from "@/content/integrations";
 import { getDb } from "@/db";
 import { buildWebhookUrl, findOrCreateConnection } from "@/lib/connectors/connections";
@@ -46,16 +50,17 @@ type StepProps = {
   children: ReactNode;
 };
 
+/** Charte v2, Étapes numérotées: a true sequence, each number on a Soleil disc of 36, its content beside it. */
 const Step = ({ number, id, title, description, children }: StepProps) => (
-  <li id={id} className="flex scroll-mt-6 gap-4 py-8 desktop:gap-6 desktop:py-10">
+  <li id={id} className="flex scroll-mt-6 gap-3 desktop:gap-4">
     <span
       aria-hidden="true"
-      className="flex size-[32px] shrink-0 items-center justify-center rounded-full bg-ink text-body font-bold text-white desktop:size-[40px]"
+      className="flex size-[36px] shrink-0 items-center justify-center rounded-full bg-sun font-display text-[18px] leading-[1]"
     >
       {number}
     </span>
-    <div className="flex min-w-[0] flex-1 flex-col gap-6">
-      <div className="flex flex-col gap-1">
+    <div className="flex min-w-[0] flex-1 flex-col gap-4">
+      <div className="flex flex-col gap-1 pt-[4px]">
         <h3 className="font-display text-h3">
           <span className="sr-only">{`Étape ${number} : `}</span>
           {title}
@@ -75,7 +80,7 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
   const { connector: slug } = await params;
   const connector = getConnectorBySlug(slug);
   if (!connector) notFound();
-  const { space } = await getCurrentSpace();
+  const { signedInUser, space } = await getCurrentSpace();
   const database = getDb();
   const connection = await findOrCreateConnection(database, space.id, connector);
   const now = new Date();
@@ -96,15 +101,16 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
 
   return (
     <>
-      <BackBar href={CONNECTORS_SECTION_HREF} label="Connecteurs" />
-      <SpacePage className="desktop:max-w-[1128px]">
-        <Breadcrumb parentHref={CONNECTORS_SECTION_HREF} parentLabel="Connecteurs" current={connector.name} />
-        <div className="flex flex-col items-start gap-4 desktop:flex-row desktop:items-center desktop:gap-6">
-          <ConnectorLogo name={connector.name} />
-          <div className="flex flex-col gap-2">
+      <SpaceMobileHeader account={buildSpaceAccount(signedInUser, space)} />
+      <SpacePage className="gap-6 desktop:gap-6">
+        <div className="flex flex-col gap-4">
+          <Breadcrumb parentHref={CONNECTORS_SECTION_HREF} parentLabel="Connecteurs" current={connector.name} />
+          <MobileBackLink href={CONNECTORS_SECTION_HREF} label="Connecteurs" />
+          <div className="flex flex-col items-start gap-4 desktop:flex-row desktop:items-center">
+            <Monogram name={connector.name} className="size-[48px] text-[18px] desktop:size-[56px] desktop:text-[21px]" />
             <h1 className="font-display text-h1">{wording.title}</h1>
-            <p className="max-w-text text-body">{wording.intro}</p>
           </div>
+          <p className="max-w-[840px] text-lead">{wording.intro}</p>
         </div>
 
         <ConnectionStatusBanner
@@ -117,11 +123,12 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
           setAsideCount={overview.setAsideCount}
         />
 
-        <section aria-labelledby="connection-steps" className="flex flex-col">
+        {/* Maquettes 3.4: the three steps and the optional one on a white card. */}
+        <section aria-labelledby="connection-steps" className="flex flex-col gap-6 rounded-panel bg-white p-4 desktop:p-8">
           <h2 id="connection-steps" className="font-display text-h2">
             La connexion en 3 étapes
           </h2>
-          <ol className="flex flex-col">
+          <ol className="flex flex-col gap-9">
             <Step
               number={1}
               title="Copier votre adresse de connexion"
@@ -148,10 +155,10 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
             >
               {connector.id === "universal" ? (
                 <div className="flex flex-col gap-4">
-                  <UniversalFieldList />
                   <p className="max-w-text text-small">
                     <RichTextLine parts={UNIVERSAL_GUIDE_LINKS} />
                   </p>
+                  <UniversalFieldTable />
                 </div>
               ) : (
                 <ConnectionGuide connectorId={connector.id} connectorName={connector.name} />
@@ -168,7 +175,11 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
           <ConnectionOptionalStep connectorId={connector.id} />
         </section>
 
-        <section id="offres-a-associer" aria-labelledby="external-products" className="flex scroll-mt-6 flex-col gap-4">
+        <section
+          id="offres-a-associer"
+          aria-labelledby="external-products"
+          className="flex scroll-mt-6 flex-col gap-4 rounded-panel bg-white p-4 desktop:p-8"
+        >
           <div className="flex flex-col gap-1">
             <h2 id="external-products" className="font-display text-h2">
               Offres à associer
@@ -201,8 +212,8 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
             <h2 id="latest-events" className="font-display text-h2">
               Derniers événements reçus
             </h2>
-            {overview.eventCount > OVERVIEW_EVENT_COUNT ? (
-              <Link href={connectorHistoryHref(connector.slug)} className={cn(DISCREET_BUTTON_CLASSES, "hidden shrink-0 desktop:inline-flex")}>
+            {overview.eventCount > 0 ? (
+              <Link href={connectorHistoryHref(connector.slug)} className={cn(DISCREET_BUTTON_CLASSES, "-mr-[10px] hidden shrink-0 desktop:inline-flex")}>
                 Voir tout l&apos;historique
               </Link>
             ) : null}
@@ -219,12 +230,19 @@ const ConnectorPage = async ({ params }: PageProps<"/app/connecteurs/[connector]
               {`Rien reçu pour l'instant. Chaque vente de ${wording.toolName} s'affichera ici.`}
             </p>
           )}
-          {overview.eventCount > OVERVIEW_EVENT_COUNT ? (
-            <Link href={connectorHistoryHref(connector.slug)} className={cn(DISCREET_BUTTON_CLASSES, "self-start desktop:hidden")}>
+          {overview.eventCount > 0 ? (
+            <Link href={connectorHistoryHref(connector.slug)} className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px] self-start desktop:hidden")}>
               Voir tout l&apos;historique
             </Link>
           ) : null}
         </section>
+        <p className="rounded-card bg-sky px-5 py-4 text-body desktop:px-6 desktop:py-5">
+          {"Un souci à une étape ? "}
+          <Link href={MARKETING_PATHS.contact} className={INLINE_LINK_CLASSES}>
+            Écrivez-nous
+          </Link>
+          {" : nous faisons la connexion avec vous, en partage d'écran."}
+        </p>
       </SpacePage>
     </>
   );

@@ -6,21 +6,31 @@ import { cn } from "@/lib/cn";
 import type { DashboardFigures as Figures } from "@/lib/dashboard/count-dashboard-figures";
 import { formatAverageRating, formatResponseRate } from "./format-figures";
 
+/** Maquettes 3.4: the tiles of the key figures on Soleil, Ciel or white (white by default). */
+const FIGURE_TONES = {
+  sun: "bg-sun",
+  sky: "bg-sky",
+  white: "bg-white",
+} as const;
+
 type FigureProps = {
   value: string;
+  /** Under the number, before what it counts (the stars of the average rating). */
   aside?: ReactNode;
+  tone?: keyof typeof FIGURE_TONES;
   children: ReactNode;
   className?: string;
 };
 
-/** A key figure of the space, on its white tile: the number in large type, what it counts below. */
-export const Figure = ({ value, aside, children, className }: FigureProps) => (
-  <div className={cn("flex min-w-[0] flex-col gap-3 rounded-panel bg-white p-6", className)}>
-    <p className="flex flex-wrap items-center gap-3">
-      <span className="font-display text-figure">{value}</span>
+/** A key figure of the space, on its tile: the number in large type, what it counts below. */
+export const Figure = ({ value, aside, tone = "white", children, className }: FigureProps) => (
+  <div className={cn("flex min-w-[0] flex-col gap-2 rounded-panel p-4 desktop:gap-3 desktop:p-6", FIGURE_TONES[tone], className)}>
+    <p className="font-display text-figure">{value}</p>
+    <div className="flex flex-col gap-1">
       {aside}
-    </p>
-    <div className="text-small text-gray">{children}</div>
+      {/* On Soleil and Ciel, text is in Encre (charte v2: no Gris on Soleil). */}
+      <div className={cn("text-small", tone === "white" ? "text-gray" : "text-ink")}>{children}</div>
+    </div>
   </div>
 );
 
@@ -34,9 +44,12 @@ type DashboardFiguresProps = {
 
 export const DashboardFigures = ({ figures, pendingHref }: DashboardFiguresProps) => (
   <section aria-label="Vos chiffres" className={FIGURE_ROW_CLASSES}>
-    <Figure value={String(figures.approved)}>témoignages validés</Figure>
+    <Figure value={String(figures.approved)} tone="sun">
+      {figures.approved === 1 ? "témoignage validé" : "témoignages validés"}
+    </Figure>
     <Figure
       value={formatAverageRating(figures.averageRating)}
+      tone="sky"
       aside={
         figures.averageRating === null ? null : (
           <span className="hidden desktop:inline-flex">

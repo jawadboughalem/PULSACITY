@@ -15,13 +15,15 @@ type FilterSelectProps = {
   options: FilterOption[];
   value: string;
   onChange: () => void;
+  /** On a computer, the select's width (maquettes 3.4: 190 for the status, 230 for the offer, 170 for the rating). */
+  desktopWidthClassName?: string;
 };
 
 /**
  * Desktop: the select under its label. Mobile: a filter chip (40 high in a 44 zone) showing the label, over an
  * invisible native select; Soleil with its check once a filter is set.
  */
-export const FilterSelect = ({ name, label, options, value, onChange }: FilterSelectProps) => {
+export const FilterSelect = ({ name, label, options, value, onChange, desktopWidthClassName }: FilterSelectProps) => {
   const selected = options.find((option) => option.value === value);
   const isFiltered = value !== "" && selected !== undefined;
 
@@ -45,7 +47,7 @@ export const FilterSelect = ({ name, label, options, value, onChange }: FilterSe
           name={name}
           defaultValue={value}
           onChange={onChange}
-          className="max-desktop:h-full desktop:min-w-[176px]"
+          className={cn("max-desktop:h-full", desktopWidthClassName ?? "desktop:min-w-[176px]")}
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>

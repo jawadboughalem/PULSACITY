@@ -5,8 +5,8 @@ import { cn } from "@/lib/cn";
 export type StarFill = "full" | "half" | "empty";
 
 type StarIconProps = {
-  /** Charte v2: 16 in badges and lists, 18 in tables, 20 in cards, 46 in a 56 target (collect page). */
-  size: 16 | 18 | 20 | 36 | 46;
+  /** Charte v2: 16 in badges and lists, 18 in tables, 20 in cards, 28 in the space's forms (maquettes 3.4), 46 in a 56 target (collect page). */
+  size: 16 | 18 | 20 | 28 | 36 | 46;
   isFilled?: boolean;
   fill?: StarFill;
 };

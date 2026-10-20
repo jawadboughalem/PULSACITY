@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BILLING_HREF } from "@/components/space/space-sections";
-import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { DISCREET_BUTTON_CLASSES, SECONDARY_COMPACT_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { snoozePlanLimitNotice } from "./plan-limit-notice-actions";
 
@@ -23,8 +23,8 @@ export const PlanLimitNotice = ({ planName, testimonialLimit, pendingCount }: Pl
           ? `Rien n'est supprimé. Les nouveaux témoignages continuent d'arriver et restent en attente : ${pendingCount} pour l'instant. Avec le plan Essentiel, ils s'affichent tous, sans limite.`
           : "Rien n'est supprimé. Les nouveaux témoignages continuent d'arriver et restent en attente. Avec le plan Essentiel, ils s'affichent tous, sans limite."}
       </p>
-      <div className="flex flex-col items-start gap-2 pt-3 desktop:flex-row desktop:items-center desktop:gap-6">
-        <Link href={BILLING_HREF} className={SECONDARY_BUTTON_CLASSES}>
+      <div className="flex flex-col items-start gap-3 pt-3 desktop:flex-row desktop:items-center desktop:gap-5">
+        <Link href={BILLING_HREF} className={SECONDARY_COMPACT_BUTTON_CLASSES}>
           Voir le plan Essentiel
         </Link>
         <form action={snoozePlanLimitNotice}>

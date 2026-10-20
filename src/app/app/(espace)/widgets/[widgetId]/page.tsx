@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { z } from "zod";
-import { BackBar } from "@/components/space/BackBar";
-import { WIDGETS_SECTION_HREF, widgetGuideHref } from "@/components/space/space-sections";
+import { buildSpaceAccount } from "@/components/space/build-space-account";
+import { widgetGuideHref } from "@/components/space/space-sections";
+import { SpaceMobileHeader } from "@/components/space/SpaceMobileHeader";
+import { SpacePage } from "@/components/space/SpacePage";
 import { WidgetEditor } from "@/components/widgets/WidgetEditor";
 import { canHideBadge } from "@/config/plans";
 import { readPulsacitySpaceId } from "@/config/pulsacity-space";
@@ -36,8 +38,8 @@ const WidgetEditorPage = async ({ params }: PageProps<"/app/widgets/[widgetId]">
 
   return (
     <>
-      <BackBar href={WIDGETS_SECTION_HREF} label="Widgets" />
-      <main className="flex min-w-[0] flex-col">
+      <SpaceMobileHeader account={buildSpaceAccount(signedInUser, space)} />
+      <SpacePage>
         <WidgetEditor
           widget={toEditableWidget(widget)}
           offers={offers.map(({ id, name }) => ({ id, name }))}
@@ -55,7 +57,7 @@ const WidgetEditorPage = async ({ params }: PageProps<"/app/widgets/[widgetId]">
           email={signedInUser.email}
           guideHref={widgetGuideHref(widget.id)}
         />
-      </main>
+      </SpacePage>
     </>
   );
 };

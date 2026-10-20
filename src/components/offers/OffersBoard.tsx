@@ -32,11 +32,11 @@ export const OffersBoard = ({ offers, connectors, today }: OffersBoardProps) => 
   );
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-6 desktop:flex-row desktop:items-end desktop:justify-between">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4 desktop:flex-row desktop:items-end desktop:justify-between desktop:gap-6">
         <div className="flex flex-col gap-2">
           <h1 className="font-display text-h1">Offres</h1>
-          <p className="max-w-text text-body text-gray">
+          <p className="max-w-text text-body">
             Chaque offre a son lien de collecte et ses réglages de demande d&apos;avis.
           </p>
         </div>
@@ -46,7 +46,7 @@ export const OffersBoard = ({ offers, connectors, today }: OffersBoardProps) => 
         <AddOfferForm onDone={() => setIsAdding(false)} />
       ) : null}
       {isEmpty && !isAdding ? (
-        <section className="flex flex-col gap-4 rounded-panel bg-sky p-6 desktop:p-10">
+        <section className="flex flex-col gap-4 rounded-panel bg-white p-5 desktop:p-8">
           <h2 className="font-display text-h2">Aucune offre pour l&apos;instant</h2>
           <p className="max-w-text text-body">
             Ajoutez la formation ou le service que vous vendez. Chaque offre reçoit son lien de collecte, à envoyer à vos
@@ -63,7 +63,7 @@ export const OffersBoard = ({ offers, connectors, today }: OffersBoardProps) => 
         </section>
       ) : null}
       {isEmpty ? null : (
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-6">
           {offers.map(({ offer, collectionUrl, collectionAddress }) => (
             <OfferRow
               key={offer.id}

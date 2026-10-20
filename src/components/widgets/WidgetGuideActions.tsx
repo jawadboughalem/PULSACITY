@@ -1,6 +1,7 @@
 "use client";
 
 import { useCopyLink } from "@/components/space/useCopyLink";
+import { ActionDoneMessage } from "@/components/ui/ActionDoneMessage";
 import { DISCREET_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
@@ -27,14 +28,15 @@ export const WidgetGuideActions = ({ widgetId, snippet }: WidgetGuideActionsProp
         {isSending ? <Spinner size={18} /> : <Icon name="mail" size={20} />}
         {isSending ? "Envoi…" : "M'envoyer le code"}
       </button>
-      <div aria-live="polite">
-        {result?.ok ? <p className="text-small text-success">{`Le code est parti vers ${result.data.email}.`}</p> : null}
+      <ActionDoneMessage message={result?.ok ? `Le code est parti vers ${result.data.email}.` : null} />
+      <div aria-live="polite" className="empty:hidden">
         {error ? <FieldError id="widget-code-error" message={error} /> : null}
       </div>
       <button type="button" onClick={handleCopy} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
-        <Icon name={isCopied ? "valid" : "copy"} size={20} />
+        <Icon name={isCopied ? "check" : "copy"} size={20} />
         {isCopied ? "Code copié" : "Copier le code"}
       </button>
+      <ActionDoneMessage message={isCopied ? "Le code est copié." : null} />
     </div>
   );
 };

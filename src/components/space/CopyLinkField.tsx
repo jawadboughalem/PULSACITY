@@ -1,6 +1,7 @@
 "use client";
 
-import { PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { ActionDoneMessage } from "@/components/ui/ActionDoneMessage";
+import { PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { FIELD_LABEL_CLASSES, READ_ONLY_FIELD_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
@@ -9,9 +10,11 @@ import { useCopyLink } from "./useCopyLink";
 
 type CopyLinkFieldProps = {
   url: string;
+  /** « secondary » where the screen has its main button elsewhere (Témoignages, empty: maquettes 3.4). */
+  buttonVariant?: "primary" | "secondary";
 };
 
-export const CopyLinkField = ({ url }: CopyLinkFieldProps) => {
+export const CopyLinkField = ({ url, buttonVariant = "primary" }: CopyLinkFieldProps) => {
   const { isCopied, handleCopy } = useCopyLink(url, markLinkShared);
 
   return (
@@ -28,14 +31,16 @@ export const CopyLinkField = ({ url }: CopyLinkFieldProps) => {
           onFocus={(event) => event.target.select()}
           className={cn(READ_ONLY_FIELD_CLASSES, "flex-1")}
         />
-        <button type="button" onClick={handleCopy} className={PRIMARY_BUTTON_CLASSES}>
-          <Icon name={isCopied ? "valid" : "copy"} size={20} />
+        <button
+          type="button"
+          onClick={handleCopy}
+          className={buttonVariant === "primary" ? PRIMARY_BUTTON_CLASSES : cn(SECONDARY_BUTTON_CLASSES, "self-center")}
+        >
+          <Icon name={isCopied ? "check" : "copy"} size={20} />
           {isCopied ? "Lien copié" : "Copier le lien"}
         </button>
       </div>
-      <p aria-live="polite" className="sr-only">
-        {isCopied ? "Le lien est copié." : ""}
-      </p>
+      <ActionDoneMessage message={isCopied ? "Le lien est copié." : null} />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BILLING_HREF } from "@/components/space/space-sections";
 import { DISCREET_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { StatusBanner } from "@/components/ui/StatusBanner";
+import { cn } from "@/lib/cn";
 
 type CsvPlanNoticeProps = {
   pendingCount: number;
@@ -51,7 +52,7 @@ export const CsvPlanNotice = (props: CsvPlanNoticeProps) => (
   >
     <div className="flex flex-col items-start gap-1">
       <p>{describe(props)}</p>
-      <Link href={BILLING_HREF} className={DISCREET_BUTTON_CLASSES}>
+      <Link href={BILLING_HREF} className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px]")}>
         Voir le plan Essentiel
       </Link>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { ActionDoneMessage } from "@/components/ui/ActionDoneMessage";
 import { PRIMARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
@@ -16,12 +17,10 @@ export const ShareLinkButton = ({ url }: ShareLinkButtonProps) => {
   return (
     <>
       <button type="button" onClick={handleShare} className={cn(PRIMARY_BUTTON_CLASSES, "w-full")}>
-        <Icon name={isCopied ? "valid" : "share"} size={20} />
+        <Icon name={isCopied ? "check" : "share"} size={20} />
         {isCopied ? "Lien copié" : "Partager mon lien"}
       </button>
-      <p aria-live="polite" className="sr-only">
-        {isCopied ? "Le lien est copié." : ""}
-      </p>
+      <ActionDoneMessage message={isCopied ? "Le lien est copié." : null} />
     </>
   );
 };

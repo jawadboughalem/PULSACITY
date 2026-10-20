@@ -9,7 +9,7 @@ export const REQUEST_BADGES = {
   sent: { tone: "outline", label: "Envoyée", icon: "mail" },
   reminded: { tone: "outline", label: "Relancée", icon: "replay" },
   completed: { tone: "success", label: "Complétée", icon: "valid" },
-  cancelled: { tone: "dashed", label: "Annulée", icon: "close" },
+  cancelled: { tone: "neutral", label: "Annulée", icon: "cancelled" },
   failed: { tone: "error", label: "Échec", icon: "alert" },
 } as const satisfies Record<ReviewRequestStatus, { tone: BadgeTone; label: string; icon: IconName }>;
 

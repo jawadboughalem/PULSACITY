@@ -5,7 +5,7 @@ import { SpaceAvatar } from "@/components/ui/SpaceAvatar";
 import { StatusBanner } from "@/components/ui/StatusBanner";
 import { getFirstName } from "@/lib/testimonials/format-customer-name";
 import { formatExcerpt } from "@/lib/testimonials/format-excerpt";
-import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
+import { RATINGS } from "@/lib/testimonials/ratings";
 import { PoweredByPulsacity } from "./PoweredByPulsacity";
 import { StarIcon } from "./StarIcon";
 import type { SentTestimonial } from "./useTestimonialForm";

@@ -122,7 +122,7 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
     const { report } = step;
     const publishedCount = report.importedCount - report.pendingCount;
     return (
-      <div className="flex flex-col gap-8">
+      <div className="flex max-w-[800px] flex-col gap-5">
         <ImportStepper current={2} />
         {report.isFirstApproval ? <FirstApprovalBanner /> : null}
         <section role="status" className="flex items-start gap-3 rounded-card bg-success-surface p-6 desktop:gap-4 desktop:p-8">
@@ -183,11 +183,13 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
     const toFix = preview.rows.filter((row) => row.status !== "ready");
     const pendingCount = ready.filter((row) => row.isPending).length;
     return (
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6">
         <ImportStepper current={1} />
         <div className="flex flex-col gap-4 rounded-card bg-white p-4 desktop:flex-row desktop:items-center desktop:justify-between desktop:p-6">
-          <div className="flex flex-col gap-3 desktop:flex-row desktop:items-start desktop:gap-4">
-            <Icon name="copy" size={20} className="mt-[2px]" />
+          <div className="flex items-start gap-4">
+            <span aria-hidden="true" className="flex size-[44px] shrink-0 items-center justify-center rounded-field bg-sky">
+              <Icon name="file" size={20} />
+            </span>
             <div className="flex min-w-[0] flex-col">
               <span className="text-body font-bold break-all">{step.fileName}</span>
               <span className="text-small text-gray">
@@ -234,7 +236,7 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
                     setConsentError(false);
                   }}
                 />
-                <span>{CSV_CONSENT_TEXT}</span>
+                <span className="font-bold">{CSV_CONSENT_TEXT}</span>
               </label>
               {consentError ? (
                 <FieldError
@@ -270,8 +272,8 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-10">
-      <div className="flex flex-col gap-8">
+    <div className="flex max-w-[800px] flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <ImportStepper current={0} />
         <div
           onDragOver={(event) => {
@@ -285,11 +287,11 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
             handleFile(event.dataTransfer.files[0]);
           }}
           className={cn(
-            "pz-couleur flex flex-col items-center gap-4 rounded-panel border-2 border-dashed bg-sky px-6 py-10 text-center desktop:py-12",
-            isDragging ? "border-ink" : "border-gray",
+            "pz-couleur flex flex-col items-center gap-4 rounded-panel border-2 border-dashed px-5 py-6 text-center desktop:px-6 desktop:py-9",
+            isDragging ? "border-ink bg-sky" : "border-gray bg-white",
           )}
         >
-          <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink">
+          <span className="flex size-[64px] items-center justify-center rounded-full bg-sky">
             <Icon name="upload" size={24} />
           </span>
           <p className="text-body font-bold max-desktop:hidden">Déposez votre fichier ici</p>
@@ -306,7 +308,7 @@ export const CsvImport = ({ testimonialsHref }: CsvImportProps) => {
             aria-disabled={isWorking}
             className={cn(
               SECONDARY_BUTTON_CLASSES,
-              "w-full cursor-pointer peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-ink desktop:w-auto",
+              "w-full cursor-pointer peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-ink desktop:h-[44px] desktop:w-auto desktop:px-[18px]",
             )}
           >
             {isWorking ? <Spinner size={18} /> : <Icon name="upload" size={20} />}

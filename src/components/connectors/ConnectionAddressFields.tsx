@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { renewAddress } from "@/app/app/(espace)/connecteurs/connector-actions";
 import { useCopyLink } from "@/components/space/useCopyLink";
+import { ActionDoneMessage } from "@/components/ui/ActionDoneMessage";
 import { INLINE_LINK_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { FieldError } from "@/components/ui/FieldError";
@@ -72,10 +73,11 @@ export const ConnectionAddressFields = ({
               className={READ_ONLY_FIELD_CLASSES}
             />
             <button type="button" onClick={address.handleCopy} className={cn(PRIMARY_BUTTON_CLASSES, "w-full shrink-0 desktop:w-auto")}>
-              <Icon name={address.isCopied ? "valid" : "copy"} size={20} />
+              <Icon name={address.isCopied ? "check" : "copy"} size={20} />
               {address.isCopied ? "Copiée" : "Copier"}
             </button>
           </div>
+          <ActionDoneMessage message={address.isCopied ? "L'adresse de connexion est copiée." : null} />
         </div>
         {signingSecret ? (
           <div className="flex min-w-[0] flex-col gap-2 desktop:flex-[2]">
@@ -97,23 +99,24 @@ export const ConnectionAddressFields = ({
                 aria-label={secret.isCopied ? "Clé secrète copiée" : "Copier la clé secrète"}
                 className={cn(SECONDARY_BUTTON_CLASSES, "w-full shrink-0 desktop:w-auto")}
               >
+                {secret.isCopied ? <Icon name="check" size={20} /> : null}
                 {secret.isCopied ? "Copiée" : "Copier"}
               </button>
             </div>
+            <ActionDoneMessage message={secret.isCopied ? "La clé secrète est copiée." : null} />
           </div>
         ) : null}
       </div>
-      <p aria-live="polite" className="sr-only">
-        {address.isCopied ? "L'adresse de connexion est copiée." : secret.isCopied ? "La clé secrète est copiée." : ""}
-      </p>
-      <div aria-live="polite" className="empty:hidden">
-        {isRenewed ? (
-          <p className="text-small text-success">
-            {hasSecret
+      <ActionDoneMessage
+        message={
+          isRenewed
+            ? hasSecret
               ? `Nouvelle adresse et nouvelle clé créées. Collez-les dans ${connectorName}.`
-              : `Nouvelle adresse créée. Collez-la dans ${connectorName}.`}
-          </p>
-        ) : null}
+              : `Nouvelle adresse créée. Collez-la dans ${connectorName}.`
+            : null
+        }
+      />
+      <div aria-live="polite" className="empty:hidden">
         {hasFailed ? (
           <FieldError
             id="renew-error"

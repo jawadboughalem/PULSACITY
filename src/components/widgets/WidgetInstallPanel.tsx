@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { type SendWidgetCodeResult, sendWidgetCodeByEmail } from "@/app/app/(espace)/widget-code-actions";
 import { useCopyLink } from "@/components/space/useCopyLink";
+import { ActionDoneMessage } from "@/components/ui/ActionDoneMessage";
 import { DISCREET_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
 import { FieldError } from "@/components/ui/FieldError";
 import { Icon } from "@/components/ui/Icon";
@@ -48,7 +49,7 @@ export const WidgetInstallPanel = ({ widgetId, snippet, email, guideHref }: Widg
   const { isSending, result, send, error } = useSendWidgetCode(widgetId);
 
   return (
-    <section aria-labelledby="install-widget" className="flex flex-col gap-4 pt-6">
+    <section aria-labelledby="install-widget" className="flex flex-col gap-4 rounded-panel bg-white p-4">
       <h2 id="install-widget" className="font-display text-h3">
         Installer le widget
       </h2>
@@ -93,9 +94,10 @@ export const WidgetInstallPanel = ({ widgetId, snippet, email, guideHref }: Widg
           onClick={handleCopy}
           className={cn(SECONDARY_BUTTON_CLASSES, "w-full")}
         >
-          <Icon name={isCopied ? "valid" : "copy"} size={20} />
+          <Icon name={isCopied ? "check" : "copy"} size={20} />
           {isCopied ? "Code copié" : "Copier le code"}
         </button>
+        <ActionDoneMessage message={isCopied ? "Le code est copié." : null} />
         <p aria-live="polite" className="text-small text-gray">
           {isCopied
             ? "Collez-le dans votre page, dans un bloc de code HTML. Le guide Systeme.io vous montre où."

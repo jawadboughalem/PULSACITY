@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { BackBar } from "@/components/space/BackBar";
-import { MORE_SECTION_HREF } from "@/components/space/space-sections";
+import { buildSpaceAccount } from "@/components/space/build-space-account";
+import { MobileBackLink } from "@/components/space/MobileBackLink";
+import { SpaceMobileHeader } from "@/components/space/SpaceMobileHeader";
 import { SpacePage } from "@/components/space/SpacePage";
 import { describeWidget } from "@/components/widgets/describe-widget";
 import { type CreateLimit, type WidgetDisplay, WidgetList } from "@/components/widgets/WidgetList";
@@ -33,7 +34,7 @@ const describePaused = (pausedSince: Date | null): string =>
   `${pausedSince === null ? "En pause" : `En pause depuis le ${formatDayMonthYear(pausedSince)}`} : il ne s'affiche plus sur votre page, et rien ne bouge à sa place.`;
 
 const WidgetsPage = async () => {
-  const { space } = await getCurrentSpace();
+  const { signedInUser, space } = await getCurrentSpace();
   const database = getDb();
   const [widgets, ranked, priceList] = await Promise.all([
     listSpaceWidgets(database, space.id),
@@ -63,8 +64,9 @@ const WidgetsPage = async () => {
 
   return (
     <>
-      <BackBar href={MORE_SECTION_HREF} label="Plus" />
-      <SpacePage className="desktop:max-w-[1128px]">
+      <SpaceMobileHeader account={buildSpaceAccount(signedInUser, space)} />
+      <SpacePage className="gap-4">
+        <MobileBackLink />
         <WidgetList
           widgets={widgets.map((widget) => {
             const description = describeWidget(widget.type, widget.productName);

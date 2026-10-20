@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { cn } from "@/lib/cn";
 import { quoteInFrench } from "@/lib/french/typography";
 import { ChooseEventsDrawing, FillWebhookDrawing, OpenWebhooksDrawing } from "./systeme/SystemeSettingsDrawings";
 
@@ -116,8 +117,11 @@ const OPTIONAL_GUIDES: Record<string, OptionalGuide> = {
   },
 };
 
-const RuleCard = ({ caption, name, hint }: RuleBox) => (
-  <div className="flex flex-1 flex-col gap-1 rounded-card bg-sky p-4">
+/** Ciel on the public page; Nuage in the space, where the step sits on a white card (maquettes 3.4). */
+type RuleSurface = "sky" | "cloud";
+
+const RuleCard = ({ caption, name, hint, surface }: RuleBox & { surface: RuleSurface }) => (
+  <div className={cn("flex flex-1 flex-col gap-1 rounded-card p-4", surface === "cloud" ? "bg-cloud" : "bg-sky")}>
     <p className="text-small text-gray">{caption}</p>
     <p className="text-body font-bold">{name}</p>
     <p className="text-small">{hint}</p>
@@ -128,19 +132,20 @@ type ConnectionRuleProps = {
   connectorId: string;
   /** The step where the address is copied: the first in the space (m5), the second on the public page (m21). */
   addressStep: number;
+  surface?: RuleSurface;
 };
 
 /** The automation rule of the optional step: its trigger, then its action. Also on the public page of the connector. */
-export const ConnectionRule = ({ connectorId, addressStep }: ConnectionRuleProps) => {
+export const ConnectionRule = ({ connectorId, addressStep, surface = "sky" }: ConnectionRuleProps) => {
   const guide = OPTIONAL_GUIDES[connectorId];
   if (!guide) return null;
   const [trigger, action] = guide.rule;
   return (
     <div className="flex max-w-[720px] flex-col items-stretch gap-2 desktop:flex-row desktop:items-center desktop:gap-4">
-      <RuleCard {...trigger} />
+      <RuleCard {...trigger} surface={surface} />
       <Icon name="chevronDown" size={20} className="shrink-0 self-center desktop:hidden" />
       <Icon name="chevronRight" size={20} className="hidden shrink-0 desktop:block" />
-      <RuleCard {...action} hint={action.hint(addressStep)} />
+      <RuleCard {...action} hint={action.hint(addressStep)} surface={surface} />
     </div>
   );
 };
@@ -149,21 +154,21 @@ export const ConnectionOptionalStep = ({ connectorId }: { connectorId: string })
   const guide = OPTIONAL_GUIDES[connectorId];
   if (!guide) return null;
   return (
-    <section aria-labelledby="optional-step" className="flex gap-4 py-8 desktop:gap-6 desktop:py-10">
+    <section aria-labelledby="optional-step" className="flex gap-3 pt-3 desktop:gap-4">
       <span
         aria-hidden="true"
-        className="flex size-[32px] shrink-0 items-center justify-center rounded-full border-2 border-ink bg-white desktop:size-[40px]"
+        className="flex size-[36px] shrink-0 items-center justify-center rounded-full border-2 border-ink bg-white"
       >
         <Icon name="plus" size={20} />
       </span>
-      <div className="flex min-w-[0] flex-1 flex-col gap-6">
-        <div className="flex flex-col gap-1">
+      <div className="flex min-w-[0] flex-1 flex-col gap-4">
+        <div className="flex flex-col gap-1 pt-[4px]">
           <h3 id="optional-step" className="font-display text-h3">
             {guide.title}
           </h3>
           <p className="max-w-text text-body text-gray">{guide.description}</p>
         </div>
-        <ConnectionRule connectorId={connectorId} addressStep={1} />
+        <ConnectionRule connectorId={connectorId} addressStep={1} surface="cloud" />
         <p className="max-w-text text-small">{guide.parts.map(renderPart)}</p>
       </div>
     </section>

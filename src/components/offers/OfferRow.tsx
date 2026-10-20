@@ -10,7 +10,12 @@ import {
   setOfferRequestsEnabled,
 } from "@/app/app/(espace)/offres/offer-actions";
 import { useCopyLink } from "@/components/space/useCopyLink";
-import { DISCREET_BUTTON_CLASSES, PRIMARY_BUTTON_CLASSES, SECONDARY_BUTTON_CLASSES } from "@/components/ui/button-styles";
+import { ActionDoneMessage } from "@/components/ui/ActionDoneMessage";
+import {
+  DANGER_BUTTON_CLASSES,
+  DISCREET_BUTTON_CLASSES,
+  SECONDARY_BUTTON_CLASSES,
+} from "@/components/ui/button-styles";
 import { FieldError } from "@/components/ui/FieldError";
 import {
   FIELD_CLASSES,
@@ -118,7 +123,7 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
   const requestDay = formatDayMonth(new Date(new Date(`${today}T12:00:00Z`).getTime() + shownDelay * DAY_MS));
 
   return (
-    <li className="flex flex-col gap-8 rounded-panel bg-white p-5 desktop:p-8">
+    <li className="flex flex-col gap-6 rounded-panel bg-white p-5 desktop:p-8">
       {isEditingName ? (
         <form onSubmit={handleRename} className="flex flex-col gap-2">
           <label htmlFor={ids.name} className={FIELD_LABEL_CLASSES}>
@@ -155,7 +160,7 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
       ) : (
         <div className="flex flex-col gap-3 desktop:flex-row desktop:items-start desktop:justify-between">
           <div className="flex min-w-[0] flex-col gap-1">
-            <h2 className="font-display text-h3">{offer.name}</h2>
+            <h2 className="font-display text-h2">{offer.name}</h2>
             <p className="text-small text-gray">
               {offer.price
                 ? formatPrice(offer.price.amountCents, offer.price.currency)
@@ -164,7 +169,7 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
                   : `${offer.testimonialCount} témoignage`}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="-ml-[10px] flex gap-2 desktop:ml-[0] desktop:-mr-[10px]">
             <button type="button" onClick={() => setIsEditingName(true)} className={DISCREET_BUTTON_CLASSES}>
               Renommer
             </button>
@@ -181,7 +186,11 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
       )}
 
       {removal === "confirm" ? (
-        <div role="alertdialog" aria-labelledby={`${offer.id}-removal`} className="flex flex-col gap-3 rounded-card bg-sky p-6">
+        <div
+          role="alertdialog"
+          aria-labelledby={`${offer.id}-removal`}
+          className="flex flex-col gap-3 rounded-card border-2 border-ink bg-white p-5 desktop:p-6"
+        >
           <p id={`${offer.id}-removal`} className="text-body font-bold">
             {`Retirer ${quoteInFrench(offer.name)} ?`}
           </p>
@@ -194,7 +203,7 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
               type="button"
               disabled={isSaving}
               onClick={() => save(() => removeOffer(offer.id), "Offre retirée.", () => setRemoval("closed"))}
-              className={cn(PRIMARY_BUTTON_CLASSES, "w-full desktop:w-auto")}
+              className={cn(DANGER_BUTTON_CLASSES, "w-full desktop:w-auto")}
             >
               Retirer l&apos;offre
             </button>
@@ -219,16 +228,10 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
         </div>
       ) : null}
 
-      <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-2 desktop:gap-12">
-        <div className="flex flex-col gap-8">
-          <div className="flex items-start gap-4">
-            <Switch
-              id={ids.requests}
-              isOn={requestsEnabled}
-              labelId={ids.requestsLabel}
-              descriptionId={ids.requestsDescription}
-              onChange={handleRequestsEnabled}
-            />
+      <div className="flex flex-col gap-8 desktop:grid desktop:grid-cols-2 desktop:gap-9">
+        <div className="flex flex-col gap-6">
+          {/* Maquettes 3.4: the switch at the right of what it turns on. */}
+          <div className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-1">
               <label id={ids.requestsLabel} htmlFor={ids.requests} className="cursor-pointer text-body font-bold">
                 Demander un avis après chaque vente
@@ -239,6 +242,13 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
                   : "Désactivé : aucune demande ne part toute seule. Vous pouvez toujours envoyer le lien vous-même."}
               </p>
             </div>
+            <Switch
+              id={ids.requests}
+              isOn={requestsEnabled}
+              labelId={ids.requestsLabel}
+              descriptionId={ids.requestsDescription}
+              onChange={handleRequestsEnabled}
+            />
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor={ids.delay} className={FIELD_LABEL_CLASSES}>
@@ -269,20 +279,20 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
                 : "Activez la demande automatique pour régler le délai."}
             </p>
           </div>
-          <div aria-live="polite">
+          <div aria-live="polite" className="empty:hidden">
             {error ? <FieldError id={`${offer.id}-error`} message={ERRORS[error]} /> : null}
-            {savedMessage && !error ? <p className="text-small text-success">{savedMessage}</p> : null}
           </div>
+          <ActionDoneMessage message={savedMessage && !error ? savedMessage : null} />
         </div>
 
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
             <span id={ids.link} className={FIELD_LABEL_CLASSES}>
               Lien de collecte
             </span>
             <p
               aria-labelledby={ids.link}
-              className={cn(READ_ONLY_FIELD_CLASSES, "flex h-auto min-h-[56px] items-center py-3 break-all")}
+              className={cn(READ_ONLY_FIELD_CLASSES, "flex h-auto min-h-[56px] items-center border-cloud py-3 wrap-anywhere")}
             >
               {collectionAddress}
             </p>
@@ -290,26 +300,34 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
             <button
               type="button"
               onClick={handleCopy}
-              className={cn(SECONDARY_BUTTON_CLASSES, "mt-2 w-full desktop:w-auto desktop:self-start")}
+              className={cn(SECONDARY_BUTTON_CLASSES, "mt-2 w-full desktop:h-[44px] desktop:w-auto desktop:self-start desktop:px-[18px]")}
             >
-              <Icon name={isCopied ? "valid" : "copy"} size={20} className={cn(isCopied && "text-success")} />
+              <Icon name={isCopied ? "check" : "copy"} size={20} />
               {isCopied ? "Lien copié" : "Copier le lien"}
             </button>
+            <ActionDoneMessage message={isCopied ? "Le lien est copié." : null} />
           </div>
           <div className="flex flex-col gap-3">
             <span className={FIELD_LABEL_CLASSES}>Identifiants par connecteur</span>
-            <ul className="flex flex-col gap-4">
+            {/* Maquettes 3.4: each identifier on its aplat, Nuage, or Attente fond while no product is associated. */}
+            <ul className="flex flex-col gap-3">
               {offer.connectorRefs.map((ref) => {
                 const connector = connectors.find((candidate) => candidate.id === ref.connector);
                 return (
-                  <li key={`${ref.connector}-${ref.externalRef}`} className="flex items-start gap-3 text-small">
+                  <li
+                    key={`${ref.connector}-${ref.externalRef}`}
+                    className="flex flex-wrap items-start gap-3 rounded-field bg-cloud p-4 text-small"
+                  >
                     <Icon name="connection" size={20} />
-                    <span className="flex min-w-[0] flex-1 flex-col gap-1">
+                    <span className="flex min-w-[0] flex-1 basis-[180px] flex-col">
                       <span className="text-body font-bold">{connector?.name ?? ref.connector}</span>
                       <span>{ref.productName ? `Produit ${quoteInFrench(ref.productName)}` : ref.externalRef}</span>
                     </span>
                     {connector ? (
-                      <Link href={connector.associationHref} className={cn(DISCREET_BUTTON_CLASSES, "shrink-0")}>
+                      <Link
+                        href={connector.associationHref}
+                        className={cn(DISCREET_BUTTON_CLASSES, "-my-2 shrink-0 max-desktop:ml-[22px]")}
+                      >
                         Modifier
                       </Link>
                     ) : null}
@@ -319,19 +337,19 @@ export const OfferRow = ({ offer, connectors, collectionUrl, collectionAddress, 
               {connectors
                 .filter((connector) => !offer.connectorRefs.some((ref) => ref.connector === connector.id))
                 .map((connector) => (
-                  <li key={connector.id} className="flex items-start gap-3 text-small">
+                  <li key={connector.id} className="flex items-start gap-3 rounded-field bg-waiting-surface p-4 text-small">
                     <Icon name="clock" size={20} className="text-waiting" />
                     <span className="flex flex-col gap-1">
                       <span className="text-body font-bold">{`${connector.name} · aucun produit associé`}</span>
                       <span>Les ventes de ce produit sont gardées de côté : aucune demande n&apos;est envoyée.</span>
-                      <Link href={connector.associationHref} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
+                      <Link href={connector.associationHref} className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px] self-start")}>
                         {`Associer un produit ${connector.name}`}
                       </Link>
                     </span>
                   </li>
                 ))}
               {connectors.length === 0 && offer.connectorRefs.length === 0 ? (
-                <li className="flex items-start gap-3 text-small">
+                <li className="flex items-start gap-3 rounded-field bg-cloud p-4 text-small">
                   <Icon name="connection" size={20} className="text-gray" />
                   <span className="flex flex-col gap-1">
                     <span className="text-body font-bold">Aucun outil connecté</span>

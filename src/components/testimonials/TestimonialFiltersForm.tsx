@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { FIELD_CLASSES, FIELD_LABEL_CLASSES } from "@/components/ui/field-styles";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
-import { RATINGS } from "@/lib/testimonials/testimonial-form-schema";
+import { RATINGS } from "@/lib/testimonials/ratings";
 import {
   MAX_SEARCH_LENGTH,
   STATUS_SEARCH_VALUES,
@@ -77,9 +77,17 @@ export const TestimonialFiltersForm = ({ action, filters, products }: Testimonia
             name={TESTIMONIAL_SEARCH_PARAMS.query}
             defaultValue={filters.query ?? ""}
             maxLength={MAX_SEARCH_LENGTH}
-            placeholder="Un prénom, un mot…"
-            className={cn(FIELD_CLASSES, "pl-10")}
+            placeholder=" "
+            className={cn(FIELD_CLASSES, "peer pl-10")}
           />
+          {/* The hint differs on a phone, where no label stands above the field (maquettes 3.4): drawn over the empty field. */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-[0] right-4 left-10 hidden items-center truncate text-body text-gray peer-placeholder-shown:flex"
+          >
+            <span className="truncate desktop:hidden">Rechercher un prénom, un mot…</span>
+            <span className="truncate max-desktop:hidden">Un prénom, un mot…</span>
+          </span>
         </span>
       </label>
       <div className="flex flex-wrap gap-2 desktop:contents">
@@ -87,6 +95,7 @@ export const TestimonialFiltersForm = ({ action, filters, products }: Testimonia
           name={TESTIMONIAL_SEARCH_PARAMS.status}
           label="Statut"
           options={STATUS_OPTIONS}
+          desktopWidthClassName="desktop:w-[190px]"
           value={filters.status ? STATUS_SEARCH_VALUES[filters.status] : ""}
           onChange={submit}
         />
@@ -94,6 +103,7 @@ export const TestimonialFiltersForm = ({ action, filters, products }: Testimonia
           name={TESTIMONIAL_SEARCH_PARAMS.productId}
           label="Offre"
           options={productOptions}
+          desktopWidthClassName="desktop:w-[230px]"
           value={filters.productId === WITHOUT_PRODUCT ? WITHOUT_PRODUCT_SEARCH_VALUE : (filters.productId ?? "")}
           onChange={submit}
         />
@@ -101,6 +111,7 @@ export const TestimonialFiltersForm = ({ action, filters, products }: Testimonia
           name={TESTIMONIAL_SEARCH_PARAMS.rating}
           label="Note"
           options={RATING_OPTIONS}
+          desktopWidthClassName="desktop:w-[170px]"
           value={filters.rating ? String(filters.rating) : ""}
           onChange={submit}
         />
