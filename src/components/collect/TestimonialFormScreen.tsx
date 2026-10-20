@@ -5,15 +5,14 @@ import {
   MAX_TESTIMONIAL_LENGTH,
   type TestimonialFieldError,
 } from "@/lib/testimonials/testimonial-form-schema";
-import { CollectHeader } from "./CollectHeader";
 import { CollectInputField } from "./CollectInputField";
+import { COLLECT_TITLE_CLASSES } from "./CollectShell";
 import { CollectSubmitButton } from "./CollectSubmitButton";
 import { CollectTextareaField } from "./CollectTextareaField";
 import { ConsentField } from "./ConsentField";
 import { HoneypotField } from "./HoneypotField";
 import { type CollectionIncentive, IncentiveNote } from "./IncentiveNote";
 import { PhotoPicker } from "./PhotoPicker";
-import { PoweredByPulsacity } from "./PoweredByPulsacity";
 import { RatingField } from "./RatingField";
 import { SubmitProblemBanner } from "./SubmitProblemBanner";
 import type { TestimonialFormState } from "./useTestimonialForm";
@@ -35,40 +34,40 @@ const AUTHOR_TITLE_TOO_LONG = `Ce titre dépasse ${MAX_AUTHOR_TITLE_LENGTH} cara
 type TestimonialFormScreenProps = {
   form: TestimonialFormState;
   spaceName: string;
-  logoUrl: string | null;
   accentColor: string | null;
+  starColor: string | null;
   title: string;
   consentText: string;
-  homeUrl: string;
-  referralCode: string;
   incentive?: CollectionIncentive | null;
 };
 
+/**
+ * Maquettes 3.6, « Page de collecte »: the question, then the form, 28 apart; « Envoyer mon avis » the only filled
+ * button, in the creator's accent. No duration: « Une note et quelques mots suffisent. » (charte v2, ton de voix).
+ */
 export const TestimonialFormScreen = ({
   form,
   spaceName,
-  logoUrl,
   accentColor,
+  starColor,
   title,
   consentText,
-  homeUrl,
-  referralCode,
   incentive = null,
 }: TestimonialFormScreenProps) => {
   const { values, setters, refs, fieldErrors } = form;
 
   return (
-    <>
-      <CollectHeader spaceName={spaceName} logoUrl={logoUrl} />
+    <div className="flex flex-col gap-7">
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-h2">{title}</h1>
-        <p className="text-body text-gray">{`${spaceName} lira chaque mot. Comptez moins d'une minute.`}</p>
+        <h1 className={COLLECT_TITLE_CLASSES}>{title}</h1>
+        <p className="text-body text-gray">{`${spaceName} lira chaque mot. Une note et quelques mots suffisent.`}</p>
       </div>
       {incentive ? <IncentiveNote incentive={incentive} spaceName={spaceName} /> : null}
       <form onSubmit={form.handleSubmit} onInput={form.handleInput} noValidate className="flex flex-col gap-6">
         {form.submitProblem ? <SubmitProblemBanner problem={form.submitProblem} /> : null}
         <RatingField
           rating={values.rating}
+          starColor={starColor}
           hasError={fieldErrors.rating !== undefined}
           firstStarRef={refs.firstStarRef}
           onChange={setters.setRating}
@@ -76,7 +75,7 @@ export const TestimonialFormScreen = ({
         <CollectTextareaField
           id="testimonial-body"
           label="Votre témoignage"
-          placeholder="Qu'est-ce qui a changé pour vous ?"
+          placeholder="Qu'est-ce qui a changé pour vous ?"
           focusHint="Quelques phrases suffisent."
           maxLength={MAX_TESTIMONIAL_LENGTH}
           value={values.body}
@@ -126,7 +125,6 @@ export const TestimonialFormScreen = ({
           isWaitingForPhoto={form.photoUpload.state.status === "uploading"}
         />
       </form>
-      <PoweredByPulsacity homeUrl={homeUrl} referralCode={referralCode} />
-    </>
+    </div>
   );
 };

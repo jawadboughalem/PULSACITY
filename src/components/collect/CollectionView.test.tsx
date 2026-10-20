@@ -18,8 +18,7 @@ const JULIE_NUTRITION: ComponentProps<typeof CollectionView> = {
   logoUrl: null,
   accentColor: null,
   replyToEmail: "julie@exemple.fr",
-  referralCode: "k7m2xq9p",
-  homeUrl: "https://pulsacity.com",
+  poweredBy: { homeUrl: "https://pulsacity.com", referralCode: "k7m2xq9p" },
   title: "Votre avis sur « Programme 30 jours » ?",
   consentText: "J'accepte que ce témoignage soit publié sur les supports de Julie Nutrition.",
   incentive: null,
@@ -95,9 +94,9 @@ describe("CollectionView", () => {
 
     expect(find("header").textContent).toBe("JNJulie Nutrition");
     expect(find("h1").textContent).toBe("Votre avis sur « Programme 30 jours » ?");
-    expect(container.textContent).toContain("Julie Nutrition lira chaque mot. Comptez moins d'une minute.");
+    expect(container.textContent).toContain("Julie Nutrition lira chaque mot. Une note et quelques mots suffisent.");
     expect(container.textContent).toContain("Touchez une étoile.");
-    expect(find<HTMLTextAreaElement>("#testimonial-body").placeholder).toBe("Qu'est-ce qui a changé pour vous ?");
+    expect(find<HTMLTextAreaElement>("#testimonial-body").placeholder).toBe("Qu'est-ce qui a changé pour vous ?");
     expect(find<HTMLInputElement>("#author-title").placeholder).toBe("Enseignante, Lyon");
     expect(container.textContent).toContain(JULIE_NUTRITION.consentText);
     expect(find<HTMLAnchorElement>('a[href^="https://pulsacity.com"]').href).toBe(
@@ -131,7 +130,7 @@ describe("CollectionView", () => {
     await submit();
 
     expect(find('[role="alert"]').textContent).toBe(
-      "Julie Nutrition a besoin de votre accord pour publier ce témoignage. Cochez la case, puis renvoyez : votre texte est bien conservé.",
+      "Julie Nutrition a besoin de votre accord pour publier ce témoignage. Cochez la case, puis renvoyez : votre texte est bien conservé.",
     );
     expect(document.activeElement).toBe(find('input[type="checkbox"]'));
     expect(find<HTMLTextAreaElement>("#testimonial-body").value).toBe(BODY);
@@ -161,7 +160,7 @@ describe("CollectionView", () => {
     expect(find('[role="status"]').textContent).toBe("Votre témoignage est bien envoyé.");
     expect(find("h1").textContent).toBe("Merci Camille.");
     expect(container.textContent).toContain(
-      "« En 30 jours j'ai arrêté de grignoter le soir. Julie explique sans culpabiliser… »",
+      "« En 30 jours j'ai arrêté de grignoter le soir. Julie explique sans culpabiliser… »",
     );
     expect(container.textContent).toContain("Camille R. · Enseignante, Lyon");
     expect(container.textContent).toContain("Julie Nutrition le relit avant de le publier. Vous pouvez fermer cette page.");

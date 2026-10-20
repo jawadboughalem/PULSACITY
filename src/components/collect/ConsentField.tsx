@@ -14,12 +14,15 @@ type ConsentFieldProps = {
   onChange: (isChecked: boolean) => void;
 };
 
-/** Charte v2, Case à cocher: the consent of the collect page is a row on Nuage, radius-card, padding 16. */
+/**
+ * Charte v2, ajouts 3.6: the consent of the collect page is a row on #F2F4F8, radius-card, padding 16; missing, on Erreur
+ * fond with a 2 px Erreur border. Its text is kept with the testimonial, as proof.
+ */
 export const ConsentField = ({ consentText, spaceName, isChecked, hasError, checkboxRef, onChange }: ConsentFieldProps) => (
   <div
     className={cn(
       "rounded-card p-4",
-      hasError ? "flex flex-col gap-3 border-2 border-error bg-error-surface" : "bg-cloud",
+      hasError ? "flex flex-col gap-2 border-2 border-error bg-error-surface" : "bg-widget-light-card",
     )}
   >
     <label className="flex min-h-[44px] cursor-pointer items-start gap-3 text-body">
@@ -54,7 +57,7 @@ export const ConsentField = ({ consentText, spaceName, isChecked, hasError, chec
       <p id={CONSENT_ERROR_ID} role="alert" className="flex items-start gap-[6px] pl-[36px] text-small text-error">
         <Icon name="alert" size={20} className="mt-[1px] shrink-0" />
         <span>
-          {`${spaceName} a besoin de votre accord pour publier ce témoignage. Cochez la case, puis renvoyez : votre texte est bien conservé.`}
+          {`${spaceName} a besoin de votre accord pour publier ce témoignage. Cochez la case, puis renvoyez : votre texte est bien conservé.`}
         </span>
       </p>
     ) : null}

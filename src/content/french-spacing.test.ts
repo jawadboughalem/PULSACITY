@@ -4,7 +4,16 @@ import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
 /** The texts of the public site, and the parts of the space it shows (the guide of Systeme.io, the fields of the universal connector, the paste steps, the errors of « Écrivez-nous »). */
-const FOLDERS = ["src/content", "src/components/marketing", "src/app/(marketing)"];
+const FOLDERS = [
+  "src/content",
+  "src/components/marketing",
+  "src/app/(marketing)",
+  // Lot 4.8: the pages of the creator's customers, and every e-mail (maquettes 3.6, « Textes à surveiller »).
+  "src/components/collect",
+  "src/app/t",
+  "src/app/desinscription",
+  "src/emails",
+];
 const FILES = [
   "src/mdx-components.tsx",
   "src/components/connectors/ConnectionGuide.tsx",

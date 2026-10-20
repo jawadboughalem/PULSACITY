@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CorrectionChoice, CorrectionOutcome, CorrectionShell } from "@/components/collect/CorrectionAnswer";
+import { CollectOutcome, WriteToCreatorLink } from "@/components/collect/CollectOutcome";
+import { CollectShell } from "@/components/collect/CollectShell";
+import { CorrectionChoice } from "@/components/collect/CorrectionAnswer";
 import { getDb } from "@/db";
 import { getAppUrl } from "@/lib/app-url";
-import { CORRECTION_TOKEN_PARAMETER, findCorrection } from "@/lib/testimonials/corrections/manage-corrections";
+import type { IconName } from "@/components/ui/icon-paths";
+import {
+  CORRECTION_TOKEN_PARAMETER,
+  type CorrectionPage as Correction,
+  findCorrection,
+} from "@/lib/testimonials/corrections/manage-corrections";
 import { answerCorrectionFromPage } from "./answer-correction-action";
 import { CORRECTION_ANSWER_PARAMETER } from "./correction-answer-parameter";
 
@@ -13,6 +20,18 @@ export const metadata: Metadata = {
 };
 
 const readParameter = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) ?? null;
+
+/** The icon, the title, what happened, then what to know (Gris), and the way to write to the creator. */
+type OutcomeProps = { correction: Correction; icon: IconName; title: string; lines: [string, string] };
+
+const Outcome = ({ correction, icon, title, lines }: OutcomeProps) => (
+  <CollectOutcome
+    icon={icon}
+    title={title}
+    lines={[{ text: lines[0] }, { text: lines[1], isSecondary: true }]}
+    action={<WriteToCreatorLink spaceName={correction.space.name} replyToEmail={correction.space.replyToEmail} />}
+  />
+);
 
 /**
  * Maquettes 3.6, « Réponse à une correction »: the author answers the creator's correction (positionnement.md, point
@@ -25,21 +44,23 @@ const CorrectionPage = async ({ params, searchParams }: PageProps<"/t/[spaceSlug
   if (!token) notFound();
   const correction = await findCorrection(getDb(), spaceSlug, token);
   if (correction.status === "not-found") notFound();
-  const homeUrl = getAppUrl();
+  const { space } = correction;
+  const identity = { name: space.name, logoUrl: space.logoUrl, accentColor: space.accentColor };
+  const poweredBy = { homeUrl: getAppUrl(), referralCode: space.referralCode };
   const justAnswered = readParameter(parameters[CORRECTION_ANSWER_PARAMETER]);
 
   if (correction.status === "waiting") {
     return (
-      <CorrectionShell page={correction} homeUrl={homeUrl}>
+      <CollectShell identity={identity} poweredBy={poweredBy}>
         <CorrectionChoice page={correction} spaceSlug={spaceSlug} token={token} action={answerCorrectionFromPage} />
-      </CorrectionShell>
+      </CollectShell>
     );
   }
   if (correction.status === "withdrawn") {
     return (
-      <CorrectionShell page={correction} homeUrl={homeUrl}>
-        <CorrectionOutcome
-          page={correction}
+      <CollectShell identity={identity} poweredBy={poweredBy}>
+        <Outcome
+          correction={correction}
           icon="cancelled"
           title="Cette correction n'est plus proposée"
           lines={[
@@ -47,14 +68,14 @@ const CorrectionPage = async ({ params, searchParams }: PageProps<"/t/[spaceSlug
             "Vous n'avez rien à faire.",
           ]}
         />
-      </CorrectionShell>
+      </CollectShell>
     );
   }
   if (correction.outcome === "accepted" && justAnswered === "acceptee") {
     return (
-      <CorrectionShell page={correction} homeUrl={homeUrl}>
-        <CorrectionOutcome
-          page={correction}
+      <CollectShell identity={identity} poweredBy={poweredBy}>
+        <Outcome
+          correction={correction}
           icon="valid"
           title="Correction acceptée"
           lines={[
@@ -62,14 +83,14 @@ const CorrectionPage = async ({ params, searchParams }: PageProps<"/t/[spaceSlug
             "Votre texte d'origine reste gardé, tel que vous l'avez écrit.",
           ]}
         />
-      </CorrectionShell>
+      </CollectShell>
     );
   }
   if (correction.outcome === "refused" && justAnswered === "gardee") {
     return (
-      <CorrectionShell page={correction} homeUrl={homeUrl}>
-        <CorrectionOutcome
-          page={correction}
+      <CollectShell identity={identity} poweredBy={poweredBy}>
+        <Outcome
+          correction={correction}
           icon="valid"
           title="Votre texte reste tel quel"
           lines={[
@@ -77,13 +98,13 @@ const CorrectionPage = async ({ params, searchParams }: PageProps<"/t/[spaceSlug
             "Vous pouvez toujours lui écrire pour en parler.",
           ]}
         />
-      </CorrectionShell>
+      </CollectShell>
     );
   }
   return (
-    <CorrectionShell page={correction} homeUrl={homeUrl}>
-      <CorrectionOutcome
-        page={correction}
+    <CollectShell identity={identity} poweredBy={poweredBy}>
+      <Outcome
+        correction={correction}
         icon="clock"
         title="Vous avez déjà répondu"
         lines={[
@@ -91,7 +112,7 @@ const CorrectionPage = async ({ params, searchParams }: PageProps<"/t/[spaceSlug
           `Pour changer d'avis, écrivez à ${correction.space.name}.`,
         ]}
       />
-    </CorrectionShell>
+    </CollectShell>
   );
 };
 

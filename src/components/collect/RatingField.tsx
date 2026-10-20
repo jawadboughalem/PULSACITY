@@ -9,6 +9,8 @@ const MISSING_RATING_MESSAGE = "Choisissez une note, de 1 à 5 étoiles.";
 
 type RatingFieldProps = {
   rating: number;
+  /** The chosen stars all in the creator's accent, or Encre; null: Soleil with its outline. */
+  starColor: string | null;
   hasError: boolean;
   firstStarRef: Ref<HTMLInputElement>;
   onChange: (rating: number) => void;
@@ -16,12 +18,13 @@ type RatingFieldProps = {
 
 const labelRating = (rating: number) => `${rating} ${rating === 1 ? "étoile" : "étoiles"} sur ${RATINGS.length}`;
 
-export const RatingField = ({ rating, hasError, firstStarRef, onChange }: RatingFieldProps) => (
+/** Charte v2, ajouts 3.6: stars of 46 (42 on a phone) in targets of 56, in a field-like box. */
+export const RatingField = ({ rating, starColor, hasError, firstStarRef, onChange }: RatingFieldProps) => (
   <fieldset className="min-w-[0]" aria-describedby={hasError ? "rating-error" : "rating-hint"}>
     <legend className={cn(FIELD_LABEL_CLASSES, "mb-2")}>Votre note</legend>
     <div
       className={cn(
-        "pz-couleur flex justify-between rounded-field border-2 bg-white px-2 py-1",
+        "pz-couleur flex justify-between rounded-field border-2 bg-white px-1 py-[2px] desktop:px-4",
         hasError ? "border-error" : "border-gray hover:border-ink",
       )}
     >
@@ -43,7 +46,12 @@ export const RatingField = ({ rating, hasError, firstStarRef, onChange }: Rating
             aria-label={labelRating(value)}
             className="sr-only"
           />
-          <StarIcon size={36} isFilled={value <= rating} />
+          <StarIcon
+            size={46}
+            isFilled={value <= rating}
+            solidColor={starColor}
+            className="size-[42px] desktop:size-[46px]"
+          />
         </label>
       ))}
     </div>

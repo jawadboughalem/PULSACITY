@@ -146,7 +146,7 @@ describe("sendHiddenReason", () => {
       spaceName: "Julie Nutrition",
       replyTo: "julie@exemple.fr",
       idempotencyKey: `hidden-reason:${id}`,
-      unsubscribeUrl: expect.stringContaining("https://pulsacity.com/api/unsubscribe"),
+      unsubscribeUrl: expect.stringContaining("https://pulsacity.com/desinscription/"),
     });
     const html = await render(sent[0].body);
     expect(html).toContain("Il donne des informations personnelles");

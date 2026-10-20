@@ -5,6 +5,7 @@ import { PULSACITY_BETA_OFFER_SLUG, readPulsacitySpaceId } from "@/config/pulsac
 import { getAppUrl } from "@/lib/app-url";
 import { buildConsentText } from "@/lib/testimonials/build-consent-text";
 import { loadCollectionPage } from "@/lib/testimonials/load-collection-page";
+import { CollectShell } from "./CollectShell";
 import type { CollectionIncentive } from "./IncentiveNote";
 import { CollectionView } from "./CollectionView";
 import { InactiveLinkScreen } from "./InactiveLinkScreen";
@@ -41,37 +42,31 @@ export const CollectionPageContent = async ({ spaceSlug, productSlug, requestTok
   if (!page) notFound();
 
   const { space } = page;
-  const homeUrl = getAppUrl();
+  // On PULSACITY's own pages, « Propulsé par PULSACITY » makes no sense (maquettes 3.6, page of the beta testers).
+  const poweredBy =
+    space.id === readPulsacitySpaceId() ? null : { homeUrl: getAppUrl(), referralCode: space.referralCode };
 
+  if (page.status === "link-inactive") {
+    return (
+      <CollectShell identity={space} poweredBy={poweredBy}>
+        <InactiveLinkScreen spaceName={space.name} replyToEmail={space.replyToEmail} />
+      </CollectShell>
+    );
+  }
   return (
-    <div className="min-h-dvh bg-white px-page-gutter py-6 text-ink">
-      <main className="mx-auto flex min-h-[calc(100dvh-48px)] w-full max-w-text flex-col gap-6">
-        {page.status === "link-inactive" ? (
-          <InactiveLinkScreen
-            spaceName={space.name}
-            logoUrl={space.logoUrl}
-            replyToEmail={space.replyToEmail}
-            homeUrl={homeUrl}
-            referralCode={space.referralCode}
-          />
-        ) : (
-          <CollectionView
-            spaceSlug={space.slug}
-            productSlug={page.request ? null : (page.product?.slug ?? null)}
-            requestToken={page.request?.token ?? null}
-            prefilledName={page.request?.prefilledName ?? ""}
-            spaceName={space.name}
-            logoUrl={space.logoUrl}
-            accentColor={space.accentColor}
-            replyToEmail={space.replyToEmail}
-            referralCode={space.referralCode}
-            homeUrl={homeUrl}
-            title={buildTitle(space.name, page.product?.name ?? null)}
-            consentText={buildConsentText(space.name)}
-            incentive={readIncentive(space, page.product?.slug ?? null)}
-          />
-        )}
-      </main>
-    </div>
+    <CollectionView
+      spaceSlug={space.slug}
+      productSlug={page.request ? null : (page.product?.slug ?? null)}
+      requestToken={page.request?.token ?? null}
+      prefilledName={page.request?.prefilledName ?? ""}
+      spaceName={space.name}
+      logoUrl={space.logoUrl}
+      accentColor={space.accentColor}
+      replyToEmail={space.replyToEmail}
+      poweredBy={poweredBy}
+      title={buildTitle(space.name, page.product?.name ?? null)}
+      consentText={buildConsentText(space.name)}
+      incentive={readIncentive(space, page.product?.slug ?? null)}
+    />
   );
 };
