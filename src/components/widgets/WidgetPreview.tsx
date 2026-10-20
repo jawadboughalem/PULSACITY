@@ -16,8 +16,6 @@ const PHONE_PAGE_MIN_WIDTH = 390;
 
 const PHONE_FRAME_BELOW = 600;
 
-const LOGOTYPE_URL = "/fonts/pulsacity-logotype.woff2";
-
 const INK = "#16213E";
 
 type WidgetHostProps = {
@@ -41,7 +39,6 @@ const WidgetHost = ({ payload, loadMore }: WidgetHostProps) => {
       host,
       linkColor: linkColor.current,
       loadMore,
-      logotypeUrl: LOGOTYPE_URL,
     });
   }, [payload, loadMore]);
 

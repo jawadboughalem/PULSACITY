@@ -3,7 +3,6 @@ import { renderCarousel } from "./carousel";
 import { type LayoutContext, applyWidthClasses } from "./context";
 import { h } from "./dom";
 import { renderLoadingState } from "./loading";
-import { loadLogotype } from "./logotype";
 import { readPageContext } from "./page";
 import type { WidgetCardStyle, WidgetPayload, WidgetTheme, WidgetType } from "./payload";
 import type { ReviewsDirectory } from "./reviews";
@@ -17,7 +16,6 @@ export type RenderOptions = {
   linkColor: string | null;
   loadMore?: (offset: number) => Promise<WidgetPayload | null>;
   reviews?: ReviewsDirectory;
-  logotypeUrl?: string;
 };
 
 export type RenderedWidget = {
@@ -110,15 +108,12 @@ const renderInto = (
   };
 };
 
-export const renderWidget = (shadow: ShadowRoot, payload: WidgetPayload, options: RenderOptions): RenderedWidget => {
-  const rendered = renderInto(shadow, options, payload, (context) => {
+export const renderWidget = (shadow: ShadowRoot, payload: WidgetPayload, options: RenderOptions): RenderedWidget =>
+  renderInto(shadow, options, payload, (context) => {
     if (payload.type === "wall") return renderWall(payload, context);
     if (payload.type === "carousel") return renderCarousel(payload, context);
     return renderBadge(payload, context);
   });
-  if (payload.poweredBy && options.logotypeUrl) loadLogotype(options.logotypeUrl);
-  return rendered;
-};
 
 export const renderLoading = (shadow: ShadowRoot, type: WidgetType, options: RenderOptions, look?: Look): RenderedWidget =>
   renderInto(shadow, options, look ?? { theme: "auto", cardStyle: "sharp", accentColor: null }, (context) =>

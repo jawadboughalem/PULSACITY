@@ -10,8 +10,6 @@ import { ChoiceButtons } from "../ChoiceButtons";
 import { ExampleMention } from "../ExampleMention";
 import { JULIE_ACCENT, JULIE_PAGE_BACKGROUNDS, JULIE_PAGE_FONT_CLASSES } from "./julie-page";
 
-const LOGOTYPE_URL = "/fonts/pulsacity-logotype.woff2";
-
 /** On a dark card, Julie's green stands out too little: the stars take Soleil (maquettes 3.5, widget sombre). */
 const DARK_ACCENT = "#FFBE3B";
 
@@ -52,7 +50,7 @@ const LiveWidget = ({ payload }: { payload: WidgetPayload }) => {
     if (!host) return;
     const linkColor = readLinkColor(host);
     const shadow = host.shadowRoot ?? host.attachShadow({ mode: "open" });
-    const rendered = renderWidget(shadow, payload, { host, linkColor, logotypeUrl: LOGOTYPE_URL });
+    const rendered = renderWidget(shadow, payload, { host, linkColor });
     return () => rendered.destroy();
   }, [payload]);
 
@@ -72,13 +70,15 @@ const LOOK_OPTIONS = [
 
 /**
  * Room kept for the widget, so that switching its type moves nothing below (recette of lot 4.7): on a computer, one
- * height for the three, the carousel's; on a phone, the height of each, a wall's height left under a badge being
- * most of a screen. Measured at 360 and 1440 px, plus a margin.
+ * height for the three, the tallest; on a phone, the height of each, a wall's height left under a badge being most of
+ * a screen. The widget turns wide (three columns, three cards) when it reaches 1024 px itself, on a screen of 1316 px:
+ * below, the two-column wall is the tallest; above, the wall and the carousel are alike. Measured from 320 to 1920 px
+ * with the widget of lot 4.8, plus a margin.
  */
 const RESERVED_HEIGHTS: Record<WidgetType, string> = {
-  wall: "min-h-[680px] desktop:min-h-[424px]",
-  carousel: "min-h-[384px] desktop:min-h-[424px]",
-  badge: "min-h-[96px] desktop:min-h-[424px]",
+  wall: "min-h-[732px] desktop:min-h-[460px] min-[1316px]:min-h-[320px]",
+  carousel: "min-h-[352px] desktop:min-h-[460px] min-[1316px]:min-h-[320px]",
+  badge: "min-h-[96px] desktop:min-h-[460px] min-[1316px]:min-h-[320px]",
 };
 
 /**

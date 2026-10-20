@@ -3,69 +3,66 @@ import type { WidgetType } from "./payload";
 
 const LOADING_TEXT = "Chargement des avis…";
 
-type SkeletonCard = { height: number; lines: Array<"full" | "short">; hasPhoto?: boolean };
+type SkeletonCard = { height: number; lines: number };
 
-/** The proportions of maquette 2, « Mur · chargement »: three columns on a wide page, two on a narrow one. */
+/**
+ * Maquettes 3.6, « Chargement des trois types »: three columns of two cards on a wide page, two columns on a narrow
+ * one (one under 340 px, the same cards one under the other). The heights of the cards of the maquette.
+ */
 const WALL_COLUMNS: Record<"wide" | "narrow", SkeletonCard[][]> = {
   wide: [
     [
-      { height: 300, lines: ["full", "full", "short"] },
-      { height: 240, lines: ["full", "short"] },
+      { height: 260, lines: 3 },
+      { height: 196, lines: 3 },
     ],
     [
-      { height: 260, lines: ["full", "short"] },
-      { height: 280, lines: ["full", "full", "short"] },
+      { height: 218, lines: 3 },
+      { height: 248, lines: 3 },
     ],
-    [{ height: 420, lines: ["full", "short"], hasPhoto: true }],
+    [
+      { height: 298, lines: 3 },
+      { height: 156, lines: 3 },
+    ],
   ],
   narrow: [
     [
-      { height: 250, lines: ["full", "full", "short"] },
-      { height: 200, lines: ["full", "short"] },
+      { height: 238, lines: 3 },
+      { height: 216, lines: 3 },
     ],
     [
-      { height: 330, lines: ["full", "short"], hasPhoto: true },
-      { height: 190, lines: ["full"] },
+      { height: 216, lines: 3 },
+      { height: 238, lines: 3 },
     ],
   ],
 };
 
 const bar = (className: string) => h("span", { class: `bar ${className}` });
 
+const repeat = <T>(count: number, make: (index: number) => T) => Array.from({ length: count }, (_, index) => make(index));
+
+/** A card as it will come (charte v2, Widget, « Carte »): the stars, the quote, then the author at the bottom. */
+const cardContent = (lines: number) => [
+  bar("sk-stars"),
+  ...repeat(lines, (index) => bar(index === lines - 1 ? "sk-text short" : "sk-text")),
+  h("div", { class: "sk-author sk-bottom" }, bar("sk-avatar"), h("div", { class: "sk-lines" }, bar("sk-name"), bar("sk-title"))),
+];
+
 /** Heights go through the CSSOM: a page whose security policy forbids style attributes still lets them through. */
-const skeletonCard = ({ height, lines, hasPhoto }: SkeletonCard) => {
-  const card = h(
-    "div",
-    { class: "sk-card" },
-    h("div", { class: "sk-author" }, bar("sk-avatar"), h("div", { class: "sk-lines" }, bar("sk-name"), bar("sk-title"))),
-    bar("sk-stars"),
-    ...lines.map((line) => bar(line === "short" ? "sk-text short" : "sk-text")),
-    hasPhoto ? bar("sk-photo") : null,
-  );
+const skeletonCard = ({ height, lines }: SkeletonCard) => {
+  const card = h("div", { class: "sk-card" }, ...cardContent(lines));
   card.style.height = `${height}px`;
   return card;
 };
 
+/** « Chargement des avis… »: shown for the wall and the carousel, only read aloud for the badge. */
 const status = (isVisible: boolean) =>
   h("p", { class: isVisible ? "status" : "sr-only", role: "status" }, LOADING_TEXT);
 
-const repeat = (count: number, make: () => HTMLElement) => Array.from({ length: count }, make);
-
-/** Maquette 2, « Carrousel · chargement »: the stars and the quote on top, the author at the bottom. */
-const carouselSkeletonCard = () =>
-  h(
-    "div",
-    { class: "sk-card sk-slide" },
-    h("div", { class: "sk-stars-row" }, ...repeat(5, () => bar("sk-star"))),
-    bar("sk-text"),
-    bar("sk-text long"),
-    bar("sk-text short"),
-    h("div", { class: "sk-author sk-bottom" }, bar("sk-avatar"), h("div", { class: "sk-lines" }, bar("sk-name"), bar("sk-title"))),
-  );
+const carouselSkeletonCard = () => h("div", { class: "sk-card sk-slide" }, ...cardContent(3));
 
 /**
- * The arrows and the points sit where the carousel will put them, so that nothing moves when it arrives: three points
- * on a wide page, four on a phone, as in maquette 2.
+ * The arrows and the points sit where the carousel will put them, so that nothing moves when it arrives: two points
+ * on a wide page, four on a phone.
  */
 const carouselSkeleton = (isWide: boolean) =>
   h(
@@ -74,10 +71,10 @@ const carouselSkeleton = (isWide: boolean) =>
     h("div", { class: "sk-track" }, h("div", { class: "sk-row" }, ...repeat(isWide ? 3 : 1, carouselSkeletonCard))),
     h("span", { class: "sk-arrow prev" }),
     h("span", { class: "sk-arrow next" }),
-    h("div", { class: "sk-dots" }, ...repeat(isWide ? 3 : 4, () => h("span", { class: "sk-dot" }))),
+    h("div", { class: "sk-dots" }, ...repeat(isWide ? 2 : 4, () => h("span", { class: "sk-dot" }))),
   );
 
-/** Maquette 2, « Badge · chargement »: the pill keeps its place next to the buy button. */
+/** The pill keeps its place next to the buy button: three faces, the stars, the figures. */
 const badgeSkeleton = () =>
   h(
     "div",

@@ -48,7 +48,7 @@ export const renderWall = (payload: WidgetPayload, context: LayoutContext): HTML
       h(
         "p",
         { class: "summary" },
-        stars(payload.average, describeSummary(payload.average, payload.count ?? payload.total), "large"),
+        stars(payload.average, describeSummary(payload.average, payload.count ?? payload.total), "medium"),
         h("span", { "aria-hidden": "true" }, summarize(payload.average, payload.count ?? payload.total)),
       ),
     );

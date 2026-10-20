@@ -40,12 +40,13 @@ afterEach(() => {
 });
 
 describe("the wall", () => {
-  it("shows each card as in maquette 2: the author with the date of the review, the stars, the quote in French quotes", () => {
+  it("shows each card as in maquettes 3.6: the stars, the quote in French quotes, the author with the date of the review", () => {
     const { root } = render(SAMPLE_PAYLOAD);
 
     const cards = root.querySelectorAll(".grid > li > article.card");
     expect(cards).toHaveLength(4);
     const first = cards[0];
+    expect([...first.children].map((child) => child.className)).toEqual(["stars", "quote", "author"]);
     expect(first.querySelector(".name")?.textContent).toBe("Camille R.");
     expect(first.querySelector(".meta")?.textContent).toBe("Enseignante");
     expect(first.querySelector(".avatar")?.textContent).toBe("CR");
@@ -395,6 +396,7 @@ describe("« Propulsé par PULSACITY »", () => {
       const link = render(payload).root.querySelector<HTMLAnchorElement>("a.powered");
       expect(link?.getAttribute("href")).toBe("https://pulsacity.com/?ref=julie42");
       expect(link?.textContent).toBe("Propulsé parPulsacity");
+      expect(link?.querySelector("svg path")).not.toBeNull();
       expect(link?.getAttribute("target")).toBe("_blank");
     }
   });
@@ -435,7 +437,21 @@ describe("the colours", () => {
 
     expect(variable(root, "--card-bg")).toBe("#22262D");
     expect(variable(root, "--page-text")).toBe("rgb(31, 42, 34)");
-    expect(variable(root, "--page-muted")).toBe("#5A5F6E");
+    expect(variable(root, "--page-muted")).toBe("#565B6B");
+  });
+
+  it("lays its cards on #F2F4F8 on a white page, and turns them white on a page already tinted (charte v2, ajouts 3.6)", () => {
+    expect(variable(render(SAMPLE_PAYLOAD, { background: "#FFFFFF" }).root, "--card-bg")).toBe("#F2F4F8");
+    expect(variable(render(SAMPLE_PAYLOAD, { background: "#F2F5F1" }).root, "--card-bg")).toBe("#FFFFFF");
+    expect(variable(render(SAMPLE_PAYLOAD, { background: "#F4F8FF" }).root, "--card-bg")).toBe("#FFFFFF");
+  });
+
+  it("takes Soleil for stars an accent cannot carry on dark cards, and Encre on light ones (maquettes 3.6, « Thèmes »)", () => {
+    const green = { ...SAMPLE_PAYLOAD, accentColor: "#4F6F52" };
+    const orange = { ...SAMPLE_PAYLOAD, accentColor: "#F5873B" };
+
+    expect(variable(render({ ...green, theme: "dark" }, { background: "#FFFFFF" }).root, "--card-accent")).toBe("#FFBE3B");
+    expect(variable(render({ ...orange, theme: "light" }, { background: "#14161A" }).root, "--card-accent")).toBe("#16213E");
   });
 
   it("takes the colour of the page's links when no accent is set", () => {
@@ -478,7 +494,7 @@ describe("the loading state", () => {
     expect(root.classList.contains("one-column")).toBe(true);
   });
 
-  it("holds the place of a carousel with its cards, its arrows and its points, as in maquette 2", () => {
+  it("holds the place of a carousel with its cards, its arrows and its points, as in maquettes 3.6", () => {
     const wide = createHost({ width: 1200 });
     const narrow = createHost({ width: 360 });
 
@@ -489,7 +505,7 @@ describe("the loading state", () => {
     expect(wideRoot.querySelectorAll(".sk-slide")).toHaveLength(3);
     expect(narrowRoot.querySelectorAll(".sk-slide")).toHaveLength(1);
     expect(wideRoot.querySelectorAll(".sk-arrow")).toHaveLength(2);
-    expect(wideRoot.querySelectorAll(".sk-dot")).toHaveLength(3);
+    expect(wideRoot.querySelectorAll(".sk-dot")).toHaveLength(2);
     expect(narrowRoot.querySelectorAll(".sk-arrow")).toHaveLength(2);
     expect(narrowRoot.querySelectorAll(".sk-dot")).toHaveLength(4);
   });
