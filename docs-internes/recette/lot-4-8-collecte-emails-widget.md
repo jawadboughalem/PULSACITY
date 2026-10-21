@@ -12,7 +12,9 @@ Dans l'ordre :
 - Prompt 4 : recette, la page de collecte générale à 360 px.
 - Prompt 5 : recette de bout en bout avec B : la correction, le motif, la désinscription.
 - Action 6, à faire vous-même : les mêmes e-mails dans Outlook et dans Apple Mail.
-- Après la fusion : prompt 7 (vérification en production, avec le widget sur votre vraie page Systeme.io), à la toute fin avec celles des autres lots.
+- Après la fusion : prompt 7 (vérification en production : le widget sur votre vraie page Systeme.io, les e-mails avec le symbole PULSACITY), puis l'action 6 sur des e-mails de production, à la toute fin avec les vérifications des autres lots.
+
+Recette faite le 21 octobre (prompts 1 à 5) : compte rendu et corrections dans `etat.md`, section du lot 4.8. L'action 6 est reportée à la vérification en production.
 
 Ce lot ne touche à aucun service : aucune action sur Vercel, Supabase, Cloudflare, Resend ou Stripe, aucune variable, aucune migration. Il change l'apparence de ce que voient vos clients (page de collecte, réponses à une correction, désinscription, e-mails) et du widget, pas ce que fait le produit. Deux adresses changent de forme, l'ancienne continuant de marcher : le lien de connexion (`/entrer/…`) et le lien de désinscription des e-mails (`/desinscription/…`).
 
@@ -111,13 +113,13 @@ Avant ce prompt : toujours connecté à l'aperçu avec A, fenêtre en grand. La 
 Tu continues la recette du lot 4.8 de PULSACITY sur l'aperçu https://pulsacity-git-claude-sweet-ritc-38d706-jawadboughalems-projects.vercel.app, connecté à l'espace « Julie Nutrition », fenêtre en grand. Pour chaque point, note « OK » ou décris ce que tu vois. Maquettes : https://github.com/jawadboughalem/PULSACITY/tree/claude/sweet-ritchie-zo9fad/docs-internes/design-v2/maquettes. N'envoie rien à une adresse en @exemple.fr. Ne recopie dans le compte rendu aucune adresse e-mail ni aucun lien.
 
 A. La demande
-1. Ouvre Demandes (/app/demandes) et clique « Demander un avis ». Prénom : Camille ; adresse : demande-moi l'adresse B ; offre : « Programme 30 jours » ; date d'achat : celle proposée ; coche « Cette personne a acheté cette offre auprès de moi. » ; clique « Envoyer la demande ».
-2. Dans la boîte de B, ouvre l'e-mail. Expéditeur affiché : « Julie Nutrition » ; objet : « Camille, votre avis sur Programme 30 jours ? ». Compare à v2-email-demande-desktop-01.png : comme l'aperçu de Réglages, avec le bouton vert « Donner mon avis ». En bas : « Ne plus recevoir ces e-mails » (ne clique pas) ; son lien commence par l'adresse de l'aperçu suivie de « /desinscription/ ».
+1. Ouvre Demandes (/app/demandes) et clique « Demander un avis ». Prénom : Camille ; adresse : demande-moi l'adresse B ; offre : « Programme 30 jours » ; date d'achat : celle proposée ; coche « Cette personne a acheté cette offre auprès de moi. » ; clique « Envoyer la demande ». Sur un aperçu, l'envoi planifié ne tourne pas : dans la liste, clique « Envoyer maintenant » sur cette demande.
+2. Dans la boîte de B, ouvre l'e-mail. Expéditeur affiché : « Julie Nutrition via PULSACITY » ; objet : « Camille, votre avis sur Programme 30 jours ? ». Compare à v2-email-demande-desktop-01.png : comme l'aperçu de Réglages, avec le bouton vert « Donner mon avis ». En bas : « Ne plus recevoir ces e-mails » (ne clique pas) ; son lien commence par l'adresse de l'aperçu suivie de « /desinscription/ ».
 3. Dans Gmail, menu « ⋮ » de l'e-mail, « Afficher l'original » : la partie « text/plain » existe et se lit comme une lettre (Bonjour Camille, les paragraphes, « Donner mon avis : » puis le lien, la signature, puis « -- » et les mentions). Compare à v2-email-demande-version-texte-desktop-01.png. Ferme l'onglet.
 
 B. La page de collecte, sur ordinateur
 4. Clique « Donner mon avis ». Compare à v2-collecte-page-desktop-01-arrivee.png : la page teintée d'un vert très pâle, en haut les initiales « JN » sur un rond vert et « Julie Nutrition », une carte blanche centrée : le titre, « Julie Nutrition lira chaque mot. Une note et quelques mots suffisent. », cinq grandes étoiles vides, le champ de l'avis, la photo (un rond en pointillés), le prénom, la case de consentement sur fond gris très clair, le bouton vert « Envoyer mon avis » sur toute la largeur. Sous la carte, « Propulsé par PULSACITY » en petit.
-5. Clique « Envoyer mon avis » sans rien remplir : un bandeau en haut de la carte et les messages sous les champs manquants. Compare à v2-collecte-page-desktop-04-champs-manquants.png.
+5. Clique « Envoyer mon avis » sans rien remplir : les messages sous les champs manquants (la case de consentement aussi, voulu). Compare à v2-collecte-page-desktop-04-champs-manquants.png.
 6. Choisis 5 étoiles (elles deviennent vertes), écris « Avis de recette du lot 4.8, merci. », ajoute une photo de toi ou n'importe quelle image (demande-moi si tu n'en trouves pas) : elle prend la place du rond, recadrée. Ne coche pas la case et envoie : seule la case est signalée. Compare à v2-collecte-page-desktop-03-consentement-manquant.png.
 7. Coche la case et envoie : « Envoi… » apparaît un instant dans le bouton, puis le remerciement. Compare à v2-collecte-page-desktop-07-envoi-reussi.png : le message de remerciement sur la teinte verte, avec le rond vert aux initiales, puis le récapitulatif de ton avis (étoiles vertes, texte).
 8. Ouvre à nouveau le lien « Donner mon avis » de l'e-mail : « Ce lien n'est plus actif », avec un lien « Écrire à Julie Nutrition ». Compare à v2-collecte-page-desktop-08-lien-plus-actif.png.
@@ -177,7 +179,7 @@ Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu
 
 ## 6. À faire vous-même — les e-mails dans Outlook et dans Apple Mail
 
-Claude in Chrome ne voit que le navigateur : ce contrôle se fait à la main, en quelques minutes. Les e-mails de A (« Votre lien », « Code du widget », « Nouveau témoignage ») et de B (demande, demande d'accord, motif) sont déjà dans vos boîtes.
+Reportée le 21 octobre à la vérification en production, après le prompt 7, sur des e-mails reçus de pulsacity.com (ceux de l'aperçu montrent le symbole PULSACITY cassé). Claude in Chrome ne voit que le navigateur, et ne copie pas un e-mail vers un service d'aperçu : ce contrôle se fait à la main, en quelques minutes, sur « Votre lien » et sur une demande d'avis.
 
 - **Outlook** (bureau, Windows) : ouvrez deux ou trois de ces e-mails. Attendu : la carte blanche aux coins carrés (Outlook n'arrondit pas), le bouton plein, de la bonne couleur, avec son texte centré, lisible ; le lien en clair sous le bouton ; aucun texte coupé. Si Outlook bloque les images, le symbole PULSACITY manque en haut : « Télécharger les images » le fait apparaître, le reste se lit sans.
 - **Apple Mail** (maison, Mac, et sur iPhone si votre messagerie y est) : les mêmes e-mails. Attendu : la carte arrondie, le bouton arrondi ; sur l'iPhone, la carte occupe la largeur, le bouton fait toute la largeur ou presque, le texte n'est pas minuscule.
@@ -199,7 +201,7 @@ Tu vérifies en production le lot 4.8 de PULSACITY : le widget sur ma vraie page
 3. Le widget a le dessin v2 : cartes sans bord ni ombre (blanches si la section est teintée), étoiles, citation, puis l'auteur en bas ; « 4,7/5 · … avis » en gras léger ; « À propos de ces avis » et « Propulsé par » suivi du logo PULSACITY dessiné. Les polices sont celles de ma page.
 4. Si c'est un mur : « Voir les … autres avis » ajoute des avis. Si c'est un carrousel : les flèches et les points font avancer les cartes.
 5. Règle la fenêtre sur 360 px : le widget tient dans la largeur, sans débordement ; le mur passe en une colonne, ou en deux avec l'avatar au-dessus du nom.
-6. Sur https://pulsacity.com/connexion, demande un lien pour mon adresse (demande-la-moi) : dans l'e-mail, le lien en clair commence par « https://pulsacity.com/entrer/ ». Clique le bouton : j'arrive dans mon espace.
+6. Sur https://pulsacity.com/connexion, demande un lien pour mon adresse (demande-la-moi) : dans l'e-mail, en haut, le petit symbole PULSACITY s'affiche (sur l'aperçu, il était cassé : l'image y était protégée), et le lien en clair commence par « https://pulsacity.com/entrer/ ». Clique le bouton : j'arrive dans mon espace.
 7. Dans mon espace, Réglages, lis l'adresse de ma page de collecte et ouvre-la : la page v2 (teinte de ma couleur, carte blanche, bouton à ma couleur). N'envoie rien.
 
 Compte rendu à me donner : chaque point avec « OK » ou ce que tu as vu. Aucune adresse e-mail, aucun lien.
