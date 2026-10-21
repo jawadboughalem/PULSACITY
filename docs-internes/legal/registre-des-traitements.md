@@ -6,7 +6,7 @@ Brouillon préparé par Claude Code au lot 4.9, d'après le modèle de la CNIL e
 
 ## Responsable et contact
 
-- Responsable du traitement : l'exploitant de PULSACITY, personne physique (nom et adresse : variables `LEGAL_PUBLISHER_*`, mentions légales).
+- Responsable du traitement : l'exploitant de PULSACITY, personne physique (son nom : variable `LEGAL_PUBLISHER_NAME`, mentions légales ; aucune adresse publiée).
 - Contact pour les données : contact@pulsacity.com.
 - Pas de délégué à la protection des données (non obligatoire).
 
@@ -20,7 +20,7 @@ Brouillon préparé par Claude Code au lot 4.9, d'après le modèle de la CNIL e
 | Source des inscriptions | Savoir d'où viennent les inscriptions | Créateurs | Réponse « Comment avez-vous connu PULSACITY ? », source de l'adresse, code de parrainage | Intérêt légitime | Supabase | Durée du compte |
 | Messages reçus | Répondre | Toute personne qui écrit | Adresse, sujet, message (nom et plan de l'espace s'il y en a un) | Intérêt légitime | Resend, OVH, Google (Gmail) | 3 ans après le dernier échange ; compteurs d'envois 48 heures |
 | « Me prévenir », « Dites-nous quel outil » | Annoncer un connecteur, choisir les suivants | Visiteurs, créateurs | E-mail, outil (sans espace : l'outil seul pour « Dites-nous quel outil ») | Consentement | Supabase, Resend | Jusqu'à l'annonce, au plus 3 ans |
-| Protection du service | Sécurité, limites d'envoi | Visiteurs | Adresse IP, date, page ; empreinte HMAC de l'adresse IP | Intérêt légitime | Vercel | Journaux : 1 jour (Vercel Pro) ; compteurs : 48 heures |
+| Protection du service | Sécurité, limites d'envoi | Visiteurs | Adresse IP, date, page ; empreinte HMAC de l'adresse IP | Intérêt légitime | Vercel | Journaux : 1 heure (Vercel Hobby), 1 jour (Pro) ; compteurs : 48 heures |
 | Mesure d'audience | Statistiques des pages publiques | Visiteurs | Pages, source, pays, langue, appareil ; sans cookie, IP non gardée | Intérêt légitime (exemptée de consentement, auto-évaluation CNIL faite) | Umami Software | 6 mois |
 
 ## Partie 2 — Traitements faits pour le compte des créateurs (article 30.2)

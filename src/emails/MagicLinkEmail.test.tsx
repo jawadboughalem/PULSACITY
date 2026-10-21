@@ -40,17 +40,12 @@ describe("MagicLinkEmail", () => {
     expect(text).toContain("Vous recevez cet e-mail parce qu'une connexion a été demandée avec julie@exemple.fr.");
   });
 
-  it("ends with the person who sends PULSACITY and their address, once the legal variables are filled in", async () => {
-    const before = await render(<MagicLinkEmail url={LINK} email="julie@exemple.fr" lifetimeMinutes={15} />, {
-      plainText: true,
-    });
-    expect(before).not.toContain("·");
-
+  it("signs « PULSACITY » alone: never the publisher's name, nor any postal address", async () => {
     vi.stubEnv("LEGAL_PUBLISHER_NAME", "Julie Martin");
-    vi.stubEnv("LEGAL_PUBLISHER_ADDRESS", "12 rue des Lilas, 69003 Lyon");
     const text = await render(<MagicLinkEmail url={LINK} email="julie@exemple.fr" lifetimeMinutes={15} />, {
       plainText: true,
     });
-    expect(read(text)).toMatch(/PULSACITY\s+Julie Martin · 12 rue des Lilas, 69003 Lyon\s*$/);
+    expect(read(text)).toMatch(/PULSACITY\s*$/);
+    expect(text).not.toContain("Julie Martin");
   });
 });

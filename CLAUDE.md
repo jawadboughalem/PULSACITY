@@ -23,7 +23,7 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 
 - PULSACITY encaisse dès la V0 : le fondateur vend en tant que particulier, sans entreprise. Stripe Billing, la page « Abonnement et factures » et les CGV restent dans la V0.
 - La micro-entreprise se crée au seuil de `docs-internes/fin-v0/seuil-micro-entreprise.md` : 5 clients payants, 3 mois de suite avec des paiements, ou 500 € encaissés, le premier atteint. Ce jour-là, les prompts 6.1 à 6.7 passent avant tout le reste.
-- Textes légaux d'un vendeur particulier : son nom, son adresse et son téléphone viennent de variables Vercel, jamais du dépôt (lot 4.9). Une seule adresse : contact@pulsacity.com.
+- Textes légaux d'un vendeur particulier : son nom vient d'une variable Vercel, jamais du dépôt (lot 4.9) ; ni son adresse ni son téléphone ne sont publiés, nulle part (décision du 21 octobre 2026). Une seule adresse : contact@pulsacity.com.
 - Aucune TVA n'est facturée : les prix sont des prix finaux, jamais « TVA comprise ».
 - Les décisions sont dans `docs-internes/decisions/` (connecteurs, tarifs, positionnement, commercialisation, textes légaux) ; `arbitrages.md` règle leurs contradictions et prime sur elles.
 
@@ -79,7 +79,7 @@ src/lib/welcome-emails/       # e-mails d'accueil J0, J1, J3, J7 : échéances, 
 src/lib/billing/              # Stripe Billing de PULSACITY : prix par clé de recherche, Checkout, portail, changements de plan, événements, prix fondateur, rappel des bêta-testeurs
 src/lib/requests/             # planification et envoi des demandes
 src/lib/support/              # « Écrivez-nous » : contact@pulsacity.com, champs, limites, envoi (rien gardé en base), « Signaler un contenu » (/aide?sujet=signalement)
-src/lib/legal/                # textes légaux : l'exploitant lu dans les variables LEGAL_PUBLISHER_*, leur validation
+src/lib/legal/                # textes légaux : le nom de l'exploitant (LEGAL_PUBLISHER_NAME), leur validation
 src/emails/                   # templates React Email
 src/content/                  # textes du site : offres (depuis plans.ts), FAQ, aide par thème (help.ts), un fichier par connecteur et leurs familles (integrations/), guides et textes légaux en MDX
 docs-internes/                # décisions, payloads, recette ; etat.md : où en est le projet ; design-v2/ : charte, maquettes et logo v2
@@ -188,10 +188,8 @@ R2_PUBLIC_URL
 CRON_SECRET
 NEXT_PUBLIC_APP_URL            # https://pulsacity.com
 SENTRY_DSN
-LEGAL_VALIDATED                # true quand le fondateur valide les textes légaux ; sans les trois variables suivantes, ils restent en brouillon
-LEGAL_PUBLISHER_NAME           # prénom et nom de l'exploitant, vendeur particulier (lot 4.9) : textes légaux, pied des e-mails de PULSACITY
-LEGAL_PUBLISHER_ADDRESS        # son adresse postale, sur une ligne
-LEGAL_PUBLISHER_PHONE          # son numéro de mobile (mentions légales)
+LEGAL_VALIDATED                # true quand le fondateur valide les textes légaux ; sans LEGAL_PUBLISHER_NAME, ils restent en brouillon
+LEGAL_PUBLISHER_NAME           # prénom et nom de l'exploitant, vendeur particulier (lot 4.9), dans les textes légaux seulement ; sans elle, les phrases qui le nomment s'en passent
 PULSACITY_SPACE_ID             # l'espace PULSACITY : son mur sur l'accueil, son badge sur Tarifs (sans elle, rien)
 NEXT_PUBLIC_UMAMI_WEBSITE_ID   # mesure d'audience Umami Cloud des pages publiques (sans elle, aucun script)
 NEXT_PUBLIC_UMAMI_SCRIPT_URL   # facultative : autre adresse du script d'Umami (cloud.umami.is par défaut)

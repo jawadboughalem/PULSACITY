@@ -294,9 +294,9 @@ Checklist : w.js reste un seul fichier de moins de 30 Ko compressé, sans dépen
 
 À joindre au message : les textes réécrits du compte rendu 2.7, les informations du prompt 2.6, sans vos informations personnelles, et le tableau du compte rendu 2.4.
 
-1. **Vos informations personnelles** (nom, adresse, téléphone) :
-   - elles viennent de variables d'environnement que vous saisissez vous-même dans Vercel, jamais du dépôt ;
-   - le lot vous donne le prompt Claude in Chrome pour les saisir, les ajoute à la liste des variables de CLAUDE.md, et prévoit l'affichage quand elles manquent (aperçus).
+1. **Votre nom**, seule information personnelle publiée (décision du 21 octobre : ni adresse ni téléphone, nulle part) :
+   - il vient d'une variable d'environnement que vous saisissez vous-même dans Vercel, jamais du dépôt ;
+   - le lot vous donne le prompt Claude in Chrome pour la saisir, l'ajoute à la liste des variables de CLAUDE.md, et prévoit les pages sans elle (aperçus) : la phrase se lit sans le nom, jamais de passage entre crochets.
 2. **Les quatre textes, selon 2.7** : mentions légales, CGV, CGU avec leur annexe, politique de confidentialité.
    - Plus aucun « [À COMPLÉTER] ».
    - Une seule adresse partout : contact@pulsacity.com.

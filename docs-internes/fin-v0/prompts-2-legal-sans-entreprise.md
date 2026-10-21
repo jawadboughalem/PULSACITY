@@ -19,7 +19,7 @@ Ce que deviennent les textes légaux :
 
 | Texte | Sort |
 | --- | --- |
-| Mentions légales | Celles d'un vendeur particulier : nom, adresse, téléphone, e-mail (à confirmer par 2.7), et l'hébergeur |
+| Mentions légales | Celles d'un vendeur particulier : nom et e-mail, et l'hébergeur ; ni adresse ni téléphone (décision du 21 octobre) |
 | CGV | Gardées et publiées : celles d'un vendeur particulier, sans TVA |
 | CGU, avec l'annexe de sous-traitance RGPD | Gardées |
 | Politique de confidentialité, cookies compris | Gardée : le RGPD s'applique aussi à un particulier |
@@ -117,7 +117,7 @@ Puis le « Compte rendu pour Claude Code » : les quatre textes réécrits en en
 
 Où : vous, vers Claude Code, au début du lot 4.9.
 
-Le dépôt est public et garde tout son historique. Vos informations personnelles (nom, adresse, téléphone) apparaîtront sur le site, comme la loi l'impose à un vendeur, mais viendront de variables d'environnement que vous saisissez vous-même dans Vercel : le lot 4.9 vous donne le prompt. Elles ne s'envoient pas à Claude Code.
+Le dépôt est public et garde tout son historique. Votre nom apparaît dans les textes légaux, par une variable d'environnement que vous saisissez vous-même dans Vercel : le lot 4.9 vous donne le prompt. Il ne s'envoie pas à Claude Code. Votre adresse et votre téléphone ne sont publiés nulle part (décision du 21 octobre).
 
 Remplissez ce modèle et envoyez-le à Claude Code, avec le compte rendu de 2.7 :
 
@@ -127,7 +127,7 @@ Informations pour les textes légaux (lot 4.9)
 Vendeur et éditeur
 - Qualité : vendeur particulier
 - Nom commercial du service : PULSACITY
-- Ce qui est publié : [d'après 2.7 : nom, adresse, téléphone…] (les valeurs : Vercel)
+- Ce qui est publié : le nom seul (la valeur : Vercel)
 - E-mail, pour tout : contact@pulsacity.com
 - TVA : [mention d'après 2.7]
 

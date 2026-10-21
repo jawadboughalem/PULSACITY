@@ -29,7 +29,7 @@ Ces chiffres sont une règle de prudence, pas une règle de la loi : 1.1 peut le
 
 - **Déclarer ce qui est encaissé.** Chaque euro reçu se déclare avec vos revenus de l'année : déclaration 2042 C PRO, ligne 5NP (micro-BIC non professionnel, prestations de services), d'après 2.7.
 - **Garder la trace de chaque paiement.** Stripe la garde : clients, paiements, factures.
-- **Des textes légaux de vendeur particulier** : votre nom, votre adresse et votre téléphone dans les mentions légales, les CGV en ligne. 1.1 et 2.7 le précisent ; le lot 4.9 les publie, vos informations venant de variables Vercel, jamais du dépôt.
+- **Des textes légaux de vendeur particulier** : votre nom dans les mentions légales, les CGV en ligne ; ni votre adresse ni votre téléphone (décision du 21 octobre). Le lot 4.9 les publie, votre nom venant d'une variable Vercel, jamais du dépôt.
 
 ## Suivre les repères
 

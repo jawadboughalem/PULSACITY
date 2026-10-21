@@ -3,7 +3,7 @@
 Adresse de l'aperçu (PR #48) : https://pulsacity-git-claude-legal-text-8e35c1-jawadboughalems-projects.vercel.app
 
 Dans l'ordre :
-- Prompt 1 : Vercel — vos trois informations (vous les tapez vous-même), la région des fonctions, l'offre, l'adresse et le téléphone de Vercel.
+- Prompt 1 : Vercel — votre nom (vous le tapez vous-même), la région des fonctions, l'offre, l'adresse de Vercel. Fait le 21 octobre (compte rendu sous le prompt).
 - Prompt 2 : Supabase — l'offre et les sauvegardes de la production (lecture seule).
 - Prompt 3 : Stripe, bac à sable — l'impayé à 14 jours, le rappel avant un renouvellement annuel, la mention de TVA des reçus.
 - Prompt 4 : Umami — son contrat de traitement et sa garantie de transfert (lecture seule).
@@ -13,54 +13,52 @@ Dans l'ordre :
 - Prompt 8 : recette à 360 px.
 - Après votre validation des textes, puis la fusion : prompt 9 (`LEGAL_VALIDATED=true` en production) et prompt 10 (vérification sur pulsacity.com).
 
-Deux décisions à prendre avant le prompt 1 :
-- **L'adresse publiée** : option A (votre domicile) ou option B (une domiciliation, qui suppose en général la micro-entreprise). Elle s'affiche dans les mentions légales, la politique de confidentialité, et sous « PULSACITY » au pied des e-mails envoyés aux créateurs (maquettes 3.6).
-- **Vercel Pro** avant le premier paiement (le DPA de Vercel ne couvre pas Hobby ; les journaux sont gardés 1 jour en Pro, 1 heure en Hobby : la politique de confidentialité dit 1 jour).
+Décision du 21 octobre : ni votre adresse ni votre téléphone ne sont publiés, nulle part. Seul votre nom apparaît, dans les textes légaux, par `LEGAL_PUBLISHER_NAME`. Aucun prompt ne vous les demande.
+
+Une décision reste à prendre : **Vercel Pro** avant le premier paiement (le DPA de Vercel ne couvre pas Hobby). La politique de confidentialité dit « au plus 1 jour » de journaux : 1 heure en Hobby, 1 jour en Pro.
 
 Deux adresses, à garder pour vous (jamais dans un compte rendu) :
 - **A** : celle des recettes précédentes, l'espace « Julie Nutrition » de la recette ;
 - **B** : une autre de vos adresses (un alias Gmail suffit), qui joue la cliente. Sa boîte de réception est ouverte dans un onglet du groupe « PULSACITY ».
 
 Déjà vérifié par Claude Code dans son conteneur :
-- les quatre textes à 360 et 1440 px, sans débordement ni erreur dans la console : sans les trois variables, leur place surlignée et le bandeau « Les passages surlignés attendent leur valeur » ; avec elles et `LEGAL_VALIDATED=true`, ni bandeau ni `noindex` ;
+- les quatre textes à 360 et 1440 px, sans débordement ni erreur dans la console : sans `LEGAL_PUBLISHER_NAME`, les phrases se lisent sans le nom, sans crochet ; avec elle et `LEGAL_VALIDATED=true`, ni bandeau ni `noindex` ;
+- aucun crochet de remplissage dans les pages : un test le garde (`src/content/placeholder-brackets.test.ts`) ;
 - les prix et limites des CGV lus dans `plans.ts` ; liens internes et ancres (`#avis`, `#cookies`, `#destinataires`, `#contact`, `#sous-traitance`) par un test ;
 - la page de collecte (demande et lien public) avec la nouvelle case et les deux aides, à 360 et 1440 px ;
 - « Gérer mon avis » de bout en bout dans Chromium : avis enregistré, confirmation, « Garder mon avis », retrait, accord retiré, avis plus enregistré ; par des tests : l'avis, ses corrections et sa photo partent, rien d'un autre espace ni d'un lien pas encore répondu ;
-- les pieds des e-mails (client : « … utilise PULSACITY … Vos données » ; créateur : nom et adresse de l'exploitant sous « PULSACITY ») ;
+- les pieds des e-mails (client : « … utilise PULSACITY … Vos données » ; créateur : « PULSACITY » seul) ;
 - `pnpm lint`, `pnpm typecheck`, `pnpm build` ; `pnpm test` vert, sauf `decode-csv-file.test.ts` (connu, propre au conteneur).
 
-Ce que les textes affirment et que la recette ne voit pas, à vérifier par les prompts 1 à 4 avant votre validation : le téléphone de Vercel (repris d'une source tierce), la région des fonctions (Francfort, `vercel.json`), les sauvegardes de Supabase (7 jours supposés), la garantie de transfert d'Umami. La purge à 90 jours des ventes déjà traitées est promise par les textes : elle se construit au lot 4.10, avant le 1er janvier 2027.
+Ce que les textes affirment et que la recette ne voit pas, à vérifier par les prompts 2 à 4 avant votre validation : les sauvegardes de Supabase (7 jours supposés), les réglages de Stripe, la garantie de transfert d'Umami. La région des fonctions (FRA1) et l'adresse de Vercel sont relevées (prompt 1) ; Vercel ne publie pas de téléphone. La purge à 90 jours des ventes déjà traitées est promise par les textes : elle se construit au lot 4.10, avant le 1er janvier 2027.
 
 ---
 
-## 1. Vercel — vos informations, la région, l'offre, les coordonnées de Vercel
+## 1. Vercel — votre nom, la région, l'offre, l'adresse de Vercel
 
-À coller dans Claude in Chrome. Avant ce prompt : connectez-vous vous-même à Vercel. Ayez sous la main votre prénom et nom, votre adresse (celle de l'option choisie, sur une ligne : « 12 rue des Lilas, 69003 Lyon ») et votre numéro de mobile : c'est vous qui les tapez, jamais l'agent.
+Fait le 21 octobre. À coller dans Claude in Chrome, s'il fallait le refaire. Avant ce prompt : connectez-vous vous-même à Vercel. C'est vous qui tapez votre nom, jamais l'agent.
 
 ```
-Tu m'aides à préparer les textes légaux de PULSACITY sur Vercel. Je suis connecté à Vercel dans ce groupe d'onglets. Tu ne vois ni ne tapes mes informations personnelles : c'est moi qui les saisis. Tu ne touches à aucune autre variable, ni aux domaines, ni à la facturation, ni à la protection des déploiements.
+Tu m'aides à préparer les textes légaux de PULSACITY sur Vercel. Je suis connecté à Vercel dans ce groupe d'onglets. Tu ne vois ni ne tapes mon nom : c'est moi qui le saisis. Tu ne touches à aucune autre variable, ni aux domaines, ni à la facturation, ni à la protection des déploiements, et tu ne redéploies rien.
 
 Où : https://vercel.com/jawadboughalems-projects/pulsacity/settings/environment-variables
 
-A. Mes trois informations
-1. Clique « Add Environment Variable » (ou « Add New »). Écris le nom LEGAL_PUBLISHER_NAME. Coche les environnements Production et Preview, pas Development. Laisse « Sensitive » décoché. Puis arrête-toi et dis-moi : « Tapez votre prénom et votre nom dans Value, puis dites-moi quand c'est fait. » Quand je te le dis, clique « Save ».
-2. Même chose avec LEGAL_PUBLISHER_ADDRESS (je tape mon adresse, sur une ligne), puis LEGAL_PUBLISHER_PHONE (je tape mon numéro de mobile).
-3. Vérification : la liste montre les trois noms, chacun en Production et Preview. N'ouvre pas leurs valeurs.
+A. Mon nom
+1. Clique « Add Environment Variable » (ou « Add New »). Écris le nom LEGAL_PUBLISHER_NAME. Coche les environnements Production et Preview, pas Development. Puis arrête-toi et dis-moi : « Tapez votre prénom et votre nom dans Value, puis dites-moi quand c'est fait. » Quand je te le dis, clique « Save ».
+2. Vérification : la liste montre LEGAL_PUBLISHER_NAME en Production et Preview. N'ouvre pas sa valeur.
 
-B. Faire prendre les variables à l'aperçu
-4. Ouvre https://vercel.com/jawadboughalems-projects/pulsacity/deployments, trouve le dernier déploiement de la branche claude/legal-texts-private-seller-049wke, menu « … », « Redeploy », sans cocher « Use existing Build Cache », puis confirme. Attends qu'il soit « Ready ».
-5. Ne redéploie pas la production : elle prendra les variables à la fusion de la PR.
+B. La région des fonctions et l'offre
+3. Ouvre https://vercel.com/jawadboughalems-projects/pulsacity/deployments, le dernier déploiement de la branche claude/legal-texts-private-seller-049wke, onglet « Resources » ou « Functions » : relève la région indiquée pour les fonctions (attendu : fra1, Francfort).
+4. Ouvre https://vercel.com/jawadboughalems-projects/pulsacity/settings/functions : relève la « Function Region » du réglage du projet, sans la changer.
+5. Ouvre les réglages de l'équipe (« Settings » de jawadboughalems-projects, « Billing ») : relève l'offre (Hobby ou Pro), sans rien changer.
 
-C. La région des fonctions et l'offre
-6. Ouvre ce déploiement « Ready », onglet « Resources » ou « Functions » : relève la région indiquée pour les fonctions (attendu : fra1, Francfort).
-7. Ouvre https://vercel.com/jawadboughalems-projects/pulsacity/settings/functions : relève la « Function Region » du réglage du projet, sans la changer.
-8. Ouvre les réglages de l'équipe (« Settings » de jawadboughalems-projects, « Billing ») : relève l'offre (Hobby ou Pro), sans rien changer.
+C. L'adresse de Vercel
+6. Ouvre https://vercel.com/legal/privacy-notice : relève l'adresse postale de Vercel Inc. et l'adresse e-mail de contact, telles qu'écrites. Ne cherche pas de numéro de téléphone ailleurs : s'il n'y en a pas sur cette page, dis-le.
 
-D. Les coordonnées de Vercel
-9. Ouvre https://vercel.com/legal et ses pages (« Terms of Service », « Privacy Notice », « Contact »), et le pied de page de vercel.com : relève l'adresse postale de Vercel Inc. et un numéro de téléphone s'il y en a un, tels qu'écrits. Dis-moi aussi si aucun numéro n'apparaît.
-
-Compte rendu à me donner : les trois noms de variables vus (sans leurs valeurs), les environnements cochés, l'heure du redéploiement « Ready », la région des fonctions du déploiement et celle du réglage du projet, l'offre, l'adresse et le téléphone de Vercel Inc. avec la page où tu les as lus. Aucune de mes informations personnelles.
+Compte rendu à me donner : le nom de la variable vu (sans sa valeur), les environnements cochés, la région des fonctions du déploiement et celle du réglage du projet, l'offre, l'adresse et le contact de Vercel Inc. Aucune information personnelle.
 ```
+
+Compte rendu du 21 octobre : `LEGAL_PUBLISHER_NAME` créée, type « Config » (Vercel n'a plus de case « Sensitive »), en Production et Preview, pas en Development. Aucun redéploiement : le prochain envoi sur la branche reconstruit l'aperçu avec la variable ; la production la prendra à la fusion. Fonctions du dernier aperçu (d59885e) en FRA1 (Francfort) ; le réglage du projet indique cdg1, marqué « Overridden » par `vercel.json`. Offre Hobby. Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, United States ; aucun numéro de téléphone publié, contact privacy@vercel.com.
 
 ---
 
@@ -154,15 +152,15 @@ Compte rendu à me donner : la branche choisie, le plan, et la couleur de l'exé
 
 ## 6. Recette — les quatre textes et « Signaler un contenu »
 
-Avant ce prompt : le redéploiement du prompt 1 est « Ready ». Fenêtre en grand. Si l'aperçu demande de vous identifier à Vercel, faites-le vous-même.
+Avant ce prompt : le dernier déploiement de l'aperçu (après le changement du 21 octobre) est « Ready ». Fenêtre en grand. Si l'aperçu demande de vous identifier à Vercel, faites-le vous-même.
 
 ```
-Tu fais la recette du lot 4.9 de PULSACITY sur l'aperçu https://pulsacity-git-claude-legal-text-8e35c1-jawadboughalems-projects.vercel.app, fenêtre en grand (1440 px environ). Pour chaque point, note « OK » ou décris ce que tu vois. Ne recopie dans le compte rendu ni le nom, ni l'adresse, ni le téléphone de l'exploitant : dis seulement s'ils apparaissent, et où. Ne relève pas les erreurs réseau vues par ton outil de surveillance du navigateur.
+Tu fais la recette du lot 4.9 de PULSACITY sur l'aperçu https://pulsacity-git-claude-legal-text-8e35c1-jawadboughalems-projects.vercel.app, fenêtre en grand (1440 px environ). Pour chaque point, note « OK » ou décris ce que tu vois. Ne recopie pas dans le compte rendu le nom de l'exploitant : dis seulement s'il apparaît, et où. Ne relève pas les erreurs réseau vues par ton outil de surveillance du navigateur.
 
 A. Les mentions légales (/mentions-legales)
-1. En haut : « Version du 21 octobre 2026 », puis le bandeau jaune « Brouillon en cours de relecture », « Ce texte n'est pas encore validé. » (sans « Les passages surlignés… »). Aucun passage surligné dans la page, aucun « [À COMPLÉTER », aucun « LEGAL_PUBLISHER ».
-2. « Éditeur » : un prénom et un nom, « personne physique, sans entreprise immatriculée à ce jour », l'adresse, le téléphone, contact@pulsacity.com, « TVA non applicable, art. 293 B du CGI ». « Directeur de la publication » : le même nom.
-3. « Hébergement » : Vercel Inc., son adresse et son téléphone, « Serveurs utilisés : Francfort, Allemagne. » ; le lien « politique de confidentialité » mène à la rubrique « 4. Qui reçoit vos données ».
+1. En haut : « Version du 21 octobre 2026 », puis le bandeau jaune « Brouillon en cours de relecture », « Ce texte n'est pas encore validé. ». Aucun passage surligné, aucun crochet (« [ » ou « ] ») dans la page, aucun « LEGAL_PUBLISHER ».
+2. « Éditeur » : « édités par », un prénom et un nom, « une personne physique, sans entreprise immatriculée à ce jour », puis contact@pulsacity.com et « TVA non applicable, art. 293 B du CGI ». Aucune adresse postale ni aucun numéro de téléphone de l'exploitant. « Directeur de la publication » : « l'éditeur », suivi du même nom.
+3. « Hébergement » : Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis, « vercel.com, contact : privacy@vercel.com », « Serveurs utilisés : Francfort, Allemagne (région FRA1). », sans numéro de téléphone ; le lien « politique de confidentialité » mène à la rubrique « 4. Qui reçoit vos données ».
 4. « Nous contacter, signaler un contenu » : clique « pulsacity.com/aide ». La page Aide s'ouvre sur « Écrivez-nous » : le sujet est déjà rempli, « Signaler un contenu », et le message commence par trois lignes « Page ou widget : », « Contenu visé : », « Pourquoi il est illicite : ». N'envoie rien.
 5. Le sommaire « Sur cette page » à droite mène à chaque titre.
 
@@ -174,7 +172,7 @@ C. Les CGU (/cgu)
 8. 13 articles et l'annexe « Annexe : contrat de sous-traitance (article 28 du RGPD) ». Aucune mention « [4.13] ». L'article 6.2 a un lien « page qui explique », qui mène à « À propos de ces avis ». L'article 7.4 a un lien vers l'aide, avec le sujet rempli comme au point 4. L'annexe nomme l'exploitant (point 1) et liste quatre sous-traitants ultérieurs (Vercel, Supabase, Resend, Cloudflare).
 
 D. La politique de confidentialité (/confidentialite)
-9. « 1. Qui est responsable » : le nom et l'adresse de l'exploitant. « 3. Ce que nous traitons… » : huit rubriques (espace, abonnements, e-mails, d'où viennent les inscriptions, messages, « Me prévenir », protection, mesure d'audience), chacune avec « Données », « Base légale », « Durée ».
+9. « 1. Qui est responsable » : « L'exploitant de PULSACITY », son nom, « personne physique », contact@pulsacity.com ; aucune adresse postale. « 3. Ce que nous traitons… » : huit rubriques (espace, abonnements, e-mails, d'où viennent les inscriptions, messages, « Me prévenir », protection, mesure d'audience), chacune avec « Données », « Base légale », « Durée ».
 10. « 4. Qui reçoit vos données » : huit prestataires, dont Umami, OVH et Google (Gmail). « 5. Cookies » : trois cookies, avec leurs noms. « 9. Vous avez laissé un avis à un créateur » : « Retirer votre accord » parle de la page « Gérer mon avis ».
 
 E. « À propos de ces avis »
@@ -196,7 +194,7 @@ Avant ce prompt : connectez-vous vous-même à l'aperçu avec A (lien de connexi
 Tu continues la recette du lot 4.9 de PULSACITY sur l'aperçu https://pulsacity-git-claude-legal-text-8e35c1-jawadboughalems-projects.vercel.app, connecté à l'espace « Julie Nutrition », fenêtre en grand. Pour chaque point, note « OK » ou décris ce que tu vois. N'envoie rien à une adresse en @exemple.fr. Ne recopie dans le compte rendu ni adresse e-mail, ni lien, ni information personnelle de l'exploitant.
 
 A. Un e-mail de PULSACITY au créateur
-1. Dans la boîte de A, ouvre le dernier e-mail « Votre lien pour entrer dans PULSACITY ». Tout en bas, sous la carte : la raison de l'e-mail, « PULSACITY », puis une ligne avec un prénom et un nom, « · » et une adresse. Dis seulement si cette ligne est là.
+1. Dans la boîte de A, ouvre le dernier e-mail « Votre lien pour entrer dans PULSACITY ». Tout en bas, sous la carte : la raison de l'e-mail, puis « PULSACITY », seul : ni nom de personne, ni adresse postale.
 
 B. La demande et son pied
 2. Ouvre Demandes (/app/demandes), « Demander un avis ». Prénom : Camille ; adresse : demande-moi l'adresse B ; offre : « Programme 30 jours » ; date proposée ; coche « Cette personne a acheté cette offre auprès de moi. » ; « Envoyer la demande ». Sur un aperçu, l'envoi planifié ne tourne pas : clique « Envoyer maintenant » sur cette demande.
@@ -247,11 +245,11 @@ Tu m'aides à publier les textes légaux de PULSACITY en production. Je suis con
 
 Où : https://vercel.com/jawadboughalems-projects/pulsacity/settings/environment-variables
 
-1. Vérifie que LEGAL_PUBLISHER_NAME, LEGAL_PUBLISHER_ADDRESS et LEGAL_PUBLISHER_PHONE existent en Production (n'ouvre pas leurs valeurs). S'il en manque une, arrête-toi et dis-le-moi.
+1. Vérifie que LEGAL_PUBLISHER_NAME existe en Production (n'ouvre pas sa valeur). Si elle manque, arrête-toi et dis-le-moi.
 2. Trouve LEGAL_VALIDATED. Modifie seulement sa valeur pour l'environnement Production : true. Ne change pas Preview (elle reste false). Enregistre.
 3. Ouvre https://vercel.com/jawadboughalems-projects/pulsacity/deployments, le dernier déploiement de production (branche main), menu « … », « Redeploy », sans cocher « Use existing Build Cache », confirme. Attends « Ready ».
 
-Compte rendu à me donner : les trois variables vues en Production, la valeur de LEGAL_VALIDATED en Production et en Preview, l'heure du déploiement « Ready ».
+Compte rendu à me donner : LEGAL_PUBLISHER_NAME vue en Production, la valeur de LEGAL_VALIDATED en Production et en Preview, l'heure du déploiement « Ready ».
 ```
 
 ---
@@ -261,7 +259,7 @@ Compte rendu à me donner : les trois variables vues en Production, la valeur de
 ```
 Tu vérifies la mise en ligne des textes légaux sur https://pulsacity.com. Tu ne te connectes à rien, tu n'envoies rien.
 
-1. Ouvre /mentions-legales, /cgv, /cgu, /confidentialite et /a-propos-des-avis : aucun bandeau « Brouillon en cours de relecture », aucun passage surligné. Les mentions légales donnent un nom, une adresse et un téléphone (ne les recopie pas).
+1. Ouvre /mentions-legales, /cgv, /cgu, /confidentialite et /a-propos-des-avis : aucun bandeau « Brouillon en cours de relecture », aucun passage surligné, aucun crochet. Les mentions légales donnent un nom (ne le recopie pas) et contact@pulsacity.com, ni adresse postale ni téléphone de l'exploitant.
 2. Sur chacune, code source (Ctrl+U), cherche « noindex » : il n'y est plus.
 3. Ouvre /sitemap.xml : il liste /mentions-legales, /cgu, /cgv, /confidentialite et /a-propos-des-avis.
 4. Ouvre /robots.txt : rien n'y interdit ces pages.
@@ -270,4 +268,4 @@ Tu vérifies la mise en ligne des textes légaux sur https://pulsacity.com. Tu n
 Compte rendu à me donner : chaque point avec « OK » ou ce que tu as vu. Aucune information personnelle.
 ```
 
-Ensuite, pour Stripe en mode réel (2.8 c) : les informations publiques du compte prennent le nom et l'adresse de l'exploitant, les liens https://pulsacity.com/cgv et https://pulsacity.com/confidentialite, et les réglages du prompt 3 sont refaits en mode réel. Claude Code écrit ces prompts avec le passage du lot 4.5 en mode réel.
+Ensuite, pour Stripe en mode réel (2.8 c) : les informations publiques du compte prennent le nom de l'exploitant et contact@pulsacity.com, sans adresse ni téléphone (si Stripe en exige un pour activer le compte, le prompt s'arrêtera et vous demandera), les liens https://pulsacity.com/cgv et https://pulsacity.com/confidentialite, et les réglages du prompt 3 sont refaits en mode réel. Claude Code écrit ces prompts avec le passage du lot 4.5 en mode réel.
