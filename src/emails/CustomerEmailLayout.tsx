@@ -29,6 +29,7 @@ export const CUSTOMER_EMAIL_MOBILE_STYLES = `
   .customer-email-card > tbody > tr > td { padding: 24px !important; }
   .customer-email-legal > tbody > tr > td { padding: 0 24px !important; }
   .customer-email-button { display: block !important; padding-top: 18px !important; padding-bottom: 18px !important; text-align: center !important; }
+  .customer-email-actions { width: 100% !important; float: none !important; }
   .customer-email-actions td { display: block !important; width: 100% !important; padding: 0 0 12px !important; }
 }
 `;

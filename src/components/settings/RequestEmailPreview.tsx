@@ -24,31 +24,44 @@ type RequestEmailPreviewProps = {
 /** The width of a phone: the e-mail is drawn as it reads there, then scaled down to the room it has. */
 const FRAME_WIDTH = 400;
 
-/** The e-mail, drawn in a frame of its own: its styles stay inside, and it shows at its full height. */
+/**
+ * The e-mail, drawn in a frame of its own: its styles stay inside, and it shows at its full height. Narrower than a
+ * phone, it is scaled down; wider, it takes the whole room, so that no strip of the window shows beside its page.
+ */
 const EmailFrame = ({ html }: { html: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
   const [contentHeight, setContentHeight] = useState(640);
-  const [scale, setScale] = useState(1);
+  const [roomWidth, setRoomWidth] = useState(FRAME_WIDTH);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    const observer = new ResizeObserver(([entry]) => setScale(Math.min(1, entry.contentRect.width / FRAME_WIDTH)));
+    const observer = new ResizeObserver(([entry]) => setRoomWidth(entry.contentRect.width));
     observer.observe(container);
     return () => observer.disconnect();
   }, []);
 
+  const scale = Math.min(1, roomWidth / FRAME_WIDTH);
+  const frameWidth = Math.max(FRAME_WIDTH, roomWidth);
+
+  const measure = () => {
+    const body = frameRef.current?.contentDocument?.body;
+    if (body) setContentHeight(body.scrollHeight);
+  };
+
+  // A wider frame wraps fewer lines: the height follows.
+  useEffect(measure, [frameWidth]);
+
   return (
     <div ref={containerRef} className="overflow-hidden rounded-card bg-white" style={{ height: contentHeight * scale }}>
       <iframe
+        ref={frameRef}
         title="Aperçu de l'e-mail"
         srcDoc={html}
         sandbox="allow-same-origin"
-        onLoad={(event) => {
-          const body = event.currentTarget.contentDocument?.body;
-          if (body) setContentHeight(body.scrollHeight);
-        }}
-        style={{ width: FRAME_WIDTH, height: contentHeight, transform: `scale(${scale})` }}
+        onLoad={measure}
+        style={{ width: frameWidth, height: contentHeight, transform: `scale(${scale})` }}
         className="pointer-events-none block origin-top-left"
       />
     </div>

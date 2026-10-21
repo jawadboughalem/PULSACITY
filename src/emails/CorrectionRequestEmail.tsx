@@ -85,16 +85,19 @@ export const CorrectionRequestEmail = ({
         </Text>
       </Section>
       <Text style={creatorParagraphStyle}>Rien ne change sans votre accord. Votre texte d&apos;origine reste gardé.</Text>
-      <Row className="customer-email-actions" style={{ width: "auto" }}>
-        <Column style={{ paddingRight: "12px" }}>
-          <CustomerEmailButton href={answerUrl} label="Accepter la correction" accentColor={space.accentColor} />
-        </Column>
-        <Column>
-          <a className="customer-email-button" href={answerUrl} style={customerSecondaryButtonStyle}>
-            Garder mon texte
-          </a>
-        </Column>
-      </Row>
+      {/* Left, under the text (maquettes 3.6); the floating table stays inside the section's cell. */}
+      <Section>
+        <Row align="left" className="customer-email-actions" style={{ width: "auto" }}>
+          <Column style={{ paddingRight: "12px" }}>
+            <CustomerEmailButton href={answerUrl} label="Accepter la correction" accentColor={space.accentColor} />
+          </Column>
+          <Column>
+            <a className="customer-email-button" href={answerUrl} style={customerSecondaryButtonStyle}>
+              Garder mon texte
+            </a>
+          </Column>
+        </Row>
+      </Section>
       <CustomerFallbackLink href={answerUrl} />
       <Text style={creatorSmallStyle}>Sans réponse de votre part, votre texte d&apos;origine reste affiché.</Text>
       <Text style={{ ...creatorParagraphStyle, margin: "8px 0 4px" }}>Merci,</Text>

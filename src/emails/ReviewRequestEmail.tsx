@@ -69,13 +69,16 @@ const describeReviewEmail = ({ kind, space, firstName, productName, eventType, p
   };
 };
 
+/** Keeps « e-mail » on one line in HTML; a plain text reader has no line to keep, and an old one may draw a box. */
+const WORD_JOINER = "\u2060";
+
 /**
  * Maquettes 3.6, « Version texte de la demande »: written by hand, in the order of the e-mail, without the initials of
- * the logo nor the link twice; the address of the way out, /desinscription/{code}, readable.
+ * the logo nor the link twice; the address of the way out, /desinscription/{code}, readable. Without the word joiner.
  */
 export const buildReviewEmailText = (props: ReviewRequestEmailProps): string => {
   const words = describeReviewEmail(props);
-  return [
+  const text = [
     words.greeting,
     ...words.paragraphs,
     `${REVIEW_BUTTON_LABEL}${NO_BREAK_SPACE}:\n${props.reviewUrl}`,
@@ -88,6 +91,7 @@ export const buildReviewEmailText = (props: ReviewRequestEmailProps): string => 
       ...(props.space.senderPostalAddress ? [formatPostalAddressLine(props.space.senderPostalAddress)] : []),
     ].join("\n"),
   ].join("\n\n");
+  return text.replaceAll(WORD_JOINER, "");
 };
 
 /**

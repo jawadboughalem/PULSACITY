@@ -55,7 +55,8 @@ import {
   buildSwatches,
 } from "./WidgetSettingsControls";
 
-const LIGHT_CARD = "#FFFFFF";
+/** Charte v2, Widget: the light card (#F2F4F8, darker than white, so the stricter test) and the dark one. */
+const LIGHT_CARD = "#F2F4F8";
 const DARK_CARD = "#22262D";
 
 const MAX_ITEMS_ERROR = `Indiquez un nombre entre ${MIN_WIDGET_MAX_ITEMS} et ${MAX_WIDGET_MAX_ITEMS}.`;
@@ -81,14 +82,14 @@ const describeAccentWarning = (accent: string | null, theme: WidgetEdit["theme"]
   if (theme === "dark") {
     return calculateContrastRatio(accent, DARK_CARD) < MIN_ACCENT_CONTRAST_RATIO
       ? {
-          text: "La couleur d'accent ressort peu sur des cartes sombres : vos étoiles s'afficheront en carmin clair.",
+          text: "La couleur d'accent ressort peu sur des cartes sombres : vos étoiles s'afficheront en Soleil.",
           offersInk: false,
         }
       : null;
   }
   return calculateContrastRatio(accent, LIGHT_CARD) < MIN_ACCENT_CONTRAST_RATIO
     ? {
-        text: "La couleur d'accent ressort peu sur des cartes blanches : vos étoiles s'afficheront en Encre.",
+        text: "La couleur d'accent ressort peu sur des cartes claires : vos étoiles s'afficheront en Encre.",
         offersInk: true,
       }
     : null;

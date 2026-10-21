@@ -113,6 +113,11 @@ describe("buildReviewEmailText", () => {
     );
   });
 
+  it("leaves out the invisible joiner of « e-mail », which an old reader may draw as a box", () => {
+    expect(buildReviewEmailText({ kind: "request", ...PROPS })).not.toContain("\u2060");
+    expect(buildReviewEmailText({ kind: "request", ...PROPS })).toContain("Ne plus recevoir ces e-mails");
+  });
+
   it("says the reminder is the last message", () => {
     const text = read(buildReviewEmailText({ kind: "reminder", ...PROPS }));
     expect(text).toContain("Belle journée,\nJulie Nutrition");
