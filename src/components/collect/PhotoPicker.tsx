@@ -63,7 +63,7 @@ export const PhotoPicker = ({ upload }: PhotoPickerProps) => {
         <div className="flex min-w-[0] flex-col">
           <p className="text-body font-bold">Une photo de vous ?</p>
           <p id="photo-hint" className="text-small text-gray">
-            Facultatif. Un visage rend votre témoignage plus parlant.
+            Facultatif. Une photo de vous seulement, pas d&apos;une autre personne.
           </p>
           {isUploaded ? (
             <button type="button" onClick={handleRemove} className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px] self-start")}>

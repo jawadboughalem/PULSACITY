@@ -10,7 +10,7 @@ import {
 import { formatDayMonthYear } from "@/lib/dates/format-french-date";
 import { SPACE_HOME_PATH } from "@/lib/spaces/space-paths";
 import type { WelcomeEmailStep } from "@/lib/welcome-emails/welcome-email-steps";
-import { CreatorEmailButton, CreatorEmailHeader, PULSACITY_SIGNATURE } from "./AccountEmailLayout";
+import { CreatorEmailButton, CreatorEmailHeader, PulsacitySender } from "./AccountEmailLayout";
 import {
   CREATOR_EMAIL_MOBILE_STYLES,
   creatorCardStyle,
@@ -192,7 +192,7 @@ export const WelcomeEmail = ({ step, spaceCreatedAt, progress, appUrl, unsubscri
               Ne plus recevoir les e-⁠mails d&apos;accueil
             </Link>
           </Text>
-          <Text style={creatorLegalLineStyle}>{PULSACITY_SIGNATURE}</Text>
+          <PulsacitySender isLast={false} />
         </Container>
       </Body>
     </Html>

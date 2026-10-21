@@ -3,6 +3,7 @@ import { act } from "react";
 import { type Root, createRoot } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SendContactMessageResult } from "@/app/(marketing)/aide/contact-actions";
+import { REPORT_DRAFT, readContactDraft } from "@/lib/support/report-content";
 import { ContactForm } from "./ContactForm";
 
 const { sendContactMessage } = vi.hoisted(() => ({
@@ -62,6 +63,17 @@ describe("ContactForm", () => {
 
     act(() => type("contact-email", "autre@exemple.fr"));
     expect(text()).not.toContain("Adresse de votre compte");
+  });
+
+  it("types the subject and the questions of a report, reached by « Signaler un contenu »", () => {
+    expect(readContactDraft({ sujet: "signalement" })).toBe(REPORT_DRAFT);
+    expect(readContactDraft({ sujet: "autre" })).toBeNull();
+    act(() => root.render(<ContactForm accountEmail={null} draft={REPORT_DRAFT} />));
+
+    expect(field("contact-subject").value).toBe("Signaler un contenu");
+    expect(field("contact-message").value.replaceAll("\u00a0", " ")).toBe(
+      "Page ou widget :\nContenu visé :\nPourquoi il est illicite :\n",
+    );
   });
 
   it("lists every point to correct, beside each field, and keeps what was typed", async () => {

@@ -1,47 +1,124 @@
 import { FOUNDER_PRICE_SEATS, PLANS } from "@/config/plans";
 import { formatPrice } from "@/lib/french/format-price";
 
-## 1. Objet
+## 1. Qui vend, à qui
 
-Ces conditions générales de vente (CGV) s'appliquent aux abonnements payants de PULSACITY : les plans Essentiel et Pro. Elles complètent les [conditions générales d'utilisation](/cgu). Le plan Gratuit reste gratuit, sans limite de durée.
+**1.1** PULSACITY est un service vendu par <Publisher field="name" />, personne physique, sans entreprise immatriculée à ce jour (« nous »). Coordonnées : [mentions légales](/mentions-legales).
 
-## 2. Prix
+**1.2** Les abonnements payants sont réservés aux professionnels. Vous les souscrivez pour votre activité de formateur, coach, consultant ou autre indépendant (« vous »). En souscrivant, vous le confirmez.
 
-Les prix sont des prix finaux : le montant affiché est celui que vous payez, rien ne s'y ajoute. PULSACITY ne facture pas de TVA aujourd'hui.
+**1.3** Ces CGV complètent les [conditions générales d'utilisation](/cgu) (CGU). Pour la vente, les CGV l'emportent.
 
-- **Essentiel** : {formatPrice(PLANS.essentiel.priceCents.monthly, "EUR")} par mois, ou {formatPrice(PLANS.essentiel.priceCents.yearly, "EUR")} par an.
-- **Pro** : {formatPrice(PLANS.pro.priceCents.monthly, "EUR")} par mois, ou {formatPrice(PLANS.pro.priceCents.yearly, "EUR")} par an.
+## 2. Plans et prix
 
-Prix de lancement : les bêta-testeurs et les {FOUNDER_PRICE_SEATS} premiers abonnés payants paient Essentiel {formatPrice(PLANS.essentiel.founderPriceCents.monthly, "EUR")} par mois ou {formatPrice(PLANS.essentiel.founderPriceCents.yearly, "EUR")} par an, et Pro {formatPrice(PLANS.pro.founderPriceCents.monthly, "EUR")} par mois ou {formatPrice(PLANS.pro.founderPriceCents.yearly, "EUR")} par an. Ce prix est gardé à vie, tant que l'abonnement ne s'interrompt pas.
+- **Gratuit**, 0 € : {PLANS.free.limits.testimonials} témoignages validés, {PLANS.free.limits.monthlyRequests} demandes automatiques par mois, {PLANS.free.limits.widgets} widget, badge « Propulsé par PULSACITY » obligatoire.
+- **Essentiel**, {formatPrice(PLANS.essentiel.priceCents.monthly, "EUR")} par mois ou {formatPrice(PLANS.essentiel.priceCents.yearly, "EUR")} par an : témoignages, demandes et widgets illimités, badge obligatoire.
+- **Pro**, {formatPrice(PLANS.pro.priceCents.monthly, "EUR")} par mois ou {formatPrice(PLANS.pro.priceCents.yearly, "EUR")} par an : tout Essentiel, badge retirable.
+- **Tous les plans** : {PLANS.free.limits.manualRequestsPerDay} demandes saisies à la main par jour ; tri par offre.
 
-## 3. Commande et paiement
+**2.1** Prix finaux : rien ne s'ajoute au paiement. TVA non applicable, art. 293 B du CGI. Nous ne facturons pas de TVA : il n'y en a donc aucune à récupérer sur nos reçus.
 
-L'abonnement se souscrit depuis l'espace du créateur. Le paiement se fait par carte bancaire, par l'intermédiaire de Stripe, au début de chaque période. Une facture est disponible dans l'espace après chaque paiement.
+**2.2** L'annuel vaut dix mois : deux mois offerts.
 
-## 4. Durée et renouvellement
+**2.3** Le prix applicable est celui affiché au moment de la souscription. C'est aussi celui de vos reçus.
 
-L'abonnement est sans engagement. Il se renouvelle automatiquement à la fin de chaque période, mensuelle ou annuelle, jusqu'à sa résiliation.
+## 3. Prix fondateur
 
-## 5. Changement de plan
+**3.1** Essentiel à {formatPrice(PLANS.essentiel.founderPriceCents.monthly, "EUR")} par mois ou {formatPrice(PLANS.essentiel.founderPriceCents.yearly, "EUR")} par an. Pro à {formatPrice(PLANS.pro.founderPriceCents.monthly, "EUR")} par mois ou {formatPrice(PLANS.pro.founderPriceCents.yearly, "EUR")} par an.
 
-Le créateur peut changer de plan ou de période à tout moment depuis son espace. Un passage à un plan supérieur prend effet tout de suite : ce qui reste de la période déjà payée est déduit. Un passage à un plan inférieur, du mensuel à l'annuel ou de l'annuel au mensuel, prend effet à la fin de la période déjà payée, sans remboursement.
+**3.2** Il est réservé aux bêta-testeurs et aux {FOUNDER_PRICE_SEATS} premiers abonnés payants. Nos pages l'indiquent tant qu'il est ouvert.
+
+**3.3** Vous le gardez tant que votre abonnement payant ne s'interrompt pas. Passer d'Essentiel à Pro, ou du mensuel à l'annuel, garde le prix fondateur du plan choisi. L'abonnement s'interrompt par une résiliation devenue effective, ou par un retour au Gratuit après un défaut de paiement (article 9).
+
+**3.4** Le prix fondateur n'est jamais augmenté. L'article 10.2 ne s'y applique pas.
+
+## 4. Commande et paiement
+
+**4.1** Vous souscrivez depuis « Abonnement et factures ». Le paiement se fait par carte, par Stripe (Stripe Payments Europe, Limited). Nous ne voyons ni ne gardons votre numéro de carte.
+
+**4.2** Le contrat est conclu quand Stripe confirme le paiement, ou l'enregistrement de votre carte pour l'offre bêta. Vous recevez une confirmation par e-⁠mail.
+
+**4.3** Chaque période se paie à son début, automatiquement, avec la carte enregistrée.
+
+**4.4** Un reçu vous est envoyé par e-⁠mail à chaque paiement. Il est aussi téléchargeable dans le portail Stripe.
+
+**4.5** Un code promotionnel s'applique selon les conditions annoncées avec lui.
+
+## 5. Durée et renouvellement
+
+**5.1** L'abonnement est mensuel ou annuel. Il se renouvelle tout seul à la fin de chaque période.
+
+**5.2** Avant un renouvellement annuel, nous vous prévenons par e-⁠mail au moins 7 jours à l'avance.
 
 ## 6. Résiliation
 
-Le créateur résilie à tout moment depuis son espace, sans frais ni préavis. L'abonnement prend fin à la fin de la période déjà payée, qui n'est pas remboursée. L'espace repasse alors au plan Gratuit : aucune donnée n'est supprimée.
+**6.1** Vous résiliez à tout moment depuis « Abonnement et factures ».
 
-## 7. Défaut de paiement
+**6.2** La résiliation prend effet à la fin de la période payée, sans remboursement au prorata, sauf aux articles 7 et 13.
 
-Si un paiement échoue, Stripe le présente à nouveau pendant quelques jours, et le créateur est prévenu par e-⁠mail. Sans paiement, l'espace repasse au plan Gratuit, sans perte de données.
+**6.3** Vous revenez alors au plan Gratuit (article 8.3). Rien n'est supprimé.
 
-## 8. Droit de rétractation
+**6.4** Jusqu'à la fin de la période, « Reprendre mon abonnement » annule la résiliation.
 
-Le service s'adresse aux professionnels, pour leur activité : le droit de rétractation des consommateurs ne s'applique pas. <ToComplete>cas des professionnels de cinq salariés au plus (article L221-3 du Code de la consommation), à valider par un juriste</ToComplete>
+## 7. Satisfait ou remboursé, 14 jours
 
-## 9. Évolution des prix
+**7.1** Dans les 14 jours qui suivent votre premier paiement, y compris le premier prélèvement après l'offre bêta, nous vous remboursons entièrement sur simple demande à contact@pulsacity.com. L'abonnement s'arrête aussitôt et vous revenez au plan Gratuit.
 
-PULSACITY peut faire évoluer ses prix. Un nouveau prix vaut pour les nouveaux abonnés : un abonnement en cours garde le sien. Une hausse pour les abonnés en place reste exceptionnelle : elle est annoncée par e-⁠mail au moins 30 jours avant, et le créateur peut résilier avant son échéance. Une baisse s'applique à tous, tout de suite.
+**7.2** Cette garantie vaut une fois par espace. Elle s'ajoute aux droits que la loi vous accorde, le cas échéant.
 
-## 10. Droit applicable
+## 8. Changement de plan
 
-Ces conditions sont soumises au droit français. En cas de litige, et à défaut d'accord amiable, les tribunaux de <ToComplete>ville du siège</ToComplete> sont compétents.
+**8.1** Passer à un plan supérieur est immédiat. Le prorata de la période en cours est facturé.
+
+**8.2** Passer à un plan inférieur, du mensuel à l'annuel ou l'inverse, prend effet à la fin de la période payée, sans remboursement au prorata.
+
+**8.3** Au retour au plan Gratuit, rien n'est supprimé :
+
+- un widget reste actif : le plus ancien, ou celui que vous choisissez. Les autres n'affichent plus rien sur votre page, sans décaler sa mise en page, et reviennent avec Essentiel ;
+- au-delà de {PLANS.free.limits.testimonials} témoignages validés, tous restent visibles dans votre espace. Le widget en montre {PLANS.free.limits.testimonials} : ceux mis en avant, puis les plus récents. Les nouveaux attendent ;
+- au-delà de {PLANS.free.limits.monthlyRequests} demandes automatiques dans le mois, les demandes sont gardées et partent le 1er du mois suivant ;
+- le badge « Propulsé par PULSACITY » revient à la fin de la période Pro.
+
+## 9. Défaut de paiement
+
+**9.1** Si un paiement échoue, Stripe le retente pendant 14 jours. Vous êtes prévenu par e-⁠mail et par un bandeau dans votre espace.
+
+**9.2** Sans paiement au bout de 14 jours, l'abonnement s'arrête. Vous revenez au plan Gratuit (article 8.3), et le prix fondateur est perdu. La période impayée n'est pas due.
+
+**9.3** Pour toute autre somme due entre professionnels et non payée à l'échéance : pénalités de retard au taux de trois fois le taux d'intérêt légal, exigibles dès le lendemain de l'échéance, et indemnité forfaitaire de 40 € pour frais de recouvrement (articles L441-10 et D441-5 du Code de commerce).
+
+## 10. Évolution des prix
+
+**10.1** Un nouveau prix vaut pour les nouveaux abonnés. Les abonnements en cours gardent le leur.
+
+**10.2** Une hausse pour les abonnés en place au prix public reste exceptionnelle. Elle est annoncée par e-⁠mail 30 jours avant et s'applique au premier renouvellement qui suit ces 30 jours. Vous pouvez résilier avant, sans frais.
+
+**10.3** Une baisse s'applique à tous, dès le paiement suivant.
+
+**10.4** Le prix fondateur n'est jamais augmenté.
+
+## 11. Offre bêta-testeur
+
+**11.1** Elle se fait sur invitation. Vous recevez le plan Essentiel offert pendant 3 mois, par un code promotionnel. Votre carte est demandée à l'inscription ; rien n'est prélevé pendant ces 3 mois.
+
+**11.2** Nous vous prévenons par e-⁠mail 7 jours avant le premier prélèvement, qui se fait au prix fondateur. Si vous résiliez avant, rien n'est prélevé.
+
+**11.3** En échange, nous vous demandons vos retours sur le produit et un avis sur PULSACITY. Votre avis est libre, positif ou négatif, et n'a aucun effet sur l'offre. Il s'affiche avec la mention « Bêta-testeur · plan Essentiel offert pendant la bêta ».
+
+## 12. Réclamations et litiges
+
+**12.1** Écrivez à contact@pulsacity.com. Nous répondons sous deux jours ouvrés.
+
+**12.2** La médiation de la consommation ne s'applique pas entre professionnels.
+
+**12.3** Ces CGV sont soumises au droit français. À défaut d'accord amiable, le tribunal compétent est celui que désignent les règles de procédure.
+
+## 13. Quand PULSACITY deviendra une entreprise
+
+**13.1** Nous nous immatriculerons comme entrepreneur individuel (micro-entreprise). C'est la même personne : votre abonnement continue avec le même plan, le même prix, la même date de renouvellement et les mêmes données. Seules les mentions changent (statut, numéro SIREN, factures). Vous serez prévenu par e-⁠mail au moins 15 jours avant.
+
+**13.2** Si le service est un jour transféré à une société contrôlée par l'exploitant, vous acceptez dès maintenant ce transfert (article 1216 du Code civil). Il vous sera notifié par e-⁠mail. Vous pourrez alors résilier sans frais dans les 30 jours, et la part payée d'avance et non utilisée vous sera remboursée.
+
+## 14. Modification des CGV
+
+Toute modification importante est annoncée par e-⁠mail 30 jours avant. Elle s'applique au renouvellement suivant, et vous pouvez résilier avant. Font exception les changements imposés par la loi.

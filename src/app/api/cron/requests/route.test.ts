@@ -6,6 +6,7 @@ const sendDueReviewEmails = vi.fn();
 const runBillingTasks = vi.fn();
 const sendDueWelcomeEmails = vi.fn();
 const sendWaitingHiddenReasons = vi.fn();
+const purgeEndedRateLimits = vi.fn();
 
 vi.mock("@/db", () => ({ getDb: () => ({}) }));
 vi.mock("@sentry/nextjs", () => ({ captureException: vi.fn() }));
@@ -21,6 +22,9 @@ vi.mock("@/lib/welcome-emails/send-welcome-emails", () => ({
 vi.mock("@/lib/testimonials/send-hidden-reason", () => ({
   sendWaitingHiddenReasons: (...args: unknown[]) => sendWaitingHiddenReasons(...args),
 }));
+vi.mock("@/lib/rate-limit/purge-rate-limits", () => ({
+  purgeEndedRateLimits: (...args: unknown[]) => purgeEndedRateLimits(...args),
+}));
 vi.mock("@/lib/billing/run-billing-tasks", () => ({
   runBillingTasks: (...args: unknown[]) => runBillingTasks(...args),
 }));
@@ -34,6 +38,7 @@ beforeEach(() => {
   runBillingTasks.mockReset().mockResolvedValue({ replayedEvents: 1, betaReminders: 0 });
   sendDueWelcomeEmails.mockReset().mockResolvedValue({ welcomeEmailsSent: 3, welcomeEmailsSkipped: 1 });
   sendWaitingHiddenReasons.mockReset().mockResolvedValue({ hiddenReasonsSent: 1 });
+  purgeEndedRateLimits.mockReset().mockResolvedValue(4);
 });
 
 afterEach(() => {
@@ -61,6 +66,7 @@ describe("GET /api/cron/requests", () => {
       welcomeEmailsSent: 3,
       welcomeEmailsSkipped: 1,
       hiddenReasonsSent: 1,
+      rateLimitsPurged: 4,
     });
     expect(processMissedEvents).toHaveBeenCalledOnce();
     // Without a Stripe key (local, CI), the billing tasks still send the reminders, without replaying events.

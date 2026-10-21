@@ -4,11 +4,14 @@ import { formatDayMonthYear } from "@/lib/dates/format-french-date";
 import { NO_BREAK_SPACE } from "@/lib/french/typography";
 import { formatPostalAddressLine } from "@/lib/spaces/space-settings-schema";
 import {
+  CUSTOMER_DATA_LINK_LABEL,
   CustomerEmailButton,
   CustomerEmailLayout,
   type CustomerEmailSpace,
   CustomerFallbackLink,
+  buildCustomerDataUrl,
   customerSignatureStyle,
+  describeCustomerDataNotice,
 } from "./CustomerEmailLayout";
 import { creatorParagraphStyle } from "./creator-email-styles";
 
@@ -87,7 +90,8 @@ export const buildReviewEmailText = (props: ReviewRequestEmailProps): string => 
       "--",
       words.notice,
       `Ne plus recevoir ces e-⁠mails${NO_BREAK_SPACE}:\n${props.unsubscribeUrl}`,
-      `Envoyé avec PULSACITY pour ${props.space.name}`,
+      describeCustomerDataNotice(props.space.name),
+      `${CUSTOMER_DATA_LINK_LABEL}${NO_BREAK_SPACE}:\n${buildCustomerDataUrl()}`,
       ...(props.space.senderPostalAddress ? [formatPostalAddressLine(props.space.senderPostalAddress)] : []),
     ].join("\n"),
   ].join("\n\n");

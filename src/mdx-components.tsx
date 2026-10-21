@@ -3,6 +3,12 @@ import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { INLINE_LINK_CLASSES } from "@/components/ui/button-styles";
 import { readNodeText, slugifyHeading } from "@/lib/content/text-headings";
+import {
+  LEGAL_PUBLISHER_FIELDS,
+  LEGAL_PUBLISHER_PLACEHOLDERS,
+  type LegalPublisherField,
+  readLegalPublisher,
+} from "@/lib/legal/publisher";
 
 /** A link of the site goes through next/link; another site's opens as a plain link. */
 const ProseLink = ({ href = "", children }: ComponentPropsWithoutRef<"a">) =>
@@ -35,14 +41,19 @@ const AnchoredHeading = ({ id, children }: AnchoredHeadingProps) => (
 );
 
 /**
- * What the company still has to provide, while a draft (charte v2, ajouts 3.5, Brouillon et champs à compléter):
- * highlighted in Attente fond, Attente 700, radius 4, line by line. Written <ToComplete>SIREN</ToComplete>.
+ * The publisher's name, address or phone (lot 4.9), from its Vercel variable: written <Publisher field="name" />.
+ * Missing on a preview, it shows highlighted as the charte draws a field to fill in (ajouts 3.5, Brouillon et champs à
+ * compléter): Attente fond, Attente 700, radius 4, line by line.
  */
-const ToComplete = ({ children }: { children: ReactNode }) => (
-  <mark className="rounded-[4px] box-decoration-clone bg-waiting-surface px-1 font-bold text-waiting">
-    [À COMPLÉTER : {children}]
-  </mark>
-);
+const Publisher = ({ field }: { field: LegalPublisherField }) => {
+  const value = readLegalPublisher()[field];
+  if (value) return value;
+  return (
+    <mark className="rounded-[4px] box-decoration-clone bg-waiting-surface px-1 font-bold text-waiting">
+      [{LEGAL_PUBLISHER_FIELDS[field]} : {LEGAL_PUBLISHER_PLACEHOLDERS[field]}]
+    </mark>
+  );
+};
 
 /** Charte v2, ajouts 3.5, Lecture: the text in 17/27, 68 characters a line at most. */
 const TEXT_CLASSES = "text-[17px] leading-[27px]";
@@ -60,7 +71,7 @@ const components = {
   strong: ({ children }) => <strong className="font-bold">{children}</strong>,
   a: ProseLink,
   AnchoredHeading,
-  ToComplete,
+  Publisher,
   blockquote: ({ children }) => (
     <blockquote className="max-w-quote border-l-2 border-ink pl-6 text-quote">{children}</blockquote>
   ),

@@ -8,3 +8,7 @@ export const prefixPersonWithDe = (name: string): string =>
 
 export const prefixWithDe = (name: string): string =>
   VOWEL_INITIAL.test(name.normalize("NFD")) ? `d'${name}` : `de ${name}`;
+
+/** « qu'Atelier Nomade publie », « que Julie Nutrition publie ». */
+export const prefixWithQue = (name: string): string =>
+  VOWEL_INITIAL.test(name.normalize("NFD")) ? `qu'${name}` : `que ${name}`;

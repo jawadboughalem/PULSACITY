@@ -135,7 +135,7 @@ export const submitTestimonial = async (
       status: "pending",
       source: "form",
       consentAt: new Date(),
-      consentText: buildConsentText(space.name),
+      consentText: buildConsentText(space.name, submission.requestToken ? "request" : "public-link"),
       ...origin,
     });
 

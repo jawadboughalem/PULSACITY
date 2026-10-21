@@ -49,7 +49,10 @@ describe("ReviewRequestEmail", () => {
     expect(text).toContain("Merci d'avance,");
     expect(text).toContain("Vous recevez cet e-mail parce que vous avez acheté Programme 30 jours auprès de Julie Nutrition le 28 août 2026.");
     expect(text).toContain("Ne plus recevoir ces e-mails https://pulsacity.com/desinscription/def");
-    expect(text).toContain("Envoyé avec PULSACITY pour Julie Nutrition");
+    expect(text).toContain(
+      "Julie Nutrition utilise PULSACITY pour recueillir les avis de ses clients. Vos données https://pulsacity.com/confidentialite#avis",
+    );
+    expect(text).not.toContain("Propulsé");
     expect(html).toContain(">JN<");
   });
 
@@ -106,7 +109,8 @@ describe("buildReviewEmailText", () => {
           "--",
           "Vous recevez cet e-mail parce que vous avez acheté Programme 30 jours auprès de Julie Nutrition le 28 août 2026.",
           "Ne plus recevoir ces e-mails :\nhttps://pulsacity.com/desinscription/def",
-          "Envoyé avec PULSACITY pour Julie Nutrition",
+          "Julie Nutrition utilise PULSACITY pour recueillir les avis de ses clients.",
+          "Vos données :\nhttps://pulsacity.com/confidentialite#avis",
           "Julie Martin · 12 rue des Lilas · 69003 Lyon",
         ].join("\n"),
       ].join("\n\n"),

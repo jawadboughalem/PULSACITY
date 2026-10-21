@@ -6,6 +6,7 @@ import { connections, products, purchases, reviewRequests, spaces, testimonials 
 import { insertTestSpace, insertTestUser } from "@/db/space-fixtures";
 import { createTestDatabase, emptyTestDatabase } from "@/db/test-database";
 import { buildTestimonialPhotoKey } from "@/lib/uploads/upload-keys";
+import { buildConsentText } from "./build-consent-text";
 import { type TestimonialSubmission, submitTestimonial } from "./submit-testimonial";
 
 let database: Database;
@@ -60,7 +61,7 @@ describe("submitTestimonial", () => {
       rating: 5,
       authorName: "Camille R.",
       authorTitle: "Enseignante, Lyon",
-      consentText: "J'accepte que ce témoignage soit publié sur les supports de Julie Nutrition.",
+      consentText: buildConsentText("Julie Nutrition", "public-link"),
       productId: null,
       customerId: null,
     });
@@ -92,7 +93,11 @@ describe("submitTestimonial", () => {
     await submitTestimonial(database, { ...CAMILLE, requestToken: request.token });
 
     expect(await findTestimonials()).toEqual([
-      expect.objectContaining({ customerId: request.customerId, productId: request.productId }),
+      expect.objectContaining({
+        customerId: request.customerId,
+        productId: request.productId,
+        consentText: buildConsentText("Julie Nutrition", "request"),
+      }),
     ]);
     const [closedRequest] = await database
       .select()

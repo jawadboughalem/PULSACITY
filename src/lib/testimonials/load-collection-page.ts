@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import type { Database } from "@/db/database";
-import { customers, products, purchases, reviewRequests, spaces } from "@/db/schema";
+import { customers, products, purchases, reviewRequests, spaces, testimonials } from "@/db/schema";
 import { isReviewRequestActive } from "./active-review-request-statuses";
 import { formatCustomerName } from "./format-customer-name";
 
@@ -29,6 +29,12 @@ export type CollectionPage =
       product: CollectionProduct | null;
       request: { token: string; prefilledName: string } | null;
     }
+  /**
+   * « Gérer mon avis »: the link of a request already answered. While the review is kept, its author can withdraw the
+   * consent; once it is gone (withdrawn, or deleted by the creator), the page says so.
+   */
+  | { status: "review-saved"; space: CollectionSpace; requestToken: string }
+  | { status: "review-removed"; space: CollectionSpace; requestToken: string }
   | { status: "link-inactive"; space: CollectionSpace };
 
 const findCollectionSpace = async (database: Database, spaceSlug: string): Promise<CollectionSpace | null> => {
@@ -77,6 +83,7 @@ export const loadCollectionPage = async (
 
   const [request] = await database
     .select({
+      id: reviewRequests.id,
       status: reviewRequests.status,
       firstName: customers.firstName,
       lastName: customers.lastName,
@@ -89,6 +96,14 @@ export const loadCollectionPage = async (
     .innerJoin(products, eq(products.id, purchases.productId))
     .where(and(eq(reviewRequests.token, requestToken), eq(purchases.spaceId, space.id)))
     .limit(1);
+  if (request?.status === "completed") {
+    const [review] = await database
+      .select({ id: testimonials.id })
+      .from(testimonials)
+      .where(and(eq(testimonials.reviewRequestId, request.id), eq(testimonials.spaceId, space.id)))
+      .limit(1);
+    return review ? { status: "review-saved", space, requestToken } : { status: "review-removed", space, requestToken };
+  }
   if (!request || !isReviewRequestActive(request.status)) return { status: "link-inactive", space };
 
   return {

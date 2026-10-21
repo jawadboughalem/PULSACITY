@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Body, Button, Column, Container, Head, Html, Img, Link, Preview, Row, Section, Text } from "react-email";
 import { getAppUrl } from "@/lib/app-url";
+import { formatPublisherPostalLine } from "@/lib/legal/publisher";
 import {
   CREATOR_EMAIL_MOBILE_STYLES,
   creatorButtonStyle,
@@ -18,11 +19,23 @@ import {
 
 export const EMAIL_SYMBOL_PATH = "/brand/email-symbole-48.png";
 
-/**
- * The sender's line under the reason. PULSACITY's postal address joins it with the legal texts of a private seller
- * (lot 4.9); until then, the name alone.
- */
 export const PULSACITY_SIGNATURE = "PULSACITY";
+
+/**
+ * The sender, last of the footer (maquettes 3.6, « adresse postale de PULSACITY »): « PULSACITY », then the person who
+ * sends as a private seller and their address, from the variables of the legal texts (lot 4.9); without them, the name
+ * alone.
+ */
+export const PulsacitySender = ({ isLast = true }: { isLast?: boolean }) => {
+  const postalLine = formatPublisherPostalLine();
+  const lastStyle = isLast ? { ...creatorLegalLineStyle, margin: 0 } : creatorLegalLineStyle;
+  return (
+    <>
+      <Text style={postalLine ? creatorLegalLineStyle : lastStyle}>{PULSACITY_SIGNATURE}</Text>
+      {postalLine ? <Text style={lastStyle}>{postalLine}</Text> : null}
+    </>
+  );
+};
 
 /** Charte v2, « E-mails », e-mails to the creator: `email-symbole-48.png` shown at 24, then « PULSACITY » in text. */
 export const CreatorEmailHeader = ({ appUrl = getAppUrl() }: { appUrl?: string }) => (
@@ -77,7 +90,7 @@ export const AccountEmailLayout = ({ preview, notice, children }: AccountEmailLa
       </Container>
       <Container className="creator-email-legal" style={creatorLegalStyle}>
         <Text style={creatorLegalLineStyle}>{notice}</Text>
-        <Text style={{ ...creatorLegalLineStyle, margin: 0 }}>{PULSACITY_SIGNATURE}</Text>
+        <PulsacitySender />
       </Container>
     </Body>
   </Html>

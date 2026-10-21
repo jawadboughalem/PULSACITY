@@ -28,12 +28,18 @@ describe("sitemap", () => {
     for (const guide of GUIDES) expect(paths).toContain(`/guides/${guide.slug}`);
   });
 
-  it("leaves the legal drafts out until LEGAL_VALIDATED is true", () => {
+  it("leaves the legal drafts out until LEGAL_VALIDATED is true and the publisher is filled in", () => {
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://pulsacity.com");
     vi.stubEnv("LEGAL_VALIDATED", "false");
+    vi.stubEnv("LEGAL_PUBLISHER_NAME", "Julie Martin");
+    vi.stubEnv("LEGAL_PUBLISHER_ADDRESS", "12 rue des Lilas, 69003 Lyon");
+    vi.stubEnv("LEGAL_PUBLISHER_PHONE", "06 12 34 56 78");
     expect(listPaths()).not.toContain("/cgu");
     expect(listPaths()).not.toContain("/a-propos-des-avis");
     vi.stubEnv("LEGAL_VALIDATED", "true");
+    vi.stubEnv("LEGAL_PUBLISHER_PHONE", "");
+    expect(listPaths()).not.toContain("/mentions-legales");
+    vi.stubEnv("LEGAL_PUBLISHER_PHONE", "06 12 34 56 78");
     expect(listPaths()).toEqual(
       expect.arrayContaining(["/mentions-legales", "/cgu", "/cgv", "/confidentialite", "/a-propos-des-avis"]),
     );

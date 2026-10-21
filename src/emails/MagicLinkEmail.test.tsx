@@ -1,9 +1,13 @@
 import { render } from "react-email";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MagicLinkEmail } from "./MagicLinkEmail";
 
 beforeEach(() => {
   vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://pulsacity.com");
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
 });
 
 const LINK = "https://pulsacity.com/entrer/abc";
@@ -34,5 +38,19 @@ describe("MagicLinkEmail", () => {
     expect(text).toContain(LINK);
     expect(text).toContain("Vous n'avez pas demandé ce lien ? Ignorez cet e-mail : personne ne peut entrer dans votre espace sans lui.");
     expect(text).toContain("Vous recevez cet e-mail parce qu'une connexion a été demandée avec julie@exemple.fr.");
+  });
+
+  it("ends with the person who sends PULSACITY and their address, once the legal variables are filled in", async () => {
+    const before = await render(<MagicLinkEmail url={LINK} email="julie@exemple.fr" lifetimeMinutes={15} />, {
+      plainText: true,
+    });
+    expect(before).not.toContain("·");
+
+    vi.stubEnv("LEGAL_PUBLISHER_NAME", "Julie Martin");
+    vi.stubEnv("LEGAL_PUBLISHER_ADDRESS", "12 rue des Lilas, 69003 Lyon");
+    const text = await render(<MagicLinkEmail url={LINK} email="julie@exemple.fr" lifetimeMinutes={15} />, {
+      plainText: true,
+    });
+    expect(read(text)).toMatch(/PULSACITY\s+Julie Martin · 12 rue des Lilas, 69003 Lyon\s*$/);
   });
 });

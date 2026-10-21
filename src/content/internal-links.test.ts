@@ -29,7 +29,8 @@ const ANCHOR_SOURCES: Record<string, string> = {
 };
 
 const assertLinkWorks = (link: string) => {
-  const [path, anchor] = link.split("#");
+  const [pathAndQuery, anchor] = link.split("#");
+  const path = pathAndQuery.split("?")[0];
   const page = path === "" ? "/" : path;
   expect(hasPageFile(page) || DYNAMIC_PAGES.has(page), `${link}: no page`).toBe(true);
   if (anchor) {

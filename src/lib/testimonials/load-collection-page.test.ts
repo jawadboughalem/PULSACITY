@@ -53,7 +53,7 @@ describe("loadCollectionPage", () => {
     });
   });
 
-  it("recognises a link already used, cancelled or unknown", async () => {
+  it("recognises a link cancelled or unknown, and a used one whose review is gone", async () => {
     const used = await insertTestReviewRequest(database, {
       spaceId,
       productName: "Suivi",
@@ -61,8 +61,18 @@ describe("loadCollectionPage", () => {
       lastName: null,
       status: "completed",
     });
+    const cancelled = await insertTestReviewRequest(database, {
+      spaceId,
+      productName: "Atelier",
+      firstName: "Léa",
+      lastName: null,
+      status: "cancelled",
+    });
 
-    for (const token of [used.token, "unknown-token"]) {
+    expect(await loadCollectionPage(database, "julie-nutrition", null, used.token)).toMatchObject({
+      status: "review-removed",
+    });
+    for (const token of [cancelled.token, "unknown-token"]) {
       expect(await loadCollectionPage(database, "julie-nutrition", null, token)).toMatchObject({
         status: "link-inactive",
       });

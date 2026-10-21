@@ -16,6 +16,10 @@ export const MARKETING_PATHS = {
   aboutReviews: "/a-propos-des-avis",
   /** « Écrivez-nous » of /aide, where the footer's « Contact » and every « Écrivez-nous » lead. */
   contact: "/aide#contact",
+  /** « Écrivez-nous » with the subject « Signaler un contenu » already typed (CGU 7.4, règlement (UE) 2022/2065). */
+  report: "/aide?sujet=signalement#contact",
+  /** Section 9 of the privacy policy, for the customers of the creators: linked from every e-mail they receive. */
+  customerData: "/confidentialite#avis",
 } as const;
 
 export const integrationPath = (slug: string) => `${MARKETING_PATHS.integrations}/${slug}`;
