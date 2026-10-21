@@ -84,7 +84,7 @@ Compte rendu à me donner : l'offre, le texte de la page des sauvegardes, la ré
 
 ## 3. Stripe, bac à sable — l'impayé, le rappel annuel, la mention des reçus
 
-À coller dans Claude in Chrome. Avant ce prompt : connectez-vous vous-même à Stripe ; vérifiez que vous êtes dans le bac à sable « PULSACITY » (pas le mode réel). Ces réglages seront à refaire en mode réel (2.8 c), avec le nom et l'adresse de l'exploitant dans les informations publiques.
+À coller dans Claude in Chrome. Avant ce prompt : connectez-vous vous-même à Stripe ; vérifiez que vous êtes dans le bac à sable « PULSACITY » (pas le mode réel). Ces réglages seront à refaire en mode réel (2.8 c), avec le nom de l'exploitant dans les informations publiques.
 
 ```
 Tu m'aides à aligner les réglages de Stripe sur les CGV de PULSACITY, dans le bac à sable « PULSACITY » (environnement de test), pas en mode réel. Vérifie d'abord le bandeau de test en haut de la page. Tu ne touches ni aux produits, ni aux prix, ni aux clés, ni au webhook, ni au portail client, ni à l'activation du compte, ni à Stripe Tax.
