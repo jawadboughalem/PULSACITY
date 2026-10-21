@@ -58,9 +58,14 @@ export const WidgetInstallPanel = ({ widgetId, snippet, email, guideHref }: Widg
           <div className="flex items-start gap-[14px] rounded-card bg-success-surface px-5 py-4 text-ink">
             <Icon name="valid" size={24} className="mt-[1px] shrink-0 text-success" />
             <div className="flex min-w-[0] flex-col items-start gap-1 break-words">
-              <p className="text-body font-bold">{`Code envoyé à ${result.data.email}.`}</p>
+              <p className="text-body font-bold wrap-anywhere">{`Code envoyé à ${result.data.email}.`}</p>
               <p className="text-small">Ouvrez l&apos;e-mail sur votre ordinateur : le code et le guide y sont.</p>
-              <button type="button" onClick={send} disabled={isSending} className={DISCREET_BUTTON_CLASSES}>
+              <button
+                type="button"
+                onClick={send}
+                disabled={isSending}
+                className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px]")}
+              >
                 {isSending ? "Envoi…" : "Renvoyer l'e-mail"}
               </button>
             </div>
@@ -83,7 +88,7 @@ export const WidgetInstallPanel = ({ widgetId, snippet, email, guideHref }: Widg
               {isSending ? "Envoi…" : "M'envoyer le code"}
             </button>
             {error ? <FieldError id="widget-code-error" message={error} /> : null}
-            <p className="text-small text-gray">{`Il part à ${email}, avec le guide.`}</p>
+            <p className="text-small text-gray wrap-anywhere">{`Il part à ${email}, avec le guide.`}</p>
           </div>
         )}
       </div>
@@ -103,7 +108,7 @@ export const WidgetInstallPanel = ({ widgetId, snippet, email, guideHref }: Widg
             ? "Collez-le dans votre page, dans un bloc de code HTML. Le guide Systeme.io vous montre où."
             : "Un seul code pour ce widget : vos réglages s'appliquent même après l'avoir collé."}
         </p>
-        <Link href={guideHref} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
+        <Link href={guideHref} className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px] self-start")}>
           Voir le guide « Coller dans Systeme.io »
         </Link>
       </div>

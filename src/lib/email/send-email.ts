@@ -18,6 +18,8 @@ export type AccountEmail = {
   to: string;
   subject: string;
   body: ReactElement;
+  /** The beta testers' reminder answers to contact@pulsacity.com (maquettes 3.6). */
+  replyTo?: string;
 };
 
 /** A message written on /aide, to PULSACITY's one address: answering it writes to its sender. */
@@ -44,6 +46,8 @@ export type CustomerEmail = {
   to: string;
   subject: string;
   body: ReactElement;
+  /** The text version written by hand (maquettes 3.6); without it, the HTML read as text. */
+  text?: string;
   spaceName: string;
   replyTo: string;
   unsubscribeUrl: string;
@@ -57,13 +61,14 @@ type Message = {
   to: string;
   subject: string;
   body: ReactElement;
+  text?: string;
   replyTo?: string;
   headers?: Record<string, string>;
   idempotencyKey?: string;
 };
 
-const deliver = async ({ senderName, senderLocalPart, to, subject, body, replyTo, headers, idempotencyKey }: Message) => {
-  const [html, text] = await Promise.all([render(body), render(body, { plainText: true })]);
+const deliver = async ({ senderName, senderLocalPart, to, subject, body, text: writtenText, replyTo, headers, idempotencyKey }: Message) => {
+  const [html, text] = await Promise.all([render(body), writtenText ?? render(body, { plainText: true })]);
 
   if (!process.env.RESEND_API_KEY && process.env.NODE_ENV !== "production") {
     console.info(`[e-mail to ${to}] ${subject}\n\n${text}`);
@@ -90,8 +95,8 @@ const deliver = async ({ senderName, senderLocalPart, to, subject, body, replyTo
 /** « Julie Nutrition via PULSACITY »: the name the customer sees as the sender of a request. */
 export const buildCustomerSenderName = (spaceName: string): string => `${spaceName} via PULSACITY`;
 
-export const sendAccountEmail = ({ to, subject, body }: AccountEmail): Promise<void> =>
-  deliver({ senderName: ACCOUNT_SENDER_NAME, senderLocalPart: ACCOUNT_SENDER_LOCAL_PART, to, subject, body });
+export const sendAccountEmail = ({ to, subject, body, replyTo }: AccountEmail): Promise<void> =>
+  deliver({ senderName: ACCOUNT_SENDER_NAME, senderLocalPart: ACCOUNT_SENDER_LOCAL_PART, to, subject, body, replyTo });
 
 export const sendSupportEmail = ({ to, subject, body, replyTo }: SupportEmail): Promise<void> =>
   deliver({ senderName: SUPPORT_SENDER_NAME, senderLocalPart: ACCOUNT_SENDER_LOCAL_PART, to, subject, body, replyTo });
@@ -112,6 +117,7 @@ export const sendCustomerEmail = ({
   to,
   subject,
   body,
+  text,
   spaceName,
   replyTo,
   unsubscribeUrl,
@@ -123,6 +129,7 @@ export const sendCustomerEmail = ({
     to,
     subject,
     body,
+    text,
     replyTo,
     headers: { "List-Unsubscribe": `<${unsubscribeUrl}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" },
     idempotencyKey,

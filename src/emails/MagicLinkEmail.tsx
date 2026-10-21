@@ -1,23 +1,32 @@
 import { Text } from "react-email";
-import { AccountEmailLayout } from "./AccountEmailLayout";
-import { EmailButton } from "./EmailButton";
-import { paragraphStyle } from "./email-styles";
+import { AccountEmailLayout, CreatorEmailButton } from "./AccountEmailLayout";
+import { creatorParagraphStyle, creatorSmallStyle } from "./creator-email-styles";
 
 export const MAGIC_LINK_EMAIL_SUBJECT = "Votre lien pour entrer dans PULSACITY";
 
 type MagicLinkEmailProps = {
   url: string;
+  /** The address the link was asked for: the footer says so. */
+  email: string;
   lifetimeMinutes: number;
 };
 
-export const MagicLinkEmail = ({ url, lifetimeMinutes }: MagicLinkEmailProps) => (
+/**
+ * Maquettes 3.6, « Votre lien »: « Valable 15 minutes » stays, a rule of security rather than a duration of setup. The
+ * link in clear reads /entrer/{code} (`shortenSignInLink`).
+ */
+export const MagicLinkEmail = ({ url, email, lifetimeMinutes }: MagicLinkEmailProps) => (
   <AccountEmailLayout
     preview="Votre lien pour entrer dans votre espace, sans mot de passe."
-    legalNotice="Vous n'avez rien demandé ? Ignorez cet e-mail. Sans ce lien, personne ne peut entrer dans votre espace."
+    notice={`Vous recevez cet e-⁠mail parce qu'une connexion a été demandée avec ${email}.`}
   >
-    <Text style={paragraphStyle}>Bonjour,</Text>
-    <Text style={paragraphStyle}>Voici votre lien pour entrer dans votre espace PULSACITY.</Text>
-    <EmailButton href={url} label="Accéder à mon espace" />
-    <Text style={paragraphStyle}>{`Ce lien est valable ${lifetimeMinutes} minutes. Il ne sert qu'une fois.`}</Text>
+    <Text style={creatorParagraphStyle}>Bonjour,</Text>
+    <Text style={{ ...creatorParagraphStyle, marginBottom: "28px" }}>
+      {`Voici votre lien pour entrer dans votre espace PULSACITY. Il est valable ${lifetimeMinutes} minutes et ne sert qu'une fois.`}
+    </Text>
+    <CreatorEmailButton href={url} label="Accéder à mon espace" />
+    <Text style={{ ...creatorSmallStyle, margin: 0 }}>
+      Vous n&apos;avez pas demandé ce lien ? Ignorez cet e-⁠mail : personne ne peut entrer dans votre espace sans lui.
+    </Text>
   </AccountEmailLayout>
 );

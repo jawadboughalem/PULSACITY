@@ -5,6 +5,7 @@ import { spaces, subscriptions, user } from "@/db/schema";
 import { BetaEndingEmail, describeBetaEndingSubject } from "@/emails/BetaEndingEmail";
 import { getAppUrl } from "@/lib/app-url";
 import { sendAccountEmail } from "@/lib/email/send-email";
+import { SUPPORT_EMAIL } from "@/lib/support/support-address";
 import { BILLING_PATH } from "./billing-paths";
 
 /** « Nous vous écrivons le 5 janvier, 7 jours avant le premier prélèvement » (maquette 8.3, bêta-testeur). */
@@ -57,6 +58,7 @@ export const sendDueBetaReminders = async (
       await send({
         to: owner.email,
         subject: describeBetaEndingSubject(reminder.betaUntil),
+        replyTo: SUPPORT_EMAIL,
         body: createElement(BetaEndingEmail, {
           firstPaymentAt: reminder.betaUntil,
           amountCents: reminder.amountCents,

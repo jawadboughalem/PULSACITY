@@ -29,7 +29,7 @@ const describeCount = (first: number, visible: number, total: number) =>
 const DOT_ZONE = 44;
 const ARROW_ZONE = 48 + 8;
 
-/** Maquette 2: three cards from 1024 px, one below. Swiped by finger, moved one card at a time by the arrows. */
+/** Maquettes 3.6: three cards from 1024 px, one below. Swiped by finger, moved one card at a time by the arrows. */
 export const renderCarousel = (payload: WidgetPayload, context: LayoutContext): HTMLElement => {
   const total = payload.testimonials.length;
   const slides = payload.testimonials.map((testimonial, index) =>

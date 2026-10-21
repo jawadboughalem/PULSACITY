@@ -29,5 +29,6 @@ export const readUnsubscribeToken = (token: string | null | undefined): string |
   return expected.length === received.length && timingSafeEqual(expected, received) ? customerId : null;
 };
 
+/** /desinscription/{code}: an address without technical words, readable in the text version (maquettes 3.6). */
 export const buildUnsubscribeUrl = (customerId: string): string =>
-  `${getAppUrl()}/api/unsubscribe?${UNSUBSCRIBE_TOKEN_PARAMETER}=${encodeURIComponent(signUnsubscribeToken(customerId))}`;
+  `${getAppUrl()}${UNSUBSCRIBE_PAGE_PATH}/${encodeURIComponent(signUnsubscribeToken(customerId))}`;

@@ -9,7 +9,7 @@ const PROBLEM_MESSAGES: Record<SubmitProblem, { title: string; detail: string }>
     detail: `Patientez quelques minutes, puis renvoyez. ${KEPT_TEXT}`,
   },
   "page-not-found": {
-    title: "Cette page de collecte n'existe plus.",
+    title: "Cette page n'existe plus.",
     detail: "Écrivez directement à la personne qui vous l'a envoyée.",
   },
   "invalid-photo": {

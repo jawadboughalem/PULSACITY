@@ -52,7 +52,6 @@ const mountWidget = (host: HTMLElement, widgetId: string, { origin }: MountEnvir
       ...options,
       loadMore: (offset) => loadWidgetPayload(origin, widgetId, offset),
       reviews,
-      logotypeUrl: `${origin}/fonts/pulsacity-logotype.woff2`,
     });
     const shownRoot = rendered.root;
     if (payload.type !== "badge") {

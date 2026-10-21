@@ -1,47 +1,83 @@
 import type { ReactNode } from "react";
-import { Body, Column, Container, Head, Html, Img, Preview, Row, Section, Text } from "react-email";
+import { Body, Button, Column, Container, Head, Html, Img, Link, Preview, Row, Section, Text } from "react-email";
 import { getAppUrl } from "@/lib/app-url";
 import {
-  EMAIL_MOBILE_STYLES,
-  cardStyle,
-  headerNameStyle,
-  headerStyle,
-  headerSymbolCellStyle,
-  headerSymbolStyle,
-  legalStyle,
-  pageStyle,
-} from "./email-styles";
+  CREATOR_EMAIL_MOBILE_STYLES,
+  creatorButtonStyle,
+  creatorCardStyle,
+  creatorFallbackStyle,
+  creatorHeaderStyle,
+  creatorLegalLineStyle,
+  creatorLegalStyle,
+  creatorLinkStyle,
+  creatorNameStyle,
+  creatorPageStyle,
+  creatorSymbolCellStyle,
+  creatorSymbolStyle,
+} from "./creator-email-styles";
 
 export const EMAIL_SYMBOL_PATH = "/brand/email-symbole-48.png";
 
+/**
+ * The sender's line under the reason. PULSACITY's postal address joins it with the legal texts of a private seller
+ * (lot 4.9); until then, the name alone.
+ */
+export const PULSACITY_SIGNATURE = "PULSACITY";
+
+/** Charte v2, « E-mails », e-mails to the creator: `email-symbole-48.png` shown at 24, then « PULSACITY » in text. */
+export const CreatorEmailHeader = ({ appUrl = getAppUrl() }: { appUrl?: string }) => (
+  <Section style={creatorHeaderStyle}>
+    <Row>
+      <Column style={creatorSymbolCellStyle}>
+        <Img src={`${appUrl}${EMAIL_SYMBOL_PATH}`} width="24" height="24" alt="" style={creatorSymbolStyle} />
+      </Column>
+      <Column>
+        <Text style={creatorNameStyle}>PULSACITY</Text>
+      </Column>
+    </Row>
+  </Section>
+);
+
+/** Soleil, Encre text; always followed by « Le bouton ne s'affiche pas ? Ouvrez ce lien : » and the link in clear. */
+export const CreatorEmailButton = ({ href, label }: { href: string; label: string }) => (
+  <>
+    <Button className="creator-email-button" href={href} style={creatorButtonStyle}>
+      {label}
+    </Button>
+    <Text style={creatorFallbackStyle}>
+      Le bouton ne s&apos;affiche pas ? Ouvrez ce lien :{" "}
+      <Link href={href} style={creatorLinkStyle}>
+        {href}
+      </Link>
+    </Text>
+  </>
+);
+
 type AccountEmailLayoutProps = {
   preview: string;
-  legalNotice: string;
+  /** Why this e-mail came, first line of the footer: « Vous recevez cet e-mail parce que … ». */
+  notice: ReactNode;
   children: ReactNode;
 };
 
-export const AccountEmailLayout = ({ preview, legalNotice, children }: AccountEmailLayoutProps) => (
+/**
+ * Maquettes 3.6, « Créateur · E-mails »: the e-mails PULSACITY sends a creator. A white card of 600 on Nuage, radius 20
+ * (square under Outlook), padding 40 (24 on a phone); system fonts only. Below, the reason, then the sender.
+ */
+export const AccountEmailLayout = ({ preview, notice, children }: AccountEmailLayoutProps) => (
   <Html lang="fr">
     <Head>
-      <style>{EMAIL_MOBILE_STYLES}</style>
+      <style>{CREATOR_EMAIL_MOBILE_STYLES}</style>
     </Head>
     <Preview>{preview}</Preview>
-    <Body lang="fr" style={pageStyle}>
-      <Container className="email-card" style={cardStyle}>
-        <Section style={headerStyle}>
-          <Row>
-            <Column style={headerSymbolCellStyle}>
-              <Img src={`${getAppUrl()}${EMAIL_SYMBOL_PATH}`} width="24" height="24" alt="" style={headerSymbolStyle} />
-            </Column>
-            <Column>
-              <Text style={headerNameStyle}>Pulsacity</Text>
-            </Column>
-          </Row>
-        </Section>
+    <Body lang="fr" style={creatorPageStyle}>
+      <Container className="creator-email-card" style={creatorCardStyle}>
+        <CreatorEmailHeader />
         {children}
       </Container>
-      <Container className="email-legal" style={legalStyle}>
-        {legalNotice}
+      <Container className="creator-email-legal" style={creatorLegalStyle}>
+        <Text style={creatorLegalLineStyle}>{notice}</Text>
+        <Text style={{ ...creatorLegalLineStyle, margin: 0 }}>{PULSACITY_SIGNATURE}</Text>
       </Container>
     </Body>
   </Html>

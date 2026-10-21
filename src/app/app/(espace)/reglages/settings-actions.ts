@@ -9,6 +9,7 @@ import { buildCollectionUrl } from "@/lib/app-url";
 import { requireSignedInUser } from "@/lib/auth/require-signed-in-user";
 import { findOwnedSpace } from "@/lib/spaces/find-owned-space";
 import { MAX_SPACE_NAME_LENGTH, spaceSlugSchema } from "@/lib/spaces/new-space-form-schema";
+import { readTypedColor } from "@/lib/colors/read-typed-color";
 import { type RequestEmailPreview, renderRequestEmailPreview } from "@/lib/spaces/render-request-email-preview";
 import {
   MAX_POSTAL_ADDRESS_LENGTH,
@@ -76,6 +77,8 @@ const previewInputSchema = z.object({
   spaceName: z.string().trim().max(MAX_SPACE_NAME_LENGTH),
   logoKey: z.string(),
   removeLogo: z.boolean(),
+  /** As typed: an unreadable colour leaves the button in Encre, like a space without an accent. */
+  accentColor: z.string().max(16),
   senderPostalAddress: z.string().max(MAX_POSTAL_ADDRESS_LENGTH * 2),
 });
 
@@ -91,7 +94,7 @@ export const previewRequestEmail = async (input: RequestEmailPreviewInput): Prom
   const space = await findOwnedSpace(database, signedInUser.id);
   if (!parsed.success || !space) return { ok: false, error: "preview-failed" };
 
-  const { spaceName, logoKey, removeLogo, senderPostalAddress } = parsed.data;
+  const { spaceName, logoKey, removeLogo, accentColor, senderPostalAddress } = parsed.data;
   const logoUrl = logoKey && isLogoKeyOf(signedInUser.id, logoKey) ? getUploadPublicUrl(logoKey) : removeLogo ? null : space.logoUrl;
   const [firstOffer] = await database
     .select({ name: products.name, slug: products.slug })
@@ -110,6 +113,7 @@ export const previewRequestEmail = async (input: RequestEmailPreviewInput): Prom
     data: await renderRequestEmailPreview({
       spaceName: spaceName || space.name,
       logoUrl,
+      accentColor: readTypedColor(accentColor),
       senderPostalAddress: address || null,
       productName: firstOffer?.name ?? null,
       collectionUrl: buildCollectionUrl(space.slug, firstOffer?.slug),

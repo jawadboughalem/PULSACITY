@@ -11,9 +11,19 @@ export const WIDE_FROM = 1024;
  */
 export const ONE_COLUMN_BELOW = 340;
 
-/** « wide » and « one-column » on the root, from the widget's width. Unknown before layout (0), it stays two columns. */
+/**
+ * Narrower than this, in two columns, the name, the title and the dates beside the avatar would have under 130 px, and
+ * « 23 sept. 2026 » or « Pharmacienne » would break inside the word (recette of lot 4.6): the avatar goes above them.
+ */
+export const COMPACT_BELOW = 440;
+
+/**
+ * « wide », « compact » and « one-column » on the root, from the widget's width. Unknown before layout (0), it stays
+ * two columns.
+ */
 export const applyWidthClasses = (root: HTMLElement, width: number): void => {
   root.classList.toggle("wide", width >= WIDE_FROM);
+  root.classList.toggle("compact", width >= ONE_COLUMN_BELOW && width < COMPACT_BELOW);
   root.classList.toggle("one-column", width > 0 && width < ONE_COLUMN_BELOW);
 };
 

@@ -15,7 +15,7 @@ const describeIncentive = (incentive: CollectionIncentive, spaceName: string) =>
  * Charte v2, ajouts 3.6: an aplat #F2F4F8, the gift icon 20, 15/22. The texts are Design's proposal.
  */
 export const IncentiveNote = ({ incentive, spaceName }: { incentive: CollectionIncentive; spaceName: string }) => (
-  <p className="flex items-start gap-3 rounded-card bg-widget-light-card px-5 py-4 text-small">
+  <p className="flex items-start gap-3 rounded-card bg-widget-light-card px-4 py-3 text-small">
     <Icon name="gift" size={20} className="mt-[1px] shrink-0" />
     {describeIncentive(incentive, spaceName)}
   </p>

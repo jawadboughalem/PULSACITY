@@ -5,7 +5,7 @@ import { aboutLink, avatar, incentiveNote, poweredBy, stars } from "./parts";
 import type { WidgetPayload } from "./payload";
 
 /**
- * Maquette 2: next to the buy button, three faces, the stars and « 4,8/5 · 47 avis », every review received but those
+ * Maquettes 3.6: next to the buy button, three faces, the stars and « 4,8/5 · 47 avis », every review received but those
  * refused for a declared reason. It links to the wall of the page when there is one; « À propos de ces avis » and
  * « Propulsé par » go beside it, or below it when the page is centred or narrow.
  */

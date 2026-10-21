@@ -107,10 +107,13 @@ describe("sendDueReviewEmails", () => {
     });
     const text = await render(email.body, { plainText: true });
     expect(text).toContain("https://pulsacity.com/t/julie-nutrition/programme-30-jours?r=jeton-1");
-    expect(text).toContain("Donner mon avis (1 minute)");
+    expect(text).toContain("Donner mon avis");
+    expect(text).not.toContain("minute");
     expect(text).toContain("vous avez acheté Programme 30 jours auprès de Julie Nutrition le 28 août 2026");
-    expect(email.unsubscribeUrl).toMatch(/^https:\/\/pulsacity\.com\/api\/unsubscribe\?token=/);
-    const token = new URL(email.unsubscribeUrl).searchParams.get("token");
+    expect(email.text).toContain("vous avez acheté Programme 30 jours auprès de Julie Nutrition le 28 août 2026");
+    expect(email.text).toContain(email.unsubscribeUrl);
+    expect(email.unsubscribeUrl).toMatch(/^https:\/\/pulsacity\.com\/desinscription\/[^/?]+$/);
+    const token = decodeURIComponent(new URL(email.unsubscribeUrl).pathname.split("/").at(-1) ?? "");
     expect(readUnsubscribeToken(token)).toBe(request.customerId);
 
     expect(await readRequest(request.id)).toMatchObject({
@@ -140,7 +143,7 @@ describe("sendDueReviewEmails", () => {
     expect(sent.map((email) => email.subject)).toEqual([
       "Camille, votre avis sur Programme 30 jours\u00a0?",
       "Camille, votre avis sur Programme 30 jours\u00a0?",
-      "Camille, une minute pour Programme 30 jours\u00a0?",
+      "Camille, un mot sur Programme 30 jours\u00a0?",
     ]);
     expect(sent[2].idempotencyKey).toBe(`review-request/${request.id}/reminder`);
     expect(await render(sent[2].body, { plainText: true })).toContain("C'est le dernier message à ce sujet.");

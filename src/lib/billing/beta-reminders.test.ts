@@ -50,7 +50,8 @@ describe("sendDueBetaReminders", () => {
     expect(send).toHaveBeenCalledOnce();
     expect(send.mock.calls[0][0]).toMatchObject({
       to: "julie@exemple.fr",
-      subject: "Votre plan Essentiel devient payant le 12 janvier",
+      subject: "Votre plan Essentiel offert se termine le 12 janvier",
+      replyTo: "contact@pulsacity.com",
     });
   });
 

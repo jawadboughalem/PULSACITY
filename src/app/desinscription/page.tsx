@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { CollectHeader } from "@/components/collect/CollectHeader";
-import { PoweredByPulsacity } from "@/components/collect/PoweredByPulsacity";
-import { FOCUS_RING } from "@/components/ui/button-styles";
-import { Icon } from "@/components/ui/Icon";
+import { CollectOutcome, WriteToCreatorLink } from "@/components/collect/CollectOutcome";
+import { CollectShell } from "@/components/collect/CollectShell";
 import { getDb } from "@/db";
 import { getAppUrl } from "@/lib/app-url";
-import { cn } from "@/lib/cn";
 import { loadUnsubscribedCustomer } from "@/lib/requests/unsubscribe-customer";
 import {
   UNSUBSCRIBE_STATE_PARAMETER,
@@ -21,43 +18,32 @@ export const metadata: Metadata = {
 
 const readParameter = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) ?? null;
 
-const PAGE_CLASSES = "min-h-dvh bg-white px-page-gutter py-6 text-ink";
-const MAIN_CLASSES = "mx-auto flex min-h-[calc(100dvh-48px)] w-full max-w-text flex-col gap-6";
-
+/** Maquettes 3.6, « Désinscription »: a link that failed cannot say whose it was, so the page has no creator. */
 const Problem = ({ title, detail }: { title: string; detail: string }) => (
-  <div className={PAGE_CLASSES}>
-    <main className={MAIN_CLASSES}>
-      <div className="mt-10 flex flex-col gap-4">
-        <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink bg-white">
-          <Icon name="alert" size={32} />
-        </span>
-        <h1 className="font-display text-h2">{title}</h1>
-        <p className="text-body">{detail}</p>
-      </div>
-    </main>
-  </div>
+  <CollectShell identity={null} poweredBy={null}>
+    <CollectOutcome icon="alert" title={title} lines={[{ text: detail }]} />
+  </CollectShell>
 );
 
-/** After « Ne plus recevoir ces e-mails »: the link has already unsubscribed, this page says so (m1, « Désinscription confirmée »). */
+/** After « Ne plus recevoir ces e-mails »: the link has already unsubscribed, this page says so (maquettes 3.6). */
 const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) => {
   const parameters = await searchParams;
   if (readParameter(parameters[UNSUBSCRIBE_STATE_PARAMETER]) === WELCOME_UNSUBSCRIBED_STATE) {
-    // « Ne plus recevoir les e-mails d'accueil », a creator's own e-mails: the page of m1, in PULSACITY's name.
+    // « Ne plus recevoir les e-mails d'accueil », a creator's own e-mails: the same page, in PULSACITY's name.
     return (
-      <div className={PAGE_CLASSES}>
-        <main className={MAIN_CLASSES}>
-          <div className="mt-10 flex flex-col gap-4">
-            <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink bg-white">
-              <Icon name="valid" size={32} />
-            </span>
-            <h1 className="font-display text-h2">Désinscription confirmée</h1>
-            <p className="text-body">Vous ne recevrez plus les e-⁠mails d&apos;accueil de PULSACITY.</p>
-            <p className="text-body text-gray">
-              Les autres e-⁠mails de votre espace continuent : liens de connexion, nouveaux témoignages, abonnement.
-            </p>
-          </div>
-        </main>
-      </div>
+      <CollectShell identity={null} poweredBy={null}>
+        <CollectOutcome
+          icon="valid"
+          title="Désinscription confirmée"
+          lines={[
+            { text: "Vous ne recevrez plus les e-⁠mails d'accueil de PULSACITY." },
+            {
+              text: "Les autres e-⁠mails de votre espace continuent : liens de connexion, nouveaux témoignages, abonnement.",
+              isSecondary: true,
+            },
+          ]}
+        />
+      </CollectShell>
     );
   }
   if (readParameter(parameters[UNSUBSCRIBE_STATE_PARAMETER]) === "failed") {
@@ -81,30 +67,20 @@ const UnsubscribePage = async ({ searchParams }: PageProps<"/desinscription">) =
   }
 
   return (
-    <div className={PAGE_CLASSES}>
-      <main className={MAIN_CLASSES}>
-        <CollectHeader spaceName={customer.spaceName} logoUrl={customer.logoUrl} />
-        <div className="mt-10 flex flex-col gap-4">
-          <span className="flex size-[64px] items-center justify-center rounded-full border-2 border-ink bg-white">
-            <Icon name="valid" size={32} />
-          </span>
-          <h1 className="font-display text-h2">Désinscription confirmée</h1>
-          <p className="text-body">{`Vous ne recevrez plus de demande d'avis de ${customer.spaceName}.`}</p>
-          <p className="text-body text-gray">Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.</p>
-        </div>
-        <a
-          href={`mailto:${customer.replyToEmail}`}
-          className={cn(
-            "pz-couleur pz-appui mb-1 flex h-[60px] w-full items-center justify-center gap-2 rounded-full bg-sun text-[18px] font-bold text-ink hover:bg-sun-hover active:bg-sun-pressed",
-            FOCUS_RING,
-          )}
-        >
-          <Icon name="email" size={20} />
-          {`Écrire à ${customer.spaceName}`}
-        </a>
-        <PoweredByPulsacity homeUrl={getAppUrl()} referralCode={customer.referralCode} />
-      </main>
-    </div>
+    <CollectShell
+      identity={{ name: customer.spaceName, logoUrl: customer.logoUrl, accentColor: customer.accentColor }}
+      poweredBy={{ homeUrl: getAppUrl(), referralCode: customer.referralCode }}
+    >
+      <CollectOutcome
+        icon="valid"
+        title="Désinscription confirmée"
+        lines={[
+          { text: `Vous ne recevrez plus de demande d'avis de ${customer.spaceName}.` },
+          { text: "Un lien déjà reçu reste valable : vous pouvez toujours donner votre avis.", isSecondary: true },
+        ]}
+        action={<WriteToCreatorLink spaceName={customer.spaceName} replyToEmail={customer.replyToEmail} />}
+      />
+    </CollectShell>
   );
 };
 

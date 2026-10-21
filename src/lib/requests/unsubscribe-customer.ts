@@ -5,6 +5,8 @@ import { customers, purchases, reviewRequests, spaces } from "@/db/schema";
 export type UnsubscribedCustomer = {
   spaceName: string;
   logoUrl: string | null;
+  /** The confirmation page wears the creator's identity: logo, name and the tint of their accent. */
+  accentColor: string | null;
   replyToEmail: string;
   referralCode: string;
 };
@@ -53,6 +55,7 @@ export const unsubscribeCustomer = (
       .select({
         spaceName: spaces.name,
         logoUrl: spaces.logoUrl,
+        accentColor: spaces.accentColor,
         replyToEmail: spaces.replyToEmail,
         referralCode: spaces.referralCode,
       })
@@ -71,6 +74,7 @@ export const loadUnsubscribedCustomer = async (
     .select({
       spaceName: spaces.name,
       logoUrl: spaces.logoUrl,
+      accentColor: spaces.accentColor,
       replyToEmail: spaces.replyToEmail,
       referralCode: spaces.referralCode,
       unsubscribedAt: customers.unsubscribedAt,

@@ -1,5 +1,7 @@
 "use client";
 
+import { readAccentStarColor } from "@/lib/colors/accent-button-colors";
+import { CollectShell } from "./CollectShell";
 import { InactiveLinkScreen } from "./InactiveLinkScreen";
 import type { CollectionIncentive } from "./IncentiveNote";
 import { TestimonialFormScreen } from "./TestimonialFormScreen";
@@ -11,8 +13,8 @@ type CollectionViewProps = CollectionContext & {
   logoUrl: string | null;
   accentColor: string | null;
   replyToEmail: string;
-  referralCode: string;
-  homeUrl: string;
+  /** « Propulsé par PULSACITY » and its referral link; null on PULSACITY's own pages. */
+  poweredBy: { homeUrl: string; referralCode: string } | null;
   title: string;
   consentText: string;
   incentive: CollectionIncentive | null;
@@ -27,25 +29,43 @@ export const CollectionView = ({
   logoUrl,
   accentColor,
   replyToEmail,
-  referralCode,
-  homeUrl,
+  poweredBy,
   title,
   consentText,
   incentive,
 }: CollectionViewProps) => {
   const form = useTestimonialForm({ spaceSlug, productSlug, requestToken, prefilledName });
-  const space = { spaceName, logoUrl, homeUrl, referralCode };
+  const identity = { name: spaceName, logoUrl, accentColor };
+  const starColor = readAccentStarColor(accentColor);
 
-  if (form.sentTestimonial) return <ThankYouScreen testimonial={form.sentTestimonial} {...space} />;
-  if (form.isLinkInactive) return <InactiveLinkScreen replyToEmail={replyToEmail} {...space} />;
+  if (form.sentTestimonial) {
+    return (
+      <CollectShell identity={identity} hasHeader={false} poweredBy={poweredBy}>
+        <ThankYouScreen
+          testimonial={form.sentTestimonial}
+          spaceName={spaceName}
+          logoUrl={logoUrl}
+          accentColor={accentColor}
+          starColor={starColor}
+        />
+      </CollectShell>
+    );
+  }
   return (
-    <TestimonialFormScreen
-      form={form}
-      title={title}
-      consentText={consentText}
-      accentColor={accentColor}
-      incentive={incentive}
-      {...space}
-    />
+    <CollectShell identity={identity} poweredBy={poweredBy}>
+      {form.isLinkInactive ? (
+        <InactiveLinkScreen spaceName={spaceName} replyToEmail={replyToEmail} />
+      ) : (
+        <TestimonialFormScreen
+          form={form}
+          title={title}
+          consentText={consentText}
+          spaceName={spaceName}
+          accentColor={accentColor}
+          starColor={starColor}
+          incentive={incentive}
+        />
+      )}
+    </CollectShell>
   );
 };

@@ -6,16 +6,20 @@ export type StarFill = "full" | "half" | "empty";
 
 type StarIconProps = {
   /** Charte v2: 16 in badges and lists, 18 in tables, 20 in cards, 28 in the space's forms (maquettes 3.4), 46 in a 56 target (collect page). */
-  size: 16 | 18 | 20 | 28 | 36 | 46;
+  size: 16 | 18 | 20 | 28 | 36 | 42 | 46;
   isFilled?: boolean;
   fill?: StarFill;
+  /** The collect page (ajouts 3.6): a chosen star all in the creator's accent, fill and outline, or all in Encre. */
+  solidColor?: string | null;
+  /** Another size on a phone or a computer, over the `size` of the attributes. */
+  className?: string;
 };
 
 /** Charte v2, Étoiles de note: full in Soleil with a 1.3 Encre outline, empty a 1.5 Gris outline, half for averages. */
-export const StarIcon = ({ size, isFilled = false, fill = isFilled ? "full" : "empty" }: StarIconProps) => {
+export const StarIcon = ({ size, isFilled = false, fill = isFilled ? "full" : "empty", solidColor = null, className }: StarIconProps) => {
   const halfId = `star-half-${useId().replace(/[^a-zA-Z0-9-]/g, "")}`;
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" className="shrink-0">
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" className={cn("shrink-0", className)}>
       {fill === "half" ? (
         <defs>
           <clipPath id={halfId}>
@@ -27,6 +31,7 @@ export const StarIcon = ({ size, isFilled = false, fill = isFilled ? "full" : "e
         d={STAR_PATH}
         strokeWidth={fill === "full" ? 1.3 : 1.5}
         strokeLinejoin="round"
+        style={fill === "full" && solidColor ? { fill: solidColor, stroke: solidColor } : undefined}
         className={cn(fill === "full" ? "fill-sun stroke-ink" : "fill-none stroke-gray")}
       />
       {fill === "half" ? (

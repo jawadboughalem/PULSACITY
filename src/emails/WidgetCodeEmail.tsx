@@ -1,8 +1,17 @@
 import { Fragment } from "react";
-import { Section, Text } from "react-email";
+import { Link, Section, Text } from "react-email";
+import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
+import { getAppUrl } from "@/lib/app-url";
 import { PASTE_GUIDE_STEPS, PASTE_GUIDE_SUMMARY } from "@/lib/widgets/paste-guide-steps";
 import { AccountEmailLayout } from "./AccountEmailLayout";
-import { EMAIL_COLORS, paragraphStyle, smallStyle } from "./email-styles";
+import {
+  CREATOR_EMAIL_COLORS,
+  creatorLinkStyle,
+  creatorParagraphStyle,
+  creatorQuoteBoxStyle,
+  creatorSmallStyle,
+  creatorTitleStyle,
+} from "./creator-email-styles";
 
 export const WIDGET_CODE_EMAIL_SUBJECT = "Le code de votre widget PULSACITY";
 
@@ -10,21 +19,28 @@ type WidgetCodeEmailProps = {
   snippet: string;
 };
 
+/**
+ * Maquettes 3.6, « Code du widget »: the code on Nuage, then the four steps of Systeme.io, without a duration. Systeme.io
+ * is one tool among others: the guides of the other pages follow.
+ */
 export const WidgetCodeEmail = ({ snippet }: WidgetCodeEmailProps) => (
   <AccountEmailLayout
     preview="Le code à coller une fois sur votre page de vente."
-    legalNotice="Vous recevez cet e-mail parce que vous l'avez demandé depuis votre espace PULSACITY."
+    notice="Vous recevez cet e-⁠mail parce que vous l'avez demandé depuis votre espace PULSACITY."
   >
-    <Text style={paragraphStyle}>Bonjour,</Text>
-    <Text style={paragraphStyle}>
-      Voici le code de votre widget. Collez-le une seule fois dans un bloc de code HTML de votre page de vente.
+    <Text style={creatorParagraphStyle}>Bonjour,</Text>
+    <Text style={{ ...creatorParagraphStyle, marginBottom: "24px" }}>
+      Voici le code de votre widget. Collez-le une seule fois sur votre page de vente : vos réglages s&apos;appliquent
+      ensuite tout seuls.
     </Text>
-    <Section style={{ margin: "0 0 24px", padding: "16px", backgroundColor: EMAIL_COLORS.paper100 }}>
+    <Section style={{ ...creatorQuoteBoxStyle, padding: "16px" }}>
       <Text
         style={{
-          ...smallStyle,
-          color: EMAIL_COLORS.ink900,
+          margin: 0,
           fontFamily: "'Courier New', Courier, monospace",
+          fontSize: "14px",
+          lineHeight: "20px",
+          color: CREATOR_EMAIL_COLORS.ink,
           whiteSpace: "pre-wrap",
           wordBreak: "break-all",
         }}
@@ -32,18 +48,25 @@ export const WidgetCodeEmail = ({ snippet }: WidgetCodeEmailProps) => (
         {snippet}
       </Text>
     </Section>
-    <Text style={{ ...paragraphStyle, fontWeight: 600 }}>{`Sur Systeme.io : ${PASTE_GUIDE_SUMMARY}`}</Text>
-    {PASTE_GUIDE_STEPS.map((parts, index) => (
-      <Text key={index} style={paragraphStyle}>
-        {`${index + 1}. `}
-        {parts.map((part, partIndex) =>
-          typeof part === "string" ? (
-            <Fragment key={partIndex}>{part}</Fragment>
-          ) : (
-            <strong key={partIndex}>{part.strong}</strong>
-          ),
-        )}
-      </Text>
-    ))}
+    <Text style={creatorTitleStyle}>{`Coller dans Systeme.io, en ${PASTE_GUIDE_SUMMARY}`}</Text>
+    <ol style={{ margin: "0 0 20px", paddingLeft: "22px" }}>
+      {PASTE_GUIDE_STEPS.map((parts, index) => (
+        <li key={index} style={{ ...creatorParagraphStyle, margin: "0 0 12px" }}>
+          {parts.map((part, partIndex) =>
+            typeof part === "string" ? (
+              <Fragment key={partIndex}>{part}</Fragment>
+            ) : (
+              <strong key={partIndex}>{part.strong}</strong>
+            ),
+          )}
+        </li>
+      ))}
+    </ol>
+    <Text style={{ ...creatorSmallStyle, margin: 0 }}>
+      Votre page est sur WordPress, Wix ou un autre outil ?{" "}
+      <Link href={`${getAppUrl()}${MARKETING_PATHS.guides}`} style={creatorLinkStyle}>
+        Voir les guides
+      </Link>
+    </Text>
   </AccountEmailLayout>
 );

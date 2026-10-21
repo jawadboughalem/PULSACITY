@@ -170,6 +170,7 @@ export const SpaceSettingsForm = ({ initial, collectionAddressPrefix, previewPro
               spaceName: values.name,
               logoKey: form.logo.uploadedKey,
               removeLogo: form.logo.isRemoved,
+              accentColor: values.accentColor,
               senderPostalAddress: values.senderPostalAddress,
             })}
           />

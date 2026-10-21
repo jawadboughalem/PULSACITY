@@ -13,13 +13,17 @@ const PHOTO_ERROR_MESSAGES: Record<ImageUploadError, string> = {
   "too-many-uploads": "Beaucoup de photos ont été envoyées en peu de temps. Patientez un peu, puis réessayez.",
 };
 
-const POLAROID_WIDTH = 104;
-const POLAROID_PHOTO_HEIGHT = 84;
+/** Charte v2, ajouts 3.6: the photo is the author's portrait, a round of 72, as in the widget. */
+const PORTRAIT_SIZE = 72;
 
 type PhotoPickerProps = {
   upload: ImageUpload;
 };
 
+/**
+ * Maquettes 3.6, « Photo : ses états »: an empty round with a dashed 2 px Gris border (Erreur after a failure), the
+ * portrait cropped in it once chosen; the sending and the failures said under the row.
+ */
 export const PhotoPicker = ({ upload }: PhotoPickerProps) => {
   const { state, handleSelectFile, handleRemove } = upload;
   const isUploaded = state.status === "uploaded";
@@ -29,7 +33,9 @@ export const PhotoPicker = ({ upload }: PhotoPickerProps) => {
       <div className="flex items-center gap-4">
         <label
           className={cn(
-            "flex h-[116px] w-[104px] shrink-0 -rotate-2 cursor-pointer rounded-field border-2 border-ink bg-white p-2 pb-6",
+            "flex size-[72px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full text-ink",
+            !isUploaded && "border-2 border-dashed",
+            state.status === "failed" ? "border-error" : "border-gray",
             "has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ink",
           )}
         >
@@ -37,32 +43,30 @@ export const PhotoPicker = ({ upload }: PhotoPickerProps) => {
             type="file"
             accept="image/*"
             aria-label={isUploaded ? "Changer la photo" : "Ajouter une photo, facultatif"}
-            aria-describedby="photo-hint"
+            aria-describedby={state.status === "failed" ? "photo-hint photo-error" : "photo-hint"}
             className="sr-only"
             onChange={(event) => handleSelectFile(event.target.files?.[0])}
           />
-          <span className="flex flex-1 items-center justify-center overflow-hidden bg-sky text-ink">
-            {isUploaded ? (
-              <Image
-                src={state.image.previewUrl}
-                alt=""
-                width={POLAROID_WIDTH}
-                height={POLAROID_PHOTO_HEIGHT}
-                unoptimized
-                className="size-full object-cover"
-              />
-            ) : (
-              <Icon name="photo" size={24} />
-            )}
-          </span>
+          {isUploaded ? (
+            <Image
+              src={state.image.previewUrl}
+              alt=""
+              width={PORTRAIT_SIZE}
+              height={PORTRAIT_SIZE}
+              unoptimized
+              className="size-full object-cover"
+            />
+          ) : (
+            <Icon name="photo" size={24} />
+          )}
         </label>
-        <div className="flex flex-col gap-1">
-          <p className="text-body font-bold">Une photo de vous ?</p>
+        <div className="flex min-w-[0] flex-col">
+          <p className="text-body font-bold">Une photo de vous ?</p>
           <p id="photo-hint" className="text-small text-gray">
             Facultatif. Un visage rend votre témoignage plus parlant.
           </p>
           {isUploaded ? (
-            <button type="button" onClick={handleRemove} className={cn(DISCREET_BUTTON_CLASSES, "self-start")}>
+            <button type="button" onClick={handleRemove} className={cn(DISCREET_BUTTON_CLASSES, "-ml-[10px] self-start")}>
               Retirer la photo
             </button>
           ) : null}

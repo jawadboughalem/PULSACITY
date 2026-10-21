@@ -8,6 +8,8 @@ type SpaceAvatarProps = {
   size: 32 | 36 | 44 | 64;
   /** Charte v2, Avatar: Ciel without a photo, white when it sits on Ciel. */
   background: "sky" | "white";
+  /** Without a logo, the initials on the creator's accent rather than Ciel (collect page, maquettes 3.6). */
+  colors?: { background: string; text: string };
   className?: string;
 };
 
@@ -19,9 +21,10 @@ const SIZE_CLASSES = {
   64: "size-[64px] text-[20px]",
 } as const;
 
-export const SpaceAvatar = ({ name, logoUrl, size, background, className }: SpaceAvatarProps) => (
+export const SpaceAvatar = ({ name, logoUrl, size, background, colors, className }: SpaceAvatarProps) => (
   <span
     aria-hidden="true"
+    style={colors && !logoUrl ? { backgroundColor: colors.background, color: colors.text } : undefined}
     className={cn(
       "flex shrink-0 items-center justify-center overflow-hidden rounded-full leading-none font-bold text-ink",
       background === "white" ? "bg-white" : "bg-sky",

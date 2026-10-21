@@ -4,6 +4,7 @@ import { sendAccountEmail } from "@/lib/email/send-email";
 import { consumeRateLimit } from "@/lib/rate-limit/consume-rate-limit";
 import { hashRateLimitSubject } from "@/lib/rate-limit/hash-rate-limit-subject";
 import { MAGIC_LINK_LIFETIME_MINUTES } from "./magic-link-lifetime";
+import { shortenSignInLink } from "./sign-in-link";
 import { MAGIC_LINKS_PER_ADDRESS } from "./magic-link-rate-limits";
 import { TooManyMagicLinksError } from "./too-many-magic-links-error";
 
@@ -14,6 +15,6 @@ export const sendMagicLink = async (database: Database, email: string, url: stri
   await sendAccountEmail({
     to: email,
     subject: MAGIC_LINK_EMAIL_SUBJECT,
-    body: <MagicLinkEmail url={url} lifetimeMinutes={MAGIC_LINK_LIFETIME_MINUTES} />,
+    body: <MagicLinkEmail url={shortenSignInLink(url)} email={email} lifetimeMinutes={MAGIC_LINK_LIFETIME_MINUTES} />,
   });
 };

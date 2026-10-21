@@ -1,3 +1,11 @@
+import {
+  MENTION_HEIGHT,
+  MENTION_LOGOTYPE,
+  MENTION_ROCKET,
+  MENTION_STAR,
+  MENTION_SYMBOL_SCALE,
+  MENTION_WIDTH,
+} from "./brand-mention-paths";
 import { h, svg } from "./dom";
 import { ABOUT_REVIEWS, INCENTIVE_NOTE, describeDates, describeRating, describeSelection, quoteInFrench } from "./format";
 import type { PublicTestimonial, WidgetPayload } from "./payload";
@@ -29,12 +37,15 @@ const fillOf = (position: number, rounded: number): StarFill => {
   return position - 0.5 === rounded ? "half" : "empty";
 };
 
-/** Five stars, rounded to the nearest half for an average, always with their value in words. */
-/** Without a label, the stars only repeat a text already read, and screen readers skip them. */
+/**
+ * Five stars, rounded to the nearest half for an average, always with their value in words. Without a label, the stars
+ * only repeat a text already read, and screen readers skip them. Charte v2, Widget: 18 on a card, 22 on a card of the
+ * carousel, 20 in the summary, 16 in the badge.
+ */
 export const stars = (
   rating: number,
   label: string | null,
-  size: "small" | "regular" | "large" = "regular",
+  size: "small" | "regular" | "medium" | "large" = "regular",
 ): HTMLElement => {
   const rounded = Math.round(rating * 2) / 2;
   const sizeClass = size === "regular" ? "stars" : `stars ${size}`;
@@ -54,8 +65,8 @@ export const avatar = (initials: string, photo: string | null): HTMLElement => {
   const image = h("img", {
     src: photo,
     alt: "",
-    width: 44,
-    height: 44,
+    width: 36,
+    height: 36,
     loading: "lazy",
     decoding: "async",
     referrerpolicy: "no-referrer",
@@ -65,7 +76,10 @@ export const avatar = (initials: string, photo: string | null): HTMLElement => {
   return circle;
 };
 
-/** The author: the name, the title, « Avis du …, achat en … », and on PULSACITY's wall the beta testers' mention. */
+/**
+ * The author: the name, the title, « Avis du …, achat en … », and on PULSACITY's wall the beta testers' mention. The
+ * avatar of 36 sits at the top of these lines (maquettes 3.6).
+ */
 const who = (testimonial: PublicTestimonial): HTMLElement =>
   h(
     "p",
@@ -78,25 +92,19 @@ const who = (testimonial: PublicTestimonial): HTMLElement =>
     testimonial.mention ? h("span", { class: "dates" }, testimonial.mention) : null,
   );
 
-/** Maquette 2, wall: the author, the stars, then the quote. */
-export const wallCard = (testimonial: PublicTestimonial): HTMLElement =>
+/** Charte v2, Widget, « Carte »: the stars, the quote, then the author, in the wall as in the carousel (maquettes 3.6). */
+const card = (testimonial: PublicTestimonial, starsSize: "regular" | "large"): HTMLElement =>
   h(
     "article",
     { class: "card" },
-    h("div", { class: "author" }, avatar(testimonial.initials, testimonial.photo), who(testimonial)),
-    testimonial.rating === null ? null : stars(testimonial.rating, describeRating(testimonial.rating)),
+    testimonial.rating === null ? null : stars(testimonial.rating, describeRating(testimonial.rating), starsSize),
     h("blockquote", { class: "quote" }, quoteInFrench(testimonial.text)),
+    h("div", { class: "author" }, avatar(testimonial.initials, testimonial.photo), who(testimonial)),
   );
 
-/** Maquette 2, carousel: the stars, the quote, then the author. */
-export const carouselCard = (testimonial: PublicTestimonial): HTMLElement =>
-  h(
-    "article",
-    { class: "card" },
-    testimonial.rating === null ? null : stars(testimonial.rating, describeRating(testimonial.rating), "large"),
-    h("blockquote", { class: "quote" }, quoteInFrench(testimonial.text)),
-    h("div", { class: "author" }, avatar(testimonial.initials, testimonial.photo), who(testimonial)),
-  );
+export const wallCard = (testimonial: PublicTestimonial): HTMLElement => card(testimonial, "regular");
+
+export const carouselCard = (testimonial: PublicTestimonial): HTMLElement => card(testimonial, "large");
 
 /** « À propos de ces avis », a page of pulsacity.com, distinct from « Propulsé par » (positionnement.md, point 3). */
 export const aboutLink = (href: string): HTMLElement =>
@@ -121,51 +129,41 @@ export const notes = (payload: WidgetPayload): HTMLElement | null => {
   return h("div", { class: "notes" }, lines.childElementCount > 0 ? lines : null, powered);
 };
 
-const SYMBOL_STAR =
-  "M16.00 18.40 L17.94 22.33 L22.28 22.96 L19.14 26.02 L19.88 30.34 L16.00 28.30 L12.12 30.34 L12.86 26.02 L9.72 22.96 L14.06 22.33Z";
-const SYMBOL_BODY = "M16 0.8C20.6 3.6 22.2 8 22.2 12.6V21H9.8V12.6C9.8 8 11.4 3.6 16 0.8Z";
-const SYMBOL_FINS = "M10.6 12.8L5.6 17.4V22.4L10.6 20.2Z M21.4 12.8L26.4 17.4V22.4L21.4 20.2Z";
+let mentionCount = 0;
 
-let symbolCount = 0;
-
-/** pulsacity-symbole-petit-mono.svg, its paths as is. Each copy has its own mask, or two copies would share one. */
-const brandSymbol = (): SVGElement => {
-  symbolCount += 1;
-  const maskId = `pz-symbol-${symbolCount}`;
+/** pulsacity-mention-mono.svg, its paths as is, in the secondary colour. Each copy has its own mask. */
+const brandMention = (): SVGElement => {
+  mentionCount += 1;
+  const maskId = `pz-mention-${mentionCount}`;
   return svg(
     "svg",
-    { viewBox: "0 0 32 32", "aria-hidden": "true", focusable: "false" },
+    { viewBox: `0 0 ${MENTION_WIDTH} ${MENTION_HEIGHT}`, fill: "currentColor", "aria-hidden": "true", focusable: "false" },
     svg(
       "defs",
       null,
       svg(
         "mask",
-        { id: maskId, maskUnits: "userSpaceOnUse", x: 0, y: 0, width: 32, height: 32 },
-        svg("rect", { width: 32, height: 32, fill: "white" }),
-        svg("path", { d: SYMBOL_STAR, fill: "black", stroke: "black", "stroke-width": 3, "stroke-linejoin": "round" }),
+        { id: maskId, maskUnits: "userSpaceOnUse", x: 0, y: 0, width: 64, height: 64 },
+        svg("rect", { width: 64, height: 64, fill: "white" }),
+        svg("path", { d: MENTION_STAR, fill: "black", stroke: "black", "stroke-width": 13, "stroke-linejoin": "round" }),
       ),
     ),
     svg(
       "g",
-      { mask: `url(#${maskId})`, fill: "currentColor" },
-      svg("path", { d: SYMBOL_BODY }),
-      svg("path", { d: SYMBOL_FINS }),
+      { transform: `scale(${MENTION_SYMBOL_SCALE})` },
+      svg("g", { mask: `url(#${maskId})` }, svg("path", { d: MENTION_ROCKET })),
+      svg("path", { d: MENTION_STAR, stroke: "currentColor", "stroke-width": 3.5, "stroke-linejoin": "round" }),
     ),
-    svg("path", {
-      d: SYMBOL_STAR,
-      fill: "currentColor",
-      stroke: "currentColor",
-      "stroke-width": 0.6,
-      "stroke-linejoin": "round",
-    }),
+    svg("path", { d: MENTION_LOGOTYPE }),
   );
 };
 
-/** « Propulsé par PULSACITY », with the referral link of the space. */
+/** « Propulsé par PULSACITY », with the referral link of the space: 12/16 and the drawn mention, no font loaded. */
 export const poweredBy = (href: string): HTMLElement =>
   h(
     "a",
     { class: "powered", href, target: "_blank", rel: "noopener" },
     "Propulsé par",
-    h("span", { class: "brand" }, brandSymbol(), "Pulsacity"),
+    brandMention(),
+    h("span", { class: "sr-only" }, "Pulsacity"),
   );

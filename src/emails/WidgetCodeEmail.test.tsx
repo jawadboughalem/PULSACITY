@@ -18,13 +18,20 @@ describe("WidgetCodeEmail", () => {
     expect(text).toContain('data-pulsacity-widget="abc"');
   });
 
-  it("carries the guide for Systeme.io, its four steps in order, without a duration", async () => {
-    const text = await render(<WidgetCodeEmail snippet={SNIPPET} />, { plainText: true });
+  it("carries the guide for Systeme.io, its four steps in order, without a duration (maquettes 3.6)", async () => {
+    const text = (await render(<WidgetCodeEmail snippet={SNIPPET} />, { plainText: true }))
+      .replaceAll("\u2060", "")
+      .replaceAll("\u00a0", " ");
 
-    expect(text).toContain("Collez-le une seule fois dans un bloc de code HTML de votre page de vente.");
-    expect(text).toContain("Sur Systeme.io : 4 étapes");
-    expect(text).not.toMatch(/minute/);
-    expect(text.indexOf("1. Dans l'éditeur de votre page Systeme.io")).toBeLessThan(text.indexOf("2. Cliquez sur l'élément"));
-    expect(text).toContain("4. Enregistrez la page, puis ouvrez son aperçu");
+    expect(text).toContain(
+      "Collez-le une seule fois sur votre page de vente : vos réglages s'appliquent ensuite tout seuls.",
+    );
+    expect(text).toContain("Coller dans Systeme.io, en 4 étapes");
+    expect(text).not.toMatch(/minute|s'exécute/);
+    expect(text).toContain("le widget n'apparaît pas dans l'éditeur");
+    expect(text).toContain("Votre page est sur WordPress, Wix ou un autre outil ? Voir les guides");
+    expect(text).toContain("https://pulsacity.com/guides");
+    expect(text.indexOf("Dans l'éditeur de votre page Systeme.io")).toBeLessThan(text.indexOf("Cliquez sur l'élément"));
+    expect(text.indexOf("Cliquez sur l'élément")).toBeLessThan(text.indexOf("Enregistrez la page, puis ouvrez son aperçu"));
   });
 });

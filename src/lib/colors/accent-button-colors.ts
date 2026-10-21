@@ -47,3 +47,15 @@ export const readAccentTint = (accentColor: string | null): string | null => {
     .join("")
     .toUpperCase()}`;
 };
+
+/** Charte v2, ajouts 3.6, Page de collecte: the stars take the accent if it reaches 3:1 on Blanc, otherwise Encre. */
+const MIN_STAR_CONTRAST_RATIO = 3;
+
+/**
+ * The colour of the chosen stars of the collect page, fill and outline. Null without an accent: Soleil with its Encre
+ * outline, like everywhere else.
+ */
+export const readAccentStarColor = (accentColor: string | null): string | null => {
+  if (!accentColor || !HEX_COLOR_PATTERN.test(accentColor)) return null;
+  return calculateContrastRatio(accentColor, WHITE) >= MIN_STAR_CONTRAST_RATIO ? accentColor.toUpperCase() : INK;
+};

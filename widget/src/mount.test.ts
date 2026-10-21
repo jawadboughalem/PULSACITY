@@ -3,7 +3,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { MOUNT_SELECTOR, mountWidgets } from "./mount";
 import type { WidgetPayload } from "./payload";
 import { SAMPLE_BADGE_PAYLOAD, SAMPLE_PAYLOAD } from "./sample-payload";
-import { LOGOTYPE_FAMILY } from "./styles";
 
 const ORIGIN = "https://pulsacity.com";
 
@@ -169,7 +168,7 @@ describe("isolation from the page", () => {
     expect(host?.shadowRoot?.querySelector("style")?.textContent).toContain(":host { display: block !important; }");
   });
 
-  it("gives the page's fonts only the logotype, under a family no page uses", async () => {
+  it("adds no font to the page: the mention « Propulsé par PULSACITY » is drawn (charte v2, Widget)", async () => {
     const added: Array<{ family: string }> = [];
     vi.stubGlobal(
       "FontFace",
@@ -185,6 +184,6 @@ describe("isolation from the page", () => {
     mountWidgets({ origin: ORIGIN });
     await settle();
 
-    expect(added.map((face) => face.family)).toEqual([LOGOTYPE_FAMILY]);
+    expect(added).toEqual([]);
   });
 });

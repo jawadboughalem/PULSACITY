@@ -16,9 +16,8 @@ import {
 } from "./creator-email-styles";
 
 /**
- * Charte v2, « E-mails » and « E-mails, ajouts » (3.6): an e-mail to a creator's customer, in the creator's name.
- * The answers to a correction and the reason of a hidden testimonial are the first ones drawn in v2; the request and
- * its reminder follow with lot 4.8.
+ * Charte v2, « E-mails » and « E-mails, ajouts » (3.6): an e-mail to a creator's customer, in the creator's name: the
+ * request and its reminder, the correction to agree to, the reason of a hidden testimonial.
  */
 const SYSTEM_FONTS = "Helvetica, Arial, sans-serif";
 
@@ -29,7 +28,8 @@ export const CUSTOMER_EMAIL_MOBILE_STYLES = `
 @media (max-width: 600px) {
   .customer-email-card > tbody > tr > td { padding: 24px !important; }
   .customer-email-legal > tbody > tr > td { padding: 0 24px !important; }
-  .customer-email-button { display: block !important; padding-top: 16px !important; padding-bottom: 16px !important; text-align: center !important; }
+  .customer-email-button { display: block !important; padding-top: 18px !important; padding-bottom: 18px !important; text-align: center !important; }
+  .customer-email-actions { width: 100% !important; float: none !important; }
   .customer-email-actions td { display: block !important; width: 100% !important; padding: 0 0 12px !important; }
 }
 `;
@@ -120,7 +120,7 @@ const SpaceLogo = ({ space }: { space: CustomerEmailSpace }) =>
 /** « Le bouton ne s'affiche pas ? Ouvrez ce lien : » and the link in clear, after every button. */
 export const CustomerFallbackLink = ({ href }: { href: string }) => (
   <Text style={creatorFallbackStyle}>
-    Le bouton ne s&apos;affiche pas ? Ouvrez ce lien :{" "}
+    Le bouton ne s&apos;affiche pas ? Ouvrez ce lien :{" "}
     <Link href={href} style={creatorLinkStyle}>
       {href}
     </Link>
@@ -138,12 +138,14 @@ type CustomerEmailLayoutProps = {
   preview: string;
   /** « Vous recevez cet e-mail parce que … » */
   reason: string;
+  /** The whole first line, when « Vous recevez cet e-mail parce que » does not open it (the reminder). */
+  notice?: string;
   unsubscribeUrl: string;
   children: ReactNode;
 };
 
 /** The card with the creator's logo and name, then the footer: the reason, the way out, the sender's address. */
-export const CustomerEmailLayout = ({ space, preview, reason, unsubscribeUrl, children }: CustomerEmailLayoutProps) => (
+export const CustomerEmailLayout = ({ space, preview, reason, notice, unsubscribeUrl, children }: CustomerEmailLayoutProps) => (
   <Html lang="fr">
     <Head>
       <style>{CUSTOMER_EMAIL_MOBILE_STYLES}</style>
@@ -175,10 +177,10 @@ export const CustomerEmailLayout = ({ space, preview, reason, unsubscribeUrl, ch
         {children}
       </Container>
       <Container className="customer-email-legal" style={creatorLegalStyle}>
-        <Text style={creatorLegalLineStyle}>{`Vous recevez cet e-mail parce que ${reason}`}</Text>
+        <Text style={creatorLegalLineStyle}>{notice ?? `Vous recevez cet e-⁠mail parce que ${reason}`}</Text>
         <Text style={creatorLegalLineStyle}>
           <Link href={unsubscribeUrl} style={creatorLinkStyle}>
-            Ne plus recevoir ces e-mails
+            Ne plus recevoir ces e-⁠mails
           </Link>
         </Text>
         <Text style={creatorLegalLineStyle}>{`Envoyé avec PULSACITY pour ${space.name}`}</Text>

@@ -35,7 +35,7 @@ describe("sendNewLoginAddressLink", () => {
     expect(email).toMatchObject({ to: "julie.martin@exemple.fr", subject: NEW_LOGIN_ADDRESS_SUBJECT });
     const text = await render(email.body, { plainText: true });
     expect(text).toContain(`Confirmer cette adresse ${LINK}`);
-    expect(text).toContain("Ce lien est valable 24 heures.");
+    expect(text).toContain("Ce lien est valable 24 heures et ne sert qu'une fois.");
   });
 
   it("sends nothing for an address the account already has, nor for an unknown account", async () => {

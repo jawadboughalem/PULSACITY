@@ -65,7 +65,8 @@ src/app/api/widget/[widgetId]/# JSON public des témoignages d'un widget (cache 
 src/app/api/cron/requests/    # envoi des demandes planifiées
 src/app/api/stripe/webhook/   # abonnements PULSACITY
 src/app/api/unsubscribe/      # désinscription en un clic (lien signé, et bouton du client de messagerie) ; /accueil : les e-mails d'accueil
-src/app/desinscription/       # page de confirmation de la désinscription
+src/app/desinscription/       # page de confirmation de la désinscription ; /desinscription/[code] : l'adresse des e-mails (même désinscription en un clic)
+src/app/entrer/[code]/        # lien de connexion lisible de « Votre lien », renvoyé vers Better Auth
 widget/                       # source du widget embarquable, build → public/w.js
 src/config/plans.ts           # plans et limites, mois offert par filleul payant
 src/config/pulsacity-space.ts # l'espace PULSACITY (PULSACITY_SPACE_ID), son offre bêta, le seuil de son mur
@@ -159,7 +160,7 @@ Jamais son générateur (`--design-system`, `--persist`), ni ses palettes, ses p
 ## Design du widget
 
 - Rendu dans un Shadow DOM : aucun style de la page hôte ne le casse, aucun style du widget ne fuit.
-- `font-family: inherit` récupérée depuis l'élément hôte ; couleur d'accent configurable ; thème clair/sombre/auto ; rendu conforme à la maquette 2 (`docs-internes/maquettes/`) jusqu'au lot 4.8, qui le passe à la section Widget de la charte v2.
+- `font-family: inherit` récupérée depuis l'élément hôte ; couleur d'accent configurable ; thème clair/sombre/auto ; rendu conforme à la section Widget de la charte v2 et aux maquettes 3.6 (`docs-internes/design-v2/maquettes/v2-widget-*`) depuis le lot 4.8.
 - Mur : colonnes en maçonnerie responsive. Carrousel : défilement au doigt, flèches accessibles. Badge : « 4,9/5 · 87 avis » + 3 avatars.
 - Chargement asynchrone, espace réservé pour éviter les sauts de mise en page, images en lazy-load.
 - Badge « Propulsé par PULSACITY » discret mais lisible.

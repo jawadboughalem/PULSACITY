@@ -3,7 +3,13 @@ import { and, asc, count, eq, gt, gte, inArray, isNotNull, isNull, lte, notInArr
 import { canSendRequest } from "@/config/plans";
 import type { Database } from "@/db/database";
 import { customers, products, purchases, reviewRequests, spaces } from "@/db/schema";
-import { ReviewRequestEmail, type ReviewEmailKind, buildReviewEmailSubject } from "@/emails/ReviewRequestEmail";
+import {
+  ReviewRequestEmail,
+  type ReviewEmailKind,
+  type ReviewRequestEmailProps,
+  buildReviewEmailSubject,
+  buildReviewEmailText,
+} from "@/emails/ReviewRequestEmail";
 import { buildCollectionUrl } from "@/lib/app-url";
 import type { PurchaseEventType } from "@/lib/connectors/types";
 import { startOfParisMonth } from "@/lib/dates/paris-date";
@@ -63,6 +69,7 @@ const requestColumns = {
   spaceName: spaces.name,
   spaceSlug: spaces.slug,
   logoUrl: spaces.logoUrl,
+  accentColor: spaces.accentColor,
   replyToEmail: spaces.replyToEmail,
   senderPostalAddress: spaces.senderPostalAddress,
   plan: spaces.plan,
@@ -99,23 +106,26 @@ const buildReviewUrl = (request: RequestToSend) =>
 
 const buildEmail = (request: RequestToSend, kind: ReviewEmailKind): CustomerEmail => {
   const unsubscribeUrl = buildUnsubscribeUrl(request.customerId);
+  const email: ReviewRequestEmailProps = {
+    kind,
+    space: {
+      name: request.spaceName,
+      logoUrl: request.logoUrl,
+      accentColor: request.accentColor,
+      senderPostalAddress: request.senderPostalAddress,
+    },
+    firstName: request.firstName,
+    productName: request.productName,
+    eventType: (request.eventType as PurchaseEventType | null) ?? null,
+    purchasedAt: request.purchasedAt,
+    reviewUrl: buildReviewUrl(request),
+    unsubscribeUrl,
+  };
   return {
     to: request.email,
     subject: buildReviewEmailSubject(kind, request.firstName, request.productName),
-    body: (
-      <ReviewRequestEmail
-        kind={kind}
-        spaceName={request.spaceName}
-        logoUrl={request.logoUrl}
-        firstName={request.firstName}
-        productName={request.productName}
-        eventType={(request.eventType as PurchaseEventType | null) ?? null}
-        purchasedAt={request.purchasedAt}
-        reviewUrl={buildReviewUrl(request)}
-        unsubscribeUrl={unsubscribeUrl}
-        senderPostalAddress={request.senderPostalAddress}
-      />
-    ),
+    body: <ReviewRequestEmail {...email} />,
+    text: buildReviewEmailText(email),
     spaceName: request.spaceName,
     replyTo: request.replyToEmail,
     unsubscribeUrl,
