@@ -5,6 +5,7 @@ import { HelpThemes } from "@/components/marketing/help/HelpThemes";
 import { HELP_THEMES } from "@/content/help";
 import { getSignedInUser } from "@/lib/auth/get-signed-in-user";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
+import { readContactDraft } from "@/lib/support/report-content";
 
 export const generateMetadata = () =>
   buildPageMetadata({
@@ -28,8 +29,9 @@ const readAccountEmail = async (): Promise<string | null> => {
  * Maquette 8.4, « Aide et contact »: on Nuage, the questions by theme on the left, « Écrivez-nous » on the right; on a
  * phone, the form after the questions. Open to every visitor, with or without a space.
  */
-const HelpPage = async () => {
+const HelpPage = async ({ searchParams }: PageProps<"/aide">) => {
   const accountEmail = await readAccountEmail();
+  const draft = readContactDraft(await searchParams);
   return (
     <div className="bg-cloud px-page-gutter pt-6 pb-11 desktop:pt-11 desktop:pb-14">
       <div className="mx-auto max-w-content">
@@ -41,7 +43,7 @@ const HelpPage = async () => {
         </div>
         <div className="mt-8 flex flex-col gap-8 desktop:mt-9 desktop:grid desktop:grid-cols-[minmax(0,800px)_440px] desktop:items-start desktop:justify-between desktop:gap-9">
           <HelpThemes themes={HELP_THEMES} />
-          <ContactForm accountEmail={accountEmail} />
+          <ContactForm accountEmail={accountEmail} draft={draft} />
         </div>
       </div>
     </div>

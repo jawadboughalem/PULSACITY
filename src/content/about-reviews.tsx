@@ -134,7 +134,7 @@ export const ABOUT_REVIEWS_SECTIONS: AboutReviewsSection[] = [
     content: (
       <Paragraph>
         Pour une question sur un avis précis, adressez-vous au créateur qui l&apos;affiche. Pour nous signaler un avis,{" "}
-        <Link href={MARKETING_PATHS.contact} className={INLINE_LINK_CLASSES}>
+        <Link href={MARKETING_PATHS.report} className={INLINE_LINK_CLASSES}>
           écrivez à l&apos;équipe PULSACITY
         </Link>
         .

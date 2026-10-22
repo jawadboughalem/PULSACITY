@@ -17,6 +17,7 @@ import {
   MAX_CONTACT_MESSAGE_LENGTH,
   MAX_CONTACT_SUBJECT_LENGTH,
 } from "@/lib/support/contact-message";
+import type { ContactDraft } from "@/lib/support/report-content";
 import { SUPPORT_EMAIL, SUPPORT_MAILTO } from "@/lib/support/support-address";
 
 const FIELD_IDS: Record<ContactField, string> = {
@@ -50,13 +51,15 @@ const revealTop = (section: HTMLElement | null) => {
 type ContactFormProps = {
   /** The address of a signed-in creator: already typed, and the answer goes there unless it is changed. */
   accountEmail: string | null;
+  /** « Signaler un contenu » (/aide?sujet=signalement): the subject and the questions of a report, already typed. */
+  draft?: ContactDraft | null;
 };
 
 /**
  * Maquette 8.4, « Écrivez-nous »: the address (already typed when signed in), a subject, a message. The message leaves by
  * e-mail; nothing is kept here. The text typed stays in the fields whatever happens, until it has left.
  */
-export const ContactForm = ({ accountEmail }: ContactFormProps) => {
+export const ContactForm = ({ accountEmail, draft = null }: ContactFormProps) => {
   const [submission, submitAction, isPending] = useActionState<Submission | null, FormData>(
     async (previous, formData) => ({
       result: await sendContactMessage(previous?.result ?? null, formData),
@@ -66,8 +69,8 @@ export const ContactForm = ({ accountEmail }: ContactFormProps) => {
   );
   // Kept by React state: a form action empties the fields it does not control.
   const [email, setEmail] = useState(accountEmail ?? "");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
+  const [subject, setSubject] = useState(draft?.subject ?? "");
+  const [message, setMessage] = useState(draft?.message ?? "");
   const [honeypot, setHoneypot] = useState("");
   const [closedCount, setClosedCount] = useState(0);
   const [edited, setEdited] = useState<EditedFields>({ count: 0, fields: [] });

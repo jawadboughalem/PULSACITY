@@ -76,6 +76,7 @@ export const TestimonialFormScreen = ({
           id="testimonial-body"
           label="Votre témoignage"
           placeholder="Qu'est-ce qui a changé pour vous ?"
+          hint="Votre avis sera public. Évitez les détails sur votre santé ou celle de vos proches."
           focusHint="Quelques phrases suffisent."
           maxLength={MAX_TESTIMONIAL_LENGTH}
           value={values.body}

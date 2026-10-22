@@ -14,15 +14,14 @@ type LegalPageProps = {
 };
 
 /**
- * m23, while the texts are drafts: the passages still to provide are highlighted in Attente. Charte v2, Bandeau
- * d'attente: Attente fond, its icon in Attente, the text in Encre.
+ * m23, while the texts are drafts. Charte v2, Bandeau d'attente: Attente fond, its icon in Attente, the text in Encre.
  */
 const DraftBanner = () => (
   <div role="note" className="flex items-start gap-[14px] rounded-card bg-waiting-surface px-5 py-4 desktop:px-6 desktop:py-5">
     <Icon name="clock" size={24} className="mt-[1px] shrink-0 text-waiting" />
     <div className="flex flex-col gap-1">
       <p className="text-body font-bold">Brouillon en cours de relecture</p>
-      <p className="text-small">Ce texte n&apos;est pas encore validé. Les passages surlignés restent à compléter.</p>
+      <p className="text-small">Ce texte n&apos;est pas encore validé.</p>
     </div>
   </div>
 );

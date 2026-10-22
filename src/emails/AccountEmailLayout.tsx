@@ -19,8 +19,8 @@ import {
 export const EMAIL_SYMBOL_PATH = "/brand/email-symbole-48.png";
 
 /**
- * The sender's line under the reason. PULSACITY's postal address joins it with the legal texts of a private seller
- * (lot 4.9); until then, the name alone.
+ * The sender's line under the reason: « PULSACITY » alone. No postal address: the founder publishes none (decision of
+ * 21 October 2026, lot 4.9), and the e-mails of PULSACITY never name the person behind it.
  */
 export const PULSACITY_SIGNATURE = "PULSACITY";
 

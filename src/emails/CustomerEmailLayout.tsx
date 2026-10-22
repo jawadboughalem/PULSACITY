@@ -1,5 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Body, Button, Column, Container, Head, Html, Img, Link, Preview, Row, Section, Text } from "react-email";
+import { MARKETING_PATHS } from "@/components/marketing/marketing-paths";
+import { getAppUrl } from "@/lib/app-url";
 import { readAccentButtonColors } from "@/lib/colors/accent-button-colors";
 import { getInitials } from "@/lib/spaces/get-initials";
 import { formatPostalAddressLine } from "@/lib/spaces/space-settings-schema";
@@ -133,6 +135,17 @@ export const CustomerEmailButton = ({ href, label, accentColor }: { href: string
   </Button>
 );
 
+/**
+ * The information of article 14 of the GDPR (2.7, « Pied des e-mails »): who decides (the creator), who sends for them
+ * (PULSACITY), and where the rest is said. Never a promotion of PULSACITY: no link to its home, no « Propulsé par ».
+ */
+export const describeCustomerDataNotice = (spaceName: string): string =>
+  `${spaceName} utilise PULSACITY pour recueillir les avis de ses clients.`;
+
+export const CUSTOMER_DATA_LINK_LABEL = "Vos données";
+
+export const buildCustomerDataUrl = (appUrl = getAppUrl()): string => `${appUrl}${MARKETING_PATHS.customerData}`;
+
 type CustomerEmailLayoutProps = {
   space: CustomerEmailSpace;
   preview: string;
@@ -144,7 +157,7 @@ type CustomerEmailLayoutProps = {
   children: ReactNode;
 };
 
-/** The card with the creator's logo and name, then the footer: the reason, the way out, the sender's address. */
+/** The card with the creator's logo and name, then the footer: the reason, the way out, who processes the data, the sender's address. */
 export const CustomerEmailLayout = ({ space, preview, reason, notice, unsubscribeUrl, children }: CustomerEmailLayoutProps) => (
   <Html lang="fr">
     <Head>
@@ -183,7 +196,12 @@ export const CustomerEmailLayout = ({ space, preview, reason, notice, unsubscrib
             Ne plus recevoir ces e-⁠mails
           </Link>
         </Text>
-        <Text style={creatorLegalLineStyle}>{`Envoyé avec PULSACITY pour ${space.name}`}</Text>
+        <Text style={creatorLegalLineStyle}>
+          {`${describeCustomerDataNotice(space.name)} `}
+          <Link href={buildCustomerDataUrl()} style={creatorLinkStyle}>
+            {CUSTOMER_DATA_LINK_LABEL}
+          </Link>
+        </Text>
         {space.senderPostalAddress ? (
           <Text style={{ ...creatorLegalLineStyle, margin: 0 }}>{formatPostalAddressLine(space.senderPostalAddress)}</Text>
         ) : null}

@@ -14,7 +14,7 @@ Le fondateur juge la V0 inachevée sur cinq points :
 - **Les paiements restent dans la V0.** Stripe Billing, la page « Abonnement et factures », les CGV publiées. Le fondateur encaisse en tant que particulier, sans entreprise.
 - **La micro-entreprise se crée au seuil** fixé dans `seuil-micro-entreprise.md` : 5 clients payants, 3 mois de suite avec des paiements ou 500 € encaissés, le premier atteint. Ce jour-là, les prompts 6.1 à 6.7 passent avant tout le reste.
 - **Les textes légaux sont ceux d'un vendeur particulier.**
-  - Les mentions légales donnent votre nom, votre adresse et votre téléphone (à confirmer par 1.1).
+  - Les mentions légales donnent votre nom, et ni votre adresse ni votre téléphone (décision du 21 octobre, lot 4.9).
   - Les CGV, les CGU (avec leur annexe RGPD) et la politique de confidentialité restent.
   - Vos informations viennent de variables Vercel, jamais du dépôt public.
 - **La domiciliation Kandbaz** : à peser avant de la résilier (prompt K). Si vous vendez, une adresse doit être publiée ; sans elle, c'est la vôtre. Une domiciliation suppose en général une entreprise immatriculée : K le vérifie avec leurs conditions.
@@ -119,7 +119,7 @@ Le design v2 se fait dans un **nouveau projet Claude Design**, « PULSACITY v2 �
 - **Le seuil, tenu.** Un abonnement mensuel est récurrent par nature : la régularité arrive vite. Déclarez ce que vous encaissez dès le premier euro (1.1 dit où), et créez la micro-entreprise au premier repère atteint : elle ne coûte rien sans chiffre d'affaires.
 - **Liens morts en production.** « Mon compte », « Réglages », « Abonnement et factures », « Aide et contact », « Voir le plan Essentiel » et « Voir les plans » mènent à des pages qui n'existent pas encore (`inventaire-ecrans.md`, partie 9). Pas de promotion du site avant les lots 4.3 à 4.5.
 - **TVA.** Aucune TVA n'est facturée : « TVA comprise » disparaît au profit de « Prix finaux » (arbitrage n° 2, lot 4.1). Le lot 6.6 reviendra dessus selon le régime.
-- **Vos informations personnelles hors du dépôt.** Le dépôt est public et garde tout son historique. Votre nom, votre adresse et votre téléphone apparaîtront sur le site, comme la loi l'impose à un vendeur, mais viendront de variables Vercel saisies par vous (lot 4.9).
+- **Vos informations personnelles hors du dépôt.** Le dépôt est public et garde tout son historique. Votre nom apparaît dans les textes légaux, par une variable Vercel saisie par vous ; votre adresse et votre téléphone n'apparaissent nulle part (décision du 21 octobre, lot 4.9).
 - **Les bêta-testeurs** : Essentiel offert 3 mois par un code Stripe, carte demandée, puis le prix fondateur (arbitrage n° 3, lot 4.5).
 - **Les avis en ligne : une obligation et un argument.** Le droit français encadre leur publication (date, vérification, avis négatifs). Notre badge « 4,9/5 » est calculé sur les seuls témoignages validés : 2.7 vérifie le risque. Et des avis issus de vraies ventes sont un argument fort : 1.5 dit à quelles conditions l'utiliser.
 - **Le connecteur universel d'abord.** Avec lui, chaque outil « Bientôt » marche déjà par Zapier, Make ou n8n : le catalogue promet moins et tient plus.

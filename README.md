@@ -28,6 +28,8 @@ LEGAL_VALIDATED=false
 ```
 
 Sans `RESEND_API_KEY`, aucun e-mail ne part : leur texte s'affiche dans le terminal de `pnpm dev`.
+Les textes légaux parlent au nom de l'équipe PULSACITY : aucun nom, aucune adresse, aucun téléphone de personne. Sans
+`LEGAL_VALIDATED=true`, ils restent en brouillon.
 Les demandes d'avis planifiées partent avec la tâche `/api/cron/requests`. En production, le workflow GitHub
 « Send review requests » l'appelle toutes les 15 minutes, et Vercel Cron une fois par jour (le plan Hobby ne permet
 pas plus). En local, ajoutez `CRON_SECRET=<une valeur au choix>` à `.env.local` et lancez-la à la

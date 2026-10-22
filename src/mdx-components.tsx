@@ -34,16 +34,6 @@ const AnchoredHeading = ({ id, children }: AnchoredHeadingProps) => (
   </h2>
 );
 
-/**
- * What the company still has to provide, while a draft (charte v2, ajouts 3.5, Brouillon et champs à compléter):
- * highlighted in Attente fond, Attente 700, radius 4, line by line. Written <ToComplete>SIREN</ToComplete>.
- */
-const ToComplete = ({ children }: { children: ReactNode }) => (
-  <mark className="rounded-[4px] box-decoration-clone bg-waiting-surface px-1 font-bold text-waiting">
-    [À COMPLÉTER : {children}]
-  </mark>
-);
-
 /** Charte v2, ajouts 3.5, Lecture: the text in 17/27, 68 characters a line at most. */
 const TEXT_CLASSES = "text-[17px] leading-[27px]";
 
@@ -60,7 +50,6 @@ const components = {
   strong: ({ children }) => <strong className="font-bold">{children}</strong>,
   a: ProseLink,
   AnchoredHeading,
-  ToComplete,
   blockquote: ({ children }) => (
     <blockquote className="max-w-quote border-l-2 border-ink pl-6 text-quote">{children}</blockquote>
   ),

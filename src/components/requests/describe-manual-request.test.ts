@@ -35,13 +35,12 @@ describe("the e-mail, as the form shows it", () => {
     expect(describeEmailGreeting("")).toBe("L'e-mail commence par « Bonjour Élodie, ». Sans prénom : « Bonjour, ».");
   });
 
-  it("repeats the sentence that says why the customer receives it", () => {
+  it("repeats the sentence that says why the customer receives it, once the offer and the date are chosen", () => {
     expect(describeEmailReason("Suivi individuel 3 mois", "Julie Nutrition", new Date("2026-10-02T12:00:00Z"))).toBe(
       "L'e-mail dira : « vous avez acheté Suivi individuel 3 mois auprès de Julie Nutrition le 2 oct. 2026 ».",
     );
-    expect(describeEmailReason(null, "Julie Nutrition", null)).toBe(
-      "L'e-mail dira : « vous avez acheté [l'offre] auprès de Julie Nutrition le [date] ».",
-    );
+    expect(describeEmailReason(null, "Julie Nutrition", new Date("2026-10-02T12:00:00Z"))).toBeNull();
+    expect(describeEmailReason("Suivi individuel 3 mois", "Julie Nutrition", null)).toBeNull();
   });
 });
 

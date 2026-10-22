@@ -19,11 +19,14 @@ export const describeEmailGreeting = (firstName: string): string =>
     ? `L'e-mail commence par « Bonjour ${firstName.trim()}, ».`
     : "L'e-mail commence par « Bonjour Élodie, ». Sans prénom : « Bonjour, ».";
 
-/** m20, under the date: the sentence of the e-mail that says why the customer receives it (`ReviewRequestEmail`). */
-export const describeEmailReason = (productName: string | null, spaceName: string, purchasedAt: Date | null): string =>
-  `L'e-mail dira : « vous avez acheté ${productName ?? "[l'offre]"} auprès de ${spaceName} le ${
-    purchasedAt ? formatDayMonthYear(purchasedAt) : "[date]"
-  } ».`;
+/**
+ * m20, under the date: the sentence of the e-mail that says why the customer receives it (`ReviewRequestEmail`). Until
+ * the offer and the date are chosen, nothing: never a placeholder in brackets (lot 4.9).
+ */
+export const describeEmailReason = (productName: string | null, spaceName: string, purchasedAt: Date | null): string | null =>
+  productName && purchasedAt
+    ? `L'e-mail dira : « vous avez acheté ${productName} auprès de ${spaceName} le ${formatDayMonthYear(purchasedAt)} ».`
+    : null;
 
 const ONE_REQUEST = "Une seule demande par client et par offre : ainsi, personne ne reçoit plus de deux e-mails de demande.";
 

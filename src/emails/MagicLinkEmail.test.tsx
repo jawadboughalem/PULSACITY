@@ -1,9 +1,13 @@
 import { render } from "react-email";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MagicLinkEmail } from "./MagicLinkEmail";
 
 beforeEach(() => {
   vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://pulsacity.com");
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
 });
 
 const LINK = "https://pulsacity.com/entrer/abc";
@@ -34,5 +38,12 @@ describe("MagicLinkEmail", () => {
     expect(text).toContain(LINK);
     expect(text).toContain("Vous n'avez pas demandé ce lien ? Ignorez cet e-mail : personne ne peut entrer dans votre espace sans lui.");
     expect(text).toContain("Vous recevez cet e-mail parce qu'une connexion a été demandée avec julie@exemple.fr.");
+  });
+
+  it("signs « PULSACITY » alone: no person's name, no postal address", async () => {
+    const text = await render(<MagicLinkEmail url={LINK} email="julie@exemple.fr" lifetimeMinutes={15} />, {
+      plainText: true,
+    });
+    expect(read(text)).toMatch(/PULSACITY\s*$/);
   });
 });

@@ -253,6 +253,7 @@ export const RequestReviewDialog = ({
   };
 
   const purchaseDay = /^\d{4}-\d{2}-\d{2}$/.test(purchasedOn) ? new Date(`${purchasedOn}T12:00:00Z`) : null;
+  const emailReason = describeEmailReason(offer?.name ?? null, spaceName, purchaseDay);
 
   return (
     <>
@@ -425,7 +426,7 @@ export const RequestReviewDialog = ({
                       }}
                     />
                   </div>
-                  <p className={FIELD_HINT_CLASSES}>{describeEmailReason(offer?.name ?? null, spaceName, purchaseDay)}</p>
+                  {emailReason ? <p className={FIELD_HINT_CLASSES}>{emailReason}</p> : null}
                 </div>
                 {/* Charte v2, Case à cocher: the attestation on Nuage, radius-card, padding 16; in error, Erreur fond. */}
                 <div

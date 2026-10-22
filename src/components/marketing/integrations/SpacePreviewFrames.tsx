@@ -54,7 +54,7 @@ export const ConnectionAddressFrame = ({ connectorName, hasSigningKey = true }: 
       <div className="flex flex-col gap-2">
         <span className="text-small font-bold">Adresse de connexion</span>
         <span className="flex flex-col gap-3 desktop:flex-row desktop:items-center desktop:gap-3">
-          <span className={FIELD_CLASSES}>[adresse de connexion propre à votre espace]</span>
+          <span className={FIELD_CLASSES}>https://pulsacity.com/api/connectors/••••••••••••</span>
           <span className={cn(BUTTON_CLASSES, "h-[56px] bg-sun px-7")}>
             <Icon name="copy" size={20} />
             Copier

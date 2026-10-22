@@ -23,9 +23,9 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 
 - PULSACITY encaisse dès la V0 : le fondateur vend en tant que particulier, sans entreprise. Stripe Billing, la page « Abonnement et factures » et les CGV restent dans la V0.
 - La micro-entreprise se crée au seuil de `docs-internes/fin-v0/seuil-micro-entreprise.md` : 5 clients payants, 3 mois de suite avec des paiements, ou 500 € encaissés, le premier atteint. Ce jour-là, les prompts 6.1 à 6.7 passent avant tout le reste.
-- Textes légaux d'un vendeur particulier : son nom, son adresse et son téléphone viennent de variables Vercel, jamais du dépôt (lot 4.9). Une seule adresse : contact@pulsacity.com.
+- Textes légaux (lot 4.9) : une voix d'équipe, « l'équipe PULSACITY ». Ni le nom, ni l'adresse, ni le téléphone du fondateur ne sont publiés, nulle part, et rien ne dit l'absence d'entreprise (décisions des 21 et 22 octobre 2026). Une seule adresse : contact@pulsacity.com.
 - Aucune TVA n'est facturée : les prix sont des prix finaux, jamais « TVA comprise ».
-- Les décisions sont dans `docs-internes/decisions/` (connecteurs, tarifs, positionnement, commercialisation) ; `arbitrages.md` règle leurs contradictions et prime sur elles.
+- Les décisions sont dans `docs-internes/decisions/` (connecteurs, tarifs, positionnement, commercialisation, textes légaux) ; `arbitrages.md` règle leurs contradictions et prime sur elles.
 
 ## Règles absolues
 
@@ -59,7 +59,7 @@ src/app/(auth)/               # /inscription, /connexion
 src/app/app/                  # /app, /app/temoignages (image de partage : /app/temoignages/[id]/image), /app/offres, /app/widgets, /app/connecteurs, /app/connecteurs/[connector], /app/demandes, /app/reglages (l'espace), /app/compte (la personne, export /app/compte/export), /app/facturation, /app/parrainage
 src/app/go/[slug]/            # liens courts /go/… : l'accueil, avec la source de la visite dans l'adresse
 src/app/p/[slug]/             # lien de parrainage pulsacity.com/p/<adresse de l'espace>
-src/app/t/[spaceSlug]/        # page publique de collecte (+ /t/[spaceSlug]/[productSlug]) ; /t/[spaceSlug]/correction : réponse de l'auteur à une correction
+src/app/t/[spaceSlug]/        # page publique de collecte (+ /t/[spaceSlug]/[productSlug]) ; le lien d'une demande déjà répondue : « Gérer mon avis » (retrait de l'accord) ; /t/[spaceSlug]/correction : réponse de l'auteur à une correction
 src/app/api/connectors/[connector]/[token]/  # réception des webhooks de tous les connecteurs
 src/app/api/widget/[widgetId]/# JSON public des témoignages d'un widget (cache CDN)
 src/app/api/cron/requests/    # envoi des demandes planifiées
@@ -78,7 +78,8 @@ src/lib/referrals/            # parrainage : liens, récompense au premier paiem
 src/lib/welcome-emails/       # e-mails d'accueil J0, J1, J3, J7 : échéances, arrêt à l'étape faite, désinscription
 src/lib/billing/              # Stripe Billing de PULSACITY : prix par clé de recherche, Checkout, portail, changements de plan, événements, prix fondateur, rappel des bêta-testeurs
 src/lib/requests/             # planification et envoi des demandes
-src/lib/support/              # « Écrivez-nous » : contact@pulsacity.com, champs, limites, envoi (rien gardé en base)
+src/lib/support/              # « Écrivez-nous » : contact@pulsacity.com, champs, limites, envoi (rien gardé en base), « Signaler un contenu » (/aide?sujet=signalement)
+src/lib/legal/                # textes légaux : leur validation (LEGAL_VALIDATED)
 src/emails/                   # templates React Email
 src/content/                  # textes du site : offres (depuis plans.ts), FAQ, aide par thème (help.ts), un fichier par connecteur et leurs familles (integrations/), guides et textes légaux en MDX
 docs-internes/                # décisions, payloads, recette ; etat.md : où en est le projet ; design-v2/ : charte, maquettes et logo v2
@@ -100,7 +101,7 @@ src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées
 - `customers` : id, spaceId, email, firstName, lastName, unsubscribedAt, createdAt (unique spaceId + email)
 - `purchases` : id, spaceId, customerId, productId, connectionId (nullable), source (connector|manual|csv), eventType, externalRef, purchasedAt, createdAt (unique connectionId + externalRef : une vente reçue deux fois est enregistrée une fois ; `manual` : « Demander un avis »)
 - `review_requests` : id, purchaseId, token (unique), scheduledAt, sentAt, reminderScheduledAt, reminderSentAt, completedAt, cancelledAt, failedAt, status (scheduled|sent|reminded|completed|cancelled|failed), failedAttempts
-- `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body (original, jamais modifié), displayBody (texte affiché, null = original), displayEditedAt, status (pending|approved|hidden), source (form|manual|csv), provenance (sale|request|added|import|public-link : vente reçue, demande manuelle, ajout, import, lien public), reviewRequestId, purchasedAt, purchaseConnector (la vente ou la demande à laquelle l'avis répond), hiddenAt, hiddenReason, hiddenReasonDetail (« Autre motif »), hiddenReasonSentAt (motif envoyé à l'auteur, une fois), consentAt, consentText, featured (bool), createdAt. Un avis masqué pour un motif ne compte plus dans la note du badge (`src/lib/testimonials/rated-testimonials.ts`)
+- `testimonials` : id, spaceId, productId (nullable), customerId (nullable), authorName, authorTitle, authorPhotoUrl, rating (1–5), body (original, jamais modifié), displayBody (texte affiché, null = original), displayEditedAt, status (pending|approved|hidden), source (form|manual|csv), provenance (sale|request|added|import|public-link : vente reçue, demande manuelle, ajout, import, lien public), reviewRequestId, purchasedAt, purchaseConnector (la vente ou la demande à laquelle l'avis répond), hiddenAt, hiddenReason, hiddenReasonDetail (« Autre motif »), hiddenReasonSentAt (motif envoyé à l'auteur, une fois), consentAt, consentText, featured (bool), createdAt. Un avis masqué pour un motif ne compte plus dans la note du badge (`src/lib/testimonials/rated-testimonials.ts`). L'auteur qui retire son accord (« Gérer mon avis », le lien de sa demande) supprime son avis (`src/lib/testimonials/withdraw-consent.ts`)
 - `testimonial_corrections` : id, testimonialId, fromBody, body, token (unique, lien de réponse), createdAt, sentAt, answeredAt, outcome (null = en attente | accepted | refused | cancelled) — « Corriger le texte affiché » : le texte ne change qu'avec l'accord de l'auteur ; une correction en attente à la fois, deux au plus par avis
 - `widgets` : id, spaceId, name (nullable, pour le créateur seul), type (wall|carousel|badge), productId (nullable = tous), settings (jsonb : thème, couleur d'accent, nombre max, afficher photo/note (la date de l'avis s'affiche toujours), masquer « Propulsé par » (Pro), style des cartes), firstLoadedAt (premier affichage sur une page), lastLoadedAt (dernier affichage, à l'heure près), freePlanChosenAt (« Afficher celui-ci à la place » au plan Gratuit), createdAt
 - `space_acquisitions` : spaceId (clé), heardFrom (réponse à « Comment avez-vous connu PULSACITY ? »), utmSource, utmMedium, utmCampaign, utmContent, utmTerm, referralCode (tel que reçu), createdAt — d'où vient un espace, écrit une fois à sa création ; rien sur la personne
@@ -111,7 +112,7 @@ src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées
 - `connector_waitlist_emails` : id, connector, email, createdAt (unique connector + email) — « Me prévenir » des pages publiques /integrations/[connector], pour un visiteur sans espace ; supprimée après l'annonce
 - `tool_suggestions` : id, toolName, createdAt — « Dites-nous quel outil » de /integrations, pour un visiteur sans espace : le nom de l'outil seulement, sans adresse
 - `stripe_events` : id, type, payload (l'événement entier, gardé à l'arrivée), receivedAt, processedAt (verrou d'idempotence, null tant qu'il n'est pas traité), error — rejoué par la tâche planifiée s'il reste non traité
-- `subscriptions` : id (sub_…), spaceId, status, plan, period, priceList (founder|public), amountCents, currentPeriodEnd, cancelAt, endedAt, scheduledPlan, scheduledPeriod, scheduledPriceList, scheduledAmountCents, scheduledAt, betaTester, betaUntil, betaReminderSentAt, couponId (coupon du code tapé au paiement, gardé : `partenaire-…` pour un partenaire), cardBrand, cardLast4, lastPaymentFailedAt, lastPaymentFailedAmountCents — copie de ce que Stripe dit de chaque abonnement, réécrite à chaque événement ; `spaces.plan` suit l'abonnement courant (`spaces.stripeSubscriptionId`)
+- `subscriptions` : id (sub_…), spaceId, status, plan, period, priceList (founder|public), amountCents, currentPeriodEnd, cancelAt, endedAt, scheduledPlan, scheduledPeriod, scheduledPriceList, scheduledAmountCents, scheduledAt, betaTester, betaUntil, betaReminderSentAt, renewalReminderPeriodEnd (rappel 7 jours avant un renouvellement annuel, CGV 5.2 : l'échéance annoncée), couponId (coupon du code tapé au paiement, gardé : `partenaire-…` pour un partenaire), cardBrand, cardLast4, lastPaymentFailedAt, lastPaymentFailedAmountCents — copie de ce que Stripe dit de chaque abonnement, réécrite à chaque événement ; `spaces.plan` suit l'abonnement courant (`spaces.stripeSubscriptionId`)
 - `founder_seats` : id, spaceId (unique, null après suppression de l'espace), takenAt — une ligne par abonné payant au prix fondateur, bêta-testeurs à part ; la centième ferme le prix fondateur
 - `billing_payments` : id (in_…), spaceId (null après suppression), subscriptionId, amountCents, currency, paidAt — chaque facture payée avec de l'argent, pour le seuil de la micro-entreprise (`docs-internes/requetes/seuil-micro-entreprise.md`)
 
@@ -187,7 +188,7 @@ R2_PUBLIC_URL
 CRON_SECRET
 NEXT_PUBLIC_APP_URL            # https://pulsacity.com
 SENTRY_DSN
-LEGAL_VALIDATED                # false tant que les textes ne sont pas relus
+LEGAL_VALIDATED                # true quand le fondateur valide les textes légaux ; sinon, ils restent en brouillon
 PULSACITY_SPACE_ID             # l'espace PULSACITY : son mur sur l'accueil, son badge sur Tarifs (sans elle, rien)
 NEXT_PUBLIC_UMAMI_WEBSITE_ID   # mesure d'audience Umami Cloud des pages publiques (sans elle, aucun script)
 NEXT_PUBLIC_UMAMI_SCRIPT_URL   # facultative : autre adresse du script d'Umami (cloud.umami.is par défaut)
