@@ -181,6 +181,8 @@ Compte rendu du 22 octobre : exécution n° 21 verte, branche de la PR, plan ess
 
 ## 6. Recette — les quatre textes en voix d'équipe, et « Demander un avis »
 
+Compte rendu du 22 octobre, sur les textes corrigés : 7 points sur 7. Fusion décidée par le fondateur le même jour.
+
 Compte rendu du 22 octobre (première version de ce prompt) : points 1, 3 à 6 et 10 à 12 OK ; non conformes, le nom et « une personne physique, sans entreprise immatriculée » (mentions légales, CGV 1.1, CGU 2, annexe 1, confidentialité 1), « exploité par une seule personne » (CGU 8.1), « Seul l'exploitant accède aux données » (annexe 6), l'article 13 des CGV ; Umami sans base de transfert. Tout est corrigé ; ce prompt revérifie.
 
 Avant ce prompt : le dernier déploiement de l'aperçu (après les corrections du 22 octobre) est « Ready ». Connectez-vous vous-même à l'aperçu avec A. Fenêtre en grand.
