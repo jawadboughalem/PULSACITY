@@ -3,7 +3,6 @@ import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { INLINE_LINK_CLASSES } from "@/components/ui/button-styles";
 import { readNodeText, slugifyHeading } from "@/lib/content/text-headings";
-import { readLegalPublisherName } from "@/lib/legal/publisher";
 
 /** A link of the site goes through next/link; another site's opens as a plain link. */
 const ProseLink = ({ href = "", children }: ComponentPropsWithoutRef<"a">) =>
@@ -35,21 +34,6 @@ const AnchoredHeading = ({ id, children }: AnchoredHeadingProps) => (
   </h2>
 );
 
-type PublisherNameProps = {
-  /** Written before the name, only when there is one: « , » in « l'exploitant de PULSACITY, Julie Martin ». */
-  prefix?: string;
-  suffix?: string;
-};
-
-/**
- * The publisher's name (lot 4.9), from LEGAL_PUBLISHER_NAME: written <PublisherName prefix=", " />. Without the
- * variable (a preview, a local build), nothing at all: each sentence still reads without it, never a placeholder.
- */
-const PublisherName = ({ prefix = "", suffix = "" }: PublisherNameProps) => {
-  const name = readLegalPublisherName();
-  return name ? `${prefix}${name}${suffix}` : null;
-};
-
 /** Charte v2, ajouts 3.5, Lecture: the text in 17/27, 68 characters a line at most. */
 const TEXT_CLASSES = "text-[17px] leading-[27px]";
 
@@ -66,7 +50,6 @@ const components = {
   strong: ({ children }) => <strong className="font-bold">{children}</strong>,
   a: ProseLink,
   AnchoredHeading,
-  PublisherName,
   blockquote: ({ children }) => (
     <blockquote className="max-w-quote border-l-2 border-ink pl-6 text-quote">{children}</blockquote>
   ),

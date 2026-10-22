@@ -8,6 +8,7 @@ import {
 } from "./apply-subscription";
 import { rewardReferrer } from "@/lib/referrals/reward-referrer";
 import { BETA_REMINDER_DAYS, sendDueBetaReminders } from "./beta-reminders";
+import { RENEWAL_REMINDER_DAYS, sendDueRenewalReminders } from "./renewal-reminders";
 
 /** Keeps a verified event whole, before anything else: « duplicate » when Stripe sends it again. */
 export const recordStripeEvent = async (
@@ -129,21 +130,21 @@ export const findEventSubscription = async (
 };
 
 /**
- * Stripe announces the coming invoice: for a beta tester, the first one paid. The reminder is due 7 days before it,
- * counted on the invoice's own date, which a test clock moves forward in the recette.
+ * Stripe announces the coming invoice: for a beta tester, the first one paid; for a yearly subscription, its renewal
+ * (CGV 5.2). Each reminder is due 7 days before it, counted on the invoice's own date, which a test clock moves forward
+ * in the recette.
  */
-const remindBetaTester = async (
+const remindBeforeInvoice = async (
   database: Database,
   invoice: Stripe.Invoice,
   subscriptionId: string,
 ) => {
   if (invoice.amount_due <= 0) return;
   const paymentAt = (invoice.next_payment_attempt ?? invoice.period_end) * 1000;
-  // One day of margin: the offered months may end a few seconds after the invoice is due.
-  const remindAt = new Date(
-    paymentAt - (BETA_REMINDER_DAYS - 1) * 24 * 60 * 60 * 1000,
-  );
-  await sendDueBetaReminders(database, { now: remindAt, subscriptionId });
+  // One day of margin: the offered months, or the paid year, may end a few seconds after the invoice is due.
+  const remindAt = (days: number) => new Date(paymentAt - (days - 1) * 24 * 60 * 60 * 1000);
+  await sendDueBetaReminders(database, { now: remindAt(BETA_REMINDER_DAYS), subscriptionId });
+  await sendDueRenewalReminders(database, { now: remindAt(RENEWAL_REMINDER_DAYS), subscriptionId });
 };
 
 export type StripeEventOutcome =
@@ -190,7 +191,7 @@ export const processStripeEvent = async (
       });
     }
     if (event.type === "invoice.upcoming" && subscriptionId !== null) {
-      await remindBetaTester(database, event.data.object, subscriptionId);
+      await remindBeforeInvoice(database, event.data.object, subscriptionId);
     }
     await database
       .update(stripeEvents)

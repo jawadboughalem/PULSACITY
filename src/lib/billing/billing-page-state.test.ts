@@ -24,6 +24,7 @@ const subscription = (values: Partial<CurrentSubscription> = {}): CurrentSubscri
   betaTester: false,
   betaUntil: null,
   betaReminderSentAt: null,
+  renewalReminderPeriodEnd: null,
   couponId: null,
   cardBrand: "visa",
   cardLast4: "4242",

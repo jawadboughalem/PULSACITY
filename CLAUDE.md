@@ -23,7 +23,7 @@ Ce dépôt est neuf. L'ancien projet PULSACITY a été abandonné et supprimé (
 
 - PULSACITY encaisse dès la V0 : le fondateur vend en tant que particulier, sans entreprise. Stripe Billing, la page « Abonnement et factures » et les CGV restent dans la V0.
 - La micro-entreprise se crée au seuil de `docs-internes/fin-v0/seuil-micro-entreprise.md` : 5 clients payants, 3 mois de suite avec des paiements, ou 500 € encaissés, le premier atteint. Ce jour-là, les prompts 6.1 à 6.7 passent avant tout le reste.
-- Textes légaux d'un vendeur particulier : son nom vient d'une variable Vercel, jamais du dépôt (lot 4.9) ; ni son adresse ni son téléphone ne sont publiés, nulle part (décision du 21 octobre 2026). Une seule adresse : contact@pulsacity.com.
+- Textes légaux (lot 4.9) : une voix d'équipe, « l'équipe PULSACITY ». Ni le nom, ni l'adresse, ni le téléphone du fondateur ne sont publiés, nulle part, et rien ne dit l'absence d'entreprise (décisions des 21 et 22 octobre 2026). Une seule adresse : contact@pulsacity.com.
 - Aucune TVA n'est facturée : les prix sont des prix finaux, jamais « TVA comprise ».
 - Les décisions sont dans `docs-internes/decisions/` (connecteurs, tarifs, positionnement, commercialisation, textes légaux) ; `arbitrages.md` règle leurs contradictions et prime sur elles.
 
@@ -79,7 +79,7 @@ src/lib/welcome-emails/       # e-mails d'accueil J0, J1, J3, J7 : échéances, 
 src/lib/billing/              # Stripe Billing de PULSACITY : prix par clé de recherche, Checkout, portail, changements de plan, événements, prix fondateur, rappel des bêta-testeurs
 src/lib/requests/             # planification et envoi des demandes
 src/lib/support/              # « Écrivez-nous » : contact@pulsacity.com, champs, limites, envoi (rien gardé en base), « Signaler un contenu » (/aide?sujet=signalement)
-src/lib/legal/                # textes légaux : le nom de l'exploitant (LEGAL_PUBLISHER_NAME), leur validation
+src/lib/legal/                # textes légaux : leur validation (LEGAL_VALIDATED)
 src/emails/                   # templates React Email
 src/content/                  # textes du site : offres (depuis plans.ts), FAQ, aide par thème (help.ts), un fichier par connecteur et leurs familles (integrations/), guides et textes légaux en MDX
 docs-internes/                # décisions, payloads, recette ; etat.md : où en est le projet ; design-v2/ : charte, maquettes et logo v2
@@ -112,7 +112,7 @@ src/app/fonts/                # Bricolage Grotesque et Figtree, auto-hébergées
 - `connector_waitlist_emails` : id, connector, email, createdAt (unique connector + email) — « Me prévenir » des pages publiques /integrations/[connector], pour un visiteur sans espace ; supprimée après l'annonce
 - `tool_suggestions` : id, toolName, createdAt — « Dites-nous quel outil » de /integrations, pour un visiteur sans espace : le nom de l'outil seulement, sans adresse
 - `stripe_events` : id, type, payload (l'événement entier, gardé à l'arrivée), receivedAt, processedAt (verrou d'idempotence, null tant qu'il n'est pas traité), error — rejoué par la tâche planifiée s'il reste non traité
-- `subscriptions` : id (sub_…), spaceId, status, plan, period, priceList (founder|public), amountCents, currentPeriodEnd, cancelAt, endedAt, scheduledPlan, scheduledPeriod, scheduledPriceList, scheduledAmountCents, scheduledAt, betaTester, betaUntil, betaReminderSentAt, couponId (coupon du code tapé au paiement, gardé : `partenaire-…` pour un partenaire), cardBrand, cardLast4, lastPaymentFailedAt, lastPaymentFailedAmountCents — copie de ce que Stripe dit de chaque abonnement, réécrite à chaque événement ; `spaces.plan` suit l'abonnement courant (`spaces.stripeSubscriptionId`)
+- `subscriptions` : id (sub_…), spaceId, status, plan, period, priceList (founder|public), amountCents, currentPeriodEnd, cancelAt, endedAt, scheduledPlan, scheduledPeriod, scheduledPriceList, scheduledAmountCents, scheduledAt, betaTester, betaUntil, betaReminderSentAt, renewalReminderPeriodEnd (rappel 7 jours avant un renouvellement annuel, CGV 5.2 : l'échéance annoncée), couponId (coupon du code tapé au paiement, gardé : `partenaire-…` pour un partenaire), cardBrand, cardLast4, lastPaymentFailedAt, lastPaymentFailedAmountCents — copie de ce que Stripe dit de chaque abonnement, réécrite à chaque événement ; `spaces.plan` suit l'abonnement courant (`spaces.stripeSubscriptionId`)
 - `founder_seats` : id, spaceId (unique, null après suppression de l'espace), takenAt — une ligne par abonné payant au prix fondateur, bêta-testeurs à part ; la centième ferme le prix fondateur
 - `billing_payments` : id (in_…), spaceId (null après suppression), subscriptionId, amountCents, currency, paidAt — chaque facture payée avec de l'argent, pour le seuil de la micro-entreprise (`docs-internes/requetes/seuil-micro-entreprise.md`)
 
@@ -188,8 +188,7 @@ R2_PUBLIC_URL
 CRON_SECRET
 NEXT_PUBLIC_APP_URL            # https://pulsacity.com
 SENTRY_DSN
-LEGAL_VALIDATED                # true quand le fondateur valide les textes légaux ; sans LEGAL_PUBLISHER_NAME, ils restent en brouillon
-LEGAL_PUBLISHER_NAME           # prénom et nom de l'exploitant, vendeur particulier (lot 4.9), dans les textes légaux seulement ; sans elle, les phrases qui le nomment s'en passent
+LEGAL_VALIDATED                # true quand le fondateur valide les textes légaux ; sinon, ils restent en brouillon
 PULSACITY_SPACE_ID             # l'espace PULSACITY : son mur sur l'accueil, son badge sur Tarifs (sans elle, rien)
 NEXT_PUBLIC_UMAMI_WEBSITE_ID   # mesure d'audience Umami Cloud des pages publiques (sans elle, aucun script)
 NEXT_PUBLIC_UMAMI_SCRIPT_URL   # facultative : autre adresse du script d'Umami (cloud.umami.is par défaut)

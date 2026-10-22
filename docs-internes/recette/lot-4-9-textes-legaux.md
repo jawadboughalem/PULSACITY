@@ -2,41 +2,42 @@
 
 Adresse de l'aperçu (PR #48) : https://pulsacity-git-claude-legal-text-8e35c1-jawadboughalems-projects.vercel.app
 
-Dans l'ordre :
-- Prompt 1 : Vercel — votre nom (vous le tapez vous-même), la région des fonctions, l'offre, l'adresse de Vercel. Fait le 21 octobre (compte rendu sous le prompt).
-- Prompt 2 : Supabase — l'offre et les sauvegardes de la production (lecture seule).
-- Prompt 3 : Stripe, bac à sable — l'impayé à 14 jours, le rappel avant un renouvellement annuel, la mention de TVA des reçus.
-- Prompt 4 : Umami — son contrat de traitement et sa garantie de transfert (lecture seule).
-- Prompt 5 : GitHub, l'espace de démonstration (A, plan Essentiel), depuis la branche de la PR.
-- Prompt 6 : recette, les quatre textes et « Signaler un contenu ».
-- Prompt 7 : recette de bout en bout avec B : la case de consentement, le pied des e-mails, « Gérer mon avis » et le retrait de l'accord.
-- Prompt 8 : recette à 360 px.
-- Après votre validation des textes, puis la fusion : prompt 9 (`LEGAL_VALIDATED=true` en production) et prompt 10 (vérification sur pulsacity.com).
+Où en est chaque prompt (22 octobre) :
+- Prompts 1 à 8 : faits les 21 et 22 octobre (comptes rendus sous chaque prompt). Le prompt 6 a donné le changement du 22 octobre : aucun nom, une voix d'équipe, aucune mention de l'absence d'entreprise. Le prompt 6 ci-dessous est réécrit pour revérifier les textes corrigés.
+- Prompt 2 bis : Supabase — pourquoi la production est « Unhealthy » (lecture seule). À lancer quand vous voulez.
+- Prompt 6 : à relancer sur l'aperçu, une fois son dernier déploiement « Ready » : les textes en voix d'équipe et l'aide de « Demander un avis ».
+- Prompt 9 : fait le 22 octobre, `LEGAL_VALIDATED=true` en production, sans redéploiement.
+- Prompt 9 bis : Vercel — retirer `LEGAL_PUBLISHER_NAME`, que plus rien ne lit.
+- Puis vous fusionnez la PR #48, après votre validation des textes. La production se construit avec `LEGAL_VALIDATED=true` : les textes sont publiés tout de suite.
+- Prompt 10 : vérification sur pulsacity.com, juste après la fusion.
 
-Décision du 21 octobre : ni votre adresse ni votre téléphone ne sont publiés, nulle part. Seul votre nom apparaît, dans les textes légaux, par `LEGAL_PUBLISHER_NAME`. Aucun prompt ne vous les demande.
+**Attention, jusqu'à la fusion de la PR #48** : `LEGAL_VALIDATED` vaut déjà `true` en production. Un redéploiement de `main`, ou la fusion d'une autre PR avant la #48, publierait comme validés les anciens brouillons (ceux du 4 octobre, avec leurs « [À COMPLÉTER] ») et les ouvrirait aux moteurs de recherche. Ne redéployez rien et ne fusionnez rien d'autre avant la #48.
 
-Une décision reste à prendre : **Vercel Pro** avant le premier paiement (le DPA de Vercel ne couvre pas Hobby). La politique de confidentialité dit « au plus 1 jour » de journaux : 1 heure en Hobby, 1 jour en Pro.
+Décisions des 21 et 22 octobre : ni votre nom, ni votre adresse, ni votre téléphone ne sont publiés, nulle part. Les textes parlent au nom de « l'équipe PULSACITY » et ne disent rien de l'absence d'entreprise. Aucun prompt ne vous demande une information personnelle.
+
+Une décision reste à prendre : **Vercel Pro** avant le premier paiement (le DPA de Vercel ne couvre pas Hobby). La politique de confidentialité dit « au plus 1 jour » de journaux : 1 heure en Hobby, 1 jour en Pro. Et une autre, avant les premiers clients : **les sauvegardes de la base** (Supabase Pro, 25 $ par mois, ou des sauvegardes faites par nous, lot 4.10) ; d'ici là, les textes n'en promettent aucune.
 
 Deux adresses, à garder pour vous (jamais dans un compte rendu) :
 - **A** : celle des recettes précédentes, l'espace « Julie Nutrition » de la recette ;
 - **B** : une autre de vos adresses (un alias Gmail suffit), qui joue la cliente. Sa boîte de réception est ouverte dans un onglet du groupe « PULSACITY ».
 
 Déjà vérifié par Claude Code dans son conteneur :
-- les quatre textes à 360 et 1440 px, sans débordement ni erreur dans la console : sans `LEGAL_PUBLISHER_NAME`, les phrases se lisent sans le nom, sans crochet ; avec elle et `LEGAL_VALIDATED=true`, ni bandeau ni `noindex` ;
-- aucun crochet de remplissage dans les pages : un test le garde (`src/content/placeholder-brackets.test.ts`) ;
+- les quatre textes à 360 et 1440 px, sans débordement ni erreur dans la console, en brouillon puis avec `LEGAL_VALIDATED=true` (ni bandeau ni `noindex`) ;
+- aucun crochet de remplissage, ni sur le site, ni dans l'espace, ni dans les e-mails, ni dans le widget : un test le garde (`src/content/placeholder-brackets.test.ts`) ; aucun « exploitant », « personne physique », « immatriculée », « micro-entreprise » dans les textes publics : un autre test (`src/content/legal-voice.test.ts`) ;
 - les prix et limites des CGV lus dans `plans.ts` ; liens internes et ancres (`#avis`, `#cookies`, `#destinataires`, `#contact`, `#sous-traitance`) par un test ;
 - la page de collecte (demande et lien public) avec la nouvelle case et les deux aides, à 360 et 1440 px ;
 - « Gérer mon avis » de bout en bout dans Chromium : avis enregistré, confirmation, « Garder mon avis », retrait, accord retiré, avis plus enregistré ; par des tests : l'avis, ses corrections et sa photo partent, rien d'un autre espace ni d'un lien pas encore répondu ;
 - les pieds des e-mails (client : « … utilise PULSACITY … Vos données » ; créateur : « PULSACITY » seul) ;
+- le rappel 7 jours avant un renouvellement annuel (CGV 5.2), par des tests : une fois par échéance, rien avant un paiement mensuel, une résiliation, un passage au mensuel ou au plan Gratuit ; il se verra en vrai au premier abonnement annuel ;
 - `pnpm lint`, `pnpm typecheck`, `pnpm build` ; `pnpm test` vert, sauf `decode-csv-file.test.ts` (connu, propre au conteneur).
 
-Ce que les textes affirment et que la recette ne voit pas, à vérifier par les prompts 2 à 4 avant votre validation : les sauvegardes de Supabase (7 jours supposés), les réglages de Stripe, la garantie de transfert d'Umami. La région des fonctions (FRA1) et l'adresse de Vercel sont relevées (prompt 1) ; Vercel ne publie pas de téléphone. La purge à 90 jours des ventes déjà traitées est promise par les textes : elle se construit au lot 4.10, avant le 1er janvier 2027.
+Relevés des prompts 1 à 4 : fonctions en FRA1 et adresse de Vercel (1) ; aucune sauvegarde sur l'offre Free de Supabase (2) ; facture « non recouvrable » après échec, pied « TVA non applicable, art. 293 B du CGI », rappel de renouvellement de Stripe laissé désactivé (il écrirait aussi chaque mois), événements de renouvellement à 7 jours (3) ; Umami Software, Inc., hors DPF, clauses contractuelles types 2021/914 (4). La purge à 90 jours des ventes déjà traitées est promise par les textes : elle se construit au lot 4.10, avant le 1er janvier 2027.
 
 ---
 
 ## 1. Vercel — votre nom, la région, l'offre, l'adresse de Vercel
 
-Fait le 21 octobre. À coller dans Claude in Chrome, s'il fallait le refaire. Avant ce prompt : connectez-vous vous-même à Vercel. C'est vous qui tapez votre nom, jamais l'agent.
+Fait le 21 octobre. Depuis le 22 octobre, aucun nom n'est publié : la partie A (`LEGAL_PUBLISHER_NAME`) n'a plus lieu d'être, la variable se retire par le prompt 9 bis. Gardé pour l'historique.
 
 ```
 Tu m'aides à préparer les textes légaux de PULSACITY sur Vercel. Je suis connecté à Vercel dans ce groupe d'onglets. Tu ne vois ni ne tapes mon nom : c'est moi qui le saisis. Tu ne touches à aucune autre variable, ni aux domaines, ni à la facturation, ni à la protection des déploiements, et tu ne redéploies rien.
@@ -80,11 +81,33 @@ Ne touche à aucun réglage, aucune clé, aucune facturation.
 Compte rendu à me donner : l'offre, le texte de la page des sauvegardes, la région. Aucun identifiant de projet, aucune clé.
 ```
 
+Compte rendu du 22 octobre : offre Free ; « Free Plan does not include project backups. Upgrade to the Pro Plan for up to 7 days of scheduled backups. » ; « Point in Time Recovery is a Pro Plan add-on » ; « Last backup : No backups ». Région Central EU (Frankfurt). Statut « Unhealthy » : 111 requêtes Postgres, 111 erreurs (prompt 2 bis). Les textes ne promettent plus de sauvegardes.
+
+---
+
+## 2 bis. Supabase — pourquoi la production est « Unhealthy »
+
+À coller dans Claude in Chrome. Avant ce prompt : connectez-vous vous-même à Supabase. L'application parle à la base par le pooler, jamais par l'API de Supabase. Une piste : des robots qui sondent l'API publique du projet ou tentent de se connecter à Postgres, sans rien obtenir (chaque table est protégée par RLS). Ce prompt cherche la cause, sans rien changer.
+
+```
+Tu m'aides à comprendre pourquoi la base de production de PULSACITY est marquée « Unhealthy ». Tu lis seulement : tu ne changes rien, tu ne lances aucune requête SQL, tu ne redémarres rien, tu ne mets rien en pause, tu ne touches à aucune clé ni à aucun réglage.
+
+Où : https://supabase.com/dashboard, organisation PULSACITY, projet PULSACITY (la production, pas pulsacity-recette).
+
+1. Sur la vue d'ensemble du projet, ouvre ou survole le statut « Unhealthy » : recopie mot pour mot ce qu'il dit, et le service qu'il vise (Database, Data API / PostgREST, Auth, Storage, Realtime…).
+2. Dans les graphiques de la vue d'ensemble : à quel service correspondent les requêtes et les erreurs comptées (111 et 111 le 22 octobre), et sur quelle période.
+3. Ouvre « Logs », puis « API Gateway » (ou « Edge »), sur les dernières 24 heures, en ne gardant que les erreurs si tu peux : pour 5 lignes au plus, relève la méthode, le chemin (par exemple /rest/v1/…, /auth/v1/…), le code de réponse (401, 404…) et l'agent utilisateur. Ne recopie ni adresse IP, ni en-tête « apikey » ou « authorization », ni jeton.
+4. Ouvre « Logs », puis « Postgres », dernières 24 heures, niveau « ERROR » ou « FATAL » : pour 5 lignes au plus, recopie le message (par exemple « password authentication failed », « permission denied »), sans adresse IP ni nom d'utilisateur.
+5. Relève l'état de chaque service tel que l'affiche le projet (« Project Settings », « Infrastructure » ou la vue d'ensemble), sans rien changer.
+
+Compte rendu à me donner : le texte du statut, le service visé, les lignes relevées (méthode, chemin, code, agent), les messages de Postgres, l'état des services. Aucune adresse IP, aucune clé, aucun identifiant de projet.
+```
+
 ---
 
 ## 3. Stripe, bac à sable — l'impayé, le rappel annuel, la mention des reçus
 
-À coller dans Claude in Chrome. Avant ce prompt : connectez-vous vous-même à Stripe ; vérifiez que vous êtes dans le bac à sable « PULSACITY » (pas le mode réel). Ces réglages seront à refaire en mode réel (2.8 c), avec le nom de l'exploitant dans les informations publiques.
+À coller dans Claude in Chrome. Avant ce prompt : connectez-vous vous-même à Stripe ; vérifiez que vous êtes dans le bac à sable « PULSACITY » (pas le mode réel). Ces réglages seront à refaire en mode réel (2.8 c), avec « PULSACITY » comme nom public.
 
 ```
 Tu m'aides à aligner les réglages de Stripe sur les CGV de PULSACITY, dans le bac à sable « PULSACITY » (environnement de test), pas en mode réel. Vérifie d'abord le bandeau de test en haut de la page. Tu ne touches ni aux produits, ni aux prix, ni aux clés, ni au webhook, ni au portail client, ni à l'activation du compte, ni à Stripe Tax.
@@ -106,6 +129,8 @@ C. La mention des reçus (2.7 : « TVA non applicable, art. 293 B du CGI »)
 Compte rendu à me donner : chaque réglage tel que relu après l'enregistrement, et ce que tu n'as pas trouvé. Ni clé, ni identifiant (rien qui commence par acct_, sk_, pk_ ou whsec_).
 ```
 
+Compte rendu du 22 octobre : Smart Retries, 8 fois en 2 semaines, puis annulation de l'abonnement (déjà ainsi) ; facture « marquée non recouvrable » (était « en retard de paiement »). Rappel de renouvellement de Stripe laissé désactivé : il écrirait pour toute période de plus de 7 jours, donc chaque mois. « Événements de renouvellement à venir » déjà à 7 jours : PULSACITY envoie lui-même le rappel des abonnements annuels (`AnnualRenewalEmail`, changement du 22 octobre). « Bas de page par défaut » : « TVA non applicable, art. 293 B du CGI », aucun modèle ne le remplace ; à voir sur le PDF d'une prochaine facture de test.
+
 ---
 
 ## 4. Umami — le contrat de traitement et la garantie de transfert
@@ -122,6 +147,8 @@ Tu m'aides à vérifier les garanties d'Umami Cloud, l'outil de mesure d'audienc
 
 Compte rendu à me donner : la société et son pays, le DPA (adresse, s'applique de lui-même ou à accepter), le DPF (inscrit ou non, date), les clauses types (oui ou non), la région et la durée. Aucun identifiant de site.
 ```
+
+Compte rendu du 22 octobre : Umami Software, Inc., Delaware ; DPA appliqué de lui-même ; pas inscrit au DPF (vérifié le 22 octobre) ; clauses contractuelles types 2021/914, modules 2 et 3 (ajoutées à sa ligne de la politique de confidentialité) ; région « EU (Frankfurt) » pour tout le compte ; 6 mois de conservation (offre Hobby).
 
 ---
 
@@ -148,40 +175,39 @@ Vérification : la dernière exécution de « Recette demo space » est verte, s
 Compte rendu à me donner : la branche choisie, le plan, et la couleur de l'exécution. Pas l'adresse e-mail.
 ```
 
+Compte rendu du 22 octobre : exécution n° 21 verte, branche de la PR, plan essentiel.
+
 ---
 
-## 6. Recette — les quatre textes et « Signaler un contenu »
+## 6. Recette — les quatre textes en voix d'équipe, et « Demander un avis »
 
-Avant ce prompt : le dernier déploiement de l'aperçu (après le changement du 21 octobre) est « Ready ». Fenêtre en grand. Si l'aperçu demande de vous identifier à Vercel, faites-le vous-même.
+Compte rendu du 22 octobre (première version de ce prompt) : points 1, 3 à 6 et 10 à 12 OK ; non conformes, le nom et « une personne physique, sans entreprise immatriculée » (mentions légales, CGV 1.1, CGU 2, annexe 1, confidentialité 1), « exploité par une seule personne » (CGU 8.1), « Seul l'exploitant accède aux données » (annexe 6), l'article 13 des CGV ; Umami sans base de transfert. Tout est corrigé ; ce prompt revérifie.
+
+Avant ce prompt : le dernier déploiement de l'aperçu (après les corrections du 22 octobre) est « Ready ». Connectez-vous vous-même à l'aperçu avec A. Fenêtre en grand.
 
 ```
-Tu fais la recette du lot 4.9 de PULSACITY sur l'aperçu https://pulsacity-git-claude-legal-text-8e35c1-jawadboughalems-projects.vercel.app, fenêtre en grand (1440 px environ). Pour chaque point, note « OK » ou décris ce que tu vois. Ne recopie pas dans le compte rendu le nom de l'exploitant : dis seulement s'il apparaît, et où. Ne relève pas les erreurs réseau vues par ton outil de surveillance du navigateur.
+Tu refais la recette des textes légaux du lot 4.9 de PULSACITY sur l'aperçu https://pulsacity-git-claude-legal-text-8e35c1-jawadboughalems-projects.vercel.app, fenêtre en grand (1440 px environ), après les corrections du 22 octobre : aucun nom de personne, une voix d'équipe, aucune mention de l'absence d'entreprise. Pour chaque point, note « OK » ou décris ce que tu vois. Si un nom de personne apparaît, ne le recopie pas : dis seulement où. N'envoie rien. Ne relève pas les erreurs réseau vues par ton outil de surveillance du navigateur.
 
-A. Les mentions légales (/mentions-legales)
-1. En haut : « Version du 21 octobre 2026 », puis le bandeau jaune « Brouillon en cours de relecture », « Ce texte n'est pas encore validé. ». Aucun passage surligné, aucun crochet (« [ » ou « ] ») dans la page, aucun « LEGAL_PUBLISHER ».
-2. « Éditeur » : « édités par », un prénom et un nom, « une personne physique, sans entreprise immatriculée à ce jour », puis contact@pulsacity.com et « TVA non applicable, art. 293 B du CGI ». Aucune adresse postale ni aucun numéro de téléphone de l'exploitant. « Directeur de la publication » : « l'éditeur », suivi du même nom.
-3. « Hébergement » : Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis, « vercel.com, contact : privacy@vercel.com », « Serveurs utilisés : Francfort, Allemagne (région FRA1). », sans numéro de téléphone ; le lien « politique de confidentialité » mène à la rubrique « 4. Qui reçoit vos données ».
-4. « Nous contacter, signaler un contenu » : clique « pulsacity.com/aide ». La page Aide s'ouvre sur « Écrivez-nous » : le sujet est déjà rempli, « Signaler un contenu », et le message commence par trois lignes « Page ou widget : », « Contenu visé : », « Pourquoi il est illicite : ». N'envoie rien.
-5. Le sommaire « Sur cette page » à droite mène à chaque titre.
+A. Partout
+1. Sur /mentions-legales, /cgv, /cgu, /confidentialite et /a-propos-des-avis : aucun prénom ni nom de personne, aucun crochet (« [ » ou « ] »), et nulle part les mots « exploitant », « personne physique », « immatriculée », « micro-entreprise », « société contrôlée », « une seule personne ». Sur les quatre premières : « Version du 22 octobre 2026 » et le bandeau jaune « Brouillon en cours de relecture » (l'aperçu reste en brouillon).
 
-B. Les CGV (/cgv)
-6. 14 articles. Article 2 : Gratuit 0 €, Essentiel 14,99 € par mois ou 149 € par an, Pro 24,99 € par mois ou 249 € par an ; « 15 témoignages validés, 20 demandes automatiques par mois, 1 widget » ; « 20 demandes saisies à la main par jour ». Article 3 : 9,99 € et 99 €, 19,99 € et 199 €, « 100 premiers abonnés payants ». Aucune trace de « TVA comprise » ni de « HT ».
-7. L'article 1.1 nomme l'exploitant ; les articles 7 (14 jours), 9 (14 jours, 40 €, L441-10) et 10.2 (hausse annoncée 30 jours avant) sont là.
+B. Mentions légales
+2. « Éditeur » : « pulsacity.com et pulsacity.fr sont édités par l'équipe PULSACITY. », puis contact@pulsacity.com et « TVA non applicable, art. 293 B du CGI. ». « Directeur de la publication » : « L'équipe PULSACITY, joignable à contact@pulsacity.com. ». « Hébergement » : Vercel Inc., Covina, « région FRA1 », comme avant.
 
-C. Les CGU (/cgu)
-8. 13 articles et l'annexe « Annexe : contrat de sous-traitance (article 28 du RGPD) ». Aucune mention « [4.13] ». L'article 6.2 a un lien « page qui explique », qui mène à « À propos de ces avis ». L'article 7.4 a un lien vers l'aide, avec le sujet rempli comme au point 4. L'annexe nomme l'exploitant (point 1) et liste quatre sous-traitants ultérieurs (Vercel, Supabase, Resend, Cloudflare).
+C. CGV
+3. 13 articles ; le dernier est « 13. Modification des CGV », et il n'y a plus d'article « Quand PULSACITY deviendra une entreprise ». 1.1 : « PULSACITY (« nous ») vend les abonnements décrits ici. Coordonnées : mentions légales. ». 6.2 finit par « sauf à l'article 7 et dans les cas prévus par les CGU. ». 5.2 : le rappel par e-mail au moins 7 jours avant un renouvellement annuel.
 
-D. La politique de confidentialité (/confidentialite)
-9. « 1. Qui est responsable » : « L'exploitant de PULSACITY », son nom, « personne physique », contact@pulsacity.com ; aucune adresse postale. « 3. Ce que nous traitons… » : huit rubriques (espace, abonnements, e-mails, d'où viennent les inscriptions, messages, « Me prévenir », protection, mesure d'audience), chacune avec « Données », « Base légale », « Durée ».
-10. « 4. Qui reçoit vos données » : huit prestataires, dont Umami, OVH et Google (Gmail). « 5. Cookies » : trois cookies, avec leurs noms. « 9. Vous avez laissé un avis à un créateur » : « Retirer votre accord » parle de la page « Gérer mon avis ».
+D. CGU
+4. « 2. Qui nous sommes » : « L'équipe PULSACITY (« nous ») exploite le service. ». 8.1 finit par « Le service repose sur des prestataires en ligne. ». 10.4 : « les données sont effacées sous 30 jours ; », sans le mot « sauvegardes ».
+5. Annexe : point 1, « Le sous-traitant est PULSACITY (« nous »). » ; point 6, « Seule l'équipe PULSACITY accède aux données. Chaque personne de l'équipe est tenue à la confidentialité. » ; points 7 et 12 sans « sauvegardes de la base ».
 
-E. « À propos de ces avis »
-11. Ouvre /a-propos-des-avis, dernière rubrique « Une question sur un avis » : le lien « écrivez à l'équipe PULSACITY » ouvre l'aide avec le sujet « Signaler un contenu » déjà rempli.
+E. Confidentialité
+6. « 1. Qui est responsable » : « PULSACITY. Contact : contact@pulsacity.com. ». Dans « 4. Qui reçoit vos données », la ligne d'Umami finit par « Clauses contractuelles types. ».
 
-F. Les pages restent hors des moteurs
-12. Sur /cgv, affiche le code source de la page (Ctrl+U) et cherche « noindex » : il y est (l'aperçu et le brouillon le veulent).
+F. « Demander un avis », dans l'espace
+7. Ouvre Demandes (/app/demandes), « Demander un avis ». Sous « Date d'achat », tant que l'offre reste « Choisir une offre » : aucune phrase « L'e-mail dira », aucun crochet. Choisis « Programme 30 jours » : « L'e-mail dira : « vous avez acheté Programme 30 jours auprès de Julie Nutrition le … » » apparaît. Ferme avec « Annuler », sans rien envoyer.
 
-Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu. Aucune information personnelle de l'exploitant.
+Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu. Aucune information personnelle.
 ```
 
 ---
@@ -220,6 +246,8 @@ E. La page publique
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu. Aucune adresse e-mail, aucun lien, aucune information personnelle.
 ```
 
+Compte rendu du 22 octobre : les 14 points OK. Remarques : le symbole PULSACITY cassé dans Gmail (l'image est servie par l'aperçu, protégé par Vercel : connu depuis le lot 4.8, à voir en production) ; « [l'offre] » dans l'aide de « Demander un avis » avant le choix de l'offre (corrigé : la phrase n'apparaît qu'une fois l'offre et la date choisies, point 7 du prompt 6) ; la ligne du nom et de l'adresse postale de la créatrice sous « Vos données » (attendue : c'est l'adresse que l'espace de démonstration a remplie dans Réglages, facultative, maquette 3.6).
+
 ---
 
 ## 8. Recette — à 360 px
@@ -234,38 +262,58 @@ Tu continues la recette du lot 4.9 de PULSACITY sur l'aperçu https://pulsacity-
 Compte rendu à me donner : la liste des points avec « OK » ou ce que tu as vu.
 ```
 
+Compte rendu du 22 octobre : les trois points OK, dans un cadre de 360 px (345 px utiles). Remarque : connecté, l'adresse de l'espace préremplie dans « Écrivez-nous » est plus longue que le champ, sa fin est masquée ; le champ ne déborde pas.
+
 ---
 
-## 9. Après votre validation des textes et la fusion — la mise en ligne
+## 9. `LEGAL_VALIDATED=true` en production
 
-Quand vous validez les textes (avec les comptes rendus des prompts 1 à 4 reportés par Claude Code), Claude Code fusionne la PR. Puis, à coller dans Claude in Chrome :
+Fait le 22 octobre : `LEGAL_VALIDATED` vaut `true` en Production, `false` en Preview. Pas de redéploiement : il aurait publié les anciens textes de `main`. La fusion de la PR #48 construit la production avec cette valeur.
+
+---
+
+## 9 bis. Vercel — retirer `LEGAL_PUBLISHER_NAME`
+
+À coller dans Claude in Chrome, quand vous voulez (avant ou après la fusion) : depuis le 22 octobre, plus aucun code ne lit cette variable. Avant ce prompt : connectez-vous vous-même à Vercel.
 
 ```
-Tu m'aides à publier les textes légaux de PULSACITY en production. Je suis connecté à Vercel. Tu ne touches à aucune autre variable.
+Tu m'aides à retirer une variable devenue inutile du projet PULSACITY sur Vercel. Je suis connecté à Vercel. Tu ne touches à aucune autre variable et tu ne redéploies rien.
 
 Où : https://vercel.com/jawadboughalems-projects/pulsacity/settings/environment-variables
 
-1. Vérifie que LEGAL_PUBLISHER_NAME existe en Production (n'ouvre pas sa valeur). Si elle manque, arrête-toi et dis-le-moi.
-2. Trouve LEGAL_VALIDATED. Modifie seulement sa valeur pour l'environnement Production : true. Ne change pas Preview (elle reste false). Enregistre.
-3. Ouvre https://vercel.com/jawadboughalems-projects/pulsacity/deployments, le dernier déploiement de production (branche main), menu « … », « Redeploy », sans cocher « Use existing Build Cache », confirme. Attends « Ready ».
+1. Trouve LEGAL_PUBLISHER_NAME (Production et Preview). N'ouvre pas sa valeur.
+2. Dans le menu « … » de sa ligne, choisis « Remove » (ou « Delete ») et confirme. Si elle existe pour plusieurs environnements sur des lignes séparées, retire chacune.
+3. Vérification : une recherche « LEGAL_PUBLISHER » ne trouve plus rien ; LEGAL_VALIDATED est toujours là, true en Production et false en Preview.
 
-Compte rendu à me donner : LEGAL_PUBLISHER_NAME vue en Production, la valeur de LEGAL_VALIDATED en Production et en Preview, l'heure du déploiement « Ready ».
+Compte rendu à me donner : la variable retirée et ses environnements, la valeur de LEGAL_VALIDATED en Production et en Preview. Aucune valeur d'une autre variable.
 ```
+
+---
+
+## La fusion
+
+Après votre validation des textes (prompt 6 vert) : fusionnez la PR #48 sur GitHub (« Merge pull request »), une fois « Lint, typecheck, test, build » et « GitGuardian Security Checks » verts. La PR apporte une migration (une colonne facultative, `subscriptions.renewal_reminder_period_end`) : « Database migration » l'applique à la production, puis Vercel met la production en ligne. Avec `LEGAL_VALIDATED=true`, les textes sont publiés dès ce déploiement.
 
 ---
 
 ## 10. Vérification sur pulsacity.com
 
+À coller dans Claude in Chrome, une fois le déploiement de production « Ready ».
+
 ```
 Tu vérifies la mise en ligne des textes légaux sur https://pulsacity.com. Tu ne te connectes à rien, tu n'envoies rien.
 
-1. Ouvre /mentions-legales, /cgv, /cgu, /confidentialite et /a-propos-des-avis : aucun bandeau « Brouillon en cours de relecture », aucun passage surligné, aucun crochet. Les mentions légales donnent un nom (ne le recopie pas) et contact@pulsacity.com, ni adresse postale ni téléphone de l'exploitant.
-2. Sur chacune, code source (Ctrl+U), cherche « noindex » : il n'y est plus.
-3. Ouvre /sitemap.xml : il liste /mentions-legales, /cgu, /cgv, /confidentialite et /a-propos-des-avis.
-4. Ouvre /robots.txt : rien n'y interdit ces pages.
-5. Le pied de page : « Mentions légales », « CGU », « CGV », « Confidentialité », « Cookies » mènent à leur page ou rubrique.
+1. Ouvre https://github.com/jawadboughalem/PULSACITY/actions : sur le commit de fusion de la PR #48, « CI » et « Database migration » sont verts.
+2. Ouvre /mentions-legales, /cgv, /cgu, /confidentialite et /a-propos-des-avis : aucun bandeau « Brouillon en cours de relecture », aucun passage surligné, aucun crochet. Sur les quatre premières, « Version du 22 octobre 2026 ».
+3. Voix d'équipe : les mentions légales disent « édités par l'équipe PULSACITY » et « L'équipe PULSACITY, joignable à contact@pulsacity.com. » ; aucune page ne donne un prénom et un nom de personne, une adresse postale ou un téléphone de l'éditeur, ni les mots « exploitant », « personne physique », « immatriculée », « micro-entreprise ». Les CGV ont 13 articles, le dernier « 13. Modification des CGV ».
+4. Sur chacune, affiche le code source et cherche « noindex » : il n'y est plus.
+5. Ouvre /sitemap.xml : il liste /mentions-legales, /cgu, /cgv, /confidentialite et /a-propos-des-avis.
+6. Ouvre /robots.txt : rien n'y interdit ces pages.
+7. Le pied de page : « Mentions légales », « CGU », « CGV », « Confidentialité », « Cookies » mènent à leur page ou rubrique.
 
-Compte rendu à me donner : chaque point avec « OK » ou ce que tu as vu. Aucune information personnelle.
+Compte rendu à me donner : chaque point avec « OK » ou ce que tu as vu. Si un nom de personne apparaît, dis où, sans le recopier.
 ```
 
-Ensuite, pour Stripe en mode réel (2.8 c) : les informations publiques du compte prennent le nom de l'exploitant et contact@pulsacity.com, sans adresse ni téléphone (si Stripe en exige un pour activer le compte, le prompt s'arrêtera et vous demandera), les liens https://pulsacity.com/cgv et https://pulsacity.com/confidentialite, et les réglages du prompt 3 sont refaits en mode réel. Claude Code écrit ces prompts avec le passage du lot 4.5 en mode réel.
+Compte rendu du 22 octobre (avant la fusion) : la production montre encore les brouillons du 4 octobre (CGU du 19 octobre), avec bandeau, passages à compléter et `noindex`, hors du plan du site. Normal : la PR #48 n'était pas fusionnée.
+
+Ensuite, pour Stripe en mode réel (2.8 c) : les informations publiques du compte prennent « PULSACITY » et contact@pulsacity.com, sans nom de personne, sans adresse ni téléphone (si Stripe en exige un pour activer le compte, le prompt s'arrêtera et vous demandera), les liens https://pulsacity.com/cgv et https://pulsacity.com/confidentialite, et les réglages du prompt 3 sont refaits en mode réel. Claude Code écrit ces prompts avec le passage du lot 4.5 en mode réel.

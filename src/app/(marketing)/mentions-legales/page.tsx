@@ -13,7 +13,7 @@ export const generateMetadata = () =>
   });
 
 const LegalNoticePage = () => (
-  <LegalPage name="mentions-legales" title="Mentions légales" updatedOn="21 octobre 2026">
+  <LegalPage name="mentions-legales" title="Mentions légales" updatedOn="22 octobre 2026">
     <LegalText />
   </LegalPage>
 );

@@ -636,6 +636,11 @@ export const subscriptions = pgTable(
     /** The e-mail sent 7 days before the first payment of a beta tester. */
     betaReminderSentAt: timestamptz("beta_reminder_sent_at"),
     /**
+     * The end of the yearly period whose renewal was announced by e-mail, 7 days before (CGV 5.2): one e-mail per
+     * renewal, claimed before it leaves.
+     */
+    renewalReminderPeriodEnd: timestamptz("renewal_reminder_period_end"),
+    /**
      * The coupon of the promotion code typed at Checkout (« partenaire-… » for a partner's code), kept once the discount
      * is over: who brought the subscription.
      */

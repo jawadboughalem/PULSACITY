@@ -28,16 +28,12 @@ describe("sitemap", () => {
     for (const guide of GUIDES) expect(paths).toContain(`/guides/${guide.slug}`);
   });
 
-  it("leaves the legal drafts out until LEGAL_VALIDATED is true and the publisher is named", () => {
+  it("leaves the legal drafts out until LEGAL_VALIDATED is true", () => {
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://pulsacity.com");
     vi.stubEnv("LEGAL_VALIDATED", "false");
-    vi.stubEnv("LEGAL_PUBLISHER_NAME", "Julie Martin");
     expect(listPaths()).not.toContain("/cgu");
     expect(listPaths()).not.toContain("/a-propos-des-avis");
     vi.stubEnv("LEGAL_VALIDATED", "true");
-    vi.stubEnv("LEGAL_PUBLISHER_NAME", "");
-    expect(listPaths()).not.toContain("/mentions-legales");
-    vi.stubEnv("LEGAL_PUBLISHER_NAME", "Julie Martin");
     expect(listPaths()).toEqual(
       expect.arrayContaining(["/mentions-legales", "/cgu", "/cgv", "/confidentialite", "/a-propos-des-avis"]),
     );
